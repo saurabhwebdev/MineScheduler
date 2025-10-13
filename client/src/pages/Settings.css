@@ -129,6 +129,8 @@
 .uom-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
@@ -217,6 +219,34 @@
   background: #0a3d6e;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(6, 45, 84, 0.25);
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #062d54;
+  border: 1px solid #d9d9d9;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: #062d54;
+  color: #062d54;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 45, 84, 0.15);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Modern icon buttons */

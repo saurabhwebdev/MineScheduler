@@ -324,20 +324,13 @@ const ShiftConfig = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <p style={{ margin: 0, color: '#595959', fontSize: '14px' }}>
-            Configure work shifts and shift change durations for scheduling
-          </p>
-        </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button className="btn-primary" onClick={handleCreateShift}>
-            <PlusOutlined /> New Shift
-          </button>
-          <button className="btn-secondary" onClick={handleExport}>
-            <DownloadOutlined /> Export
-          </button>
-        </div>
+      <div className="uom-actions">
+        <button className="btn-primary" onClick={handleCreateShift}>
+          <PlusOutlined /> New Shift
+        </button>
+        <button className="btn-secondary" onClick={handleExport}>
+          <DownloadOutlined /> Export
+        </button>
       </div>
 
       <Table
