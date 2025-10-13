@@ -77,3 +77,66 @@
   background-color: #062d54;
   border-radius: 0 4px 4px 0;
 }
+
+/* Modern Custom Tooltip */
+.custom-tooltip {
+  position: absolute;
+  left: 60px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #062d54 0%, #0a4275 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(6, 45, 84, 0.3),
+              0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tooltip arrow */
+.custom-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 6px 6px 0;
+  border-color: transparent #062d54 transparent transparent;
+}
+
+/* Show tooltip on hover */
+.sidebar-menu-item:hover .custom-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Active item tooltip - green accent */
+.sidebar-menu-item.active .custom-tooltip {
+  background: linear-gradient(135deg, #3cca70 0%, #2eb55f 100%);
+  box-shadow: 0 4px 12px rgba(60, 202, 112, 0.3),
+              0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-menu-item.active .custom-tooltip::before {
+  border-color: transparent #3cca70 transparent transparent;
+}
+
+/* Subtle hover effect */
+.sidebar-menu-item:hover .custom-tooltip {
+  box-shadow: 0 6px 16px rgba(6, 45, 84, 0.4),
+              0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-menu-item.active:hover .custom-tooltip {
+  box-shadow: 0 6px 16px rgba(60, 202, 112, 0.4),
+              0 3px 6px rgba(0, 0, 0, 0.15);
+}

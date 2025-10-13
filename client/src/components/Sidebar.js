@@ -55,9 +55,10 @@ const Sidebar = () => {
             key={item.key}
             className={`sidebar-menu-item ${isActive(item.path) ? 'active' : ''}`}
             onClick={() => navigate(item.path)}
-            title={item.label}
+            data-tooltip={item.label}
           >
             <div className="menu-icon">{item.icon}</div>
+            <span className="custom-tooltip">{item.label}</span>
           </div>
         ))}
       </div>
