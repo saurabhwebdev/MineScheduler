@@ -8,7 +8,8 @@ import {
   FileTextOutlined,
   ClockCircleOutlined,
   SettingOutlined,
-  AuditOutlined
+  AuditOutlined,
+  ToolOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
@@ -23,6 +24,7 @@ const Sidebar = () => {
     { key: 'schedule', icon: <CalendarOutlined />, label: 'Schedule', path: '/schedule' },
     { key: 'tasks', icon: <FileTextOutlined />, label: 'Tasks', path: '/tasks' },
     { key: 'delays', icon: <ClockCircleOutlined />, label: 'Delays', path: '/delays' },
+    { key: 'equipment', icon: <ToolOutlined />, label: 'Equipment', path: '/equipment' },
     { key: 'reports', icon: <BarChartOutlined />, label: 'Reports', path: '/reports' },
     { key: 'users', icon: <UserOutlined />, label: 'Users', path: '/users', adminOnly: true },
     { key: 'settings', icon: <SettingOutlined />, label: 'Settings', path: '/settings' },
