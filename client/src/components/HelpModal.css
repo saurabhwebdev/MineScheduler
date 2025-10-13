@@ -1,12 +1,17 @@
-/* Help Modal Styles */
+/* Help Modal Styles - Minimal & Modern */
+.help-modal .ant-modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .help-modal .ant-modal-header {
-  background: linear-gradient(135deg, #062d54 0%, #0a3d6e 100%);
-  border-bottom: none;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
   padding: 20px 24px;
 }
 
 .help-modal .ant-modal-title {
-  color: white !important;
+  color: #062d54 !important;
   font-size: 18px;
   font-weight: 600;
 }
@@ -14,42 +19,50 @@
 .help-modal-title {
   display: flex;
   align-items: center;
-  color: white;
+  color: #062d54;
 }
 
 .help-modal-title .anticon {
-  color: #52c41a !important;
+  color: #062d54 !important;
 }
 
 .help-modal .ant-modal-body {
   padding: 24px;
   max-height: 70vh;
   overflow-y: auto;
+  background: #fff;
 }
 
 .help-modal .ant-modal-close {
-  color: white;
+  color: #8c8c8c;
 }
 
 .help-modal .ant-modal-close:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: #062d54;
 }
 
 .help-modal-content {
   background: #fff;
 }
 
-/* Collapse Panels */
+/* Collapse Panels - Minimal & Flat */
 .help-panel .ant-collapse-header {
-  padding: 16px 20px !important;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  transition: all 0.3s ease;
+  padding: 14px 16px !important;
+  background: transparent;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
 }
 
 .help-panel .ant-collapse-header:hover {
-  background: #e8edf2;
+  background: #fafafa;
+  border-left-color: #062d54;
+}
+
+.help-panel .ant-collapse-item-active .ant-collapse-header {
+  background: #fafafa;
+  border-left-color: #062d54;
 }
 
 .help-panel .ant-collapse-content {
@@ -58,7 +71,7 @@
 }
 
 .help-panel .ant-collapse-content-box {
-  padding: 16px 20px 24px 20px;
+  padding: 12px 16px 20px 16px;
 }
 
 /* Help Content */
@@ -76,15 +89,15 @@
 }
 
 .help-item {
-  padding: 12px 16px;
-  background: #f8f9fa;
-  border-left: 3px solid #1890ff;
+  padding: 12px 14px;
+  background: #fafafa;
+  border-left: 2px solid #d9d9d9;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
 
 .help-item:hover {
-  background: #e8edf2;
+  background: #f5f5f5;
   border-left-color: #062d54;
 }
 

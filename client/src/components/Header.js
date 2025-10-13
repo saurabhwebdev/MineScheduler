@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Badge, Dropdown } from 'antd';
-import { BellOutlined, UserOutlined, LogoutOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
@@ -31,9 +31,6 @@ const Header = ({ title, subtitle }) => {
       <div className="dropdown-menu">
         <div className="dropdown-item" onClick={() => navigate('/profile')}>
           <UserOutlined /> Profile
-        </div>
-        <div className="dropdown-item" onClick={() => navigate('/help')}>
-          <QuestionCircleOutlined /> Help
         </div>
         <div className="dropdown-item logout" onClick={logout}>
           <LogoutOutlined /> Logout

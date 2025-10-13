@@ -33,39 +33,49 @@
   color: #8c8c8c;
 }
 
-/* Floating Help Button */
+/* Floating Help Button - Modern & Minimal */
 .floating-help-button {
   position: fixed;
   bottom: 32px;
   right: 32px;
-  width: 56px;
-  height: 56px;
-  background: #062d54 !important;
-  border: none;
-  box-shadow: 0 4px 16px rgba(6, 45, 84, 0.3);
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  background: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
   z-index: 1000;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: all 0.2s ease;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
 }
 
 .floating-help-button:hover {
-  background: #0a3d6e !important;
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(6, 45, 84, 0.4);
+  background: #fafafa !important;
+  border-color: #062d54 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 45, 84, 0.15) !important;
 }
 
 .floating-help-button .anticon {
-  font-size: 24px;
+  font-size: 22px;
+  color: #062d54 !important;
+}
+
+.floating-help-button:hover .anticon {
+  color: #062d54 !important;
 }
 
 @media (max-width: 768px) {
   .floating-help-button {
     bottom: 24px;
     right: 24px;
-    width: 48px;
-    height: 48px;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
   }
   
   .floating-help-button .anticon {
