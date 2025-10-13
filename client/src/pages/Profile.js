@@ -19,29 +19,59 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [editingBasic, setEditingBasic] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(false);
+  const [currentUser, setCurrentUser] = useState(user);
+
+  // Fetch fresh user data from database on mount
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = user?._id || user?.id;
+      
+      if (!userId || !token) return;
+
+      const response = await fetch(`${config.apiUrl}/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        const freshUserData = data.data.user;
+        setCurrentUser(freshUserData);
+        // Update localStorage and context with fresh data
+        login(freshUserData, token);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   useEffect(() => {
-    // Debug: Log user object
-    console.log('User object:', user);
-    console.log('User ID (_id):', user?._id);
-    console.log('User ID (id):', user?.id);
-    
-    // Set initial form values
-    form.setFieldsValue({
-      name: user?.name || '',
-      email: user?.email || '',
-    });
-    
-    employeeForm.setFieldsValue({
-      phone: user?.phone || '',
-      department: user?.department || '',
-      designation: user?.designation || '',
-      employeeId: user?.employeeId || '',
-      location: user?.location || '',
-      gender: user?.gender || '',
-      bio: user?.bio || '',
-    });
-  }, [user, form, employeeForm]);
+    // Fetch fresh data on mount
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    // Update forms when currentUser changes
+    if (currentUser) {
+      form.setFieldsValue({
+        name: currentUser?.name || '',
+        email: currentUser?.email || '',
+      });
+      
+      employeeForm.setFieldsValue({
+        phone: currentUser?.phone || '',
+        department: currentUser?.department || '',
+        designation: currentUser?.designation || '',
+        employeeId: currentUser?.employeeId || '',
+        location: currentUser?.location || '',
+        gender: currentUser?.gender || '',
+        bio: currentUser?.bio || '',
+      });
+    }
+  }, [currentUser, form, employeeForm]);
 
   const handleBasicUpdate = async (values) => {
     setLoading(true);
@@ -72,6 +102,7 @@ const Profile = () => {
       if (response.ok && data.status === 'success') {
         // Update user in context and localStorage
         const updatedUser = data.data.user;
+        setCurrentUser(updatedUser);
         login(updatedUser, token);
         
         notification.success({
@@ -79,6 +110,9 @@ const Profile = () => {
           description: 'Basic information updated successfully',
         });
         setEditingBasic(false);
+        
+        // Fetch fresh data to ensure sync
+        await fetchUserData();
       } else {
         notification.error({
           message: 'Error',
@@ -125,6 +159,7 @@ const Profile = () => {
       if (response.ok && data.status === 'success') {
         // Update user in context and localStorage
         const updatedUser = data.data.user;
+        setCurrentUser(updatedUser);
         login(updatedUser, token);
         
         notification.success({
@@ -132,6 +167,9 @@ const Profile = () => {
           description: 'Employee details updated successfully',
         });
         setEditingEmployee(false);
+        
+        // Fetch fresh data to ensure sync
+        await fetchUserData();
       } else {
         notification.error({
           message: 'Error',
@@ -161,18 +199,18 @@ const Profile = () => {
             <Avatar 
               size={64} 
               className="profile-avatar"
-              src={generateAvatar(user)}
+              src={generateAvatar(currentUser)}
             >
-              {!generateAvatar(user) && getInitials(user?.name)}
+              {!generateAvatar(currentUser) && getInitials(currentUser?.name)}
             </Avatar>
             <div className="profile-info">
-              <h2>{user?.name || 'User'}</h2>
-              <p>{user?.email}</p>
+              <h2>{currentUser?.name || 'User'}</h2>
+              <p>{currentUser?.email}</p>
             </div>
           </div>
           <div className="profile-header-right">
-            <span className={`role-badge ${user?.role}`}>
-              {user?.role === 'admin' ? 'Admin' : 'User'}
+            <span className={`role-badge ${currentUser?.role}`}>
+              {currentUser?.role === 'admin' ? 'Admin' : 'User'}
             </span>
           </div>
         </div>
@@ -192,7 +230,10 @@ const Profile = () => {
                   className="btn-cancel" 
                   onClick={() => {
                     setEditingBasic(false);
-                    form.resetFields();
+                    form.setFieldsValue({
+                      name: currentUser?.name || '',
+                      email: currentUser?.email || '',
+                    });
                   }}
                 >
                   <CloseOutlined /> Cancel
@@ -261,7 +302,15 @@ const Profile = () => {
                   className="btn-cancel" 
                   onClick={() => {
                     setEditingEmployee(false);
-                    employeeForm.resetFields();
+                    employeeForm.setFieldsValue({
+                      phone: currentUser?.phone || '',
+                      department: currentUser?.department || '',
+                      designation: currentUser?.designation || '',
+                      employeeId: currentUser?.employeeId || '',
+                      location: currentUser?.location || '',
+                      gender: currentUser?.gender || '',
+                      bio: currentUser?.bio || '',
+                    });
                   }}
                 >
                   <CloseOutlined /> Cancel
