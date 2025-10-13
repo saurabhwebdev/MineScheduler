@@ -45,6 +45,7 @@ app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/uoms', require('./routes/uoms'));
 app.use('/api/delays', require('./routes/delays'));
 app.use('/api/shifts', require('./routes/shifts'));
+app.use('/api/sites', require('./routes/sites'));
 app.use('/api/audit', require('./routes/audit'));
 
 // Health check route

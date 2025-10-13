@@ -11,6 +11,7 @@ import Reports from './pages/Reports';
 import UserManagement from './pages/UserManagement';
 import Tasks from './pages/Tasks';
 import Delays from './pages/Delays';
+import Sites from './pages/Sites';
 import Equipment from './pages/Equipment';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
@@ -67,6 +68,7 @@ function App() {
             <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
             <Route path="/tasks" element={<PrivateRoute><Tasks /></PrivateRoute>} />
             <Route path="/delays" element={<PrivateRoute><Delays /></PrivateRoute>} />
+            <Route path="/sites" element={<PrivateRoute><Sites /></PrivateRoute>} />
             <Route path="/equipment" element={<PrivateRoute><Equipment /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
             <Route path="/audit" element={<AdminRoute><Audit /></AdminRoute>} />
