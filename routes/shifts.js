@@ -47,6 +47,42 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/shifts/export
+// @desc    Export shifts to Excel file
+// @access  Private
+router.get('/export', protect, async (req, res) => {
+  try {
+    const shifts = await Shift.find().sort({ shiftCode: 1 });
+
+    const exportData = shifts.map(shift => ({
+      shiftName: shift.shiftName,
+      shiftCode: shift.shiftCode,
+      startTime: shift.startTime,
+      endTime: shift.endTime,
+      shiftChangeDuration: shift.shiftChangeDuration,
+      color: shift.color || '',
+      description: shift.description || '',
+      isActive: shift.isActive ? 'Active' : 'Inactive'
+    }));
+
+    const worksheet = xlsx.utils.json_to_sheet(exportData);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Shifts');
+
+    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    res.setHeader('Content-Disposition', 'attachment; filename=shifts_export.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to export shifts'
+    });
+  }
+});
+
 // @route   GET /api/shifts/:id
 // @desc    Get shift by ID
 // @access  Private
@@ -412,42 +448,6 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: error.message || 'Failed to import Excel file'
-    });
-  }
-});
-
-// @route   GET /api/shifts/export
-// @desc    Export shifts to Excel file
-// @access  Private
-router.get('/export', protect, async (req, res) => {
-  try {
-    const shifts = await Shift.find().sort({ shiftCode: 1 });
-
-    const exportData = shifts.map(shift => ({
-      shiftName: shift.shiftName,
-      shiftCode: shift.shiftCode,
-      startTime: shift.startTime,
-      endTime: shift.endTime,
-      shiftChangeDuration: shift.shiftChangeDuration,
-      color: shift.color || '',
-      description: shift.description || '',
-      isActive: shift.isActive ? 'Active' : 'Inactive'
-    }));
-
-    const worksheet = xlsx.utils.json_to_sheet(exportData);
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Shifts');
-
-    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
-
-    res.setHeader('Content-Disposition', 'attachment; filename=shifts_export.xlsx');
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.send(buffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to export shifts'
     });
   }
 });

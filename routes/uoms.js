@@ -47,6 +47,36 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/uoms/export
+// @desc    Export UOMs to Excel file
+// @access  Private
+router.get('/export', protect, async (req, res) => {
+  try {
+    const uoms = await Uom.find().sort({ name: 1 });
+
+    const exportData = uoms.map(uom => ({
+      name: uom.name,
+      description: uom.description || ''
+    }));
+
+    const worksheet = xlsx.utils.json_to_sheet(exportData);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'UOMs');
+
+    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    res.setHeader('Content-Disposition', 'attachment; filename=uoms_export.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to export UOMs'
+    });
+  }
+});
+
 // @route   GET /api/uoms/:id
 // @desc    Get UOM by ID
 // @access  Private
@@ -337,36 +367,6 @@ router.post('/import', protect, authorize('admin'), upload.single('file'), async
     res.status(500).json({
       status: 'error',
       message: error.message || 'Server error'
-    });
-  }
-});
-
-// @route   GET /api/uoms/export
-// @desc    Export UOMs to Excel file
-// @access  Private
-router.get('/export', protect, async (req, res) => {
-  try {
-    const uoms = await Uom.find().sort({ name: 1 });
-
-    const exportData = uoms.map(uom => ({
-      name: uom.name,
-      description: uom.description || ''
-    }));
-
-    const worksheet = xlsx.utils.json_to_sheet(exportData);
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'UOMs');
-
-    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
-
-    res.setHeader('Content-Disposition', 'attachment; filename=uoms_export.xlsx');
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.send(buffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to export UOMs'
     });
   }
 });

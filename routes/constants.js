@@ -38,6 +38,41 @@ router.use(protect);
 // Public routes (authenticated users)
 router.get('/', getConstants);
 router.get('/stats', getConstantStats);
+
+// @route   GET /api/constants/export
+// @desc    Export constants to Excel file
+// @access  Private
+router.get('/export', async (req, res) => {
+  try {
+    const constants = await Constant.find().sort({ category: 1, keyword: 1 });
+
+    const exportData = constants.map(constant => ({
+      keyword: constant.keyword,
+      value: constant.value,
+      unit: constant.unit,
+      category: constant.category,
+      description: constant.description || '',
+      isActive: constant.isActive ? 'Active' : 'Inactive'
+    }));
+
+    const worksheet = xlsx.utils.json_to_sheet(exportData);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Constants');
+
+    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    res.setHeader('Content-Disposition', 'attachment; filename=constants_export.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to export constants'
+    });
+  }
+});
+
 router.get('/:id', getConstant);
 
 // Admin-only routes
@@ -162,40 +197,6 @@ router.post('/import', authorize('admin'), upload.single('file'), async (req, re
     res.status(500).json({
       status: 'error',
       message: error.message || 'Server error'
-    });
-  }
-});
-
-// @route   GET /api/constants/export
-// @desc    Export constants to Excel file
-// @access  Private
-router.get('/export', async (req, res) => {
-  try {
-    const constants = await Constant.find().sort({ category: 1, keyword: 1 });
-
-    const exportData = constants.map(constant => ({
-      keyword: constant.keyword,
-      value: constant.value,
-      unit: constant.unit,
-      category: constant.category,
-      description: constant.description || '',
-      isActive: constant.isActive ? 'Active' : 'Inactive'
-    }));
-
-    const worksheet = xlsx.utils.json_to_sheet(exportData);
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Constants');
-
-    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
-
-    res.setHeader('Content-Disposition', 'attachment; filename=constants_export.xlsx');
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.send(buffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to export constants'
     });
   }
 });
