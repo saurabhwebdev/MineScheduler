@@ -46,9 +46,9 @@ const ConstantSchema = new mongoose.Schema({
 });
 
 // Index for faster queries
-ConstantSchema.index({ keyword: 1 });
 ConstantSchema.index({ category: 1 });
 ConstantSchema.index({ isActive: 1 });
+// Note: keyword index already created by unique: true
 
 // Static method to get constant value by keyword
 ConstantSchema.statics.getValue = async function(keyword) {

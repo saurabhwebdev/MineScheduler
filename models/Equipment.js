@@ -132,8 +132,8 @@ EquipmentSchema.set('toJSON', { virtuals: true });
 EquipmentSchema.set('toObject', { virtuals: true });
 
 // Index for faster queries
-EquipmentSchema.index({ equipmentId: 1 });
 EquipmentSchema.index({ type: 1, status: 1 });
 EquipmentSchema.index({ location: 1 });
+// Note: equipmentId index already created by unique: true
 
 module.exports = mongoose.model('Equipment', EquipmentSchema);

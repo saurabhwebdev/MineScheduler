@@ -118,7 +118,7 @@ SiteSchema.set('toObject', { virtuals: true });
 
 // Index for faster queries
 SiteSchema.index({ priority: 1, isActive: -1 });
-SiteSchema.index({ siteId: 1 });
 SiteSchema.index({ siteName: 'text' });
+// Note: siteId index already created by unique: true
 
 module.exports = mongoose.model('Site', SiteSchema);
