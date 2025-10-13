@@ -1,217 +1,208 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import './SunriseAnimation.css';
 
 const SunriseAnimation = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
     <div className="sunrise-container">
-      {/* Animated background gradient */}
+      {/* Flat gradient background */}
       <motion.div 
-        className="sunrise-background"
-        animate={{
-          background: [
-            'linear-gradient(180deg, #062d54 0%, #0a4275 50%, #3cca70 100%)',
-            'linear-gradient(180deg, #0a4275 0%, #3cca70 50%, #5dd98b 100%)',
-            'linear-gradient(180deg, #062d54 0%, #0a4275 50%, #3cca70 100%)',
-          ],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
+        className="gradient-bg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
       />
 
-      {/* Horizon line */}
-      <motion.div 
-        className="horizon-line"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 2, delay: 0.5 }}
-      />
-
-      {/* Sun */}
+      {/* Geometric shapes - floating circles */}
       <motion.div
-        className="sun"
-        initial={{ y: 100, scale: 0.5, opacity: 0 }}
+        className="shape shape-1"
+        initial={{ scale: 0, opacity: 0 }}
         animate={{ 
-          y: 0, 
           scale: 1, 
-          opacity: 1,
+          opacity: 0.08,
+          y: [-20, 20, -20],
         }}
         transition={{
-          duration: 2.5,
-          ease: "easeOut"
-        }}
-        style={{
-          x: mousePosition.x,
-          y: mousePosition.y,
-        }}
-      >
-        <motion.div
-          className="sun-core"
-          animate={{
-            boxShadow: [
-              '0 0 60px 30px rgba(60, 202, 112, 0.3)',
-              '0 0 80px 40px rgba(60, 202, 112, 0.4)',
-              '0 0 60px 30px rgba(60, 202, 112, 0.3)',
-            ],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </motion.div>
-
-      {/* Sun rays */}
-      {[...Array(12)].map((_, index) => (
-        <motion.div
-          key={index}
-          className="sun-ray"
-          style={{
-            transform: `rotate(${index * 30}deg)`,
-          }}
-          initial={{ opacity: 0, scaleY: 0 }}
-          animate={{ 
-            opacity: [0.3, 0.6, 0.3],
-            scaleY: [0.8, 1.2, 0.8],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            delay: index * 0.1,
-            ease: "easeInOut"
-          }}
-        />
-      ))}
-
-      {/* Floating particles */}
-      {[...Array(20)].map((_, index) => (
-        <motion.div
-          key={`particle-${index}`}
-          className="particle"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, Math.random() * 20 - 10, 0],
-            opacity: [0, 1, 0],
-            scale: [0, 1, 0],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-            ease: "easeInOut"
-          }}
-        />
-      ))}
-
-      {/* Mountains silhouette */}
-      <svg className="mountains" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
-        <motion.path
-          d="M0,300 L0,200 L200,100 L400,180 L600,80 L800,160 L1000,120 L1200,200 L1200,300 Z"
-          fill="rgba(6, 45, 84, 0.3)"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.5, delay: 1 }}
-        />
-        <motion.path
-          d="M0,300 L0,240 L300,140 L500,200 L700,120 L900,180 L1200,160 L1200,300 Z"
-          fill="rgba(6, 45, 84, 0.5)"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.5, delay: 1.2 }}
-        />
-      </svg>
-
-      {/* Coming Soon Text */}
-      <motion.div
-        className="coming-soon-text-container"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 2 }}
-      >
-        <motion.h1 
-          className="coming-soon-text"
-          animate={{
-            textShadow: [
-              '0 0 20px rgba(60, 202, 112, 0.5)',
-              '0 0 30px rgba(60, 202, 112, 0.8)',
-              '0 0 20px rgba(60, 202, 112, 0.5)',
-            ],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          whileHover={{
-            scale: 1.05,
-            textShadow: '0 0 40px rgba(60, 202, 112, 1)',
-          }}
-        >
-          {'Coming Soon'.split('').map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                delay: 2.2 + index * 0.05,
-              }}
-              whileHover={{
-                y: -10,
-                color: '#3cca70',
-                transition: { duration: 0.2 }
-              }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </motion.h1>
-
-        <motion.p
-          className="coming-soon-subtitle"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.8 }}
-        >
-          Something amazing is on the horizon
-        </motion.p>
-      </motion.div>
-
-      {/* Ripple effect on click */}
-      <motion.div
-        className="ripple"
-        animate={{
-          scale: [1, 2, 1],
-          opacity: [0.5, 0, 0.5],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeOut"
+          scale: { duration: 1, delay: 0.2 },
+          opacity: { duration: 1, delay: 0.2 },
+          y: { duration: 8, repeat: Infinity, ease: "easeInOut" }
         }}
       />
+      
+      <motion.div
+        className="shape shape-2"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ 
+          scale: 1, 
+          opacity: 0.06,
+          x: [-30, 30, -30],
+        }}
+        transition={{
+          scale: { duration: 1, delay: 0.4 },
+          opacity: { duration: 1, delay: 0.4 },
+          x: { duration: 10, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
+
+      <motion.div
+        className="shape shape-3"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ 
+          scale: 1, 
+          opacity: 0.05,
+          y: [30, -30, 30],
+          x: [20, -20, 20],
+        }}
+        transition={{
+          scale: { duration: 1, delay: 0.6 },
+          opacity: { duration: 1, delay: 0.6 },
+          y: { duration: 12, repeat: Infinity, ease: "easeInOut" },
+          x: { duration: 15, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
+
+      {/* Minimal floating dots */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={`dot-${i}`}
+          className="floating-dot"
+          style={{
+            left: `${15 + i * 12}%`,
+            top: `${20 + (i % 3) * 25}%`,
+          }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ 
+            opacity: [0, 0.3, 0],
+            scale: [0, 1, 0],
+            y: [0, -40, -80],
+          }}
+          transition={{
+            duration: 4 + i * 0.5,
+            repeat: Infinity,
+            delay: i * 0.8,
+            ease: "easeOut"
+          }}
+        />
+      ))}
+
+      {/* Main content container */}
+      <div className="content-wrapper">
+        {/* Coming Soon Text with modern typography */}
+        <motion.div
+          className="text-content"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <motion.div className="coming-soon-label">
+            {'COMING SOON'.split('').map((char, index) => (
+              <motion.span
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 1 + index * 0.03,
+                  ease: "easeOut"
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.div>
+
+          <motion.h1 
+            className="main-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {'Something Great'.split(' ').map((word, wordIndex) => (
+              <span key={wordIndex} className="word">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={charIndex}
+                    className="char"
+                    whileHover={{
+                      y: -8,
+                      color: '#3cca70',
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 1 && ' '}
+              </span>
+            ))}
+            <br />
+            {'is Coming'.split(' ').map((word, wordIndex) => (
+              <span key={wordIndex + 2} className="word">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={charIndex}
+                    className="char"
+                    whileHover={{
+                      y: -8,
+                      color: '#3cca70',
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 1 && ' '}
+              </span>
+            ))}
+          </motion.h1>
+
+          <motion.p
+            className="subtitle"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.6 }}
+          >
+            We're working on something amazing for you
+          </motion.p>
+
+          {/* Progress indicator */}
+          <motion.div
+            className="progress-container"
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: '100%' }}
+            transition={{ duration: 1, delay: 1.8 }}
+          >
+            <motion.div
+              className="progress-bar"
+              initial={{ width: '0%' }}
+              animate={{ width: '65%' }}
+              transition={{ duration: 2, delay: 2, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </motion.div>
+        </motion.div>
+
+        {/* Minimal icon/logo placeholder */}
+        <motion.div
+          className="icon-container"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 2.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <motion.div 
+            className="icon-circle"
+            animate={{
+              rotate: 360,
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          >
+            <div className="icon-inner" />
+          </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };
