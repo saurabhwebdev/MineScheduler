@@ -11,7 +11,7 @@
   border-radius: 12px;
 }
 
-/* Flat gradient background */
+/* Clean gradient background */
 .gradient-bg {
   position: absolute;
   top: 0;
@@ -19,15 +19,13 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, 
-    #f8fcff 0%, 
-    #f0f9ff 25%,
-    #e8f7f0 75%,
-    #f0fcf4 100%
+    #fafcfe 0%, 
+    #f5faf8 100%
   );
   z-index: 1;
 }
 
-/* Geometric shapes - minimal and flat */
+/* Minimal floating shapes */
 .shape {
   position: absolute;
   border-radius: 50%;
@@ -36,123 +34,165 @@
 }
 
 .shape-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(60, 202, 112, 0.12) 0%, transparent 70%);
-  top: -15%;
-  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(60, 202, 112, 0.08) 0%, transparent 70%);
+  top: -10%;
+  right: -5%;
 }
 
 .shape-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(6, 45, 84, 0.08) 0%, transparent 70%);
-  bottom: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(6, 45, 84, 0.06) 0%, transparent 70%);
+  bottom: -5%;
   left: -5%;
-}
-
-.shape-3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(60, 202, 112, 0.06) 0%, transparent 70%);
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Floating dots */
-.floating-dot {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #3cca70;
-  border-radius: 50%;
-  z-index: 2;
-  pointer-events: none;
 }
 
 /* Content wrapper */
 .content-wrapper {
   position: relative;
   z-index: 10;
-  text-align: center;
-  max-width: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 40px;
+}
+
+.content-inner {
+  text-align: center;
+  max-width: 600px;
   width: 100%;
 }
 
-.text-content {
-  margin-bottom: 60px;
+/* Logo circle */
+.logo-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #062d54;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 20px rgba(6, 45, 84, 0.15);
 }
 
-/* Coming Soon label */
-.coming-soon-label {
+.logo-letter {
   font-family: 'Inter', sans-serif;
-  font-size: 0.75rem;
+  font-size: 36px;
+  font-weight: 800;
+  color: #3cca70;
+  line-height: 1;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(60, 202, 112, 0.1);
+  border: 1px solid rgba(60, 202, 112, 0.2);
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
   color: #3cca70;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-bottom: 24px;
 }
 
-.coming-soon-label span {
-  display: inline-block;
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3cca70;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
 }
 
 /* Main heading */
 .main-heading {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #062d54;
-  margin: 0 0 24px 0;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.02em;
 }
 
-.main-heading .word {
-  display: inline-block;
-}
-
-.main-heading .char {
-  display: inline-block;
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-  cursor: default;
-}
-
-/* Subtitle */
-.subtitle {
+/* Description */
+.description {
   font-family: 'Inter', sans-serif;
   font-size: 1.125rem;
   font-weight: 400;
   color: #6b7280;
-  line-height: 1.7;
-  margin: 0 0 40px 0;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
 }
 
-/* Progress container */
-.progress-container {
-  max-width: 400px;
-  margin: 0 auto;
-  height: 4px;
-  background: #e5e7eb;
-  border-radius: 2px;
+/* Progress wrapper */
+.progress-wrapper {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #062d54;
+}
+
+.progress-percentage {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #3cca70;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
   overflow: hidden;
   position: relative;
 }
 
-.progress-bar {
+.progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #3cca70 0%, #2eb85c 100%);
-  border-radius: 2px;
+  border-radius: 4px;
   position: relative;
+  box-shadow: 0 0 10px rgba(60, 202, 112, 0.3);
 }
 
-.progress-bar::after {
+.progress-fill::after {
   content: '';
   position: absolute;
   top: 0;
@@ -162,7 +202,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.4),
     transparent
   );
   animation: shimmer 2s infinite;
@@ -177,150 +217,79 @@
   }
 }
 
-/* Icon container */
-.icon-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-}
-
-.icon-circle {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #3cca70 0%, #2eb85c 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 10px 40px rgba(60, 202, 112, 0.2);
-}
-
-.icon-circle::before {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
-}
-
-.icon-inner {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #3cca70 0%, #2eb85c 100%);
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 4px 20px rgba(60, 202, 112, 0.3);
-}
-
-.icon-inner::before {
-  content: '';
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background: #062d54;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .main-heading {
-    font-size: 4rem;
-  }
-  
-  .content-wrapper {
-    padding: 30px;
-  }
-}
-
 @media (max-width: 768px) {
-  .main-heading {
-    font-size: 3rem;
-    letter-spacing: -0.02em;
+  .content-wrapper {
+    padding: 24px;
   }
 
-  .subtitle {
+  .logo-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .logo-letter {
+    font-size: 32px;
+  }
+
+  .main-heading {
+    font-size: 2rem;
+  }
+
+  .description {
     font-size: 1rem;
   }
 
-  .coming-soon-label {
-    font-size: 0.7rem;
-  }
-
-  .icon-circle {
-    width: 100px;
-    height: 100px;
-  }
-
-  .icon-inner {
-    width: 50px;
-    height: 50px;
-  }
-
-  .icon-inner::before {
-    width: 25px;
-    height: 25px;
+  .badge {
+    font-size: 0.8rem;
+    padding: 6px 14px;
   }
 
   .shape-1 {
-    width: 400px;
-    height: 400px;
-  }
-
-  .shape-2 {
     width: 350px;
     height: 350px;
   }
 
-  .shape-3 {
-    width: 250px;
-    height: 250px;
-  }
-  
-  .content-wrapper {
-    padding: 20px;
+  .shape-2 {
+    width: 300px;
+    height: 300px;
   }
 }
 
 @media (max-width: 480px) {
+  .content-wrapper {
+    padding: 20px;
+  }
+
+  .logo-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .logo-letter {
+    font-size: 28px;
+  }
+
   .main-heading {
-    font-size: 2.25rem;
+    font-size: 1.75rem;
   }
 
-  .subtitle {
-    font-size: 0.9rem;
+  .description {
+    font-size: 0.95rem;
   }
 
-  .coming-soon-label {
-    font-size: 0.65rem;
+  .badge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
   }
 
-  .icon-circle {
-    width: 80px;
-    height: 80px;
+  .progress-wrapper {
+    padding: 16px;
   }
 
-  .icon-inner {
-    width: 40px;
-    height: 40px;
-  }
-
-  .icon-inner::before {
-    width: 20px;
-    height: 20px;
-  }
-
-  .progress-container {
-    max-width: 300px;
-  }
-  
-  .text-content {
-    margin-bottom: 40px;
+  .progress-label,
+  .progress-percentage {
+    font-size: 0.8rem;
   }
 }
 
