@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Modal, Form, Input, notification } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import React, { useState, useEffect, useRef } from 'react';
+import { Table, Modal, Form, Input, notification, Upload } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import config from '../config/config';
 
 const { TextArea } = Input;
@@ -13,6 +13,7 @@ const UomConfig = () => {
   const [editingUom, setEditingUom] = useState(null);
   const [deletingUom, setDeletingUom] = useState(null);
   const [form] = Form.useForm();
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchUoms();
@@ -167,6 +168,88 @@ const UomConfig = () => {
     }
   };
 
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/uoms/import`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        notification.success({
+          message: 'Import Successful',
+          description: `${data.data.success.length} UOMs imported successfully. ${data.data.skipped.length} skipped. ${data.data.failed.length} failed.`,
+          duration: 5,
+        });
+        fetchUoms();
+      } else {
+        notification.error({
+          message: 'Import Failed',
+          description: data.message || 'Failed to import UOMs',
+        });
+      }
+    } catch (error) {
+      console.error('Import error:', error);
+      notification.error({
+        message: 'Import Error',
+        description: 'An error occurred during import',
+      });
+    }
+
+    event.target.value = '';
+  };
+
+  const handleExport = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/uoms/export`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'uoms_export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        notification.success({
+          message: 'Export Successful',
+          description: 'UOMs exported successfully',
+        });
+      } else {
+        notification.error({
+          message: 'Export Failed',
+          description: 'Failed to export UOMs',
+        });
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      notification.error({
+        message: 'Export Error',
+        description: 'An error occurred during export',
+      });
+    }
+  };
+
   const columns = [
     {
       title: 'UOM NAME',
@@ -219,6 +302,22 @@ const UomConfig = () => {
       <div className="uom-actions">
         <button className="btn-primary" onClick={handleCreateUom}>
           <PlusOutlined /> New UOM
+        </button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImport}
+          accept=".xlsx,.xls"
+          style={{ display: 'none' }}
+        />
+        <button 
+          className="btn-secondary" 
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <UploadOutlined /> Import
+        </button>
+        <button className="btn-secondary" onClick={handleExport}>
+          <DownloadOutlined /> Export
         </button>
       </div>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Form, Input, notification, TimePicker, InputNumber, ColorPicker, Switch } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, ClockCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import config from '../config/config';
 
@@ -185,6 +185,45 @@ const ShiftConfig = () => {
     }
   };
 
+  const handleExport = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/shifts/export`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'shifts_export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        notification.success({
+          message: 'Export Successful',
+          description: 'Shifts exported successfully',
+        });
+      } else {
+        notification.error({
+          message: 'Export Failed',
+          description: 'Failed to export shifts',
+        });
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      notification.error({
+        message: 'Export Error',
+        description: 'An error occurred during export',
+      });
+    }
+  };
+
   const columns = [
     {
       title: 'COLOR',
@@ -291,9 +330,14 @@ const ShiftConfig = () => {
             Configure work shifts and shift change durations for scheduling
           </p>
         </div>
-        <button className="btn-primary" onClick={handleCreateShift}>
-          <PlusOutlined /> New Shift
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="btn-primary" onClick={handleCreateShift}>
+            <PlusOutlined /> New Shift
+          </button>
+          <button className="btn-secondary" onClick={handleExport}>
+            <DownloadOutlined /> Export
+          </button>
+        </div>
       </div>
 
       <Table
