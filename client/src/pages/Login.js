@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Typography, notification, Divider } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
@@ -11,11 +11,25 @@ const { Title, Text } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   // Explicit SSO check
   const showSSO = config.sso?.enabled === true && Array.isArray(config.sso?.providers) && config.sso.providers.length > 0;
+
+  useEffect(() => {
+    // Preload optimized image
+    const img = new Image();
+    img.src = '/authimage.webp';
+    img.onload = () => setImageLoaded(true);
+    // Fallback to PNG if WebP not supported
+    img.onerror = () => {
+      const fallbackImg = new Image();
+      fallbackImg.src = '/authimage-optimized.png';
+      fallbackImg.onload = () => setImageLoaded(true);
+    };
+  }, []);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -62,7 +76,17 @@ const Login = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="auth-image-container">
-          <img src="/authimage.png" alt="Mine Scheduler" className="auth-image" />
+          {!imageLoaded && <div className="auth-image-skeleton" />}
+          <picture>
+            <source srcSet="/authimage.webp" type="image/webp" />
+            <img 
+              src="/authimage-optimized.png" 
+              alt="Mine Scheduler" 
+              className={`auth-image ${imageLoaded ? 'loaded' : ''}`}
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+            />
+          </picture>
         </div>
       </motion.div>
 
