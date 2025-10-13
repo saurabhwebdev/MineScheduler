@@ -1,0 +1,405 @@
+/**
+ * Settings Page - Modern Tabbed Card Interface
+ * 
+ * Design System:
+ * - Primary Color: #062d54 (App Blue)
+ * - Hover Color: #0a3d6e (Darker Blue)
+ * - Background: #fafafa (Light Gray)
+ * - Border: #f0f0f0 (Very Light Gray)
+ * - Border Radius: 8px (Cards/Inputs), 12px (Modals)
+ * 
+ * Features:
+ * - Horizontal tabs with clean card-based layout
+ * - Responsive design for mobile devices
+ * - Modern button and form styling
+ * - Smooth transitions and hover effects
+ */
+
+/* Modern tabbed settings page */
+.settings-page-modern {
+  background: transparent;
+  min-height: calc(100vh - 120px);
+}
+
+/* Custom tab styling */
+.settings-tabs .ant-tabs-nav {
+  background: #fff;
+  padding: 0 32px;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.settings-tabs .ant-tabs-tab {
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #062d54 !important;
+  transition: all 0.3s ease;
+}
+
+.settings-tabs .ant-tabs-tab:hover {
+  color: #062d54 !important;
+}
+
+.settings-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  color: #062d54 !important;
+}
+
+.settings-tabs .ant-tabs-tab .anticon {
+  margin-right: 8px;
+  font-size: 16px;
+  color: #062d54 !important;
+}
+
+.settings-tabs .ant-tabs-tab-btn {
+  color: #062d54 !important;
+}
+
+.settings-tabs .ant-tabs-ink-bar {
+  background: #062d54;
+  height: 3px;
+}
+
+.settings-tabs .ant-tabs-content {
+  background: transparent;
+}
+
+/* Tab content wrapper */
+.settings-tab-content {
+  padding: 0;
+}
+
+/* Settings card */
+.settings-card {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.settings-card-header {
+  padding: 32px 32px 24px 32px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-card-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #062d54;
+}
+
+.settings-card-header p {
+  margin: 0;
+  color: #595959;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.settings-card-body {
+  padding: 32px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .settings-tabs .ant-tabs-nav {
+    padding: 0 16px;
+  }
+
+  .settings-card-header {
+    padding: 24px 20px 16px 20px;
+  }
+
+  .settings-card-header h3 {
+    font-size: 18px;
+  }
+
+  .settings-card-body {
+    padding: 20px;
+  }
+
+  .settings-tabs .ant-tabs-tab {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+/* UOM specific styles */
+.uom-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.uom-table-container {
+  background: transparent;
+}
+
+/* Modern table styling */
+.uom-table-container .ant-table {
+  font-size: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.uom-table-container .ant-table-thead > tr > th {
+  background: #fafafa;
+  color: #062d54;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 2px solid #f0f0f0;
+  padding: 16px 20px;
+}
+
+.uom-table-container .ant-table-tbody > tr > td {
+  padding: 16px 20px;
+  color: #062d54;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 14px;
+}
+
+.uom-table-container .ant-table-tbody > tr:hover > td {
+  background: #fafafa;
+}
+
+.uom-table-container .ant-table-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+/* Pagination styling */
+.uom-table-container .ant-pagination {
+  margin-top: 24px;
+}
+
+.uom-table-container .ant-pagination-item {
+  border-radius: 6px;
+  border-color: #d9d9d9;
+}
+
+.uom-table-container .ant-pagination-item-active {
+  border-color: #062d54;
+  background: #062d54;
+}
+
+.uom-table-container .ant-pagination-item-active a {
+  color: #fff;
+}
+
+.uom-table-container .ant-pagination-item:hover {
+  border-color: #062d54;
+}
+
+.uom-table-container .ant-pagination-item:hover a {
+  color: #062d54;
+}
+
+/* Modern button styles */
+.btn-primary {
+  background: #062d54;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(6, 45, 84, 0.1);
+}
+
+.btn-primary:hover {
+  background: #0a3d6e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 45, 84, 0.25);
+}
+
+/* Modern icon buttons */
+.icon-btn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #8c8c8c;
+  font-size: 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn:hover {
+  background: #f0f5ff;
+  color: #062d54;
+  transform: scale(1.1);
+}
+
+.icon-btn.delete {
+  color: #8c8c8c;
+}
+
+.icon-btn.delete:hover {
+  background: #fff1f0;
+  color: #ff4d4f;
+  transform: scale(1.1);
+}
+
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.icon-btn:disabled:hover {
+  transform: none;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Modern modal styles */
+.simple-modal .ant-modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.simple-modal .ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px;
+  background: #fafafa;
+}
+
+.simple-modal .ant-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #062d54;
+}
+
+.simple-modal .ant-modal-body {
+  padding: 24px;
+}
+
+.simple-modal .ant-modal-footer {
+  border-top: 1px solid #f0f0f0;
+  padding: 16px 24px;
+  background: #fafafa;
+}
+
+.simple-modal .ant-btn-primary {
+  background: #062d54;
+  border-color: #062d54;
+  border-radius: 8px;
+  height: 40px;
+  padding: 0 24px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(6, 45, 84, 0.1);
+}
+
+.simple-modal .ant-btn-primary:hover {
+  background: #0a3d6e;
+  border-color: #0a3d6e;
+  box-shadow: 0 4px 8px rgba(6, 45, 84, 0.2);
+}
+
+.simple-modal .ant-btn-default {
+  border-radius: 8px;
+  height: 40px;
+  padding: 0 24px;
+  font-weight: 500;
+  border-color: #d9d9d9;
+}
+
+.simple-modal .ant-btn-default:hover {
+  border-color: #062d54;
+  color: #062d54;
+}
+
+/* Modern delete modal */
+.delete-modal .ant-modal-content {
+  border-radius: 12px;
+}
+
+.delete-modal-content {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+
+.delete-icon {
+  font-size: 28px;
+  color: #ff4d4f;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.delete-message {
+  font-size: 15px;
+  color: #062d54;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.delete-warning {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.delete-modal .ant-btn-dangerous {
+  border-radius: 8px;
+  height: 40px;
+  padding: 0 24px;
+  font-weight: 500;
+}
+
+/* Modern form styles */
+.settings-card .ant-form-item {
+  margin-bottom: 24px;
+}
+
+.settings-card .ant-form-item-label > label {
+  font-weight: 500;
+  color: #062d54;
+  font-size: 14px;
+}
+
+.settings-card .ant-input,
+.settings-card .ant-input-number,
+.settings-card .ant-select-selector,
+.settings-card .ant-input-textarea {
+  border-radius: 8px;
+  border-color: #d9d9d9;
+  transition: all 0.3s ease;
+}
+
+.settings-card .ant-input:hover,
+.settings-card .ant-input-number:hover,
+.settings-card .ant-select-selector:hover,
+.settings-card .ant-input-textarea:hover {
+  border-color: #062d54;
+}
+
+.settings-card .ant-input:focus,
+.settings-card .ant-input-number:focus,
+.settings-card .ant-select-focused .ant-select-selector,
+.settings-card .ant-input-textarea:focus {
+  border-color: #062d54;
+  box-shadow: 0 0 0 3px rgba(6, 45, 84, 0.08);
+}
+
+.settings-card .ant-input,
+.settings-card .ant-input-number-input {
+  height: 40px;
+}

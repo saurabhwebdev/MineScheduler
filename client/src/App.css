@@ -1,0 +1,51 @@
+.App {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Notification Styling */
+.ant-notification {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.ant-notification-notice {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  padding: 16px 24px !important;
+}
+
+.ant-notification-notice-message {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  color: #062d54 !important;
+  margin-bottom: 4px !important;
+}
+
+.ant-notification-notice-description {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  color: #595959 !important;
+}
+
+.ant-notification-notice-success .ant-notification-notice-icon {
+  color: #3cca70 !important;
+}
+
+.ant-notification-notice-error .ant-notification-notice-icon {
+  color: #ff4d4f !important;
+}
+
+.ant-notification-notice-info .ant-notification-notice-icon,
+.ant-notification-notice-warning .ant-notification-notice-icon {
+  color: #062d54 !important;
+}
+
+.ant-notification-notice-close {
+  color: #8c8c8c !important;
+}
+
+.ant-notification-notice-close:hover {
+  color: #062d54 !important;
+}

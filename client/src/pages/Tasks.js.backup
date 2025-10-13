@@ -1,0 +1,563 @@
+import React, { useState, useEffect } from 'react';
+import { Table, Modal, Form, Input, Select, InputNumber, notification, ColorPicker } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import DashboardLayout from '../components/DashboardLayout';
+import config from '../config/config';
+import { generateTaskColor } from '../utils/colorGenerator';
+import './Tasks.css';
+
+const { Option } = Select;
+const { TextArea } = Input;
+
+const Tasks = () => {
+  const [tasks, setTasks] = useState([]);
+  const [uoms, setUoms] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isMoveModalVisible, setIsMoveModalVisible] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [deletingTask, setDeletingTask] = useState(null);
+  const [movingTask, setMovingTask] = useState(null);
+  const [moveDirection, setMoveDirection] = useState(null);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    fetchTasks();
+    fetchUoms();
+  }, []);
+
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/tasks`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.status === 'success') {
+        setTasks(data.data.tasks);
+      } else {
+        notification.error({
+          message: 'Error',
+          description: data.message || 'Failed to fetch tasks',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      notification.error({
+        message: 'Network Error',
+        description: 'Failed to fetch tasks',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUoms = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/uoms`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.status === 'success') {
+        setUoms(data.data.uoms);
+      }
+    } catch (error) {
+      console.error('Error fetching UOMs:', error);
+    }
+  };
+
+  const handleCreateTask = () => {
+    setEditingTask(null);
+    form.resetFields();
+    // Set a random color for new task
+    form.setFieldsValue({ color: generateTaskColor() });
+    setIsModalVisible(true);
+  };
+
+  const handleEditTask = (task) => {
+    setEditingTask(task);
+    form.setFieldsValue({
+      taskId: task.taskId,
+      taskName: task.taskName,
+      uom: task.uom,
+      taskDuration: task.taskDuration,
+      formula: task.formula,
+      limits: task.limits,
+      color: task.color || '#3498db',
+    });
+    setIsModalVisible(true);
+  };
+
+  const handleModalOk = async () => {
+    try {
+      const values = await form.validateFields();
+      const token = localStorage.getItem('token');
+
+      if (editingTask) {
+        // Update task
+        const response = await fetch(`${config.apiUrl}/tasks/${editingTask._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify(values),
+        });
+        const data = await response.json();
+
+        if (response.ok && data.status === 'success') {
+          notification.success({
+            message: 'Success',
+            description: 'Task updated successfully',
+          });
+          fetchTasks();
+        } else {
+          notification.error({
+            message: 'Error',
+            description: data.message || 'Failed to update task',
+          });
+        }
+      } else {
+        // Create new task
+        const response = await fetch(`${config.apiUrl}/tasks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify(values),
+        });
+        const data = await response.json();
+
+        if (response.ok && data.status === 'success') {
+          notification.success({
+            message: 'Success',
+            description: 'Task created successfully',
+          });
+          fetchTasks();
+        } else {
+          notification.error({
+            message: 'Error',
+            description: data.message || 'Failed to create task',
+          });
+        }
+      }
+
+      setIsModalVisible(false);
+      form.resetFields();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const showDeleteConfirm = (task) => {
+    setDeletingTask(task);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleDeleteTask = async () => {
+    if (!deletingTask) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/tasks/${deletingTask._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        notification.success({
+          message: 'Success',
+          description: 'Task deleted successfully',
+        });
+        fetchTasks();
+      } else {
+        notification.error({
+          message: 'Error',
+          description: data.message || 'Failed to delete task',
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      notification.error({
+        message: 'Network Error',
+        description: 'Failed to delete task',
+      });
+    } finally {
+      setIsDeleteModalVisible(false);
+      setDeletingTask(null);
+    }
+  };
+
+  const showMoveConfirm = (task, direction) => {
+    setMovingTask(task);
+    setMoveDirection(direction);
+    setIsMoveModalVisible(true);
+  };
+
+  const handleMoveTask = async () => {
+    if (!movingTask || !moveDirection) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/tasks/${movingTask._id}/move`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ direction: moveDirection }),
+      });
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        setTasks(data.data.tasks);
+        notification.success({
+          message: 'Success',
+          description: `Task moved ${moveDirection} successfully`,
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description: data.message || 'Failed to move task',
+        });
+      }
+    } catch (error) {
+      console.error('Error moving task:', error);
+      notification.error({
+        message: 'Network Error',
+        description: 'Failed to move task',
+      });
+    } finally {
+      setIsMoveModalVisible(false);
+      setMovingTask(null);
+      setMoveDirection(null);
+    }
+  };
+
+  const columns = [
+    {
+      title: 'SEQ',
+      key: 'seq',
+      align: 'center',
+      width: 80,
+      render: (_, record) => record.order + 1,
+    },
+    {
+      title: 'COLOR',
+      key: 'color',
+      align: 'center',
+      width: 80,
+      render: (_, record) => (
+        <div style={{
+          width: '32px',
+          height: '32px',
+          backgroundColor: record.color || '#3498db',
+          borderRadius: '6px',
+          margin: '0 auto',
+          border: '2px solid #e0e0e0',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }} />
+      ),
+    },
+    {
+      title: 'TASK ID',
+      dataIndex: 'taskId',
+      key: 'taskId',
+      width: 120,
+    },
+    {
+      title: 'TASK NAME',
+      dataIndex: 'taskName',
+      key: 'taskName',
+    },
+    {
+      title: 'UOM',
+      dataIndex: 'uom',
+      key: 'uom',
+      width: 100,
+    },
+    {
+      title: 'DURATION (MIN)',
+      dataIndex: 'taskDuration',
+      key: 'taskDuration',
+      width: 130,
+    },
+    {
+      title: 'FORMULA',
+      dataIndex: 'formula',
+      key: 'formula',
+      ellipsis: true,
+    },
+    {
+      title: 'LIMITS/EQUIPMENTS',
+      dataIndex: 'limits',
+      key: 'limits',
+      ellipsis: true,
+    },
+    {
+      title: 'ORDER',
+      key: 'order',
+      align: 'center',
+      width: 100,
+      render: (_, record, index) => (
+        <div className="order-buttons">
+          <button 
+            className="icon-btn"
+            onClick={() => showMoveConfirm(record, 'up')}
+            disabled={index === 0}
+            title="Move up"
+          >
+            <UpOutlined />
+          </button>
+          <button 
+            className="icon-btn"
+            onClick={() => showMoveConfirm(record, 'down')}
+            disabled={index === tasks.length - 1}
+            title="Move down"
+          >
+            <DownOutlined />
+          </button>
+        </div>
+      ),
+    },
+    {
+      title: 'ACTIONS',
+      key: 'actions',
+      align: 'center',
+      width: 100,
+      render: (_, record) => (
+        <div className="action-buttons">
+          <button className="icon-btn" onClick={() => handleEditTask(record)}>
+            <EditOutlined />
+          </button>
+          <button 
+            className="icon-btn delete"
+            onClick={() => showDeleteConfirm(record)}
+          >
+            <DeleteOutlined />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <DashboardLayout
+      title="Tasks"
+      subtitle="Manage mining tasks"
+    >
+      <div className="task-page">
+        <div className="page-header">
+          <button className="btn-primary" onClick={handleCreateTask}>
+            <PlusOutlined /> New Task
+          </button>
+        </div>
+
+        <div className="table-container">
+          <Table
+            columns={columns}
+            dataSource={tasks}
+            loading={loading}
+            rowKey="_id"
+            pagination={{
+              pageSize: 15,
+              showSizeChanger: false,
+              simple: false,
+            }}
+          />
+        </div>
+
+        <Modal
+          title={editingTask ? 'Edit Task' : 'New Task'}
+          open={isModalVisible}
+          onOk={handleModalOk}
+          onCancel={() => {
+            setIsModalVisible(false);
+            form.resetFields();
+          }}
+          okText={editingTask ? 'Save' : 'Create'}
+          cancelText="Cancel"
+          width={600}
+          className="simple-modal"
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item
+              label="Task ID"
+              name="taskId"
+              rules={[{ required: true, message: 'Required' }]}
+            >
+              <Input placeholder="Enter task ID" />
+            </Form.Item>
+
+            <Form.Item
+              label="Task Name"
+              name="taskName"
+              rules={[{ required: true, message: 'Required' }]}
+            >
+              <Input placeholder="Enter task name" />
+            </Form.Item>
+
+            <Form.Item
+              label="UOM"
+              name="uom"
+              rules={[{ required: true, message: 'Required' }]}
+              initialValue="NA"
+            >
+              <Select 
+                placeholder="Select UOM" 
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                <Option value="NA">NA</Option>
+                {uoms.map(uom => (
+                  <Option key={uom._id} value={uom.name}>{uom.name}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Task Duration (Minutes)"
+              name="taskDuration"
+              rules={[
+                { required: true, message: 'Required' },
+                { type: 'number', min: 0, message: 'Must be a positive number' }
+              ]}
+            >
+              <InputNumber 
+                placeholder="Enter duration in minutes" 
+                style={{ width: '100%' }}
+                min={0}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Task Color"
+              name="color"
+              rules={[{ required: true, message: 'Required' }]}
+              getValueFromEvent={(color) => {
+                return typeof color === 'string' ? color : color?.toHexString();
+              }}
+            >
+              <ColorPicker 
+                showText
+                format="hex"
+                presets={[
+                  {
+                    label: 'Recommended',
+                    colors: [
+                      '#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6',
+                      '#1abc9c', '#e67e22', '#34495e', '#16a085', '#27ae60',
+                      '#2980b9', '#8e44ad', '#c0392b', '#d35400', '#7f8c8d'
+                    ],
+                  },
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Formula"
+              name="formula"
+            >
+              <TextArea 
+                rows={3}
+                placeholder="Enter formula (optional)" 
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Limits/Equipments"
+              name="limits"
+            >
+              <TextArea 
+                rows={3}
+                placeholder="Enter limits or equipments (optional)" 
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="Delete Task"
+          open={isDeleteModalVisible}
+          onOk={handleDeleteTask}
+          onCancel={() => {
+            setIsDeleteModalVisible(false);
+            setDeletingTask(null);
+          }}
+          okText="Delete"
+          cancelText="Cancel"
+          width={400}
+          className="delete-modal"
+          okButtonProps={{ danger: true }}
+        >
+          <div className="delete-modal-content">
+            <ExclamationCircleOutlined className="delete-icon" />
+            <div>
+              <p className="delete-message">
+                Are you sure you want to delete <strong>{deletingTask?.taskName}</strong>?
+              </p>
+              <p className="delete-warning">
+                This action cannot be undone.
+              </p>
+            </div>
+          </div>
+        </Modal>
+
+        <Modal
+          title="Move Task"
+          open={isMoveModalVisible}
+          onOk={handleMoveTask}
+          onCancel={() => {
+            setIsMoveModalVisible(false);
+            setMovingTask(null);
+            setMoveDirection(null);
+          }}
+          okText="Yes, Move"
+          cancelText="Cancel"
+          width={450}
+          className="delete-modal"
+        >
+          <div className="delete-modal-content">
+            <ExclamationCircleOutlined className="delete-icon" />
+            <div>
+              <p className="delete-message">
+                Are you sure you want to move <strong>{movingTask?.taskName}</strong>?
+              </p>
+              <div className="move-details">
+                <div className="position-info">
+                  <span className="position-label">Current Position:</span>
+                  <span className="position-value">#{movingTask?.order + 1}</span>
+                </div>
+                <div className="arrow-icon">→</div>
+                <div className="position-info">
+                  <span className="position-label">New Position:</span>
+                  <span className="position-value">
+                    #{moveDirection === 'up' ? movingTask?.order : movingTask?.order + 2}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default Tasks;

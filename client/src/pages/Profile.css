@@ -1,0 +1,373 @@
+/* Profile Page - Ultra Minimal Flat Design */
+.profile-page {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Profile Header - Full Width */
+.profile-header {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+  background-color: #062d54 !important;
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+}
+
+.profile-info h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #062d54;
+  margin: 0 0 2px 0;
+}
+
+.profile-info p {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+.profile-header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Role Badge */
+.role-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.role-badge.admin {
+  background-color: #e6f0ff;
+  color: #062d54;
+}
+
+.role-badge.user {
+  background-color: #e6f7ed;
+  color: #237804;
+}
+
+/* Two Column Layout */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Profile Cards */
+.profile-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fafafa;
+}
+
+.card-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #062d54;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.optional-text {
+  font-size: 11px;
+  font-weight: 400;
+  color: #8c8c8c;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Buttons */
+.btn-edit,
+.btn-cancel {
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.btn-edit {
+  background-color: #f0f0f0;
+  color: #595959;
+}
+
+.btn-edit:hover {
+  background-color: #e0e0e0;
+  color: #262626;
+}
+
+.btn-cancel {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.btn-cancel:hover {
+  background-color: #ffccc7;
+}
+
+.btn-save {
+  height: 36px;
+  padding: 0 20px;
+  background-color: #3cca70;
+  border-color: #3cca70;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 3px;
+}
+
+.btn-save:hover {
+  background-color: #34b35e !important;
+  border-color: #34b35e !important;
+}
+
+/* Form */
+.profile-form {
+  padding: 20px;
+}
+
+.profile-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.profile-form .ant-form-item-label > label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #595959;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.profile-form .ant-input,
+.profile-form textarea,
+.profile-form .ant-select-selector {
+  border-radius: 3px;
+  border: 1px solid #d9d9d9;
+  font-size: 13px;
+  padding: 8px 11px;
+  height: 36px;
+}
+
+.profile-form .ant-select-selector {
+  padding: 0 11px !important;
+}
+
+.profile-form .ant-select-selection-item {
+  line-height: 34px !important;
+}
+
+.profile-form .ant-select-selection-placeholder {
+  line-height: 34px !important;
+}
+
+.profile-form textarea {
+  height: auto;
+}
+
+.profile-form .ant-input:disabled,
+.profile-form textarea:disabled,
+.profile-form .ant-select-disabled .ant-select-selector {
+  background-color: #fafafa;
+  color: #262626;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.profile-form .ant-input:focus,
+.profile-form textarea:focus,
+.profile-form .ant-select-focused .ant-select-selector {
+  border-color: #3cca70;
+  box-shadow: none;
+  outline: none;
+}
+
+.profile-form .ant-input:hover:not(:disabled),
+.profile-form textarea:hover:not(:disabled),
+.profile-form .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #3cca70;
+}
+
+.profile-form .ant-form-item-explain-error {
+  font-size: 11px;
+}
+
+.profile-form .anticon {
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+/* Textarea */
+.profile-form textarea.ant-input {
+  padding: 8px 11px;
+}
+
+.profile-form .ant-input-textarea-show-count::after {
+  font-size: 11px;
+  color: #8c8c8c;
+}
+
+/* Phone Input - Flat Design */
+.phone-input-container {
+  width: 100% !important;
+}
+
+.phone-input-field {
+  width: 100% !important;
+  height: 36px !important;
+  border-radius: 3px !important;
+  border: 1px solid #d9d9d9 !important;
+  font-size: 13px !important;
+  font-family: 'Inter', sans-serif !important;
+  padding-left: 48px !important;
+  background-color: #ffffff !important;
+}
+
+.phone-input-field:focus {
+  border-color: #3cca70 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.phone-input-field:hover:not(:disabled) {
+  border-color: #3cca70 !important;
+}
+
+.phone-input-field:disabled {
+  background-color: #fafafa !important;
+  border-color: #e0e0e0 !important;
+  cursor: not-allowed !important;
+}
+
+.phone-input-button {
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 3px 0 0 3px !important;
+  background-color: #fafafa !important;
+  border-right: none !important;
+  height: 36px !important;
+}
+
+.phone-input-button:hover {
+  background-color: #f0f0f0 !important;
+}
+
+.phone-input-button.open {
+  background-color: #f0f0f0 !important;
+}
+
+.phone-input-dropdown {
+  border-radius: 3px !important;
+  border: 1px solid #d9d9d9 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+}
+
+.phone-input-dropdown .search {
+  padding: 8px !important;
+  background-color: #fafafa !important;
+}
+
+.phone-input-search {
+  width: 100% !important;
+  padding: 6px 10px !important;
+  border-radius: 3px !important;
+  border: 1px solid #d9d9d9 !important;
+  font-size: 13px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.phone-input-search:focus {
+  border-color: #3cca70 !important;
+  outline: none !important;
+}
+
+.phone-input-dropdown .country {
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+}
+
+.phone-input-dropdown .country:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.phone-input-dropdown .country.highlight {
+  background-color: #e6f7ed !important;
+}
+
+.phone-input-dropdown .country .country-name {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  color: #262626 !important;
+}
+
+.phone-input-dropdown .country .dial-code {
+  color: #8c8c8c !important;
+  font-size: 12px !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .profile-header-left {
+    width: 100%;
+  }
+
+  .profile-header-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

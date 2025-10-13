@@ -1,0 +1,51 @@
+/* Help Page - Flat Minimal Design */
+.help-page {
+  font-family: 'Inter', sans-serif;
+}
+
+.help-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  max-width: 700px;
+}
+
+.help-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fafafa;
+}
+
+.help-icon {
+  font-size: 32px;
+}
+
+.help-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #062d54;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.help-content {
+  padding: 32px 24px;
+}
+
+.help-message {
+  font-size: 14px;
+  color: #262626;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.help-submessage {
+  font-size: 13px;
+  color: #8c8c8c;
+  line-height: 1.6;
+  margin: 0;
+}

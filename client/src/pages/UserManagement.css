@@ -1,0 +1,385 @@
+/* Ultra Minimal Flat Design */
+.user-page {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.page-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #062d54;
+  margin: 0;
+}
+
+.btn-primary {
+  height: 36px;
+  padding: 0 16px;
+  background-color: #3cca70;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #34b35e;
+}
+
+/* Table */
+.table-container {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.table-container .ant-table {
+  font-size: 13px;
+}
+
+.table-container .ant-table-thead > tr > th {
+  background-color: #f8f9fa;
+  color: #595959;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  letter-spacing: 0.3px;
+}
+
+.table-container .ant-table-thead > tr > th::before {
+  display: none;
+}
+
+.table-container .ant-table-tbody > tr > td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #262626;
+}
+
+.table-container .ant-table-tbody > tr:hover > td {
+  background-color: #fafafa;
+}
+
+/* Role Badge */
+.role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.role-badge.admin {
+  background-color: #e6f0ff;
+  color: #062d54;
+}
+
+.role-badge.user {
+  background-color: #e6f7ed;
+  color: #237804;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: #8c8c8c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  background-color: #f0f0f0;
+  color: #062d54;
+}
+
+.icon-btn.delete:hover {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.icon-btn.disabled,
+.icon-btn.disabled:hover {
+  color: #d9d9d9;
+  background-color: transparent;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Pagination - Minimal Flat Design */
+.table-container .ant-pagination {
+  margin: 16px;
+  font-size: 13px;
+}
+
+/* Pagination Items */
+.table-container .ant-pagination-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  background-color: #ffffff;
+  min-width: 30px;
+  height: 30px;
+  line-height: 28px;
+}
+
+.table-container .ant-pagination-item a {
+  color: #595959;
+  font-size: 13px;
+}
+
+.table-container .ant-pagination-item:hover {
+  border-color: #3cca70;
+}
+
+.table-container .ant-pagination-item:hover a {
+  color: #3cca70;
+}
+
+/* Active Page */
+.table-container .ant-pagination-item-active {
+  border-color: #3cca70;
+  background-color: #3cca70;
+}
+
+.table-container .ant-pagination-item-active a {
+  color: #ffffff;
+}
+
+.table-container .ant-pagination-item-active:hover {
+  border-color: #3cca70;
+  background-color: #3cca70;
+}
+
+.table-container .ant-pagination-item-active:hover a {
+  color: #ffffff;
+}
+
+/* Previous/Next Buttons */
+.table-container .ant-pagination-prev,
+.table-container .ant-pagination-next {
+  min-width: 30px;
+  height: 30px;
+  line-height: 28px;
+}
+
+.table-container .ant-pagination-prev button,
+.table-container .ant-pagination-next button {
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  background-color: #ffffff;
+  color: #595959;
+  height: 30px;
+}
+
+.table-container .ant-pagination-prev:hover button,
+.table-container .ant-pagination-next:hover button {
+  border-color: #3cca70;
+  color: #3cca70;
+}
+
+.table-container .ant-pagination-disabled button {
+  border-color: #e0e0e0;
+  color: #d9d9d9;
+  background-color: #fafafa;
+}
+
+.table-container .ant-pagination-disabled:hover button {
+  border-color: #e0e0e0;
+  color: #d9d9d9;
+}
+
+/* Jump to page */
+.table-container .ant-pagination-options {
+  display: flex;
+  align-items: center;
+}
+
+.table-container .ant-pagination-options-quick-jumper {
+  font-size: 13px;
+  color: #595959;
+}
+
+.table-container .ant-pagination-options-quick-jumper input {
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  height: 30px;
+  width: 50px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.table-container .ant-pagination-options-quick-jumper input:focus {
+  border-color: #3cca70;
+  box-shadow: none;
+}
+
+/* Modal */
+.simple-modal .ant-modal-content {
+  border-radius: 4px;
+}
+
+.simple-modal .ant-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.simple-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #062d54;
+}
+
+.simple-modal .ant-modal-body {
+  padding: 24px;
+}
+
+.simple-modal .ant-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Form */
+.simple-modal .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.simple-modal .ant-form-item-label > label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #262626;
+}
+
+.simple-modal .ant-input,
+.simple-modal .ant-input-password,
+.simple-modal .ant-select-selector {
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  font-size: 14px;
+}
+
+.simple-modal .ant-input:focus,
+.simple-modal .ant-input-password:focus,
+.simple-modal .ant-select-focused .ant-select-selector {
+  border-color: #3cca70;
+  box-shadow: 0 0 0 2px rgba(60, 202, 112, 0.1);
+}
+
+.simple-modal .ant-form-item-explain-error {
+  font-size: 12px;
+}
+
+/* Modal Buttons */
+.simple-modal .ant-btn {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.simple-modal .ant-btn-primary {
+  background-color: #3cca70;
+  border-color: #3cca70;
+}
+
+.simple-modal .ant-btn-primary:hover {
+  background-color: #34b35e;
+  border-color: #34b35e;
+}
+
+/* Delete Modal */
+.delete-modal .ant-modal-content {
+  border-radius: 4px;
+}
+
+.delete-modal .ant-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.delete-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #062d54;
+}
+
+.delete-modal .ant-modal-body {
+  padding: 24px;
+}
+
+.delete-modal .ant-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.delete-modal-content {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.delete-icon {
+  font-size: 22px;
+  color: #ff4d4f;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.delete-message {
+  font-size: 14px;
+  color: #262626;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.delete-message strong {
+  color: #062d54;
+  font-weight: 600;
+}
+
+.delete-warning {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+.delete-modal .ant-btn {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.delete-modal .ant-btn-primary {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.delete-modal .ant-btn-primary:hover {
+  background-color: #ff7875;
+  border-color: #ff7875;
+}

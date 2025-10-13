@@ -1,0 +1,241 @@
+/* Ultra Minimal Flat Design - Same as User Management */
+.audit-page {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Table */
+.table-container {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.table-container .ant-table {
+  font-size: 13px;
+}
+
+.table-container .ant-table-thead > tr > th {
+  background-color: #f8f9fa;
+  color: #595959;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  letter-spacing: 0.3px;
+}
+
+.table-container .ant-table-thead > tr > th::before {
+  display: none;
+}
+
+.table-container .ant-table-tbody > tr > td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #262626;
+}
+
+.table-container .ant-table-tbody > tr:hover > td {
+  background-color: #fafafa;
+}
+
+/* Action Badge */
+.action-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.action-badge.create {
+  background-color: #e6f7ed;
+  color: #237804;
+}
+
+.action-badge.update {
+  background-color: #e6f0ff;
+  color: #062d54;
+}
+
+.action-badge.delete {
+  background-color: #fff1f0;
+  color: #cf1322;
+}
+
+/* Pagination - Minimal Flat Design */
+.table-container .ant-pagination {
+  margin: 16px;
+  font-size: 13px;
+}
+
+/* Pagination Items */
+.table-container .ant-pagination-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  background-color: #ffffff;
+  min-width: 30px;
+  height: 30px;
+  line-height: 28px;
+}
+
+.table-container .ant-pagination-item a {
+  color: #595959;
+  font-size: 13px;
+}
+
+.table-container .ant-pagination-item:hover {
+  border-color: #3cca70;
+}
+
+.table-container .ant-pagination-item:hover a {
+  color: #3cca70;
+}
+
+/* Active Page */
+.table-container .ant-pagination-item-active {
+  border-color: #3cca70;
+  background-color: #3cca70;
+}
+
+.table-container .ant-pagination-item-active a {
+  color: #ffffff;
+}
+
+.table-container .ant-pagination-item-active:hover {
+  border-color: #3cca70;
+  background-color: #3cca70;
+}
+
+.table-container .ant-pagination-item-active:hover a {
+  color: #ffffff;
+}
+
+/* Previous/Next Buttons */
+.table-container .ant-pagination-prev,
+.table-container .ant-pagination-next {
+  min-width: 30px;
+  height: 30px;
+  line-height: 28px;
+}
+
+.table-container .ant-pagination-prev button,
+.table-container .ant-pagination-next button {
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  background-color: #ffffff;
+  color: #595959;
+  height: 30px;
+}
+
+.table-container .ant-pagination-prev:hover button,
+.table-container .ant-pagination-next:hover button {
+  border-color: #3cca70;
+  color: #3cca70;
+}
+
+.table-container .ant-pagination-disabled button {
+  border-color: #e0e0e0;
+  color: #d9d9d9;
+  background-color: #fafafa;
+}
+
+.table-container .ant-pagination-disabled:hover button {
+  border-color: #e0e0e0;
+  color: #d9d9d9;
+}
+
+/* Audit Detail Modal */
+.audit-detail-modal .ant-modal-content {
+  border-radius: 4px;
+}
+
+.audit-detail-modal .ant-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.audit-detail-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #062d54;
+}
+
+.audit-detail-modal .ant-modal-body {
+  padding: 24px;
+}
+
+.audit-detail-content .ant-descriptions-bordered .ant-descriptions-item-label {
+  background-color: #fafafa;
+  font-weight: 500;
+  color: #595959;
+  width: 150px;
+}
+
+.audit-detail-content .ant-descriptions-bordered .ant-descriptions-item-content {
+  background-color: #ffffff;
+  color: #262626;
+}
+
+/* Changes Section */
+.audit-changes {
+  margin-top: 16px;
+}
+
+.audit-changes h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #062d54;
+  margin-bottom: 12px;
+}
+
+.audit-changes pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 12px;
+  color: #262626;
+  overflow-x: auto;
+}
+
+/* Changes Table */
+.changes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.changes-table thead th {
+  background-color: #f8f9fa;
+  color: #595959;
+  font-weight: 600;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.changes-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #262626;
+  vertical-align: top;
+}
+
+.changes-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.changes-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+/* Clickable rows */
+.table-container .ant-table-tbody > tr {
+  cursor: pointer;
+}
+
+.table-container .ant-table-tbody > tr:hover {
+  background-color: #f0f5ff !important;
+}
