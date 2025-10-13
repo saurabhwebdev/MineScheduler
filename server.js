@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
 const connectDB = require('./config/db');
 const passport = require('./config/passport');
 
@@ -42,10 +43,20 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root route
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to MineScheduler API' });
-});
+// Serve static files from React build in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+} else {
+  // Root route for development
+  app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to MineScheduler API' });
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
