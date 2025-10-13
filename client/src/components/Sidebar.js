@@ -21,15 +21,24 @@ const Sidebar = () => {
   const { user } = useAuth();
 
   const menuItems = [
+    // Main Dashboard
     { key: 'home', icon: <HomeOutlined />, label: 'Home', path: '/dashboard' },
+    
+    // Core Scheduling
     { key: 'schedule', icon: <CalendarOutlined />, label: 'Schedule', path: '/schedule' },
     { key: 'tasks', icon: <FileTextOutlined />, label: 'Tasks', path: '/tasks' },
     { key: 'delays', icon: <ClockCircleOutlined />, label: 'Delays', path: '/delays' },
+    
+    // Resources
     { key: 'sites', icon: <EnvironmentOutlined />, label: 'Sites', path: '/sites' },
     { key: 'equipment', icon: <ToolOutlined />, label: 'Equipment', path: '/equipment' },
+    
+    // Analysis & Configuration
     { key: 'reports', icon: <BarChartOutlined />, label: 'Reports', path: '/reports' },
-    { key: 'users', icon: <UserOutlined />, label: 'Users', path: '/users', adminOnly: true },
     { key: 'settings', icon: <SettingOutlined />, label: 'Settings', path: '/settings' },
+    
+    // Admin Only
+    { key: 'users', icon: <UserOutlined />, label: 'Users', path: '/users', adminOnly: true },
     { key: 'audit', icon: <AuditOutlined />, label: 'Audit', path: '/audit', adminOnly: true },
   ];
 
