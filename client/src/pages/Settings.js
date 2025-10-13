@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
-import { SettingOutlined, DatabaseOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { SettingOutlined, DatabaseOutlined, ClockCircleOutlined, CalculatorOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import UomConfig from '../components/UomConfig';
 import ShiftConfig from '../components/ShiftConfig';
+import ConstantsConfig from '../components/ConstantsConfig';
 import './Settings.css';
 
 const Settings = () => {
@@ -49,6 +50,28 @@ const Settings = () => {
             </div>
             <div className="settings-card-body">
               <ShiftConfig />
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'constants',
+      label: (
+        <span>
+          <CalculatorOutlined />
+          Mining Constants
+        </span>
+      ),
+      children: (
+        <div className="settings-tab-content">
+          <div className="settings-card">
+            <div className="settings-card-header">
+              <h3>Mining Constants</h3>
+              <p>Manage calculation constants used in scheduling algorithms (WIDTH, HEIGHT, DENSITY)</p>
+            </div>
+            <div className="settings-card-body">
+              <ConstantsConfig />
             </div>
           </div>
         </div>
