@@ -83,6 +83,7 @@ const Settings = () => {
     <DashboardLayout 
       title="Settings"
       subtitle="Configure your application preferences"
+      page="settings"
     >
       <div className="settings-page-modern">
         <Tabs

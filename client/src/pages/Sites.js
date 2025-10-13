@@ -467,6 +467,7 @@ const Sites = () => {
     <DashboardLayout
       title="Site Management"
       subtitle="Manage mining sites and scheduling priorities"
+      page="sites"
     >
       <div className="site-page">
         <div className="page-header">

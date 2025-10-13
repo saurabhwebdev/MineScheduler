@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import HelpModal from './HelpModal';
+import { getHelpForPage } from '../help';
 import './DashboardLayout.css';
 
-const DashboardLayout = ({ children, title, subtitle }) => {
+const DashboardLayout = ({ children, title, subtitle, page }) => {
+  const [helpVisible, setHelpVisible] = useState(false);
+  const helpData = getHelpForPage(page);
+
   return (
     <div className="dashboard-layout">
       <Sidebar />
@@ -16,6 +23,28 @@ const DashboardLayout = ({ children, title, subtitle }) => {
           <p>© {new Date().getFullYear()} Copyright Unison Mining</p>
         </footer>
       </div>
+      
+      {/* Floating Help Button */}
+      {helpData && (
+        <>
+          <Tooltip title="Help & Documentation" placement="left">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<QuestionCircleOutlined />}
+              size="large"
+              className="floating-help-button"
+              onClick={() => setHelpVisible(true)}
+            />
+          </Tooltip>
+          
+          <HelpModal
+            visible={helpVisible}
+            onClose={() => setHelpVisible(false)}
+            helpData={helpData}
+          />
+        </>
+      )}
     </div>
   );
 };

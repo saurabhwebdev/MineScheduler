@@ -638,6 +638,7 @@ const Equipment = () => {
     <DashboardLayout
       title="Equipment Management"
       subtitle="Manage mining equipment and track maintenance"
+      page="equipment"
     >
       <div className="equipment-page">
         <div className="page-header">

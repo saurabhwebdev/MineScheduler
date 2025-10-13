@@ -191,6 +191,7 @@ const Profile = () => {
     <DashboardLayout 
       title="Profile"
       subtitle="Manage your account information"
+      page="profile"
     >
       <div className="profile-page">
         {/* Profile Header Section */}

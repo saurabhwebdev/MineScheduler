@@ -591,6 +591,7 @@ const Tasks = () => {
     <DashboardLayout
       title="Tasks"
       subtitle="Manage mining tasks and activities"
+      page="tasks"
     >
       <div className="task-page">
         <div className="page-header">

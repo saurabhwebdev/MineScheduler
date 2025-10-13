@@ -1,0 +1,148 @@
+/* Help Modal Styles */
+.help-modal .ant-modal-header {
+  background: linear-gradient(135deg, #062d54 0%, #0a3d6e 100%);
+  border-bottom: none;
+  padding: 20px 24px;
+}
+
+.help-modal .ant-modal-title {
+  color: white !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.help-modal-title {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.help-modal-title .anticon {
+  color: #52c41a !important;
+}
+
+.help-modal .ant-modal-body {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.help-modal .ant-modal-close {
+  color: white;
+}
+
+.help-modal .ant-modal-close:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.help-modal-content {
+  background: #fff;
+}
+
+/* Collapse Panels */
+.help-panel .ant-collapse-header {
+  padding: 16px 20px !important;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.help-panel .ant-collapse-header:hover {
+  background: #e8edf2;
+}
+
+.help-panel .ant-collapse-content {
+  border: none;
+  background: transparent;
+}
+
+.help-panel .ant-collapse-content-box {
+  padding: 16px 20px 24px 20px;
+}
+
+/* Help Content */
+.help-paragraph {
+  color: #595959;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.help-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.help-item {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-left: 3px solid #1890ff;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.help-item:hover {
+  background: #e8edf2;
+  border-left-color: #062d54;
+}
+
+.help-item-subtitle {
+  display: block;
+  color: #062d54;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.help-item-description {
+  color: #595959;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Help Footer */
+.help-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Scrollbar */
+.help-modal .ant-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.help-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.help-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.help-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .help-modal {
+    max-width: 95% !important;
+  }
+  
+  .help-modal .ant-modal-body {
+    padding: 16px;
+  }
+  
+  .help-panel .ant-collapse-header {
+    padding: 12px 16px !important;
+  }
+  
+  .help-item {
+    padding: 10px 12px;
+  }
+}

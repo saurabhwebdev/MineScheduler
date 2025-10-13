@@ -180,6 +180,7 @@ const Audit = () => {
     <DashboardLayout 
       title="Audit Log"
       subtitle="Track all system activities and changes"
+      page="audit"
     >
       <div className="audit-page">
         <div className="table-container">

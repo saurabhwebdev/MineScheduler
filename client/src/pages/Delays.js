@@ -423,6 +423,7 @@ const Delays = () => {
     <DashboardLayout
       title="Delay Management"
       subtitle="Manage delay categories and codes"
+      page="delays"
     >
       <div className="delay-page">
         <div className="page-header">

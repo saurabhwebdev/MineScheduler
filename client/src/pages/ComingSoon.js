@@ -17,6 +17,7 @@ const ComingSoon = () => {
     <DashboardLayout 
       title={`${getGreeting()} ${user?.name || 'User'}`}
       subtitle="Here's what's happening in your Mine Scheduler account today"
+      page="dashboard"
     >
       <SunriseAnimation />
     </DashboardLayout>

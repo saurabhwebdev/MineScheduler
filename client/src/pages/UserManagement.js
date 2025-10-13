@@ -242,7 +242,8 @@ const UserManagement = () => {
   return (
     <DashboardLayout
       title="User Management"
-      subtitle="Manage users and their roles"
+      subtitle="Manage system users and permissions"
+      page="users"
     >
       <div className="user-page">
         <div className="page-header">
