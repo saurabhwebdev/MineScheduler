@@ -1,0 +1,190 @@
+.sunrise-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 140px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.sunrise-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.horizon-line {
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%
+  );
+  z-index: 2;
+  transform-origin: center;
+}
+
+.sun {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.sun-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #5dd98b 0%, #3cca70 50%, #2eb85c 100%);
+  box-shadow: 0 0 60px 30px rgba(60, 202, 112, 0.3);
+}
+
+.sun-ray {
+  position: absolute;
+  width: 4px;
+  height: 80px;
+  background: linear-gradient(180deg, 
+    rgba(60, 202, 112, 0.6) 0%, 
+    transparent 100%
+  );
+  top: 35%;
+  left: 50%;
+  transform-origin: center 100px;
+  z-index: 2;
+  border-radius: 2px;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #3cca70, transparent);
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mountains {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.coming-soon-text-container {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 20px;
+}
+
+.coming-soon-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -2px;
+  line-height: 1.2;
+  text-shadow: 0 0 20px rgba(60, 202, 112, 0.5);
+  cursor: default;
+  user-select: none;
+}
+
+.coming-soon-text span {
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.coming-soon-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.ripple {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border: 2px solid rgba(60, 202, 112, 0.3);
+  border-radius: 50%;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .coming-soon-text {
+    font-size: 3rem;
+    letter-spacing: -1px;
+  }
+
+  .coming-soon-subtitle {
+    font-size: 1rem;
+  }
+
+  .sun {
+    width: 150px;
+    height: 150px;
+  }
+
+  .sun-ray {
+    height: 60px;
+    transform-origin: center 75px;
+  }
+}
+
+@media (max-width: 480px) {
+  .coming-soon-text {
+    font-size: 2rem;
+  }
+
+  .coming-soon-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .sun {
+    width: 120px;
+    height: 120px;
+  }
+
+  .sun-ray {
+    height: 50px;
+    width: 3px;
+    transform-origin: center 60px;
+  }
+}
+
+/* Smooth transitions */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
