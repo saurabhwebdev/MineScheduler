@@ -35,7 +35,6 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     // Resources
     { key: 'sites', icon: <EnvironmentOutlined />, label: 'Sites', path: '/sites' },
     { key: 'equipment', icon: <ToolOutlined />, label: 'Equipment', path: '/equipment' },
-    { key: 'maintenance', icon: <ToolOutlined />, label: 'Maintenance', path: '/maintenance' },
     
     // Analysis & Configuration
     { key: 'reports', icon: <BarChartOutlined />, label: 'Reports', path: '/reports' },

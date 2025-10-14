@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Form, Input, InputNumber, Select, notification, Tabs, Upload, Alert, Tag, DatePicker, Badge } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined, ToolOutlined, HistoryOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined, ToolOutlined, HistoryOutlined, AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 import DashboardLayout from '../components/DashboardLayout';
+import MaintenanceGrid from '../components/MaintenanceGrid';
 import config from '../config/config';
 import './Equipment.css';
 
@@ -669,19 +670,56 @@ const Equipment = () => {
           </div>
         </div>
 
-        <div className="table-container">
-          <Table
-            columns={columns}
-            dataSource={equipment}
-            loading={loading}
-            rowKey="_id"
-            pagination={{
-              pageSize: 15,
-              showSizeChanger: false,
-              simple: false,
-            }}
-          />
-        </div>
+        <Tabs
+          defaultActiveKey="list"
+          size="large"
+          style={{ marginTop: 16 }}
+          items={[
+            {
+              key: 'list',
+              label: (
+                <span>
+                  <UnorderedListOutlined /> Equipment List
+                </span>
+              ),
+              children: (
+                <div className="table-container">
+                  <Table
+                    columns={columns}
+                    dataSource={equipment}
+                    loading={loading}
+                    rowKey="_id"
+                    pagination={{
+                      pageSize: 15,
+                      showSizeChanger: false,
+                      simple: false,
+                    }}
+                  />
+                </div>
+              )
+            },
+            {
+              key: 'schedule',
+              label: (
+                <span>
+                  <AppstoreOutlined /> Usage Schedule
+                </span>
+              ),
+              children: (
+                <div style={{ padding: '16px 0' }}>
+                  <Alert
+                    message="Equipment Usage Schedule"
+                    description="View hourly equipment usage based on current schedule. Green indicates equipment in use, blue shows available for maintenance."
+                    type="info"
+                    showIcon
+                    style={{ marginBottom: 16 }}
+                  />
+                  <MaintenanceGrid equipment={equipment} />
+                </div>
+              )
+            }
+          ]}
+        />
 
         {/* Create/Edit Modal */}
         <Modal
