@@ -110,39 +110,44 @@ Add the following three constants:
 #### Test 2.1: Add UOMs
 Add these UOMs one by one:
 
+**IMPORTANT:** UOMs work by **pattern matching on the name**. The calculation formulas are built into the scheduling algorithm, NOT stored in the database.
+
 **UOM 1:**
 - Name: `area`
-- Description: `Area-based calculation for drilling and charging`
-- Formula: `(width * height * duration) / (WIDTH * HEIGHT)`
+- Description: `Area-based calculation for drilling and charging (meters)`
 - Click **Add UOM**
 
 **UOM 2:**
 - Name: `ton`
-- Description: `Tonnage-based calculation`
-- Formula: `tonnes / rate`
+- Description: `Tonnage-based calculation (tonnes/hour)`
 - Click **Add UOM**
 
 **UOM 3:**
 - Name: `bogt`
-- Description: `Bogging calculation`
-- Formula: `(totalPlanMeters * width * height * DENSITY) / rate`
+- Description: `Bogging calculation (bogger/trolley operations)`
 - Click **Add UOM**
 
 **UOM 4:**
 - Name: `bfp`
-- Description: `Backfill placement`
-- Formula: `totalBackfillTonnes / rate`
+- Description: `Backfill placement calculation`
 - Click **Add UOM**
 
 **UOM 5:**
 - Name: `task`
-- Description: `Fixed task duration`
-- Formula: `duration`
+- Description: `Fixed task duration (time-based)`
 - Click **Add UOM**
+
+**Note:** The system uses pattern matching:
+- Names containing "area", "meter", "m/h" → Area-based calculation
+- Names containing "ton", "tonne", "t/h" → Tonnage-based calculation  
+- Names containing "bogt", "bogger", "trolley" → Bogging calculation
+- Names containing "bfp", "backfill" → Backfill calculation
+- All other names (including "task") → Fixed duration calculation
 
 ✅ **Expected Results:**
 - [ ] All 5 UOMs added successfully
-- [ ] Each shows in table with formula
+- [ ] Each shows in table with name and description
+- [ ] No formula column (formulas are in the scheduling algorithm)
 - [ ] No errors in console
 
 **Status: UOMs Module** ⬜ PASS / ⬜ FAIL
