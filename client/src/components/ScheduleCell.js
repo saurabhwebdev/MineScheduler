@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tooltip } from 'antd';
+import DelayModal from './DelayModal';
 
 const ScheduleCell = ({ 
   siteId, 
@@ -11,6 +12,7 @@ const ScheduleCell = ({
   onAddDelay,
   onRemoveDelay 
 }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   
   const handleClick = () => {
     if (isDelayed) {
@@ -19,17 +21,14 @@ const ScheduleCell = ({
         onRemoveDelay(siteId, hour);
       }
     } else {
-      // Add delay (for now, simple version - will add modal in Phase 3)
-      const delay = {
-        row: siteId,
-        hourIndex: hour,
-        category: 'General',
-        code: 'DELAY',
-        comments: '',
-        duration: 1
-      };
-      onAddDelay(delay);
+      // Open modal to add delay
+      setModalVisible(true);
     }
+  };
+
+  const handleModalSubmit = (delayData) => {
+    onAddDelay(delayData);
+    setModalVisible(false);
   };
 
   const getCellStyle = () => {
@@ -63,27 +62,37 @@ const ScheduleCell = ({
   };
 
   return (
-    <Tooltip title={tooltipTitle()} placement="top">
-      <td 
-        className={`schedule-cell ${isDelayed ? 'delayed' : ''} ${taskId ? 'has-task' : ''}`}
-        style={getCellStyle()}
-        onClick={handleClick}
-        data-site={siteId}
-        data-hour={hour}
-      >
-        {isDelayed && (
-          <div className="delay-overlay">
-            <span className="delay-icon">⚠</span>
-          </div>
-        )}
-        {taskId && !isDelayed && (
-          <span className="task-label">{taskId}</span>
-        )}
-        {!taskId && !isDelayed && (
-          <span className="empty-label">&nbsp;</span>
-        )}
-      </td>
-    </Tooltip>
+    <>
+      <Tooltip title={tooltipTitle()} placement="top">
+        <td 
+          className={`schedule-cell ${isDelayed ? 'delayed' : ''} ${taskId ? 'has-task' : ''}`}
+          style={getCellStyle()}
+          onClick={handleClick}
+          data-site={siteId}
+          data-hour={hour}
+        >
+          {isDelayed && (
+            <div className="delay-overlay">
+              <span className="delay-icon">⚠</span>
+            </div>
+          )}
+          {taskId && !isDelayed && (
+            <span className="task-label">{taskId}</span>
+          )}
+          {!taskId && !isDelayed && (
+            <span className="empty-label">&nbsp;</span>
+          )}
+        </td>
+      </Tooltip>
+      
+      <DelayModal
+        visible={modalVisible}
+        siteId={siteId}
+        hour={hour}
+        onClose={() => setModalVisible(false)}
+        onSubmit={handleModalSubmit}
+      />
+    </>
   );
 };
 
