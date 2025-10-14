@@ -1,9 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Modal, Form, Input, Switch, notification } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { 
+  PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, 
+  UploadOutlined, DownloadOutlined, ToolOutlined, CarOutlined, 
+  RocketOutlined, BuildOutlined, ApiOutlined, ThunderboltOutlined,
+  FireOutlined, BulbOutlined, CompassOutlined, DashboardOutlined,
+  ExperimentOutlined, HeatMapOutlined, RadarChartOutlined, 
+  SafetyCertificateOutlined, SettingOutlined, StockOutlined,
+  TruckOutlined, CameraOutlined, BellOutlined, AlertOutlined,
+  ControlOutlined, FormatPainterOutlined, GoldOutlined,
+  BarcodeOutlined, BoxPlotOutlined, DeploymentUnitOutlined
+} from '@ant-design/icons';
 import config from '../config/config';
 
 const { TextArea } = Input;
+
+// Available equipment icons for selection
+const EQUIPMENT_ICONS = [
+  { name: 'ToolOutlined', component: ToolOutlined, label: 'Tool' },
+  { name: 'CarOutlined', component: CarOutlined, label: 'Car' },
+  { name: 'TruckOutlined', component: TruckOutlined, label: 'Truck' },
+  { name: 'RocketOutlined', component: RocketOutlined, label: 'Rocket' },
+  { name: 'BuildOutlined', component: BuildOutlined, label: 'Build' },
+  { name: 'ApiOutlined', component: ApiOutlined, label: 'API' },
+  { name: 'ThunderboltOutlined', component: ThunderboltOutlined, label: 'Thunder' },
+  { name: 'FireOutlined', component: FireOutlined, label: 'Fire' },
+  { name: 'BulbOutlined', component: BulbOutlined, label: 'Bulb' },
+  { name: 'CompassOutlined', component: CompassOutlined, label: 'Compass' },
+  { name: 'DashboardOutlined', component: DashboardOutlined, label: 'Dashboard' },
+  { name: 'ExperimentOutlined', component: ExperimentOutlined, label: 'Experiment' },
+  { name: 'HeatMapOutlined', component: HeatMapOutlined, label: 'HeatMap' },
+  { name: 'RadarChartOutlined', component: RadarChartOutlined, label: 'Radar' },
+  { name: 'SafetyCertificateOutlined', component: SafetyCertificateOutlined, label: 'Safety' },
+  { name: 'SettingOutlined', component: SettingOutlined, label: 'Setting' },
+  { name: 'StockOutlined', component: StockOutlined, label: 'Stock' },
+  { name: 'CameraOutlined', component: CameraOutlined, label: 'Camera' },
+  { name: 'BellOutlined', component: BellOutlined, label: 'Bell' },
+  { name: 'AlertOutlined', component: AlertOutlined, label: 'Alert' },
+  { name: 'ControlOutlined', component: ControlOutlined, label: 'Control' },
+  { name: 'FormatPainterOutlined', component: FormatPainterOutlined, label: 'Paint' },
+  { name: 'GoldOutlined', component: GoldOutlined, label: 'Gold' },
+  { name: 'BarcodeOutlined', component: BarcodeOutlined, label: 'Barcode' },
+  { name: 'BoxPlotOutlined', component: BoxPlotOutlined, label: 'BoxPlot' },
+  { name: 'DeploymentUnitOutlined', component: DeploymentUnitOutlined, label: 'Deploy' }
+];
 
 const EquipmentTypeConfig = () => {
   const [equipmentTypes, setEquipmentTypes] = useState([]);
@@ -12,6 +52,7 @@ const EquipmentTypeConfig = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editingType, setEditingType] = useState(null);
   const [deletingType, setDeletingType] = useState(null);
+  const [selectedIcon, setSelectedIcon] = useState('');
   const [form] = Form.useForm();
   const fileInputRef = useRef(null);
 
@@ -61,6 +102,7 @@ const EquipmentTypeConfig = () => {
       return;
     }
     setEditingType(null);
+    setSelectedIcon('');
     form.resetFields();
     setIsModalVisible(true);
   };
@@ -74,6 +116,7 @@ const EquipmentTypeConfig = () => {
       return;
     }
     setEditingType(type);
+    setSelectedIcon(type.icon || '');
     form.setFieldsValue({
       name: type.name,
       description: type.description,
@@ -86,6 +129,8 @@ const EquipmentTypeConfig = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
+      // Use selected icon from picker
+      values.icon = selectedIcon;
       const token = localStorage.getItem('token');
 
       if (editingType) {
@@ -137,6 +182,7 @@ const EquipmentTypeConfig = () => {
       }
 
       setIsModalVisible(false);
+      setSelectedIcon('');
       form.resetFields();
     } catch (error) {
       console.error('Error:', error);
@@ -291,7 +337,15 @@ const EquipmentTypeConfig = () => {
       title: 'ICON',
       dataIndex: 'icon',
       key: 'icon',
-      render: (text) => text || '-',
+      render: (iconName) => {
+        if (!iconName) return '-';
+        const iconObj = EQUIPMENT_ICONS.find(i => i.name === iconName);
+        if (iconObj) {
+          const IconComponent = iconObj.component;
+          return <IconComponent style={{ fontSize: '18px', color: '#1890ff' }} />;
+        }
+        return iconName;
+      },
     },
     {
       title: 'STATUS',
@@ -398,6 +452,7 @@ const EquipmentTypeConfig = () => {
         onOk={handleModalOk}
         onCancel={() => {
           setIsModalVisible(false);
+          setSelectedIcon('');
           form.resetFields();
         }}
         okText={editingType ? 'Save' : 'Create'}
@@ -425,11 +480,38 @@ const EquipmentTypeConfig = () => {
           </Form.Item>
 
           <Form.Item
-            label="Icon Name"
+            label="Icon"
             name="icon"
-            tooltip="Ant Design icon name (e.g., ToolOutlined, CarOutlined)"
           >
-            <Input placeholder="Enter icon name (optional)" />
+            <div className="icon-picker">
+              <div className="icon-picker-label">Select an icon for this equipment type:</div>
+              <div className="icon-picker-grid">
+                {EQUIPMENT_ICONS.map((icon) => {
+                  const IconComponent = icon.component;
+                  return (
+                    <div
+                      key={icon.name}
+                      className={`icon-picker-item ${
+                        selectedIcon === icon.name ? 'selected' : ''
+                      }`}
+                      onClick={() => {
+                        setSelectedIcon(icon.name);
+                        form.setFieldsValue({ icon: icon.name });
+                      }}
+                      title={icon.label}
+                    >
+                      <IconComponent />
+                      <span className="icon-picker-label-small">{icon.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              {selectedIcon && (
+                <div className="icon-picker-selected">
+                  Selected: <strong>{EQUIPMENT_ICONS.find(i => i.name === selectedIcon)?.label || selectedIcon}</strong>
+                </div>
+              )}
+            </div>
           </Form.Item>
 
           {editingType && (

@@ -433,3 +433,110 @@
 .settings-card .ant-input-number-input {
   height: 40px;
 }
+
+/* Icon Picker Styles */
+.icon-picker {
+  width: 100%;
+}
+
+.icon-picker-label {
+  font-size: 13px;
+  color: #595959;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.icon-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 8px;
+  padding: 12px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.icon-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  background: #fff;
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 75px;
+}
+
+.icon-picker-item:hover {
+  border-color: #062d54;
+  background: #f0f5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(6, 45, 84, 0.1);
+}
+
+.icon-picker-item.selected {
+  border-color: #062d54;
+  background: #e6f0ff;
+  box-shadow: 0 0 0 3px rgba(6, 45, 84, 0.1);
+}
+
+.icon-picker-item .anticon {
+  font-size: 24px;
+  color: #062d54;
+  margin-bottom: 6px;
+  transition: all 0.2s ease;
+}
+
+.icon-picker-item:hover .anticon {
+  transform: scale(1.15);
+}
+
+.icon-picker-label-small {
+  font-size: 11px;
+  color: #8c8c8c;
+  text-align: center;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.icon-picker-selected {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #e6f0ff;
+  border: 1px solid #b3d4ff;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #062d54;
+}
+
+.icon-picker-selected strong {
+  font-weight: 600;
+  color: #062d54;
+}
+
+/* Scrollbar styling for icon picker */
+.icon-picker-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.icon-picker-grid::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.icon-picker-grid::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+.icon-picker-grid::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
