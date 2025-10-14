@@ -125,7 +125,7 @@ export const scheduleHelp = {
         },
         {
           subtitle: 'When to Regenerate',
-          description: 'After adding/removing delays. After toggling site status. After changing grid hours (24 ↔ 48). Changes don\\'t apply until you regenerate.'
+          description: 'After adding/removing delays. After toggling site status. After changing grid hours (24 ↔ 48). Changes do not apply until you regenerate.'
         }
       ]
     },
