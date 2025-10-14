@@ -9,6 +9,7 @@ const ScheduleCell = ({
   taskColor, 
   isActive, 
   isDelayed,
+  isCurrentHour,
   onAddDelay,
   onRemoveDelay 
 }) => {
@@ -32,6 +33,8 @@ const ScheduleCell = ({
   };
 
   const getCellStyle = () => {
+    const baseStyle = {};
+
     if (!isActive) {
       return {
         backgroundColor: '#444',
@@ -47,12 +50,16 @@ const ScheduleCell = ({
     }
 
     if (taskId && taskColor) {
-      return {
-        backgroundColor: taskColor
-      };
+      baseStyle.backgroundColor = taskColor;
     }
 
-    return {};
+    // Add current hour indicator overlay
+    if (isCurrentHour && !isDelayed) {
+      baseStyle.boxShadow = 'inset 0 0 0 2px #fa8c16';
+      baseStyle.position = 'relative';
+    }
+
+    return baseStyle;
   };
 
   const tooltipTitle = () => {
@@ -65,7 +72,7 @@ const ScheduleCell = ({
     <>
       <Tooltip title={tooltipTitle()} placement="top">
         <td 
-          className={`schedule-cell ${isDelayed ? 'delayed' : ''} ${taskId ? 'has-task' : ''}`}
+          className={`schedule-cell ${isDelayed ? 'delayed' : ''} ${taskId ? 'has-task' : ''} ${isCurrentHour ? 'current-hour-col' : ''}`}
           style={getCellStyle()}
           onClick={handleClick}
           data-site={siteId}

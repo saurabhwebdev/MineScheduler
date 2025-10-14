@@ -1,11 +1,31 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ScheduleCell from './ScheduleCell';
 import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
 
   const { grid, gridHours, sitePriority, siteActive, taskColors } = scheduleData;
+
+  // Update current hour every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHour(new Date().getHours());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Calculate shift for a given hour (0-23)
+  const getShiftForHour = (hour) => {
+    // Shift A: 6:00 - 14:00 (hours 6-13)
+    // Shift B: 14:00 - 22:00 (hours 14-21)
+    // Shift C: 22:00 - 6:00 (hours 22-23, 0-5)
+    if (hour >= 6 && hour < 14) return { name: 'A', color: '#52c41a' };
+    if (hour >= 14 && hour < 22) return { name: 'B', color: '#1890ff' };
+    return { name: 'C', color: '#722ed1' };
+  };
 
   // Sort sites based on sort direction with G7/G8 grouping
   const sortedSites = useMemo(() => {
@@ -96,6 +116,25 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
       <div className="schedule-grid-scroll">
         <table className="schedule-grid">
           <thead>
+            {/* Shift Row */}
+            <tr className="shift-row">
+              <th className="priority-col shift-cell"></th>
+              <th className="site-col shift-cell">Shift</th>
+              {Array.from({ length: gridHours }, (_, i) => {
+                const shift = getShiftForHour(i);
+                return (
+                  <th 
+                    key={i} 
+                    className="hour-col shift-cell"
+                    style={{ backgroundColor: shift.color, color: '#ffffff' }}
+                    title={`Shift ${shift.name}`}
+                  >
+                    {shift.name}
+                  </th>
+                );
+              })}
+            </tr>
+            {/* Hour Row */}
             <tr>
               <th className="priority-col">P</th>
               <th 
@@ -106,11 +145,19 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                 <span>Site</span>
                 <span className="sort-indicator">{getSortIndicator()}</span>
               </th>
-              {Array.from({ length: gridHours }, (_, i) => (
-                <th key={i} className="hour-col">
-                  {i + 1}
-                </th>
-              ))}
+              {Array.from({ length: gridHours }, (_, i) => {
+                const isCurrentHour = i === currentHour;
+                return (
+                  <th 
+                    key={i} 
+                    className={`hour-col ${isCurrentHour ? 'current-hour' : ''}`}
+                    title={isCurrentHour ? 'Current Hour' : `Hour ${i + 1}`}
+                  >
+                    {i + 1}
+                    {isCurrentHour && <div className="current-hour-indicator">●</div>}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -141,6 +188,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                     const taskId = grid[siteId][hour];
                     const taskColor = taskId ? taskColors[taskId] : null;
                     const delayed = isDelayed(siteId, hour);
+                    const isCurrentHourCol = hour === currentHour;
 
                     return (
                       <ScheduleCell
@@ -151,6 +199,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                         taskColor={taskColor}
                         isActive={isActive}
                         isDelayed={delayed}
+                        isCurrentHour={isCurrentHourCol}
                         onAddDelay={onAddDelay}
                         onRemoveDelay={onRemoveDelay}
                       />

@@ -39,9 +39,77 @@
   border-bottom: 1px solid #d9d9d9;
 }
 
+/* Shift Row Styling */
+.schedule-grid .shift-row th {
+  background: #fafafa;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px;
+  border-bottom: 2px solid #d9d9d9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.schedule-grid .shift-row .shift-cell {
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Current Hour Indicator */
+.schedule-grid .current-hour {
+  background: #fff7e6 !important;
+  border: 2px solid #fa8c16 !important;
+  position: relative;
+  box-shadow: 0 0 10px rgba(250, 140, 22, 0.3);
+  font-weight: 700;
+  color: #fa8c16;
+}
+
+.current-hour-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 8px;
+  color: #fa8c16;
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.3;
+  }
+}
+
 .schedule-grid tbody tr:hover {
   background: #fafafa;
   transition: background 0.15s ease;
+}
+
+/* Highlight current hour column in all rows */
+.schedule-grid tbody tr .current-hour-col {
+  position: relative;
+}
+
+.schedule-grid tbody tr .current-hour-col::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(250, 140, 22, 0.08);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.schedule-grid tbody tr .current-hour-col .task-label,
+.schedule-grid tbody tr .current-hour-col .empty-label,
+.schedule-grid tbody tr .current-hour-col .delay-overlay {
+  position: relative;
+  z-index: 2;
 }
 
 /* Column Widths */
