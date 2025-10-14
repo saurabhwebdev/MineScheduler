@@ -60,9 +60,15 @@
   min-width: 100px;
 }
 
-.day-col {
-  width: 40px;
-  min-width: 40px;
+.hour-col {
+  width: 45px;
+  min-width: 45px;
+  font-size: 11px;
+}
+
+.task-col {
+  width: 120px;
+  min-width: 120px;
   font-size: 11px;
 }
 
@@ -113,23 +119,44 @@
   font-weight: normal;
 }
 
-/* Day Cells */
-.day-cell {
+/* Hour Cells */
+.hour-cell {
   position: relative;
   cursor: pointer;
   transition: all 0.15s ease;
   height: 36px;
   padding: 4px !important;
+  font-size: 10px;
 }
 
-.day-cell:hover {
+.hour-cell:hover {
   transform: scale(1.05);
   z-index: 5;
   box-shadow: 0 0 0 2px #3cca70;
 }
 
-.maintenance-day {
-  position: relative;
+.hour-cell.in-use {
+  font-weight: 600;
+}
+
+.hour-cell.maintenance-available {
+  border: 2px dashed #1890ff;
+}
+
+.usage-marker {
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.task-cell {
+  font-size: 11px;
+  color: #595959;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .maintenance-marker {
