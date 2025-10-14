@@ -239,3 +239,177 @@
 .table-container .ant-table-tbody > tr:hover {
   background-color: #f0f5ff !important;
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet and below (768px) */
+@media (max-width: 768px) {
+  .audit-page {
+    padding: 0;
+  }
+
+  /* Make table scrollable horizontally */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Reduce table font sizes */
+  .table-container .ant-table {
+    font-size: 12px;
+  }
+
+  .table-container .ant-table-thead > tr > th {
+    padding: 10px 12px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .table-container .ant-table-tbody > tr > td {
+    padding: 10px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* Make action badges smaller */
+  .action-badge {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+
+  /* Adjust pagination */
+  .table-container .ant-pagination {
+    margin: 12px 8px;
+  }
+
+  .table-container .ant-pagination-item,
+  .table-container .ant-pagination-prev button,
+  .table-container .ant-pagination-next button {
+    min-width: 28px;
+    height: 28px;
+    line-height: 26px;
+  }
+
+  /* Modal adjustments */
+  .audit-detail-modal .ant-modal {
+    max-width: calc(100vw - 32px);
+    margin: 16px auto;
+  }
+
+  .audit-detail-modal .ant-modal-body {
+    padding: 16px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+
+  .audit-detail-content .ant-descriptions-bordered .ant-descriptions-item-label {
+    width: 100px;
+    font-size: 12px;
+  }
+
+  .audit-detail-content .ant-descriptions-bordered .ant-descriptions-item-content {
+    font-size: 12px;
+  }
+
+  /* Changes table */
+  .changes-table {
+    font-size: 12px;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .changes-table thead,
+  .changes-table tbody,
+  .changes-table tr,
+  .changes-table th,
+  .changes-table td {
+    display: block;
+  }
+
+  .changes-table thead {
+    display: none;
+  }
+
+  .changes-table tr {
+    margin-bottom: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 8px;
+  }
+
+  .changes-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .changes-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    font-weight: 600;
+    color: #595959;
+  }
+
+  .changes-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* Audit changes pre */
+  .audit-changes pre {
+    font-size: 11px;
+    padding: 10px;
+    overflow-x: auto;
+  }
+}
+
+/* Mobile phones (480px and below) */
+@media (max-width: 480px) {
+  .table-container .ant-table {
+    font-size: 11px;
+  }
+
+  .table-container .ant-table-thead > tr > th {
+    padding: 8px 10px;
+    font-size: 9px;
+  }
+
+  .table-container .ant-table-tbody > tr > td {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .action-badge {
+    padding: 1px 5px;
+    font-size: 10px;
+  }
+
+  /* Stack modal content vertically */
+  .audit-detail-modal .ant-modal-header,
+  .audit-detail-modal .ant-modal-body {
+    padding: 12px;
+  }
+
+  .audit-detail-content .ant-descriptions-bordered .ant-descriptions-item-label {
+    width: 80px;
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .audit-detail-content .ant-descriptions-bordered .ant-descriptions-item-content {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .audit-changes h4 {
+    font-size: 13px;
+  }
+
+  .audit-changes pre {
+    font-size: 10px;
+    padding: 8px;
+  }
+}

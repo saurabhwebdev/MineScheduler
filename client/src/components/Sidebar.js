@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   HomeOutlined, 
@@ -19,6 +19,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
     // Main Dashboard
@@ -52,8 +53,30 @@ const Sidebar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  const handleMenuItemClick = (path) => {
+    navigate(path);
+    setIsMobileMenuOpen(false); // Close mobile menu after navigation
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <div className="sidebar">
+    <>
+      {/* Mobile Menu Toggle Button */}
+      <button className="mobile-menu-toggle" onClick={toggleMobileMenu} aria-label="Toggle menu">
+        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+
+      <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-logo">
         <div className="logo-icon" onClick={() => navigate('/dashboard')}>M</div>
       </div>
@@ -63,15 +86,17 @@ const Sidebar = () => {
           <div
             key={item.key}
             className={`sidebar-menu-item ${isActive(item.path) ? 'active' : ''}`}
-            onClick={() => navigate(item.path)}
+            onClick={() => handleMenuItemClick(item.path)}
             data-tooltip={item.label}
           >
             <div className="menu-icon">{item.icon}</div>
             <span className="custom-tooltip">{item.label}</span>
+            <span className="mobile-label">{item.label}</span>
           </div>
         ))}
       </div>
     </div>
+    </>
   );
 };
 

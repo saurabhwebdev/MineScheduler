@@ -140,3 +140,162 @@
   box-shadow: 0 6px 16px rgba(60, 202, 112, 0.4),
               0 3px 6px rgba(0, 0, 0, 0.15);
 }
+
+/* Mobile label - hidden by default */
+.mobile-label {
+  display: none;
+}
+
+/* Mobile Menu Toggle Button - hidden by default */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  background-color: #3cca70;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:active {
+  transform: scale(0.95);
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 2px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-line.open:nth-child(1) {
+  transform: rotate(45deg) translateY(7px);
+}
+
+.hamburger-line.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-line.open:nth-child(3) {
+  transform: rotate(-45deg) translateY(-7px);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet and below (1024px) */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    padding: 80px 0 20px 0;
+    transition: left 0.3s ease;
+    z-index: 999;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.mobile-open {
+    left: 0;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .mobile-overlay {
+    display: block;
+  }
+
+  .sidebar-logo {
+    margin-bottom: 30px;
+  }
+
+  .sidebar-menu {
+    padding: 0 20px;
+  }
+
+  .sidebar-menu-item {
+    width: 100%;
+    height: 48px;
+    justify-content: flex-start;
+    padding: 0 16px;
+    gap: 16px;
+  }
+
+  /* Show mobile label, hide tooltip */
+  .mobile-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+
+  .sidebar-menu-item.active .mobile-label {
+    color: #062d54;
+  }
+
+  .custom-tooltip {
+    display: none;
+  }
+
+  .sidebar-menu-item.active::after {
+    left: -20px;
+    width: 4px;
+    height: 48px;
+  }
+}
+
+/* Mobile phones (768px and below) */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 220px;
+    left: -220px;
+  }
+
+  .mobile-menu-toggle {
+    width: 40px;
+    height: 40px;
+    top: 12px;
+    left: 12px;
+  }
+
+  .hamburger-line {
+    width: 20px;
+  }
+
+  .sidebar-menu-item {
+    height: 44px;
+  }
+
+  .mobile-label {
+    font-size: 14px;
+  }
+}

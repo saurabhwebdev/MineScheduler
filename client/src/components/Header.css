@@ -180,3 +180,115 @@
 .dropdown-item .anticon {
   font-size: 16px;
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet and below (1024px) */
+@media (max-width: 1024px) {
+  .header {
+    left: 0;
+    padding: 0 20px 0 60px; /* Space for hamburger menu */
+  }
+
+  .header-title {
+    font-size: 20px;
+  }
+
+  .header-subtitle {
+    font-size: 12px;
+  }
+
+  .header-right {
+    gap: 16px;
+  }
+}
+
+/* Mobile phones (768px and below) */
+@media (max-width: 768px) {
+  .header {
+    height: 60px;
+    padding: 0 16px 0 56px;
+  }
+
+  .header-title {
+    font-size: 18px;
+  }
+
+  .header-subtitle {
+    display: none; /* Hide subtitle on small screens */
+  }
+
+  .header-right {
+    gap: 12px;
+  }
+
+  .notification-icon {
+    font-size: 18px;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+
+  /* Profile dropdown adjustments */
+  .profile-dropdown {
+    width: 240px;
+  }
+
+  .dropdown-user-info {
+    padding: 12px;
+  }
+
+  .dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .dropdown-name {
+    font-size: 13px;
+  }
+
+  .dropdown-email {
+    font-size: 11px;
+  }
+
+  .dropdown-item {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
+
+/* Small mobile phones (480px and below) */
+@media (max-width: 480px) {
+  .header {
+    height: 56px;
+    padding: 0 12px 0 52px;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .notification-icon {
+    font-size: 16px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .profile-dropdown {
+    width: 220px;
+  }
+}
