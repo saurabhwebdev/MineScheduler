@@ -175,7 +175,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
       } else {
         notification.error({
           message: 'Error',
-          description: data.message || 'Failed to load snapshot',
+          description: snapshotData.message || 'Failed to load snapshot',
         });
       }
     } catch (error) {

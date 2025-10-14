@@ -1,10 +1,41 @@
-import React from 'react';
-import { Tooltip } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Tooltip, Spin } from 'antd';
 import { ToolOutlined, CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import config from '../config/config';
 import './MaintenanceGrid.css';
 
 const MaintenanceGrid = ({ equipment }) => {
-  const gridDays = 30; // Show 30 days
+  const gridHours = 24; // Show 24 hours
+  const [scheduleData, setScheduleData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch current schedule to see equipment usage
+  useEffect(() => {
+    fetchSchedule();
+  }, []);
+
+  const fetchSchedule = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/schedule/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ gridHours, delayedSlots: [] }),
+      });
+      const data = await response.json();
+      if (response.ok && data.status === 'success') {
+        setScheduleData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching schedule:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getMaintenanceColor = (percentUsed) => {
     if (percentUsed >= 100) return '#ff4d4f'; // Red - Overdue
@@ -24,22 +55,33 @@ const MaintenanceGrid = ({ equipment }) => {
     return 'GOOD';
   };
 
-  // Calculate projected maintenance days
-  const getMaintenanceDays = (eq) => {
-    if (!eq.maintenanceInterval || eq.maintenanceInterval === 0) return [];
+  // Check if equipment is assigned to a task
+  const isEquipmentInUse = (eq, hour) => {
+    if (!scheduleData || !scheduleData.grid) return false;
     
-    const hoursPerDay = 8; // Assume 8 hours operation per day
-    const daysUntilMaintenance = eq.hoursUntilMaintenance / hoursPerDay;
-    
-    const maintenanceDays = [];
-    for (let day = 0; day < gridDays; day++) {
-      if (day === Math.floor(daysUntilMaintenance)) {
-        maintenanceDays.push(day);
+    // Check if any site is running a task that this equipment is assigned to
+    for (const siteId in scheduleData.grid) {
+      const taskId = scheduleData.grid[siteId][hour];
+      if (taskId && eq.assignedTasks && eq.assignedTasks.includes(taskId)) {
+        return { inUse: true, taskId, siteId };
       }
     }
-    
-    return maintenanceDays;
+    return { inUse: false };
   };
+
+  // Check if hour is suitable for maintenance (equipment not in use)
+  const isMaintenanceWindow = (eq, hour) => {
+    const usage = isEquipmentInUse(eq, hour);
+    return !usage.inUse && eq.status === 'operational';
+  };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px 0' }}>
+        <Spin size="large" tip="Loading equipment schedule..." />
+      </div>
+    );
+  }
 
   return (
     <div className="maintenance-grid-wrapper">
@@ -50,9 +92,10 @@ const MaintenanceGrid = ({ equipment }) => {
               <th className="equipment-col">Equipment</th>
               <th className="status-col">Status</th>
               <th className="hours-col">Hours</th>
-              {Array.from({ length: gridDays }, (_, i) => (
-                <th key={i} className="day-col">
-                  D{i + 1}
+              <th className="task-col">Assigned Tasks</th>
+              {Array.from({ length: gridHours }, (_, i) => (
+                <th key={i} className="hour-col">
+                  {i + 1}h
                 </th>
               ))}
             </tr>
@@ -61,7 +104,6 @@ const MaintenanceGrid = ({ equipment }) => {
             {equipment.map(eq => {
               const percentUsed = parseFloat(eq.percentUsed);
               const color = getMaintenanceColor(percentUsed);
-              const maintenanceDays = getMaintenanceDays(eq);
               const statusText = getStatusText(percentUsed);
 
               return (
@@ -80,30 +122,46 @@ const MaintenanceGrid = ({ equipment }) => {
                     <div>{eq.operatingHours}h</div>
                     <div className="interval-text">/ {eq.maintenanceInterval}h</div>
                   </td>
-                  {Array.from({ length: gridDays }, (_, day) => {
-                    const isMaintenanceDay = maintenanceDays.includes(day);
-                    const isOperational = eq.status === 'operational';
+                  <td className="task-cell">
+                    {eq.assignedTasks && eq.assignedTasks.length > 0 
+                      ? eq.assignedTasks.join(', ') 
+                      : 'None'}
+                  </td>
+                  {Array.from({ length: gridHours }, (_, hour) => {
+                    const usage = isEquipmentInUse(eq, hour);
+                    const isMaintWindow = isMaintenanceWindow(eq, hour);
+                    
+                    let cellColor = '#ffffff';
+                    let cellIcon = null;
+                    let tooltipText = `Hour ${hour + 1}`;
+                    
+                    if (usage.inUse) {
+                      // Equipment in use (task running)
+                      cellColor = '#52c41a'; // Green
+                      tooltipText = `IN USE: ${usage.taskId} at ${usage.siteId}`;
+                    } else if (isMaintWindow) {
+                      // Available for maintenance
+                      cellColor = '#1890ff'; // Blue
+                      cellIcon = <ToolOutlined />;
+                      tooltipText = 'Available for Maintenance';
+                    } else if (eq.status !== 'operational') {
+                      // Equipment not operational
+                      cellColor = '#f0f0f0';
+                      tooltipText = `${eq.status}`;
+                    } else {
+                      // Idle/Available
+                      cellColor = '#f9f9f9';
+                      tooltipText = 'Idle';
+                    }
                     
                     return (
-                      <Tooltip 
-                        key={day}
-                        title={isMaintenanceDay ? `Maintenance scheduled` : `Day ${day + 1}`}
-                      >
+                      <Tooltip key={hour} title={tooltipText}>
                         <td 
-                          className={`day-cell ${isMaintenanceDay ? 'maintenance-day' : ''}`}
-                          style={{
-                            backgroundColor: isMaintenanceDay 
-                              ? color 
-                              : isOperational 
-                                ? '#f0f0f0' 
-                                : '#ffffff'
-                          }}
+                          className={`hour-cell ${usage.inUse ? 'in-use' : ''} ${isMaintWindow ? 'maintenance-available' : ''}`}
+                          style={{ backgroundColor: cellColor }}
                         >
-                          {isMaintenanceDay && (
-                            <div className="maintenance-marker">
-                              <ToolOutlined />
-                            </div>
-                          )}
+                          {usage.inUse && <span className="usage-marker">{usage.taskId}</span>}
+                          {cellIcon && <div className="maintenance-marker">{cellIcon}</div>}
                         </td>
                       </Tooltip>
                     );
