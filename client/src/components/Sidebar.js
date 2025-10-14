@@ -73,54 +73,60 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
       )}
 
       <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-        {/* Mobile Profile Section */}
-        <div className="sidebar-mobile-profile">
-          <Avatar 
-            size={56}
-            src={generateAvatar(user)}
-            style={{ backgroundColor: '#062d54', color: '#ffffff' }}
-          >
-            {!generateAvatar(user) && getInitials(user?.name)}
-          </Avatar>
-          <div className="mobile-profile-info">
-            <div className="mobile-profile-name">{user?.name || 'User'}</div>
-            <div className="mobile-profile-email">{user?.email || ''}</div>
-            <div className="mobile-profile-role">{user?.role === 'admin' ? 'Administrator' : 'User'}</div>
-          </div>
-          <div className="mobile-profile-actions">
-            <Badge count={0} showZero={false}>
-              <BellOutlined className="mobile-notification-icon" />
-            </Badge>
+        {/* Desktop Logo */}
+        <div className="sidebar-logo">
+          <div className="logo-icon" onClick={() => navigate('/dashboard')}>M</div>
+        </div>
+
+        {/* Mobile Header */}
+        <div className="sidebar-mobile-header">
+          <div className="mobile-brand">
+            <div className="mobile-brand-icon">M</div>
+            <div className="mobile-brand-text">
+              <div className="mobile-brand-name">MineScheduler</div>
+              <div className="mobile-brand-tagline">Scheduling System</div>
+            </div>
           </div>
         </div>
 
-        <div className="sidebar-divider" />
-      <div className="sidebar-logo">
-        <div className="logo-icon" onClick={() => navigate('/dashboard')}>M</div>
-      </div>
+        {/* Menu Section */}
+        <div className="sidebar-menu">
+          {visibleMenuItems.map((item) => (
+            <div
+              key={item.key}
+              className={`sidebar-menu-item ${isActive(item.path) ? 'active' : ''}`}
+              onClick={() => handleMenuItemClick(item.path)}
+              data-tooltip={item.label}
+            >
+              <div className="menu-icon">{item.icon}</div>
+              <span className="custom-tooltip">{item.label}</span>
+              <span className="mobile-label">{item.label}</span>
+            </div>
+          ))}
+        </div>
 
-      <div className="sidebar-menu">
-        {visibleMenuItems.map((item) => (
-          <div
-            key={item.key}
-            className={`sidebar-menu-item ${isActive(item.path) ? 'active' : ''}`}
-            onClick={() => handleMenuItemClick(item.path)}
-            data-tooltip={item.label}
-          >
-            <div className="menu-icon">{item.icon}</div>
-            <span className="custom-tooltip">{item.label}</span>
-            <span className="mobile-label">{item.label}</span>
+        {/* Mobile Footer - Profile & Logout */}
+        <div className="sidebar-mobile-footer">
+          <div className="mobile-profile-section">
+            <div className="mobile-profile-content" onClick={() => navigate('/profile')}>
+              <Avatar 
+                size={40}
+                src={generateAvatar(user)}
+                style={{ backgroundColor: '#3cca70', color: '#ffffff' }}
+              >
+                {!generateAvatar(user) && getInitials(user?.name)}
+              </Avatar>
+              <div className="mobile-profile-info">
+                <div className="mobile-profile-name">{user?.name || 'User'}</div>
+                <div className="mobile-profile-email">{user?.email || ''}</div>
+              </div>
+            </div>
+            <button className="mobile-logout-btn" onClick={handleLogout}>
+              <LogoutOutlined />
+            </button>
           </div>
-        ))}
+        </div>
       </div>
-
-      {/* Mobile Logout Button */}
-      <div className="sidebar-mobile-logout">
-        <button className="mobile-logout-btn" onClick={handleLogout}>
-          <LogoutOutlined /> Logout
-        </button>
-      </div>
-    </div>
     </>
   );
 };
