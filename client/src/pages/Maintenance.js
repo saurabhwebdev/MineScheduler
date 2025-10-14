@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Statistic, Table, Tag, Button, notification, Spin, Progress } from 'antd';
-import { ToolOutlined, CheckCircleOutlined, WarningOutlined, CloseCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Statistic, Table, Tag, Button, notification, Spin, Progress, Tabs } from 'antd';
+import { ToolOutlined, CheckCircleOutlined, WarningOutlined, CloseCircleOutlined, ReloadOutlined, CalendarOutlined, TableOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
+import MaintenanceGrid from '../components/MaintenanceGrid';
 import config from '../config/config';
 import './Maintenance.css';
 
@@ -242,7 +243,7 @@ const Maintenance = () => {
           </Row>
         )}
 
-        {/* Equipment Table */}
+        {/* Equipment Tabs - Table and Grid Views */}
         <Card 
           title="Equipment Maintenance Overview"
           extra={
@@ -260,16 +261,42 @@ const Maintenance = () => {
               <Spin size="large" tip="Loading maintenance data..." />
             </div>
           ) : (
-            <Table
-              columns={columns}
-              dataSource={maintenanceData?.equipment || []}
-              rowKey="_id"
-              scroll={{ x: 1400 }}
-              pagination={{
-                pageSize: 20,
-                showSizeChanger: true,
-                showTotal: (total) => `Total ${total} equipment`
-              }}
+            <Tabs
+              defaultActiveKey="table"
+              items={[
+                {
+                  key: 'table',
+                  label: (
+                    <span>
+                      <TableOutlined /> Table View
+                    </span>
+                  ),
+                  children: (
+                    <Table
+                      columns={columns}
+                      dataSource={maintenanceData?.equipment || []}
+                      rowKey="_id"
+                      scroll={{ x: 1400 }}
+                      pagination={{
+                        pageSize: 20,
+                        showSizeChanger: true,
+                        showTotal: (total) => `Total ${total} equipment`
+                      }}
+                    />
+                  )
+                },
+                {
+                  key: 'grid',
+                  label: (
+                    <span>
+                      <CalendarOutlined /> Timeline View
+                    </span>
+                  ),
+                  children: (
+                    <MaintenanceGrid equipment={maintenanceData?.equipment || []} />
+                  )
+                }
+              ]}
             />
           )}
         </Card>

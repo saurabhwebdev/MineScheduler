@@ -1,0 +1,189 @@
+.maintenance-grid-wrapper {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 20px;
+  border: 1px solid #e8e8e8;
+  margin-top: 24px;
+}
+
+.maintenance-grid-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+.maintenance-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  table-layout: fixed;
+  min-width: 100%;
+}
+
+.maintenance-grid th,
+.maintenance-grid td {
+  border: 1px solid #e8e8e8;
+  padding: 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.maintenance-grid th {
+  background: #f9f9f9;
+  color: #262626;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.maintenance-grid tbody tr:hover {
+  background: #fafafa;
+  transition: background 0.15s ease;
+}
+
+/* Column Widths */
+.equipment-col {
+  width: 150px;
+  min-width: 150px;
+  text-align: left !important;
+}
+
+.status-col {
+  width: 120px;
+  min-width: 120px;
+}
+
+.hours-col {
+  width: 100px;
+  min-width: 100px;
+}
+
+.day-col {
+  width: 40px;
+  min-width: 40px;
+  font-size: 11px;
+}
+
+/* Equipment Cell */
+.equipment-cell {
+  text-align: left !important;
+  padding: 12px !important;
+}
+
+.equipment-cell strong {
+  display: block;
+  color: #3cca70;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.equipment-name {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Status Indicator */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.status-indicator .anticon {
+  font-size: 14px;
+}
+
+/* Hours Cell */
+.hours-cell {
+  font-weight: 600;
+  color: #262626;
+}
+
+.interval-text {
+  font-size: 11px;
+  color: #888;
+  font-weight: normal;
+}
+
+/* Day Cells */
+.day-cell {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  height: 36px;
+  padding: 4px !important;
+}
+
+.day-cell:hover {
+  transform: scale(1.05);
+  z-index: 5;
+  box-shadow: 0 0 0 2px #3cca70;
+}
+
+.maintenance-day {
+  position: relative;
+}
+
+.maintenance-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Inactive Equipment */
+.equipment-inactive {
+  opacity: 0.5;
+}
+
+.equipment-inactive .equipment-cell strong {
+  color: #888;
+  text-decoration: line-through;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .maintenance-grid {
+    font-size: 11px;
+  }
+
+  .day-col {
+    width: 36px;
+    min-width: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .maintenance-grid-wrapper {
+    padding: 16px;
+  }
+
+  .equipment-col {
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .status-col {
+    width: 100px;
+    min-width: 100px;
+  }
+}
