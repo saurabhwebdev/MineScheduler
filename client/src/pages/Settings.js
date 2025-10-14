@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
-import { SettingOutlined, DatabaseOutlined, ClockCircleOutlined, CalculatorOutlined } from '@ant-design/icons';
+import { SettingOutlined, DatabaseOutlined, ClockCircleOutlined, CalculatorOutlined, ToolOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import UomConfig from '../components/UomConfig';
 import ShiftConfig from '../components/ShiftConfig';
 import ConstantsConfig from '../components/ConstantsConfig';
+import EquipmentTypeConfig from '../components/EquipmentTypeConfig';
 import './Settings.css';
 
 const Settings = () => {
@@ -50,6 +51,28 @@ const Settings = () => {
             </div>
             <div className="settings-card-body">
               <ShiftConfig />
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'equipmentTypes',
+      label: (
+        <span>
+          <ToolOutlined />
+          Equipment Types
+        </span>
+      ),
+      children: (
+        <div className="settings-tab-content">
+          <div className="settings-card">
+            <div className="settings-card-header">
+              <h3>Equipment Types</h3>
+              <p>Manage equipment type categories used in equipment management</p>
+            </div>
+            <div className="settings-card-body">
+              <EquipmentTypeConfig />
             </div>
           </div>
         </div>
