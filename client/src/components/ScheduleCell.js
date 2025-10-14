@@ -92,7 +92,10 @@ const ScheduleCell = ({
           {isDelayed && (
             <div className="delay-overlay">
               {delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE' ? (
-                <span className="delay-icon shift-change-icon">↻</span>
+                <>
+                  <span className="delay-icon shift-change-icon">↻</span>
+                  <span className="shift-change-label">{delayInfo.shiftCode || 'SHIFT'}</span>
+                </>
               ) : (
                 <span className="delay-icon">⚠</span>
               )}

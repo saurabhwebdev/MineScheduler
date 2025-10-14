@@ -254,11 +254,13 @@
   right: 0;
   bottom: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.15); /* Light transparent overlay */
+  background: rgba(255, 255, 255, 0.2); /* Very light transparent overlay */
   color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  gap: 2px;
 }
 
 .delay-icon {
@@ -267,9 +269,20 @@
 }
 
 .shift-change-icon {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   animation: rotate 3s linear infinite;
+  line-height: 1;
+}
+
+.shift-change-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 @keyframes pulse {
