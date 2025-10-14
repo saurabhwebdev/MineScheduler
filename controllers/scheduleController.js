@@ -217,8 +217,18 @@ function buildTaskCycle(currentTaskId, firings, allTasks) {
 
 /**
  * Calculate shift changeover delays for all sites
- * @param {Array} shifts - All active shifts
- * @param {Array} sites - All sites
+ * 
+ * This function automatically generates delay entries for shift changeover periods.
+ * The changeover delay is applied BEFORE each shift starts, using the 
+ * shiftChangeDuration field from the Shift model (stored in minutes).
+ * 
+ * Example:
+ * - Shift A starts at 06:00 with 30-minute changeover
+ * - Delay will block hour 5 (05:00-06:00)
+ * - This prevents task allocation during the changeover period
+ * 
+ * @param {Array} shifts - All active shifts from database
+ * @param {Array} sites - All sites (only active sites get delays)
  * @param {number} gridHours - Total grid hours (24 or 48)
  * @returns {Array} - Array of delay objects for shift changeovers
  */
@@ -228,20 +238,31 @@ function calculateShiftChangeoverDelays(shifts, sites, gridHours) {
   if (!shifts || shifts.length === 0) return delays;
 
   // Calculate changeover hours based on shift start times
-  const changeoverHours = new Set();
+  const changeoverHoursMap = new Map(); // Map hour -> shift info
   
   shifts.forEach(shift => {
     // Parse start time (format: "HH:MM")
-    const [hours] = shift.startTime.split(':').map(Number);
+    const [startHours, startMinutes] = shift.startTime.split(':').map(Number);
     
-    // Get changeover duration in hours (convert from minutes)
-    const durationHours = Math.ceil((shift.shiftChangeDuration || 30) / 60);
+    // Get changeover duration from shift settings (in minutes)
+    const durationMinutes = shift.shiftChangeDuration || 30;
+    const durationHours = Math.ceil(durationMinutes / 60);
     
-    // Add changeover hours (starting from shift start time)
+    // Calculate changeover period ENDING at shift start time
+    // Example: If shift starts at 6:00 and changeover is 30 min,
+    // delay should be from 5:30 to 6:00, which covers hour 5
     for (let i = 0; i < durationHours; i++) {
-      const changeoverHour = (hours + i) % 24;
+      const changeoverHour = (startHours - durationHours + i + 24) % 24;
+      
+      // Only add if within grid range
       if (changeoverHour < gridHours) {
-        changeoverHours.add(changeoverHour);
+        if (!changeoverHoursMap.has(changeoverHour)) {
+          changeoverHoursMap.set(changeoverHour, {
+            shiftName: shift.shiftName,
+            shiftCode: shift.shiftCode,
+            durationMinutes: durationMinutes
+          });
+        }
       }
     }
   });
@@ -250,7 +271,7 @@ function calculateShiftChangeoverDelays(shifts, sites, gridHours) {
   sites.forEach(site => {
     if (!site.isActive) return; // Skip inactive sites
     
-    changeoverHours.forEach(hour => {
+    changeoverHoursMap.forEach((shiftInfo, hour) => {
       delays.push({
         row: site.siteId,
         site: site.siteId,
@@ -258,9 +279,10 @@ function calculateShiftChangeoverDelays(shifts, sites, gridHours) {
         hour: hour,
         category: 'Operational',
         code: 'SHIFT_CHANGE',
-        comments: 'Automatic shift changeover delay',
+        comments: `Shift changeover for ${shiftInfo.shiftCode} (${shiftInfo.durationMinutes} min)`,
         duration: 1,
-        isAutomatic: true
+        isAutomatic: true,
+        shiftCode: shiftInfo.shiftCode
       });
     });
   });
