@@ -167,67 +167,104 @@ Add these tasks:
 **Task 1 - Drilling:**
 - Task ID: `DR`
 - Task Name: `Drilling`
+- Task Type: **Activity (Quantifiable with UOM & Rate)**
 - UOM: `area` (from dropdown)
-- Duration/Rate: `1.5`
-- Task Limit: `3`
-- Color: `#FF6B6B` (or pick red)
-- Description: `Drilling operation`
-- Click **Add Task**
+- Rate (per hour): `30` (meters per hour)
+- Task Duration (Minutes): `90` (1.5 hours)
+- Task Color: Click color picker, choose red (e.g., `#FF6B6B`)
+- Formula: (leave blank - optional)
+- Limits/Equipments: `3`
+- Click **Create**
+
+✅ You'll see "Calculated Output" alert showing the calculation
 
 **Task 2 - Charging:**
 - Task ID: `CH`
 - Task Name: `Charging`
+- Task Type: **Activity (Quantifiable with UOM & Rate)**
 - UOM: `area`
-- Duration/Rate: `0.8`
-- Task Limit: `3`
-- Color: `#FFA500` (or pick orange)
-- Description: `Explosive charging`
-- Click **Add Task**
+- Rate (per hour): `40` (meters per hour)
+- Task Duration (Minutes): `60`
+- Task Color: Orange (e.g., `#FFA500`)
+- Formula: (leave blank)
+- Limits/Equipments: `3`
+- Click **Create**
 
 **Task 3 - Firing:**
 - Task ID: `FI`
 - Task Name: `Firing`
-- UOM: `task`
-- Duration/Rate: `1.0`
-- Task Limit: `5`
-- Color: `#FF0000` (or pick bright red)
-- Description: `Blast firing`
-- Click **Add Task**
+- Task Type: **Simple Task (Time-based only)**
+- UOM: `task` (from dropdown)
+- Rate: (not shown for Simple Task type)
+- Task Duration (Minutes): `60` (1 hour)
+- Task Color: Bright red (e.g., `#FF0000`)
+- Formula: (leave blank)
+- Limits/Equipments: `5`
+- Click **Create**
 
 **Task 4 - Bogging:**
 - Task ID: `BO`
 - Task Name: `Bogging`
+- Task Type: **Activity (Quantifiable with UOM & Rate)**
 - UOM: `bogt`
-- Duration/Rate: `45`
-- Task Limit: `4`
-- Color: `#4CAF50` (or pick green)
-- Description: `Ore extraction`
-- Click **Add Task**
+- Rate (per hour): `45` (tonnes per hour)
+- Task Duration (Minutes): `180` (3 hours)
+- Task Color: Green (e.g., `#4CAF50`)
+- Formula: (leave blank)
+- Limits/Equipments: `4`
+- Click **Create**
 
 **Task 5 - Backfill:**
 - Task ID: `BF`
 - Task Name: `Backfill`
+- Task Type: **Simple Task (Time-based only)**
 - UOM: `bfp`
-- Duration/Rate: `20`
-- Task Limit: `2`
-- Color: `#9C27B0` (or pick purple)
-- Description: `Backfill placement`
-- Click **Add Task**
+- Task Duration (Minutes): `120` (2 hours)
+- Task Color: Purple (e.g., `#9C27B0`)
+- Formula: (leave blank)
+- Limits/Equipments: `2`
+- Click **Create**
+
+**Important Notes:**
+- **Task Type** determines form fields:
+  - **Activity**: Shows Rate field, calculates output automatically
+  - **Simple Task**: No Rate field, just duration
+- **Rate** is per hour (e.g., 30 meters/hour for drilling)
+- **Task Duration** is in minutes (not hours!)
+- **Limits** is the number of equipment/resources (used for hourly limits)
+- **Formula** field is optional (for documentation purposes)
 
 ✅ **Expected Results:**
 - [ ] All 5 tasks added successfully
-- [ ] Colors visible in table
-- [ ] UOMs display correctly
-- [ ] Task limits show
+- [ ] Success notifications appear for each
+- [ ] Table shows:
+  - [ ] SEQ column (order number)
+  - [ ] COLOR column (colored square)
+  - [ ] Task ID, Task Name
+  - [ ] TYPE column ("Activity" or "Task" tag)
+  - [ ] UOM column
+  - [ ] RATE column (shows rate/hr for Activities, "-" for Tasks)
+  - [ ] DURATION column (shows minutes)
+  - [ ] OUTPUT column (calculated for Activities)
+  - [ ] LIMITS column
+  - [ ] ORDER buttons (up/down arrows)
+  - [ ] ACTIONS buttons (edit/delete)
+- [ ] Colors are vibrant and visible
+- [ ] Activity tasks show calculated output (e.g., "45.00 area")
+- [ ] Simple tasks show "-" for Rate and Output
 
 #### Test 3.2: Edit Task
-1. Click **Edit** on DR task
-2. Change Duration/Rate to `1.8`
-3. Click **Update**
+1. Click **Edit** icon on DR task
+2. Change Rate to `35` (was 30)
+3. Keep duration at `90` minutes
+4. Click **Save**
 
 ✅ **Expected:**
-- [ ] Success notification
-- [ ] Table shows updated value
+- [ ] Modal opens with all fields pre-filled
+- [ ] Calculated output updates automatically as you change values
+- [ ] Success notification appears
+- [ ] Table shows updated rate: "35/hr"
+- [ ] Output recalculates: (90 ÷ 60) × 35 = 52.50 area
 
 **Status: Tasks Module** ⬜ PASS / ⬜ FAIL
 
