@@ -51,6 +51,7 @@ app.use('/api/equipment-types', require('./routes/equipmentTypes'));
 app.use('/api/constants', require('./routes/constants'));
 app.use('/api/audit', require('./routes/audit'));
 app.use('/api/schedule', require('./routes/schedule'));
+app.use('/api/snapshots', require('./routes/snapshots'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

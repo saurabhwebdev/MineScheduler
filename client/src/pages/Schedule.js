@@ -3,6 +3,7 @@ import { Button, notification, Radio, Space, Spin } from 'antd';
 import { CalendarOutlined, ReloadOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
+import SnapshotManager from '../components/SnapshotManager';
 import config from '../config/config';
 import './Schedule.css';
 
@@ -148,6 +149,12 @@ const Schedule = () => {
     });
   };
 
+  const handleLoadSnapshot = (loadedScheduleData, loadedDelayedSlots, loadedGridHours) => {
+    setScheduleData(loadedScheduleData);
+    setDelayedSlots(loadedDelayedSlots);
+    setGridHours(loadedGridHours);
+  };
+
   return (
     <DashboardLayout 
       title="Schedule"
@@ -156,7 +163,7 @@ const Schedule = () => {
       <div className="schedule-container">
         {/* Controls */}
         <div className="schedule-controls">
-          <Space size="large">
+          <Space size="large" wrap>
             <div className="control-group">
               <label>Grid Hours:</label>
               <Radio.Group value={gridHours} onChange={handleHoursChange}>
@@ -185,6 +192,13 @@ const Schedule = () => {
                 Regenerate
               </Button>
             )}
+
+            <SnapshotManager
+              scheduleData={scheduleData}
+              delayedSlots={delayedSlots}
+              gridHours={gridHours}
+              onLoadSnapshot={handleLoadSnapshot}
+            />
           </Space>
 
           {delayedSlots.length > 0 && (

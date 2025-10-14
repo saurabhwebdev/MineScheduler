@@ -1,0 +1,198 @@
+.snapshot-manager {
+  display: inline-block;
+}
+
+/* Save Snapshot Modal */
+.snapshot-form {
+  padding: 10px 0;
+}
+
+.snapshot-form .form-group {
+  margin-bottom: 20px;
+}
+
+.snapshot-form .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #262626;
+}
+
+.snapshot-preview {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+}
+
+.snapshot-preview h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.snapshot-preview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.snapshot-preview li {
+  padding: 4px 0;
+  font-size: 13px;
+  color: #595959;
+}
+
+.snapshot-preview li strong {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+/* Load Snapshot Modal */
+.snapshot-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.snapshot-list .ant-list-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.snapshot-list .ant-list-item:hover {
+  background-color: #fafafa;
+}
+
+.snapshot-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.snapshot-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.snapshot-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.description-text {
+  margin: 0;
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.snapshot-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.snapshot-stats span {
+  font-size: 12px;
+  color: #8c8c8c;
+  padding: 2px 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.snapshot-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-top: 4px;
+}
+
+.snapshot-meta .anticon {
+  font-size: 11px;
+}
+
+/* Action buttons */
+.snapshot-list .ant-list-item-action {
+  margin-left: 20px;
+}
+
+.snapshot-list .ant-list-item-action > li {
+  padding: 0 4px;
+}
+
+/* Empty state */
+.snapshot-list .ant-empty {
+  padding: 40px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .snapshot-manager {
+    width: 100%;
+  }
+
+  .snapshot-manager .ant-space {
+    width: 100%;
+  }
+
+  .snapshot-manager .ant-btn {
+    flex: 1;
+  }
+
+  .snapshot-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .snapshot-stats {
+    gap: 8px;
+  }
+
+  .snapshot-list .ant-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .snapshot-list .ant-list-item-action {
+    margin-left: 0;
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  .snapshot-list .ant-list-item-action > li {
+    flex: 1;
+  }
+
+  .snapshot-list .ant-list-item-action .ant-btn {
+    width: 100%;
+  }
+}
+
+/* Loading state */
+.snapshot-list .ant-spin-container {
+  min-height: 200px;
+}
+
+/* Modal customization */
+.ant-modal .snapshot-form .ant-input-textarea-show-count::after {
+  font-size: 11px;
+  color: #8c8c8c;
+}
+
+/* Tags in list */
+.snapshot-list .ant-tag {
+  margin: 0;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
