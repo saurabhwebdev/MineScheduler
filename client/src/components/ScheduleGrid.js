@@ -4,27 +4,61 @@ import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
-  const [currentHour, setCurrentHour] = useState(new Date().getHours());
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  const { grid, gridHours, sitePriority, siteActive, taskColors } = scheduleData;
+  const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
-  // Update current hour every minute
+  // Update current time every second for smooth line movement
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentHour(new Date().getHours());
-    }, 60000); // Update every minute
+      setCurrentTime(new Date());
+    }, 1000); // Update every second
 
     return () => clearInterval(interval);
   }, []);
 
-  // Calculate shift for a given hour (0-23)
+  // Calculate shift for a given hour based on shifts from backend
   const getShiftForHour = (hour) => {
-    // Shift A: 6:00 - 14:00 (hours 6-13)
-    // Shift B: 14:00 - 22:00 (hours 14-21)
-    // Shift C: 22:00 - 6:00 (hours 22-23, 0-5)
-    if (hour >= 6 && hour < 14) return { name: 'A', color: '#52c41a' };
-    if (hour >= 14 && hour < 22) return { name: 'B', color: '#1890ff' };
-    return { name: 'C', color: '#722ed1' };
+    if (!shifts || shifts.length === 0) {
+      // Fallback to default shifts if none configured
+      if (hour >= 6 && hour < 14) return { name: 'A', code: 'A', color: '#52c41a' };
+      if (hour >= 14 && hour < 22) return { name: 'B', code: 'B', color: '#1890ff' };
+      return { name: 'C', code: 'C', color: '#722ed1' };
+    }
+
+    // Find which shift this hour belongs to
+    for (const shift of shifts) {
+      const [startHour] = shift.startTime.split(':').map(Number);
+      const [endHour] = shift.endTime.split(':').map(Number);
+
+      if (startHour < endHour) {
+        // Same-day shift
+        if (hour >= startHour && hour < endHour) {
+          return { name: shift.shiftName, code: shift.shiftCode, color: shift.color };
+        }
+      } else {
+        // Overnight shift
+        if (hour >= startHour || hour < endHour) {
+          return { name: shift.shiftName, code: shift.shiftCode, color: shift.color };
+        }
+      }
+    }
+
+    // Default if no match
+    return { name: 'N/A', code: 'N/A', color: '#8c8c8c' };
+  };
+
+  // Calculate time indicator position
+  const getTimeIndicatorPosition = () => {
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const seconds = currentTime.getSeconds();
+    
+    // Calculate precise position including seconds
+    const totalMinutes = hours * 60 + minutes + seconds / 60;
+    const percentage = (totalMinutes / (24 * 60)) * 100;
+    
+    return percentage;
   };
 
   // Sort sites based on sort direction with G7/G8 grouping
@@ -111,8 +145,20 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     }
   };
 
+  const timeIndicatorPosition = getTimeIndicatorPosition();
+  const showTimeIndicator = timeIndicatorPosition >= 0 && timeIndicatorPosition <= 100;
+
   return (
     <div className="schedule-grid-wrapper">
+      {showTimeIndicator && (
+        <div 
+          className="time-indicator-line" 
+          style={{ left: `${timeIndicatorPosition}%` }}
+          title={`Current Time: ${currentTime.toLocaleTimeString()}`}
+        >
+          <div className="time-indicator-dot"></div>
+        </div>
+      )}
       <div className="schedule-grid-scroll">
         <table className="schedule-grid">
           <thead>
@@ -127,9 +173,9 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                     key={i} 
                     className="hour-col shift-cell"
                     style={{ backgroundColor: shift.color, color: '#ffffff' }}
-                    title={`Shift ${shift.name}`}
+                    title={`${shift.name} - ${shift.code}`}
                   >
-                    {shift.name}
+                    {shift.code}
                   </th>
                 );
               })}
@@ -145,19 +191,11 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                 <span>Site</span>
                 <span className="sort-indicator">{getSortIndicator()}</span>
               </th>
-              {Array.from({ length: gridHours }, (_, i) => {
-                const isCurrentHour = i === currentHour;
-                return (
-                  <th 
-                    key={i} 
-                    className={`hour-col ${isCurrentHour ? 'current-hour' : ''}`}
-                    title={isCurrentHour ? 'Current Hour' : `Hour ${i + 1}`}
-                  >
-                    {i + 1}
-                    {isCurrentHour && <div className="current-hour-indicator">●</div>}
-                  </th>
-                );
-              })}
+              {Array.from({ length: gridHours }, (_, i) => (
+                <th key={i} className="hour-col">
+                  {i + 1}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -188,7 +226,6 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                     const taskId = grid[siteId][hour];
                     const taskColor = taskId ? taskColors[taskId] : null;
                     const delayed = isDelayed(siteId, hour);
-                    const isCurrentHourCol = hour === currentHour;
 
                     return (
                       <ScheduleCell
@@ -199,7 +236,6 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                         taskColor={taskColor}
                         isActive={isActive}
                         isDelayed={delayed}
-                        isCurrentHour={isCurrentHourCol}
                         onAddDelay={onAddDelay}
                         onRemoveDelay={onRemoveDelay}
                       />

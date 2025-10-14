@@ -1,6 +1,7 @@
 const Site = require('../models/Site');
 const Task = require('../models/Task');
 const Constant = require('../models/Constant');
+const Shift = require('../models/Shift');
 const { calculateTaskDuration } = require('../utils/durationCalculator');
 
 /**
@@ -15,6 +16,7 @@ exports.generateSchedule = async (req, res) => {
     const sites = await Site.find().sort({ isActive: -1, priority: 1 });
     const tasks = await Task.find().sort({ order: 1 });
     const constants = await Constant.getActiveConstants();
+    const shifts = await Shift.find({ isActive: true }).sort({ startTime: 1 });
 
     if (sites.length === 0) {
       return res.status(400).json({
@@ -30,9 +32,13 @@ exports.generateSchedule = async (req, res) => {
       });
     }
 
-    // 2. Build delay map: site → Set of blocked hours
+    // 2. Calculate shift changeover delays and merge with user delays
+    const shiftChangeoverDelays = calculateShiftChangeoverDelays(shifts, sites, gridHours);
+    const allDelays = [...delayedSlots, ...shiftChangeoverDelays];
+
+    // 3. Build delay map: site → Set of blocked hours
     const delayMap = {};
-    (delayedSlots || []).forEach(d => {
+    allDelays.forEach(d => {
       const site = d.row || d.site;
       const hour = d.hour !== undefined ? d.hour : d.hourIndex;
       if (site && typeof hour === 'number' && hour >= 0 && hour < gridHours) {
@@ -41,7 +47,7 @@ exports.generateSchedule = async (req, res) => {
       }
     });
 
-    // 3. Initialize data structures
+    // 4. Initialize data structures
     const grid = {};
     const hourlyAllocation = {};
     for (let h = 0; h < gridHours; h++) {
@@ -54,7 +60,7 @@ exports.generateSchedule = async (req, res) => {
     const taskLimits = {};
     const taskColors = {};
 
-    // 4. Build task lookups
+    // 5. Build task lookups
     const taskMap = {};
     tasks.forEach(task => {
       taskMap[task.taskId] = task;
@@ -62,11 +68,11 @@ exports.generateSchedule = async (req, res) => {
       taskColors[task.taskId] = task.color || '#3498db';
     });
 
-    // 5. Get default task (SEQ = 1 or first task)
+    // 6. Get default task (SEQ = 1 or first task)
     const defaultTask = tasks.find(t => t.order === 1) || tasks[0];
     const defaultTaskId = defaultTask ? defaultTask.taskId : 'DEFAULT';
 
-    // 6. Process each site
+    // 7. Process each site
     for (const site of sites) {
       const siteId = site.siteId;
       sitePriority[siteId] = site.priority;
@@ -84,13 +90,13 @@ exports.generateSchedule = async (req, res) => {
       // Get current task or use default
       const currentTaskId = site.currentTask || defaultTaskId;
 
-      // 7. Build task cycle based on firings
+      // 8. Build task cycle based on firings
       const taskCycle = buildTaskCycle(currentTaskId, site.firings || 0, tasks);
 
-      // 8. Track if we've used timeToComplete override
+      // 9. Track if we've used timeToComplete override
       let usedTimeToComplete = false;
 
-      // 9. Allocate tasks in cycle
+      // 10. Allocate tasks in cycle
       for (const taskId of taskCycle) {
         const task = taskMap[taskId];
         if (!task) continue;
@@ -140,7 +146,7 @@ exports.generateSchedule = async (req, res) => {
       }
     }
 
-    // 10. Return schedule data
+    // 11. Return schedule data
     res.json({
       status: 'success',
       data: {
@@ -151,7 +157,14 @@ exports.generateSchedule = async (req, res) => {
         siteActive,
         taskColors,
         taskLimits,
-        gridHours
+        gridHours,
+        shifts: shifts.map(s => ({
+          shiftCode: s.shiftCode,
+          shiftName: s.shiftName,
+          startTime: s.startTime,
+          endTime: s.endTime,
+          color: s.color
+        }))
       }
     });
 
@@ -200,6 +213,59 @@ function buildTaskCycle(currentTaskId, firings, allTasks) {
   }
 
   return cycle;
+}
+
+/**
+ * Calculate shift changeover delays for all sites
+ * @param {Array} shifts - All active shifts
+ * @param {Array} sites - All sites
+ * @param {number} gridHours - Total grid hours (24 or 48)
+ * @returns {Array} - Array of delay objects for shift changeovers
+ */
+function calculateShiftChangeoverDelays(shifts, sites, gridHours) {
+  const delays = [];
+
+  if (!shifts || shifts.length === 0) return delays;
+
+  // Calculate changeover hours based on shift start times
+  const changeoverHours = new Set();
+  
+  shifts.forEach(shift => {
+    // Parse start time (format: "HH:MM")
+    const [hours] = shift.startTime.split(':').map(Number);
+    
+    // Get changeover duration in hours (convert from minutes)
+    const durationHours = Math.ceil((shift.shiftChangeDuration || 30) / 60);
+    
+    // Add changeover hours (starting from shift start time)
+    for (let i = 0; i < durationHours; i++) {
+      const changeoverHour = (hours + i) % 24;
+      if (changeoverHour < gridHours) {
+        changeoverHours.add(changeoverHour);
+      }
+    }
+  });
+
+  // Create delay entries for each site at each changeover hour
+  sites.forEach(site => {
+    if (!site.isActive) return; // Skip inactive sites
+    
+    changeoverHours.forEach(hour => {
+      delays.push({
+        row: site.siteId,
+        site: site.siteId,
+        hourIndex: hour,
+        hour: hour,
+        category: 'Operational',
+        code: 'SHIFT_CHANGE',
+        comments: 'Automatic shift changeover delay',
+        duration: 1,
+        isAutomatic: true
+      });
+    });
+  });
+
+  return delays;
 }
 
 /**

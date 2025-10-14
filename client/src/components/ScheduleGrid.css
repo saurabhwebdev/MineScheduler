@@ -55,31 +55,82 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Current Hour Indicator */
-.schedule-grid .current-hour {
-  background: #fff7e6 !important;
-  border: 2px solid #fa8c16 !important;
+/* Time Indicator Line */
+.schedule-grid-wrapper {
   position: relative;
-  box-shadow: 0 0 10px rgba(250, 140, 22, 0.3);
-  font-weight: 700;
-  color: #fa8c16;
 }
 
-.current-hour-indicator {
+.time-indicator-line {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  font-size: 8px;
-  color: #fa8c16;
-  animation: blink 2s infinite;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    #ff4d4f 5%, 
+    #ff4d4f 95%, 
+    transparent 100%);
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
+  animation: pulse-line 2s ease-in-out infinite;
 }
 
-@keyframes blink {
-  0%, 50%, 100% {
+.time-indicator-dot {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ff4d4f;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.6);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.time-indicator-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 77, 79, 0.3);
+  border-radius: 50%;
+  animation: ripple 2s ease-out infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
     opacity: 1;
   }
-  25%, 75% {
-    opacity: 0.3;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.15);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+  }
+  100% {
+    width: 35px;
+    height: 35px;
+    opacity: 0;
   }
 }
 
@@ -88,29 +139,6 @@
   transition: background 0.15s ease;
 }
 
-/* Highlight current hour column in all rows */
-.schedule-grid tbody tr .current-hour-col {
-  position: relative;
-}
-
-.schedule-grid tbody tr .current-hour-col::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(250, 140, 22, 0.08);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.schedule-grid tbody tr .current-hour-col .task-label,
-.schedule-grid tbody tr .current-hour-col .empty-label,
-.schedule-grid tbody tr .current-hour-col .delay-overlay {
-  position: relative;
-  z-index: 2;
-}
 
 /* Column Widths */
 .priority-col,
