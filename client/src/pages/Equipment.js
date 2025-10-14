@@ -14,6 +14,7 @@ const Equipment = () => {
   const [equipment, setEquipment] = useState([]);
   const [sites, setSites] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [equipmentTypes, setEquipmentTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -35,6 +36,7 @@ const Equipment = () => {
     fetchEquipment();
     fetchSites();
     fetchTasks();
+    fetchEquipmentTypes();
   }, []);
 
   const fetchEquipment = async () => {
@@ -103,12 +105,30 @@ const Equipment = () => {
     }
   };
 
+  const fetchEquipmentTypes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/equipment-types`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.status === 'success') {
+        setEquipmentTypes(data.data.equipmentTypes.filter(t => t.isActive));
+      }
+    } catch (error) {
+      console.error('Error fetching equipment types:', error);
+    }
+  };
+
   const handleCreateEquipment = () => {
     setEditingEquipment(null);
     form.resetFields();
     form.setFieldsValue({ 
       status: 'operational',
-      type: 'Excavator',
+      type: equipmentTypes.length > 0 ? equipmentTypes[0].name : '',
       maintenanceInterval: 500,
       operatingHours: 0,
       isActive: true
@@ -489,16 +509,7 @@ const Equipment = () => {
       title: 'TYPE',
       dataIndex: 'type',
       key: 'type',
-      filters: [
-        { text: 'Excavator', value: 'Excavator' },
-        { text: 'Haul Truck', value: 'Haul Truck' },
-        { text: 'Drill', value: 'Drill' },
-        { text: 'Loader', value: 'Loader' },
-        { text: 'Grader', value: 'Grader' },
-        { text: 'Dozer', value: 'Dozer' },
-        { text: 'Bogger', value: 'Bogger' },
-        { text: 'Other', value: 'Other' },
-      ],
+      filters: equipmentTypes.map(type => ({ text: type.name, value: type.name })),
       onFilter: (value, record) => record.type === value,
       render: (type) => (
         <Tag color="blue">{type}</Tag>
@@ -712,15 +723,12 @@ const Equipment = () => {
                     rules={[{ required: true, message: 'Required' }]}
                     style={{ flex: 1 }}
                   >
-                    <Select>
-                      <Option value="Excavator">Excavator</Option>
-                      <Option value="Haul Truck">Haul Truck</Option>
-                      <Option value="Drill">Drill</Option>
-                      <Option value="Loader">Loader</Option>
-                      <Option value="Grader">Grader</Option>
-                      <Option value="Dozer">Dozer</Option>
-                      <Option value="Bogger">Bogger</Option>
-                      <Option value="Other">Other</Option>
+                    <Select placeholder="Select equipment type" showSearch>
+                      {equipmentTypes.map(type => (
+                        <Option key={type._id} value={type.name}>
+                          {type.name}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
 
