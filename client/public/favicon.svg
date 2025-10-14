@@ -1,8 +1,5 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Blue Circular Background -->
-  <circle cx="32" cy="32" r="32" fill="#062d54"/>
-  
-  <!-- Green Letter M - Larger Size -->
+  <!-- Green Letter M - No Background -->
   <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="800" fill="#3cca70" text-anchor="middle" dominant-baseline="middle">
     M
   </text>
