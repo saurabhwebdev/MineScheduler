@@ -124,25 +124,44 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${config.apiUrl}/snapshots/${snapshotId}`, {
+      
+      // Fetch snapshot data
+      const snapshotResponse = await fetch(`${config.apiUrl}/snapshots/${snapshotId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
-      const data = await response.json();
+      const snapshotData = await snapshotResponse.json();
 
-      if (response.ok && data.status === 'success') {
-        const snapshot = data.data.snapshot;
+      if (snapshotResponse.ok && snapshotData.status === 'success') {
+        const snapshot = snapshotData.data.snapshot;
         
-        // Construct schedule data from snapshot
+        // Fetch CURRENT shifts from database (not from snapshot)
+        const shiftsResponse = await fetch(`${config.apiUrl}/shifts`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        
+        const shiftsData = await shiftsResponse.json();
+        const currentShifts = shiftsData.status === 'success' ? shiftsData.data.shifts : [];
+        
+        // Construct schedule data from snapshot + current shifts
         const loadedScheduleData = {
           grid: snapshot.gridData,
           gridHours: snapshot.gridHours,
           sitePriority: snapshot.sitePriority,
           siteActive: snapshot.siteActive,
           taskColors: snapshot.taskColors,
-          taskLimits: snapshot.taskLimits
+          taskLimits: snapshot.taskLimits,
+          shifts: currentShifts.filter(s => s.isActive).map(s => ({
+            shiftCode: s.shiftCode,
+            shiftName: s.shiftName,
+            startTime: s.startTime,
+            endTime: s.endTime,
+            color: s.color
+          }))
         };
 
         onLoadSnapshot(loadedScheduleData, snapshot.delayedSlots, snapshot.gridHours);
