@@ -1,6 +1,6 @@
 const Equipment = require('../models/Equipment');
 const MaintenanceLog = require('../models/MaintenanceLog');
-const { logAudit } = require('../utils/auditLogger');
+const { logAudit, getClientIp, getUserAgent } = require('../utils/auditLogger');
 
 // @desc    Get all equipment
 // @route   GET /api/equipment
@@ -98,12 +98,15 @@ exports.createEquipment = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'CREATE',
-      resource: 'Equipment',
+      module: 'EQUIPMENT',
+      resourceType: 'Equipment',
       resourceId: equipment._id,
-      details: `Created equipment: ${equipment.equipmentId} - ${equipment.name}`,
-      ipAddress: req.ip
+      resourceName: `${equipment.equipmentId} - ${equipment.name}`,
+      newValues: equipment.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(201).json({
@@ -158,13 +161,16 @@ exports.updateEquipment = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'UPDATE',
-      resource: 'Equipment',
+      module: 'EQUIPMENT',
+      resourceType: 'Equipment',
       resourceId: equipment._id,
-      details: `Updated equipment: ${equipment.equipmentId} - ${equipment.name}`,
-      changes: { before: oldValues, after: equipment.toObject() },
-      ipAddress: req.ip
+      resourceName: `${equipment.equipmentId} - ${equipment.name}`,
+      oldValues: oldValues,
+      newValues: equipment.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(200).json({
@@ -217,12 +223,15 @@ exports.deleteEquipment = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'DELETE',
-      resource: 'Equipment',
+      module: 'EQUIPMENT',
+      resourceType: 'Equipment',
       resourceId: equipment._id,
-      details: `Deleted equipment: ${equipment.equipmentId} - ${equipment.name}`,
-      ipAddress: req.ip
+      resourceName: `${equipment.equipmentId} - ${equipment.name}`,
+      oldValues: equipment.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(200).json({
@@ -268,12 +277,15 @@ exports.importEquipment = async (req, res) => {
         });
         
         await logAudit({
-          user: req.user.id,
+          user: req.user,
           action: 'CREATE',
-          resource: 'Equipment',
+          module: 'EQUIPMENT',
+          resourceType: 'Equipment',
           resourceId: newEquipment._id,
-          details: `Imported equipment: ${newEquipment.equipmentId} - ${newEquipment.name}`,
-          ipAddress: req.ip
+          resourceName: `${newEquipment.equipmentId} - ${newEquipment.name}`,
+          newValues: newEquipment.toObject(),
+          ipAddress: getClientIp(req),
+          userAgent: getUserAgent(req)
         });
       } catch (error) {
         results.failed.push({
@@ -355,12 +367,15 @@ exports.logMaintenance = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'CREATE',
-      resource: 'MaintenanceLog',
+      module: 'EQUIPMENT',
+      resourceType: 'MaintenanceLog',
       resourceId: maintenanceLog._id,
-      details: `Logged ${maintenanceLog.maintenanceType} maintenance for ${equipment.equipmentId}`,
-      ipAddress: req.ip
+      resourceName: `${maintenanceLog.maintenanceType} - ${equipment.equipmentId}`,
+      newValues: maintenanceLog.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(201).json({

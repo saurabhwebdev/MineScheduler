@@ -138,7 +138,7 @@ router.post('/', protect, authorize('admin'), async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'EQUIPMENT_TYPE',
       resourceType: 'Equipment Type',
       resourceId: equipmentType._id,
       resourceName: equipmentType.name,
@@ -206,7 +206,7 @@ router.put('/:id', protect, authorize('admin'), async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'UPDATE',
-      module: 'SETTINGS',
+      module: 'EQUIPMENT_TYPE',
       resourceType: 'Equipment Type',
       resourceId: equipmentType._id,
       resourceName: equipmentType.name,
@@ -249,7 +249,7 @@ router.delete('/:id', protect, authorize('admin'), async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'DELETE',
-      module: 'SETTINGS',
+      module: 'EQUIPMENT_TYPE',
       resourceType: 'Equipment Type',
       resourceId: equipmentType._id,
       resourceName: equipmentType.name,
@@ -345,7 +345,7 @@ router.post('/import', protect, authorize('admin'), upload.single('file'), async
         await logAudit({
           user: req.user,
           action: 'CREATE',
-          module: 'SETTINGS',
+          module: 'EQUIPMENT_TYPE',
           resourceType: 'Equipment Type',
           resourceId: equipmentType._id,
           resourceName: equipmentType.name,
@@ -367,7 +367,7 @@ router.post('/import', protect, authorize('admin'), upload.single('file'), async
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'EQUIPMENT_TYPE',
       resourceType: 'Equipment Type Import',
       resourceId: 'bulk',
       resourceName: 'Excel Import',

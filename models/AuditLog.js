@@ -21,7 +21,7 @@ const AuditLogSchema = new mongoose.Schema({
   },
   module: {
     type: String,
-    enum: ['UOM', 'TASK', 'USER', 'SETTINGS'],
+    enum: ['UOM', 'TASK', 'USER', 'SETTINGS', 'SITE', 'EQUIPMENT', 'EQUIPMENT_TYPE', 'SHIFT', 'CONSTANT', 'DELAY'],
     required: true
   },
   resourceType: {

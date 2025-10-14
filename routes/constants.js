@@ -151,7 +151,7 @@ router.post('/import', authorize('admin'), upload.single('file'), async (req, re
         await logAudit({
           user: req.user,
           action: 'CREATE',
-          module: 'SETTINGS',
+          module: 'CONSTANT',
           resourceType: 'Constant',
           resourceId: constant._id,
           resourceName: constant.keyword,
@@ -173,7 +173,7 @@ router.post('/import', authorize('admin'), upload.single('file'), async (req, re
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'CONSTANT',
       resourceType: 'Constant Import',
       resourceId: 'bulk',
       resourceName: 'Excel Import',

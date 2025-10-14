@@ -144,7 +144,7 @@ router.post('/', protect, async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'SHIFT',
       resourceType: 'Shift',
       resourceId: shift._id,
       resourceName: shift.shiftName,
@@ -223,7 +223,7 @@ router.put('/:id', protect, async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'UPDATE',
-      module: 'SETTINGS',
+      module: 'SHIFT',
       resourceType: 'Shift',
       resourceId: shift._id,
       resourceName: shift.shiftName,
@@ -280,7 +280,7 @@ router.delete('/:id', protect, async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'DELETE',
-      module: 'SETTINGS',
+      module: 'SHIFT',
       resourceType: 'Shift',
       resourceId: shift._id,
       resourceName: shift.shiftName,
@@ -396,7 +396,7 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
         await logAudit({
           user: req.user,
           action: 'CREATE',
-          module: 'SETTINGS',
+          module: 'SHIFT',
           resourceType: 'Shift',
           resourceId: shift._id,
           resourceName: shift.shiftName,
@@ -424,7 +424,7 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'SHIFT',
       resourceType: 'Shift Import',
       resourceId: 'bulk',
       resourceName: 'Excel Import',

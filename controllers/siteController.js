@@ -1,5 +1,5 @@
 const Site = require('../models/Site');
-const { logAudit } = require('../utils/auditLogger');
+const { logAudit, getClientIp, getUserAgent } = require('../utils/auditLogger');
 
 // @desc    Get all sites
 // @route   GET /api/sites
@@ -94,12 +94,15 @@ exports.createSite = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'CREATE',
-      resource: 'Site',
+      module: 'SITE',
+      resourceType: 'Site',
       resourceId: site._id,
-      details: `Created site: ${site.siteId} - ${site.siteName}`,
-      ipAddress: req.ip
+      resourceName: `${site.siteId} - ${site.siteName}`,
+      newValues: site.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(201).json({
@@ -157,13 +160,16 @@ exports.updateSite = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'UPDATE',
-      resource: 'Site',
+      module: 'SITE',
+      resourceType: 'Site',
       resourceId: site._id,
-      details: `Updated site: ${site.siteId} - ${site.siteName}`,
-      changes: { before: oldValues, after: site.toObject() },
-      ipAddress: req.ip
+      resourceName: `${site.siteId} - ${site.siteName}`,
+      oldValues: oldValues,
+      newValues: site.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(200).json({
@@ -215,12 +221,15 @@ exports.deleteSite = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'DELETE',
-      resource: 'Site',
+      module: 'SITE',
+      resourceType: 'Site',
       resourceId: site._id,
-      details: `Deleted site: ${site.siteId} - ${site.siteName}`,
-      ipAddress: req.ip
+      resourceName: `${site.siteId} - ${site.siteName}`,
+      oldValues: site.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(200).json({
@@ -256,12 +265,16 @@ exports.toggleSiteStatus = async (req, res) => {
     
     // Log audit
     await logAudit({
-      user: req.user.id,
+      user: req.user,
       action: 'UPDATE',
-      resource: 'Site',
+      module: 'SITE',
+      resourceType: 'Site',
       resourceId: site._id,
-      details: `Toggled site status: ${site.siteId} - ${oldStatus ? 'Active' : 'Inactive'} to ${site.isActive ? 'Active' : 'Inactive'}`,
-      ipAddress: req.ip
+      resourceName: `${site.siteId} - ${site.siteName}`,
+      oldValues: { isActive: oldStatus },
+      newValues: { isActive: site.isActive },
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
     });
     
     res.status(200).json({
@@ -309,12 +322,15 @@ exports.importSites = async (req, res) => {
         
         // Log audit
         await logAudit({
-          user: req.user.id,
+          user: req.user,
           action: 'CREATE',
-          resource: 'Site',
+          module: 'SITE',
+          resourceType: 'Site',
           resourceId: site._id,
-          details: `Imported site: ${site.siteId} - ${site.siteName}`,
-          ipAddress: req.ip
+          resourceName: `${site.siteId} - ${site.siteName}`,
+          newValues: site.toObject(),
+          ipAddress: getClientIp(req),
+          userAgent: getUserAgent(req)
         });
       } catch (error) {
         results.failed.push({

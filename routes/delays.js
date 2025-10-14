@@ -107,7 +107,7 @@ router.post('/', protect, async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'DELAY',
       resourceType: 'Delay',
       resourceId: delay._id,
       resourceName: delay.delayCode,
@@ -176,7 +176,7 @@ router.put('/:id', protect, async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'UPDATE',
-      module: 'SETTINGS',
+      module: 'DELAY',
       resourceType: 'Delay',
       resourceId: delay._id,
       resourceName: delay.delayCode,
@@ -219,7 +219,7 @@ router.delete('/:id', protect, async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'DELETE',
-      module: 'SETTINGS',
+      module: 'DELAY',
       resourceType: 'Delay',
       resourceId: delay._id,
       resourceName: delay.delayCode,
@@ -338,7 +338,7 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
         await logAudit({
           user: req.user,
           action: 'CREATE',
-          module: 'SETTINGS',
+          module: 'DELAY',
           resourceType: 'Delay',
           resourceId: delay._id,
           resourceName: delay.delayCode,
@@ -360,7 +360,7 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
     await logAudit({
       user: req.user,
       action: 'CREATE',
-      module: 'SETTINGS',
+      module: 'DELAY',
       resourceType: 'Delay Import',
       resourceId: 'bulk',
       resourceName: 'Excel Import',

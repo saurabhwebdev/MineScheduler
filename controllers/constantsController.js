@@ -1,21 +1,5 @@
 const Constant = require('../models/Constant');
-const AuditLog = require('../models/AuditLog');
-
-// Helper function to log audit
-const logAudit = async (action, entity, entityId, details, userId, ipAddress) => {
-  try {
-    await AuditLog.create({
-      user: userId,
-      action,
-      entity,
-      entityId,
-      details,
-      ipAddress
-    });
-  } catch (error) {
-    console.error('Audit log error:', error);
-  }
-};
+const { logAudit, getClientIp, getUserAgent } = require('../utils/auditLogger');
 
 // Seed default constants if none exist
 const seedDefaultConstants = async (userId) => {
@@ -155,14 +139,17 @@ exports.createConstant = async (req, res) => {
     });
 
     // Audit log
-    await logAudit(
-      'CREATE',
-      'Constant',
-      constant._id,
-      `Created constant: ${constant.keyword} = ${constant.value} ${constant.unit}`,
-      req.user.id,
-      req.ip
-    );
+    await logAudit({
+      user: req.user,
+      action: 'CREATE',
+      module: 'CONSTANT',
+      resourceType: 'Constant',
+      resourceId: constant._id,
+      resourceName: `${constant.keyword} = ${constant.value} ${constant.unit}`,
+      newValues: constant.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
+    });
 
     const populatedConstant = await Constant.findById(constant._id)
       .populate('createdBy', 'name email');
@@ -227,20 +214,18 @@ exports.updateConstant = async (req, res) => {
     await constant.save();
 
     // Audit log
-    const changes = [];
-    if (oldValues.keyword !== constant.keyword) changes.push(`keyword: ${oldValues.keyword} → ${constant.keyword}`);
-    if (oldValues.value !== constant.value) changes.push(`value: ${oldValues.value} → ${constant.value}`);
-    if (oldValues.unit !== constant.unit) changes.push(`unit: ${oldValues.unit} → ${constant.unit}`);
-    if (oldValues.isActive !== constant.isActive) changes.push(`isActive: ${oldValues.isActive} → ${constant.isActive}`);
-
-    await logAudit(
-      'UPDATE',
-      'Constant',
-      constant._id,
-      `Updated constant: ${changes.join(', ')}`,
-      req.user.id,
-      req.ip
-    );
+    await logAudit({
+      user: req.user,
+      action: 'UPDATE',
+      module: 'CONSTANT',
+      resourceType: 'Constant',
+      resourceId: constant._id,
+      resourceName: `${constant.keyword} = ${constant.value} ${constant.unit}`,
+      oldValues: oldValues,
+      newValues: constant.toObject(),
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
+    });
 
     const populatedConstant = await Constant.findById(constant._id)
       .populate('createdBy', 'name email')
@@ -292,14 +277,17 @@ exports.deleteConstant = async (req, res) => {
     await Constant.findByIdAndDelete(req.params.id);
 
     // Audit log
-    await logAudit(
-      'DELETE',
-      'Constant',
-      req.params.id,
-      `Deleted constant: ${constantInfo.keyword} = ${constantInfo.value} ${constantInfo.unit}`,
-      req.user.id,
-      req.ip
-    );
+    await logAudit({
+      user: req.user,
+      action: 'DELETE',
+      module: 'CONSTANT',
+      resourceType: 'Constant',
+      resourceId: req.params.id,
+      resourceName: `${constantInfo.keyword} = ${constantInfo.value} ${constantInfo.unit}`,
+      oldValues: constantInfo,
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
+    });
 
     res.status(200).json({
       status: 'success',
