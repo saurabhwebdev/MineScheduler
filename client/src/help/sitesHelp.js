@@ -4,59 +4,101 @@ export const sitesHelp = {
   sections: [
     {
       title: 'Overview',
-      content: 'Sites represent different mining locations or areas within your operation. Each site can have its own priority, status, and associated tasks and equipment.'
+      content: 'Sites are mining locations (stopes, panels, drives) that appear as rows in the schedule grid. Each site has planning data, priority, and current task status that the scheduler uses to allocate tasks.'
     },
     {
       title: 'Creating a Site',
       items: [
         {
-          subtitle: 'Site Name',
-          description: 'Enter a unique identifier for the site (e.g., "North Pit", "Block A", "Zone 3").'
+          subtitle: 'Site ID',
+          description: 'Unique identifier (e.g., "G7-001", "G8-002"). Auto-uppercase. This appears as the row label in schedule grid.'
         },
         {
-          subtitle: 'Location',
-          description: 'Specify the geographic location or coordinates of the site.'
+          subtitle: 'Site Name',
+          description: 'Descriptive name (e.g., "G7 Panel 001", "North Stope"). Used in displays and reports.'
         },
         {
           subtitle: 'Priority',
-          description: 'Set site priority (1-10). Higher priority sites are scheduled first. Use 1 for highest priority, 10 for lowest.'
+          description: 'Scheduling order (1 = first, 2 = second, etc.). Lower numbers scheduled first. Sites with priority 1 get their tasks before priority 2.'
         },
         {
-          subtitle: 'Task Limit',
-          description: 'Maximum number of concurrent tasks allowed at this site. Prevents overloading a single location.'
+          subtitle: 'Active Status',
+          description: 'Check to include in scheduling. Uncheck to exclude without deleting. Inactive sites show grayed out in grid with no tasks.'
         },
         {
-          subtitle: 'Description',
-          description: 'Add notes about the site characteristics, geology, or special considerations (optional).'
+          subtitle: 'Location',
+          description: 'Geographic location or zone (optional). For reference only, not used in scheduling.'
         },
         {
-          subtitle: 'Status',
-          description: 'Active sites can be scheduled. Inactive sites are excluded from scheduling operations.'
+          subtitle: 'Site Type',
+          description: 'Category: Mining, Backfill, Development, Exploration, Other. For classification, not used in scheduling.'
         }
       ]
     },
     {
-      title: 'Site Priority System',
-      content: 'The scheduling algorithm uses site priorities to determine the order in which tasks are assigned. Sites with lower priority numbers (e.g., 1, 2, 3) are given preference over sites with higher numbers (e.g., 8, 9, 10). This ensures critical mining areas receive attention first.'
+      title: 'Planning Data (Critical for Scheduling)',
+      items: [
+        {
+          subtitle: 'Total Plan Meters',
+          description: 'Total meters to drill/develop. Used in AREA and BOGT calculations. Example: 100 meters → DR task calculates (100 / 30 rate) × 60 = 200 minutes.'
+        },
+        {
+          subtitle: 'Total Backfill Tonnes',
+          description: 'Total tonnes of backfill material. Used in BFP and TON calculations. If 0, backfill tasks are skipped.'
+        },
+        {
+          subtitle: 'Remote Tonnes',
+          description: 'Tonnes for bogger/LHD to haul. Used in BOGT calculations. Formula: (remoteTonnes / duration) × 60.'
+        },
+        {
+          subtitle: 'Width',
+          description: 'Site-specific width in meters. If 0 or blank, uses WIDTH constant from Settings. Used in volume calculations.'
+        },
+        {
+          subtitle: 'Height',
+          description: 'Site-specific height in meters. If 0 or blank, uses HEIGHT constant from Settings. Used in volume calculations.'
+        }
+      ]
     },
     {
-      title: 'Task Limits',
-      content: 'Task limits prevent too many operations from running simultaneously at one site. This helps manage: resource conflicts, safety constraints, physical space limitations, and equipment congestion. When a site reaches its task limit, additional tasks are queued or reassigned.'
+      title: 'Task Cycle Control',
+      items: [
+        {
+          subtitle: 'Current Task',
+          description: 'Task to start with (e.g., "DR", "CH"). If blank, starts with first task (order=1). Scheduler continues from this task through the cycle.'
+        },
+        {
+          subtitle: 'Firings',
+          description: 'Number of blast cycles: 0 or 1 = one cycle (currentTask to end). 2+ = repeat full cycle that many times. Example: firings=2 runs DR→CH→FI→BO→BF twice.'
+        },
+        {
+          subtitle: 'Time to Complete',
+          description: 'Override duration (in HOURS) for first occurrence of currentTask. If > 0, uses this instead of calculating. Example: 5 hours → DR runs 5 hours instead of calculated 4.'
+        }
+      ]
+    },
+    {
+      title: 'How Priority Works',
+      content: 'Scheduler sorts sites by priority (1, 2, 3...). Site 1 gets hours 1-10, Site 2 gets hours 11-20, etc. If grid runs out of hours (24 or 48), lower priority sites may not get all tasks completed.'
+    },
+    {
+      title: 'Planning Data Requirements',
+      content: 'For tasks to run: Area tasks (DR, CH) need totalPlanMeters. Bogging (BO) needs totalPlanMeters + remoteTonnes. Backfill (BF) needs totalBackfillTonnes. If values are 0, those tasks are skipped.'
     },
     {
       title: 'Managing Sites',
       items: [
         {
           subtitle: 'Edit Site',
-          description: 'Update site details, priority, or task limits as operational needs change.'
+          description: 'Modify any field. Changes take effect in new schedules. Update planning data as mining progresses.'
         },
         {
           subtitle: 'Toggle Status',
-          description: 'Quickly activate or deactivate sites without deleting them.'
+          description: 'Click Active checkbox to enable/disable. Also available as quick toggle in schedule grid (click site name).'
         },
         {
           subtitle: 'Delete Site',
-          description: 'Permanently remove a site. Warning: This may affect associated tasks and delays.'
+          description: 'Permanently remove. Warning: Removes all associations. Use inactive status instead if site may return.'
         }
       ]
     },
@@ -64,12 +106,12 @@ export const sitesHelp = {
       title: 'Import/Export',
       items: [
         {
-          subtitle: 'Import',
-          description: 'Bulk upload sites from Excel. Required columns: Site Name, Location, Priority, Task Limit.'
+          subtitle: 'Import Excel',
+          description: 'Bulk upload sites. Required: Site ID, Site Name, Priority. Optional: Planning data, width, height, current task.'
         },
         {
           subtitle: 'Export',
-          description: 'Download site data for backup or external analysis.'
+          description: 'Download all sites with complete data for backup or offline editing.'
         }
       ]
     },
@@ -77,16 +119,24 @@ export const sitesHelp = {
       title: 'Best Practices',
       items: [
         {
-          subtitle: 'Priority Planning',
-          description: 'Assign priorities based on mining plan, ore quality, accessibility, and business objectives.'
+          subtitle: 'Priority Strategy',
+          description: 'Assign priority based on: ore quality, accessibility, mining sequence, safety requirements, equipment availability.'
         },
         {
-          subtitle: 'Task Limit Setting',
-          description: 'Consider site size, equipment capacity, and safety requirements when setting limits.'
+          subtitle: 'Planning Data Accuracy',
+          description: 'Keep totalPlanMeters, tonnes, and dimensions current. Outdated data leads to incorrect durations.'
         },
         {
-          subtitle: 'Regular Reviews',
-          description: 'Update site priorities and limits as mining progresses and conditions change.'
+          subtitle: 'Width/Height Override',
+          description: 'Use site-specific width/height for non-standard stopes. Leave 0 for standard dimensions (uses constants).'
+        },
+        {
+          subtitle: 'Current Task Tracking',
+          description: 'Update currentTask as work progresses. Ensures schedule continues from correct point.'
+        },
+        {
+          subtitle: 'Regular Updates',
+          description: 'Review and update site data weekly. Adjust priorities as mining plan evolves.'
         }
       ]
     }

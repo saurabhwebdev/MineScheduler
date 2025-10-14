@@ -11,15 +11,23 @@ export const settingsHelp = {
       items: [
         {
           subtitle: 'Purpose',
-          description: 'UOMs define how tasks are measured and calculated. Common examples: Tonnes (for excavation), Area (for drilling), Task (for counting discrete operations).'
+          description: 'UOMs define how task durations are calculated using pattern matching. The UOM NAME determines which formula the scheduler uses. No formulas are stored - system matches names to built-in calculations.'
         },
         {
           subtitle: 'Creating a UOM',
-          description: 'Enter a unique UOM name and description. UOMs are used when creating tasks to determine duration calculations.'
+          description: 'Name: Unique identifier (e.g., "area", "ton", "bogt", "bfp", "task"). The NAME triggers specific formulas. Description: Optional notes about the UOM. Click Add UOM to save.'
+        },
+        {
+          subtitle: 'Pattern Matching',
+          description: 'UOM names trigger formulas: "area"/"meter" → Area-based (planMeters/rate). "ton"/"tonne" → Tonnage-based. "bogt"/"bogger" → Bogging calculation. "bfp"/"backfill" → Backfill. Any other name → Fixed duration (task).'
+        },
+        {
+          subtitle: 'Standard UOMs',
+          description: 'Create these 5: "area" (drilling/charging), "ton" (tonnage), "bogt" (bogging), "bfp" (backfill), "task" (fixed). These cover all mining operation types.'
         },
         {
           subtitle: 'Managing UOMs',
-          description: 'Edit, delete, import, or export UOM configurations. Warning: Deleting a UOM may affect tasks using that measurement.'
+          description: 'Edit: Change name or description. Delete: Warning - Tasks using this UOM will need updating. Import/Export: Bulk manage UOMs via Excel.'
         }
       ]
     },
