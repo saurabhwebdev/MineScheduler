@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tooltip } from 'antd';
+import { Tooltip, notification } from 'antd';
 import DelayModal from './DelayModal';
 
 const ScheduleCell = ({ 
@@ -9,6 +9,8 @@ const ScheduleCell = ({
   taskColor, 
   isActive, 
   isDelayed,
+  delayInfo,
+  delayColor,
   onAddDelay,
   onRemoveDelay 
 }) => {
@@ -16,7 +18,18 @@ const ScheduleCell = ({
   
   const handleClick = () => {
     if (isDelayed) {
-      // If already delayed, offer to remove
+      // Check if this is an automatic shift changeover delay
+      if (delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE') {
+        // Don't allow removal of automatic shift changeover delays
+        notification.warning({
+          message: 'Automatic Delay',
+          description: 'Shift changeover delays are automatic and cannot be removed manually. Configure shifts in Settings.',
+          duration: 4
+        });
+        return;
+      }
+      
+      // Allow removal of manual delays
       if (window.confirm(`Remove delay from ${siteId} at hour ${hour + 1}?`)) {
         onRemoveDelay(siteId, hour);
       }
@@ -41,7 +54,7 @@ const ScheduleCell = ({
 
     if (isDelayed) {
       return {
-        backgroundColor: '#ff4d4f',
+        backgroundColor: delayColor || '#ff4d4f',
         position: 'relative'
       };
     }
@@ -56,7 +69,12 @@ const ScheduleCell = ({
   };
 
   const tooltipTitle = () => {
-    if (isDelayed) return `Delayed - Click to remove`;
+    if (isDelayed) {
+      if (delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE') {
+        return `Shift Changeover: ${delayInfo.comments || 'Automatic delay'}`;
+      }
+      return `Delayed - Click to remove`;
+    }
     if (taskId) return `${taskId} - Click to add delay`;
     return 'Empty - Click to add delay';
   };
@@ -73,7 +91,11 @@ const ScheduleCell = ({
         >
           {isDelayed && (
             <div className="delay-overlay">
-              <span className="delay-icon">⚠</span>
+              {delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE' ? (
+                <span className="delay-icon shift-change-icon">↻</span>
+              ) : (
+                <span className="delay-icon">⚠</span>
+              )}
             </div>
           )}
           {taskId && !isDelayed && (

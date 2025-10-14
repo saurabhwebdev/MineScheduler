@@ -135,8 +135,29 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     return '▼';
   };
 
+  const getDelayInfo = (site, hour) => {
+    return delayedSlots.find(d => d.row === site && d.hourIndex === hour);
+  };
+
   const isDelayed = (site, hour) => {
-    return delayedSlots.some(d => d.row === site && d.hourIndex === hour);
+    return !!getDelayInfo(site, hour);
+  };
+
+  // Get shift color for a delay if it's a shift changeover
+  const getDelayColor = (delayInfo) => {
+    if (!delayInfo) return null;
+    
+    // If this is an automatic shift changeover delay
+    if (delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE' && delayInfo.shiftCode) {
+      // Find the shift with this code
+      const shift = shifts.find(s => s.shiftCode === delayInfo.shiftCode);
+      if (shift && shift.color) {
+        return shift.color;
+      }
+    }
+    
+    // Default delay color (red)
+    return '#ff4d4f';
   };
 
   const handleSiteClick = (siteId) => {
@@ -225,7 +246,9 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                   {Array.from({ length: gridHours }, (_, hour) => {
                     const taskId = grid[siteId][hour];
                     const taskColor = taskId ? taskColors[taskId] : null;
-                    const delayed = isDelayed(siteId, hour);
+                    const delayInfo = getDelayInfo(siteId, hour);
+                    const delayed = !!delayInfo;
+                    const delayColor = getDelayColor(delayInfo);
 
                     return (
                       <ScheduleCell
@@ -236,6 +259,8 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                         taskColor={taskColor}
                         isActive={isActive}
                         isDelayed={delayed}
+                        delayInfo={delayInfo}
+                        delayColor={delayColor}
                         onAddDelay={onAddDelay}
                         onRemoveDelay={onRemoveDelay}
                       />
