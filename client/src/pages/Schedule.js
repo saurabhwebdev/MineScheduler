@@ -220,7 +220,7 @@ const Schedule = () => {
         {!loading && scheduleData && (
           <ScheduleGrid
             scheduleData={scheduleData}
-            delayedSlots={delayedSlots}
+            delayedSlots={scheduleData.allDelays || delayedSlots}
             onToggleSite={handleToggleSite}
             onAddDelay={handleAddDelay}
             onRemoveDelay={handleRemoveDelay}

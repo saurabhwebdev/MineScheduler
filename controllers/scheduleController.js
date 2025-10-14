@@ -164,7 +164,9 @@ exports.generateSchedule = async (req, res) => {
           startTime: s.startTime,
           endTime: s.endTime,
           color: s.color
-        }))
+        })),
+        shiftChangeoverDelays: shiftChangeoverDelays,
+        allDelays: allDelays
       }
     });
 
