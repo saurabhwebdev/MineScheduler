@@ -9,13 +9,14 @@ import './DashboardLayout.css';
 
 const DashboardLayout = ({ children, title, subtitle, page }) => {
   const [helpVisible, setHelpVisible] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const helpData = getHelpForPage(page);
 
   return (
     <div className="dashboard-layout">
-      <Sidebar />
+      <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
       <div className="dashboard-main">
-        <Header title={title} subtitle={subtitle} />
+        <Header title={title} subtitle={subtitle} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
         <div className="dashboard-content">
           {children}
         </div>

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Avatar, Badge } from 'antd';
+import { BellOutlined, LogoutOutlined } from '@ant-design/icons';
 import { 
   HomeOutlined, 
   CalendarOutlined, 
@@ -13,13 +15,13 @@ import {
   EnvironmentOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
+import { generateAvatar, getInitials } from '../utils/avatarUtils';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const menuItems = [
     // Main Dashboard
@@ -55,28 +57,44 @@ const Sidebar = () => {
 
   const handleMenuItemClick = (path) => {
     navigate(path);
-    setIsMobileMenuOpen(false); // Close mobile menu after navigation
+    setIsMobileMenuOpen(false);
   };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const handleLogout = () => {
+    logout();
+    setIsMobileMenuOpen(false);
   };
 
   return (
     <>
-      {/* Mobile Menu Toggle Button */}
-      <button className="mobile-menu-toggle" onClick={toggleMobileMenu} aria-label="Toggle menu">
-        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-      </button>
-
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} />
       )}
 
       <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+        {/* Mobile Profile Section */}
+        <div className="sidebar-mobile-profile">
+          <Avatar 
+            size={56}
+            src={generateAvatar(user)}
+            style={{ backgroundColor: '#062d54', color: '#ffffff' }}
+          >
+            {!generateAvatar(user) && getInitials(user?.name)}
+          </Avatar>
+          <div className="mobile-profile-info">
+            <div className="mobile-profile-name">{user?.name || 'User'}</div>
+            <div className="mobile-profile-email">{user?.email || ''}</div>
+            <div className="mobile-profile-role">{user?.role === 'admin' ? 'Administrator' : 'User'}</div>
+          </div>
+          <div className="mobile-profile-actions">
+            <Badge count={0} showZero={false}>
+              <BellOutlined className="mobile-notification-icon" />
+            </Badge>
+          </div>
+        </div>
+
+        <div className="sidebar-divider" />
       <div className="sidebar-logo">
         <div className="logo-icon" onClick={() => navigate('/dashboard')}>M</div>
       </div>
@@ -94,6 +112,13 @@ const Sidebar = () => {
             <span className="mobile-label">{item.label}</span>
           </div>
         ))}
+      </div>
+
+      {/* Mobile Logout Button */}
+      <div className="sidebar-mobile-logout">
+        <button className="mobile-logout-btn" onClick={handleLogout}>
+          <LogoutOutlined /> Logout
+        </button>
       </div>
     </div>
     </>

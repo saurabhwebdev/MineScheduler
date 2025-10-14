@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Badge, Dropdown } from 'antd';
-import { BellOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
 import './Header.css';
 
-const Header = ({ title, subtitle }) => {
+const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ const Header = ({ title, subtitle }) => {
         </div>
 
         <div className="header-right">
-          <div className="header-notification">
+          <div className="header-notification header-desktop-only">
             <Badge count={0} showZero={false}>
               <BellOutlined className="notification-icon" />
             </Badge>
@@ -59,6 +59,7 @@ const Header = ({ title, subtitle }) => {
             placement="bottomRight"
             trigger={['click']}
             overlayStyle={{ padding: 0 }}
+            className="header-desktop-only"
           >
             <div className="header-user">
               <Avatar 
@@ -70,6 +71,15 @@ const Header = ({ title, subtitle }) => {
               </Avatar>
             </div>
           </Dropdown>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-menu-toggle-header" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
+          </button>
         </div>
       </div>
     </div>

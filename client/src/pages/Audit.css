@@ -250,27 +250,53 @@
     padding: 0;
   }
 
-  /* Make table scrollable horizontally */
-  .table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  /* Hide table, show card layout */
+  .table-container .ant-table-thead {
+    display: none;
   }
 
-  /* Reduce table font sizes */
-  .table-container .ant-table {
-    font-size: 12px;
+  .table-container .ant-table-tbody > tr {
+    display: block;
+    margin-bottom: 12px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
-  .table-container .ant-table-thead > tr > th {
-    padding: 10px 12px;
-    font-size: 10px;
-    white-space: nowrap;
+  .table-container .ant-table-tbody > tr:hover {
+    background: #fafafa !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
   .table-container .ant-table-tbody > tr > td {
-    padding: 10px 12px;
-    font-size: 12px;
-    white-space: nowrap;
+    display: block;
+    padding: 6px 0;
+    border-bottom: none;
+    font-size: 13px;
+    position: relative;
+    padding-left: 110px;
+    min-height: 32px;
+  }
+
+  .table-container .ant-table-tbody > tr > td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    font-weight: 600;
+    color: #595959;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .table-container .ant-table-tbody > tr > td:first-child {
+    padding-top: 0;
+  }
+
+  .table-container .ant-table-tbody > tr > td:last-child {
+    padding-bottom: 0;
   }
 
   /* Make action badges smaller */
