@@ -15,8 +15,8 @@ const EquipmentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Excavator', 'Haul Truck', 'Drill', 'Loader', 'Grader', 'Dozer', 'Bogger', 'Other'],
-    required: [true, 'Please specify equipment type']
+    required: [true, 'Please specify equipment type'],
+    trim: true
   },
   status: {
     type: String,
