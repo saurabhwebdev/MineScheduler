@@ -254,16 +254,23 @@ function calculateShiftChangeoverDelays(shifts, sites, gridHours) {
     // Example: If shift starts at 6:00 and changeover is 30 min,
     // delay should be from 5:30 to 6:00, which covers hour 5
     for (let i = 0; i < durationHours; i++) {
-      const changeoverHour = (startHours - durationHours + i + 24) % 24;
+      const changeoverHourIn24 = (startHours - durationHours + i + 24) % 24;
       
-      // Only add if within grid range
-      if (changeoverHour < gridHours) {
-        if (!changeoverHoursMap.has(changeoverHour)) {
-          changeoverHoursMap.set(changeoverHour, {
-            shiftName: shift.shiftName,
-            shiftCode: shift.shiftCode,
-            durationMinutes: durationMinutes
-          });
+      // For 48-hour grids, add delays for both day 1 and day 2
+      const daysToGenerate = gridHours <= 24 ? 1 : Math.ceil(gridHours / 24);
+      
+      for (let day = 0; day < daysToGenerate; day++) {
+        const changeoverHour = changeoverHourIn24 + (day * 24);
+        
+        // Only add if within grid range
+        if (changeoverHour < gridHours) {
+          if (!changeoverHoursMap.has(changeoverHour)) {
+            changeoverHoursMap.set(changeoverHour, {
+              shiftName: shift.shiftName,
+              shiftCode: shift.shiftCode,
+              durationMinutes: durationMinutes
+            });
+          }
         }
       }
     }

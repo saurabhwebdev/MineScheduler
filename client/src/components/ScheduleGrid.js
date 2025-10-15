@@ -18,11 +18,15 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   }, []);
 
   // Calculate shift for a given hour based on shifts from backend
+  // Supports both 24-hour and 48-hour grids
   const getShiftForHour = (hour) => {
+    // For 48-hour grids, map hours 24-47 back to 0-23
+    const hourIn24 = hour % 24;
+    
     if (!shifts || shifts.length === 0) {
       // Fallback to default shifts if none configured
-      if (hour >= 6 && hour < 14) return { name: 'A', code: 'A', color: '#52c41a' };
-      if (hour >= 14 && hour < 22) return { name: 'B', code: 'B', color: '#1890ff' };
+      if (hourIn24 >= 6 && hourIn24 < 14) return { name: 'A', code: 'A', color: '#52c41a' };
+      if (hourIn24 >= 14 && hourIn24 < 22) return { name: 'B', code: 'B', color: '#1890ff' };
       return { name: 'C', code: 'C', color: '#722ed1' };
     }
 
@@ -33,12 +37,12 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
 
       if (startHour < endHour) {
         // Same-day shift
-        if (hour >= startHour && hour < endHour) {
+        if (hourIn24 >= startHour && hourIn24 < endHour) {
           return { name: shift.shiftName, code: shift.shiftCode, color: shift.color };
         }
       } else {
         // Overnight shift
-        if (hour >= startHour || hour < endHour) {
+        if (hourIn24 >= startHour || hourIn24 < endHour) {
           return { name: shift.shiftName, code: shift.shiftCode, color: shift.color };
         }
       }
