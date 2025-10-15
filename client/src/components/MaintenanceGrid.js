@@ -84,21 +84,32 @@ const MaintenanceGrid = ({ equipment }) => {
     return !usage.inUse && eq.status === 'operational';
   };
 
-  // Calculate time indicator position (only for grid cells, not entire table)
+  // Calculate time indicator position in pixels
   const getTimeIndicatorPosition = () => {
     const hours = currentTime.getHours();
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Calculate precise position within the hour grid
-    const totalMinutes = hours * 60 + minutes + seconds / 60;
-    const percentage = (totalMinutes / (gridHours * 60)) * 100;
+    // Calculate current time as decimal hours (e.g., 10:40 = 10.667 hours)
+    const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
     
-    return percentage;
+    // Fixed columns width: 150 (equipment) + 120 (status) + 100 (hours) + 120 (tasks) = 490px
+    const fixedColumnsWidth = 490;
+    
+    // Each hour column is 45px wide
+    const hourColumnWidth = 45;
+    
+    // Calculate position within grid in pixels
+    const gridPosition = currentHourDecimal * hourColumnWidth;
+    
+    // Total position = fixed columns + grid position
+    const totalPosition = fixedColumnsWidth + gridPosition;
+    
+    return totalPosition;
   };
 
   const timeIndicatorPosition = getTimeIndicatorPosition();
-  const showTimeIndicator = timeIndicatorPosition >= 0 && timeIndicatorPosition <= 100;
+  const showTimeIndicator = timeIndicatorPosition >= 0 && timeIndicatorPosition <= (490 + gridHours * 45);
 
   if (loading) {
     return (
@@ -114,7 +125,7 @@ const MaintenanceGrid = ({ equipment }) => {
         {showTimeIndicator && (
           <div 
             className="time-indicator-line" 
-            style={{ left: `${timeIndicatorPosition}%` }}
+            style={{ left: `${timeIndicatorPosition}px` }}
             title={`Current Time: ${currentTime.toLocaleTimeString()}`}
           >
             <div className="time-indicator-dot"></div>

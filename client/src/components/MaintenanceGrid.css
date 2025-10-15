@@ -28,8 +28,8 @@
   pointer-events: none;
   box-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
   animation: pulse-line 2s ease-in-out infinite;
-  /* Position after fixed columns: 150px (equipment) + 120px (status) + 100px (hours) + 120px (tasks) = 490px */
-  margin-left: 490px;
+  /* Position calculated inline with calc(490px + percentage) */
+  /* 490px = 150px (equipment) + 120px (status) + 100px (hours) + 120px (tasks) */
 }
 
 .time-indicator-dot {
