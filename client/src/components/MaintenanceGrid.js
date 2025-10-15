@@ -90,11 +90,9 @@ const MaintenanceGrid = ({ equipment }) => {
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Grid columns: index 0="1h", index 1="2h", ..., index 10="11h"
-    // At 11:00 AM (hours=11), we want column index 10 (labeled "11h")
-    // So we need: hours - 1 to get the correct column index
-    // At 11:00 AM: (11-1) = 10 = column "11h" ✓
-    const currentHourDecimal = (hours - 1) + minutes / 60 + seconds / 3600;
+    // Column labeled "11" should show time 11:00-11:59
+    // At 11:05 AM, hours=11, should be in column "11"
+    const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
     
     // Fixed columns width: 150 (equipment) + 120 (status) + 100 (hours) + 120 (tasks) = 490px
     const fixedColumnsWidth = 490;
