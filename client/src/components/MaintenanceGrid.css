@@ -3,8 +3,7 @@
   border-radius: 6px;
   padding: 20px;
   border: 1px solid #e8e8e8;
-  margin-top: 24px;
-  max-height: calc(100vh - 280px); /* Leave space for header */
+  height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;

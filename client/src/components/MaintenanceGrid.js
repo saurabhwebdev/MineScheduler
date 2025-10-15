@@ -90,16 +90,20 @@ const MaintenanceGrid = ({ equipment }) => {
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Grid data: grid[site][0] = hour 0 (00:00-00:59), grid[site][11] = hour 11 (11:00-11:59)
-    // Column display: i=0 shows "1h", i=11 shows "12h" (i+1)
-    // But grid data index matches clock hour: at 11:05 AM (hours=11), check grid[site][11]
-    // So column displaying "12h" (i=11) shows grid[11] which is 11:00-11:59
-    // Therefore, at hours=11, we want position at column index 11 (labeled "12h")
+    // Column labeled "11h" (index 10) represents time 11:00-11:59
+    // At 11:29 AM, hours=11, should be in column index 10 (labeled "11h")
+    // Formula: columnIndex = hours - 1 (since column "1h" is index 0)
+    // At 00:29 AM (midnight), hours=0, should be in column index 0 (labeled "1h") - but 0-1=-1!
+    // Special case: hour 0 wraps to hour 24 in 24h display, OR it's in column 0
     
-    const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
+    // For correct positioning: columns 1-24 represent hours 1-24 (not 0-23)
+    // But getHours() returns 0-23, so we need to convert
+    // Hour 0 (midnight) should show in column "24h" (index 23) OR column "1h" (index 0)
+    // Typically, hour 0 = column "1h" for daily schedules
     
-    // Use calc with percentage to handle any border/padding issues
-    // Grid portion width = gridHours * 45px
+    const hourIn24Format = hours === 0 ? 24 : hours; // Convert 0 to 24
+    const currentHourDecimal = (hourIn24Format - 1) + minutes / 60 + seconds / 3600;
+    
     const gridWidthPx = gridHours * 45;
     const percentageWithinGrid = (currentHourDecimal / gridHours) * 100;
     
