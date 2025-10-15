@@ -57,10 +57,10 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
 
   // Check if a given hour column is the current hour
   const isCurrentHour = (hour) => {
-    // For 24-hour grid: hour 0-23
-    // For 48-hour grid: hour 0-47 (0-23 for day 1, 24-47 for day 2)
-    const hourIn24 = hour % 24;
-    return hourIn24 === currentHour;
+    // Only highlight the actual current hour, not repeating hours in multi-day grids
+    // For 6/12/24-hour grids: highlight if hour matches current hour
+    // For 48-hour grid: only highlight current hour (0-23), not tomorrow's same hour (24-47)
+    return hour === currentHour;
   };
 
   // Sort sites based on sort direction with G7/G8 grouping

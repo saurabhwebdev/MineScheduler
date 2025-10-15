@@ -226,6 +226,8 @@ const Schedule = () => {
             <div className="control-group">
               <label>Grid Hours:</label>
               <Radio.Group value={gridHours} onChange={handleHoursChange}>
+                <Radio.Button value={6}>6 Hours</Radio.Button>
+                <Radio.Button value={12}>12 Hours</Radio.Button>
                 <Radio.Button value={24}>24 Hours</Radio.Button>
                 <Radio.Button value={48}>48 Hours</Radio.Button>
               </Radio.Group>
