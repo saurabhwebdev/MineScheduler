@@ -21,6 +21,10 @@ DENSITY   | 2.7  | tonnes/m3  | Ore density
 ### 2. Equipment Types (Settings Page)
 Add these types:
 
+1. Click **Settings** in sidebar
+2. Go to **Equipment Types** tab
+3. Add these 4 types (click "Add Equipment Type" for each):
+
 ```
 - Drill Rig
 - Excavator
@@ -30,65 +34,187 @@ Add these types:
 
 ---
 
-### 3. Tasks (Tasks Page)
+### 3. Units of Measurement - UOM (Settings Page)
+Add these 5 UOMs (REQUIRED before creating tasks):
+
+1. Go to **UOM** tab in Settings
+2. Click "Add UOM" for each:
+
+**UOM 1:**
+- **Name:** `area`
+- **Description:** `Area-based calculation for drilling`
+- Click "Add UOM"
+
+**UOM 2:**
+- **Name:** `ton`
+- **Description:** `Tonnage-based calculation`
+- Click "Add UOM"
+
+**UOM 3:**
+- **Name:** `bogt`
+- **Description:** `Bogging calculation`
+- Click "Add UOM"
+
+**UOM 4:**
+- **Name:** `bfp`
+- **Description:** `Backfill placement`
+- Click "Add UOM"
+
+**UOM 5:**
+- **Name:** `task`
+- **Description:** `Fixed task duration`
+- Click "Add UOM"
+
+**Note:** UOM names trigger calculation formulas. "area"/"meter" = area-based, "ton" = tonnage, "bogt" = bogging, "bfp" = backfill, "task" = fixed time.
+
+---
+
+### 4. Tasks (Tasks Page)
 Create 4 tasks:
 
-| Task ID | Name | Duration (min) | Rate/hr | UOM | Equipment Type |
-|---------|------|----------------|---------|-----|----------------|
-| DRI | Drilling | 240 | 50 | meters | Drill Rig |
-| EXC | Excavation | 360 | 100 | tons | Excavator |
-| CRU | Crushing | 180 | 75 | tons | Crusher |
-| HAU | Hauling | 120 | 30 | tons | Haul Truck |
+**Task 1 - Drilling:**
+1. Click "New Task"
+2. Fill form:
+   - **Task ID:** `DRI`
+   - **Task Name:** `Drilling`
+   - **Task Type:** Select `Activity (Quantifiable with UOM & Rate)`
+   - **UOM:** Select `area` from dropdown
+   - **Rate (per hour):** `50`
+   - **Task Duration (Minutes):** `240`
+   - **Task Color:** Choose red (e.g., `#e74c3c`)
+   - **Formula:** Leave blank (optional)
+   - **Limits/Equipments:** Select `3`
+3. Click "Create"
 
-**How to add:**
-- Click "New Task"
-- Fill all fields
-- Task Color: Choose distinct colors (Red, Blue, Green, Orange)
-- Click "Create"
+**Task 2 - Excavation:**
+- **Task ID:** `EXC`
+- **Task Name:** `Excavation`
+- **Task Type:** `Activity (Quantifiable with UOM & Rate)`
+- **UOM:** `ton`
+- **Rate (per hour):** `100`
+- **Task Duration (Minutes):** `360`
+- **Task Color:** Blue (e.g., `#3498db`)
+- **Limits/Equipments:** `4`
+
+**Task 3 - Crushing:**
+- **Task ID:** `CRU`
+- **Task Name:** `Crushing`
+- **Task Type:** `Activity (Quantifiable with UOM & Rate)`
+- **UOM:** `ton`
+- **Rate (per hour):** `75`
+- **Task Duration (Minutes):** `180`
+- **Task Color:** Green (e.g., `#2ecc71`)
+- **Limits/Equipments:** `2`
+
+**Task 4 - Hauling:**
+- **Task ID:** `HAU`
+- **Task Name:** `Hauling`
+- **Task Type:** `Simple Task (Time-based only)`
+- **UOM:** `task`
+- **Task Duration (Minutes):** `120`
+- **Task Color:** Orange (e.g., `#f39c12`)
+- **Limits/Equipments:** `5`
+
+**Note:** When you select "Activity" type, the Rate field appears. The system will show "Calculated Output" alert showing the result.
 
 ---
 
-### 4. Sites (Sites Page)
+### 5. Sites (Sites Page)
 Create 5 test sites:
 
-| Site ID | Site Name | Priority | Active | Location | Tasks Needed |
-|---------|-----------|----------|--------|----------|--------------|
-| SITE-A | North Pit | 1 | ✅ | North Zone | DRI, EXC, HAU |
-| SITE-B | South Pit | 2 | ✅ | South Zone | EXC, CRU |
-| SITE-C | East Pit | 3 | ✅ | East Zone | DRI, HAU |
-| SITE-D | West Pit | 4 | ❌ | West Zone | DRI, EXC |
-| SITE-E | Central Pit | 5 | ✅ | Central | HAU, CRU |
+**Site 1 - SITE-A:**
+1. Click "New Site"
+2. **Tab 1 - Basic Info:**
+   - **Site ID:** `SITE-A`
+   - **Site Name:** `North Pit`
+   - **Priority:** `1`
+   - **Type:** Select `mining`
+   - **Location:** `North Zone`
+   - **Active:** ✅ (toggle ON)
+3. **Tab 2 - Planning Data:**
+   - **Total Backfill Tonnes:** `500`
+   - **Total Plan Meters:** `100`
+   - **Remote Tonnes:** `200`
+   - **Firings:** `0`
+   - **Width (m):** `3.6`
+   - **Height (m):** `3.4`
+   - **Current Task:** Leave blank (or select `DRI`)
+   - **Time to Complete:** `0`
+4. Click "Create"
 
-**How to add:**
-- Click "New Site"
-- Fill Site ID, Name, Priority
-- Check/uncheck Active
-- Enter Location
-- Save
+**Site 2 - SITE-B:**
+- **Basic Info:** ID: `SITE-B`, Name: `South Pit`, Priority: `2`, Type: `mining`, Location: `South Zone`, Active: ✅
+- **Planning Data:** Backfill: `400`, Plan Meters: `80`, Remote: `150`, Firings: `0`, Width: `3.6`, Height: `3.4`
 
-**Then assign tasks:**
-- Click on site name
-- Click "Assign Tasks"
-- Select tasks from dropdown
-- Save
+**Site 3 - SITE-C:**
+- **Basic Info:** ID: `SITE-C`, Name: `East Pit`, Priority: `3`, Type: `mining`, Location: `East Zone`, Active: ✅
+- **Planning Data:** Backfill: `600`, Plan Meters: `120`, Remote: `250`, Firings: `0`, Width: `3.6`, Height: `3.4`
+
+**Site 4 - SITE-D (Inactive):**
+- **Basic Info:** ID: `SITE-D`, Name: `West Pit`, Priority: `4`, Type: `mining`, Location: `West Zone`, **Active: ❌ (toggle OFF)**
+- **Planning Data:** Backfill: `450`, Plan Meters: `90`, Remote: `180`, Firings: `0`, Width: `3.6`, Height: `3.4`
+
+**Site 5 - SITE-E:**
+- **Basic Info:** ID: `SITE-E`, Name: `Central Pit`, Priority: `5`, Type: `mining`, Location: `Central`, Active: ✅
+- **Planning Data:** Backfill: `550`, Plan Meters: `110`, Remote: `220`, Firings: `0`, Width: `3.6`, Height: `3.4`
 
 ---
 
-### 5. Equipment (Equipment Page)
+### 6. Equipment (Equipment Page)
 Create 8 pieces of equipment:
 
-| ID | Name | Type | Status | Tasks | Maint Hours | Current Hours |
-|----|------|------|--------|-------|-------------|---------------|
-| EX-01 | Excavator-1 | Excavator | operational | EXC | 500 | 50 |
-| EX-02 | Excavator-2 | Excavator | operational | EXC | 500 | 480 |
-| DR-01 | Drill-1 | Drill Rig | operational | DRI | 500 | 100 |
-| DR-02 | Drill-2 | Drill Rig | operational | DRI | 500 | 450 |
-| CR-01 | Crusher-1 | Crusher | operational | CRU | 500 | 200 |
-| HT-01 | Hauler-1 | Haul Truck | operational | HAU | 500 | 150 |
-| HT-02 | Hauler-2 | Haul Truck | operational | HAU | 500 | 300 |
-| EX-03 | Excavator-3 | Excavator | maintenance | EXC | 500 | 520 |
+**Equipment 1 - EX-01:**
+1. Click "New Equipment"
+2. **Tab 1 - Basic Info:**
+   - **Equipment ID:** `EX-01`
+   - **Name:** `Excavator-1`
+   - **Type:** Select `Excavator` from dropdown
+   - **Status:** `Operational`
+   - **Location:** Select any site (optional)
+3. **Tab 2 - Specifications:** (all optional - leave blank for quick test)
+4. **Tab 3 - Maintenance:**
+   - **Maintenance Interval (hours):** `500`
+   - **Operating Hours:** `50`
+5. **Tab 4 - Tasks:**
+   - **Assigned Tasks:** Select `EXC` from dropdown
+6. Click "Create"
 
-**Note:** DR-02 and EX-03 are near/past maintenance (will show warnings)
+**Equipment 2 - EX-02:**
+- **Basic:** ID: `EX-02`, Name: `Excavator-2`, Type: `Excavator`, Status: `Operational`
+- **Maintenance:** Interval: `500`, Operating Hours: `480`
+- **Tasks:** `EXC`
+
+**Equipment 3 - DR-01:**
+- **Basic:** ID: `DR-01`, Name: `Drill-1`, Type: `Drill Rig`, Status: `Operational`
+- **Maintenance:** Interval: `500`, Operating Hours: `100`
+- **Tasks:** `DRI`
+
+**Equipment 4 - DR-02 (DUE SOON):**
+- **Basic:** ID: `DR-02`, Name: `Drill-2`, Type: `Drill Rig`, Status: `Operational`
+- **Maintenance:** Interval: `500`, **Operating Hours: `450`** (90% used - will show DUE SOON)
+- **Tasks:** `DRI`
+
+**Equipment 5 - CR-01:**
+- **Basic:** ID: `CR-01`, Name: `Crusher-1`, Type: `Crusher`, Status: `Operational`
+- **Maintenance:** Interval: `500`, Operating Hours: `200`
+- **Tasks:** `CRU`
+
+**Equipment 6 - HT-01:**
+- **Basic:** ID: `HT-01`, Name: `Hauler-1`, Type: `Haul Truck`, Status: `Operational`
+- **Maintenance:** Interval: `500`, Operating Hours: `150`
+- **Tasks:** `HAU`
+
+**Equipment 7 - HT-02:**
+- **Basic:** ID: `HT-02`, Name: `Hauler-2`, Type: `Haul Truck`, Status: `Operational`
+- **Maintenance:** Interval: `500`, Operating Hours: `300`
+- **Tasks:** `HAU`
+
+**Equipment 8 - EX-03 (OVERDUE):**
+- **Basic:** ID: `EX-03`, Name: `Excavator-3`, Type: `Excavator`, **Status: `Maintenance`**
+- **Maintenance:** Interval: `500`, **Operating Hours: `520`** (104% used - OVERDUE)
+- **Tasks:** `EXC`
+
+**Note:** DR-02 (450/500) will show "DUE SOON" badge. EX-03 (520/500) will show "OVERDUE" badge.
 
 ---
 
