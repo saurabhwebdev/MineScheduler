@@ -22,7 +22,7 @@
 
 .schedule-grid th,
 .schedule-grid td {
-  border: 1px solid #e8e8e8;
+  border: 1px solid #f0f0f0;
   padding: 8px;
   text-align: center;
   vertical-align: middle;
@@ -30,29 +30,31 @@
 }
 
 .schedule-grid th {
-  background: #f9f9f9;
-  color: #262626;
+  background: #fafafa;
+  color: #595959;
   font-weight: 600;
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-/* Shift Row Styling */
+/* Shift Row Styling - Flat & Minimal */
 .schedule-grid .shift-row th {
-  background: #fafafa;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 6px;
-  border-bottom: 2px solid #d9d9d9;
+  background: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 8px 4px;
+  border: 1px solid #f0f0f0;
+  border-bottom: 1px solid #e8e8e8;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
 .schedule-grid .shift-row .shift-cell {
-  font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  text-shadow: none;
+  opacity: 0.95;
 }
 
 /* Time Indicator Line */
@@ -257,33 +259,34 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: transparent; /* NO background - let cell color show through */
-  color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+  background: transparent;
+  color: #595959;
   gap: 2px;
   pointer-events: none;
 }
 
 .delay-icon {
-  font-size: 16px;
+  font-size: 14px;
   animation: pulse 2s infinite;
+  opacity: 0.8;
 }
 
 .shift-change-icon {
-  font-size: 16px;
-  font-weight: bold;
-  animation: rotate 3s linear infinite;
+  font-size: 14px;
+  font-weight: 600;
+  animation: rotate 4s linear infinite;
   line-height: 1;
+  opacity: 0.7;
 }
 
 .shift-change-label {
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   line-height: 1;
-  color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  color: #8c8c8c;
+  text-shadow: none;
 }
 
 @keyframes pulse {
