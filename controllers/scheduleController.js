@@ -2,6 +2,7 @@ const Site = require('../models/Site');
 const Task = require('../models/Task');
 const Constant = require('../models/Constant');
 const Shift = require('../models/Shift');
+const Schedule = require('../models/Schedule');
 const { calculateTaskDuration } = require('../utils/durationCalculator');
 
 /**
@@ -146,27 +147,53 @@ exports.generateSchedule = async (req, res) => {
       }
     }
 
-    // 11. Return schedule data
+    // 11. Prepare schedule data
+    const scheduleData = {
+      grid,
+      hourlyAllocation,
+      taskDurations,
+      sitePriority,
+      siteActive,
+      taskColors,
+      taskLimits,
+      gridHours,
+      shifts: shifts.map(s => ({
+        shiftCode: s.shiftCode,
+        shiftName: s.shiftName,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        color: s.color
+      })),
+      shiftChangeoverDelays: shiftChangeoverDelays,
+      allDelays: allDelays
+    };
+
+    // 12. Save schedule to database
+    const savedSchedule = await Schedule.create({
+      gridHours,
+      grid,
+      hourlyAllocation,
+      taskDurations,
+      sitePriority,
+      siteActive,
+      taskColors,
+      taskLimits,
+      delayedSlots,
+      allDelays,
+      shiftChangeoverDelays,
+      shifts: scheduleData.shifts,
+      generatedBy: req.user._id,
+      generatedAt: new Date()
+    });
+
+    // 13. Return schedule data with metadata
     res.json({
       status: 'success',
       data: {
-        grid,
-        hourlyAllocation,
-        taskDurations,
-        sitePriority,
-        siteActive,
-        taskColors,
-        taskLimits,
-        gridHours,
-        shifts: shifts.map(s => ({
-          shiftCode: s.shiftCode,
-          shiftName: s.shiftName,
-          startTime: s.startTime,
-          endTime: s.endTime,
-          color: s.color
-        })),
-        shiftChangeoverDelays: shiftChangeoverDelays,
-        allDelays: allDelays
+        ...scheduleData,
+        scheduleId: savedSchedule._id,
+        generatedAt: savedSchedule.generatedAt,
+        generatedBy: savedSchedule.generatedBy
       }
     });
 
@@ -354,6 +381,82 @@ function allocateHours(
 
   lastFilledHour[siteId] = currentHour;
 }
+
+/**
+ * Get the latest generated schedule
+ * GET /api/schedule/latest
+ */
+exports.getLatestSchedule = async (req, res) => {
+  try {
+    // Find the most recent schedule
+    const latestSchedule = await Schedule.findOne()
+      .sort({ generatedAt: -1 })
+      .populate('generatedBy', 'name email')
+      .lean();
+
+    if (!latestSchedule) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'No schedule found. Please generate a schedule first.'
+      });
+    }
+
+    res.json({
+      status: 'success',
+      data: latestSchedule
+    });
+
+  } catch (error) {
+    console.error('Get latest schedule error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch latest schedule',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get schedule history
+ * GET /api/schedule/history
+ */
+exports.getScheduleHistory = async (req, res) => {
+  try {
+    const { limit = 10, page = 1 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const schedules = await Schedule.find()
+      .sort({ generatedAt: -1 })
+      .limit(parseInt(limit))
+      .skip(skip)
+      .populate('generatedBy', 'name email')
+      .select('_id generatedAt gridHours generatedBy')
+      .lean();
+
+    const total = await Schedule.countDocuments();
+
+    res.json({
+      status: 'success',
+      data: {
+        schedules,
+        pagination: {
+          total,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          pages: Math.ceil(total / parseInt(limit))
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Get schedule history error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch schedule history',
+      error: error.message
+    });
+  }
+};
 
 /**
  * Toggle site active status

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Space, Spin } from 'antd';
-import { CalendarOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Button, notification, Radio, Space, Spin, Tag } from 'antd';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
 import SnapshotManager from '../components/SnapshotManager';
@@ -12,6 +12,13 @@ const Schedule = () => {
   const [scheduleData, setScheduleData] = useState(null);
   const [delayedSlots, setDelayedSlots] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [generatedAt, setGeneratedAt] = useState(null);
+  const [loadingLatest, setLoadingLatest] = useState(true);
+
+  // Fetch latest schedule on mount
+  useEffect(() => {
+    fetchLatestSchedule();
+  }, []);
 
   // Load delayed slots from sessionStorage on mount
   useEffect(() => {
@@ -34,6 +41,37 @@ const Schedule = () => {
     }
   }, [delayedSlots]);
 
+  const fetchLatestSchedule = async () => {
+    setLoadingLatest(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/schedule/latest`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        setScheduleData(data.data);
+        setGeneratedAt(data.data.generatedAt);
+        setGridHours(data.data.gridHours);
+        // Load delays from the saved schedule
+        if (data.data.delayedSlots && data.data.delayedSlots.length > 0) {
+          setDelayedSlots(data.data.delayedSlots);
+        }
+      } else if (response.status === 404) {
+        // No schedule found yet - this is fine
+        console.log('No schedule found. User needs to generate first.');
+      }
+    } catch (error) {
+      console.error('Error fetching latest schedule:', error);
+    } finally {
+      setLoadingLatest(false);
+    }
+  };
+
   const generateSchedule = async () => {
     setLoading(true);
     try {
@@ -54,6 +92,7 @@ const Schedule = () => {
 
       if (response.ok && data.status === 'success') {
         setScheduleData(data.data);
+        setGeneratedAt(data.data.generatedAt);
         notification.success({
           message: 'Success',
           description: 'Schedule generated successfully',
@@ -161,6 +200,26 @@ const Schedule = () => {
       subtitle="Generate and manage your mine scheduling"
     >
       <div className="schedule-container">
+        {/* Generation Info */}
+        {generatedAt && scheduleData && (
+          <div className="schedule-info" style={{ marginBottom: '16px', padding: '12px 16px', background: '#f9f9f9', borderRadius: '6px', border: '1px solid #e8e8e8' }}>
+            <Space>
+              <ClockCircleOutlined style={{ color: '#3cca70' }} />
+              <span style={{ fontWeight: 500 }}>Last Generated:</span>
+              <Tag color="green">
+                {new Date(generatedAt).toLocaleString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })}
+              </Tag>
+            </Space>
+          </div>
+        )}
+
         {/* Controls */}
         <div className="schedule-controls">
           <Space size="large" wrap>
@@ -210,14 +269,14 @@ const Schedule = () => {
         </div>
 
         {/* Loading State */}
-        {loading && (
+        {(loading || loadingLatest) && (
           <div className="loading-container">
-            <Spin size="large" tip="Generating schedule..." />
+            <Spin size="large" tip={loading ? "Generating schedule..." : "Loading latest schedule..."} />
           </div>
         )}
 
         {/* Schedule Grid */}
-        {!loading && scheduleData && (
+        {!loading && !loadingLatest && scheduleData && (
           <ScheduleGrid
             scheduleData={scheduleData}
             delayedSlots={scheduleData.allDelays || delayedSlots}
@@ -228,7 +287,7 @@ const Schedule = () => {
         )}
 
         {/* Empty State */}
-        {!loading && !scheduleData && (
+        {!loading && !loadingLatest && !scheduleData && (
           <div className="empty-state">
             <CalendarOutlined className="empty-icon" />
             <h3>No Schedule Generated</h3>
