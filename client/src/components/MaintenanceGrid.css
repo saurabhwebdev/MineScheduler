@@ -95,11 +95,11 @@
 }
 
 .maintenance-grid {
-  width: 100%;
   border-collapse: collapse;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 13px;
   table-layout: fixed;
+  width: max-content;
   min-width: 100%;
 }
 

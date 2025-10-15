@@ -90,28 +90,20 @@ const MaintenanceGrid = ({ equipment }) => {
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Column labeled "11h" (index 10) represents time 11:00-11:59
-    // At 11:29 AM, hours=11, should be in column index 10 (labeled "11h")
-    // Formula: columnIndex = hours - 1 (since column "1h" is index 0)
-    // At 00:29 AM (midnight), hours=0, should be in column index 0 (labeled "1h") - but 0-1=-1!
-    // Special case: hour 0 wraps to hour 24 in 24h display, OR it's in column 0
+    // Simple calculation: position in pixels from start of grid
+    // Each hour column is 45px wide
+    // At 11:20 AM, hours=11, should be at (11 + 20/60) * 45px into the grid
+    const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
+    const positionInGrid = currentHourDecimal * 45;
     
-    // For correct positioning: columns 1-24 represent hours 1-24 (not 0-23)
-    // But getHours() returns 0-23, so we need to convert
-    // Hour 0 (midnight) should show in column "24h" (index 23) OR column "1h" (index 0)
-    // Typically, hour 0 = column "1h" for daily schedules
+    // Fixed columns: 490px (150 + 120 + 100 + 120)
+    const totalPosition = 490 + positionInGrid;
     
-    const hourIn24Format = hours === 0 ? 24 : hours; // Convert 0 to 24
-    const currentHourDecimal = (hourIn24Format - 1) + minutes / 60 + seconds / 3600;
-    
-    const gridWidthPx = gridHours * 45;
-    const percentageWithinGrid = (currentHourDecimal / gridHours) * 100;
-    
-    return { gridWidthPx, percentageWithinGrid };
+    return totalPosition;
   };
 
-  const { gridWidthPx, percentageWithinGrid } = getTimeIndicatorPosition();
-  const showTimeIndicator = percentageWithinGrid >= 0 && percentageWithinGrid <= 100;
+  const timeIndicatorPosition = getTimeIndicatorPosition();
+  const showTimeIndicator = timeIndicatorPosition >= 490 && timeIndicatorPosition <= (490 + gridHours * 45);
 
   if (loading) {
     return (
@@ -127,7 +119,7 @@ const MaintenanceGrid = ({ equipment }) => {
         {showTimeIndicator && (
           <div 
             className="time-indicator-line" 
-            style={{ left: `calc(490px + (${gridWidthPx}px * ${percentageWithinGrid} / 100))` }}
+            style={{ left: `${timeIndicatorPosition}px` }}
             title={`Current Time: ${currentTime.toLocaleTimeString()}`}
           >
             <div className="time-indicator-dot"></div>
