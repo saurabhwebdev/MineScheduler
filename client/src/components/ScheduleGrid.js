@@ -4,15 +4,18 @@ import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
 
   const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
-  // Update current time every second for smooth line movement
+  // Update current hour every minute
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000); // Update every second
+    const updateCurrentHour = () => {
+      setCurrentHour(new Date().getHours());
+    };
+    
+    updateCurrentHour(); // Set immediately
+    const interval = setInterval(updateCurrentHour, 60000); // Update every minute
 
     return () => clearInterval(interval);
   }, []);
@@ -52,17 +55,12 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     return { name: 'N/A', code: 'N/A', color: '#8c8c8c' };
   };
 
-  // Calculate time indicator position
-  const getTimeIndicatorPosition = () => {
-    const hours = currentTime.getHours();
-    const minutes = currentTime.getMinutes();
-    const seconds = currentTime.getSeconds();
-    
-    // Calculate precise position including seconds
-    const totalMinutes = hours * 60 + minutes + seconds / 60;
-    const percentage = (totalMinutes / (24 * 60)) * 100;
-    
-    return percentage;
+  // Check if a given hour column is the current hour
+  const isCurrentHour = (hour) => {
+    // For 24-hour grid: hour 0-23
+    // For 48-hour grid: hour 0-47 (0-23 for day 1, 24-47 for day 2)
+    const hourIn24 = hour % 24;
+    return hourIn24 === currentHour;
   };
 
   // Sort sites based on sort direction with G7/G8 grouping
@@ -176,20 +174,8 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     }
   };
 
-  const timeIndicatorPosition = getTimeIndicatorPosition();
-  const showTimeIndicator = timeIndicatorPosition >= 0 && timeIndicatorPosition <= 100;
-
   return (
     <div className="schedule-grid-wrapper">
-      {showTimeIndicator && (
-        <div 
-          className="time-indicator-line" 
-          style={{ left: `${timeIndicatorPosition}%` }}
-          title={`Current Time: ${currentTime.toLocaleTimeString()}`}
-        >
-          <div className="time-indicator-dot"></div>
-        </div>
-      )}
       <div className="schedule-grid-scroll">
         <table className="schedule-grid">
           <thead>
@@ -223,7 +209,10 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                 <span className="sort-indicator">{getSortIndicator()}</span>
               </th>
               {Array.from({ length: gridHours }, (_, i) => (
-                <th key={i} className="hour-col">
+                <th 
+                  key={i} 
+                  className={`hour-col ${isCurrentHour(i) ? 'current-hour' : ''}`}
+                >
                   {i + 1}
                 </th>
               ))}
@@ -271,6 +260,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                         isDelayed={delayed}
                         delayInfo={delayInfo}
                         delayColor={delayColor}
+                        isCurrentHour={isCurrentHour(hour)}
                         onAddDelay={onAddDelay}
                         onRemoveDelay={onRemoveDelay}
                       />

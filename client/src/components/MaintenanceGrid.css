@@ -18,80 +18,25 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Time Indicator Line - positioned to start after fixed columns */
-.time-indicator-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    #ff4d4f 5%, 
-    #ff4d4f 95%, 
-    transparent 100%);
-  z-index: 100;
-  pointer-events: none;
-  box-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
-  animation: pulse-line 2s ease-in-out infinite;
-  /* Position calculated inline with calc(490px + percentage) */
-  /* 490px = 150px (equipment) + 120px (status) + 100px (hours) + 120px (tasks) */
+/* Current Hour Highlighting - Flat & Minimal */
+.hour-col.current-hour {
+  background: linear-gradient(to bottom, rgba(60, 202, 112, 0.12) 0%, rgba(60, 202, 112, 0.08) 100%) !important;
+  color: #3cca70 !important;
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 rgba(60, 202, 112, 0.4);
 }
 
-.time-indicator-dot {
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  background: #ff4d4f;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.6);
-  animation: pulse-dot 2s ease-in-out infinite;
+.current-hour-cell {
+  position: relative;
+  animation: subtle-pulse 3s ease-in-out infinite;
 }
 
-.time-indicator-dot::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  background: rgba(255, 77, 79, 0.3);
-  border-radius: 50%;
-  animation: ripple 2s ease-out infinite;
-}
-
-@keyframes pulse-line {
+@keyframes subtle-pulse {
   0%, 100% {
-    opacity: 0.9;
-  }
-  50% {
     opacity: 1;
   }
-}
-
-@keyframes pulse-dot {
-  0%, 100% {
-    transform: translateX(-50%) scale(1);
-  }
   50% {
-    transform: translateX(-50%) scale(1.15);
-  }
-}
-
-@keyframes ripple {
-  0% {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-  }
-  100% {
-    width: 35px;
-    height: 35px;
-    opacity: 0;
+    opacity: 0.92;
   }
 }
 
@@ -147,6 +92,7 @@
   width: 45px;
   min-width: 45px;
   font-size: 11px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .task-col {

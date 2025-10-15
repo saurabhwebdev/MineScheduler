@@ -11,6 +11,7 @@ const ScheduleCell = ({
   isDelayed,
   delayInfo,
   delayColor,
+  isCurrentHour,
   onAddDelay,
   onRemoveDelay 
 }) => {
@@ -45,27 +46,40 @@ const ScheduleCell = ({
   };
 
   const getCellStyle = () => {
+    const baseStyle = {};
+    
     if (!isActive) {
       return {
         backgroundColor: '#444',
-        color: '#aaa'
+        color: '#aaa',
+        ...(isCurrentHour ? { boxShadow: 'inset 0 0 0 2px rgba(255, 255, 255, 0.3)' } : {})
       };
     }
 
     if (isDelayed) {
       return {
         backgroundColor: delayColor || '#ff4d4f',
-        position: 'relative'
+        position: 'relative',
+        ...(isCurrentHour ? { boxShadow: 'inset 0 0 0 2px rgba(255, 255, 255, 0.4)' } : {})
       };
     }
 
     if (taskId && taskColor) {
       return {
-        backgroundColor: taskColor
+        backgroundColor: taskColor,
+        ...(isCurrentHour ? { boxShadow: 'inset 0 0 0 2px rgba(255, 255, 255, 0.4)' } : {})
       };
     }
 
-    return {};
+    // Empty cell
+    if (isCurrentHour) {
+      return {
+        backgroundColor: 'rgba(60, 202, 112, 0.08)',
+        boxShadow: 'inset 0 0 0 2px rgba(60, 202, 112, 0.2)'
+      };
+    }
+
+    return baseStyle;
   };
 
   const tooltipTitle = () => {
@@ -83,7 +97,7 @@ const ScheduleCell = ({
     <>
       <Tooltip title={tooltipTitle()} placement="top">
         <td 
-          className={`schedule-cell ${isDelayed ? 'delayed' : ''} ${taskId ? 'has-task' : ''}`}
+          className={`schedule-cell ${isDelayed ? 'delayed' : ''} ${taskId ? 'has-task' : ''} ${isCurrentHour ? 'current-hour-cell' : ''}`}
           style={getCellStyle()}
           onClick={handleClick}
           data-site={siteId}

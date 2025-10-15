@@ -8,18 +8,22 @@ const MaintenanceGrid = ({ equipment }) => {
   const gridHours = 24; // Show 24 hours
   const [scheduleData, setScheduleData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
 
   // Fetch current schedule to see equipment usage
   useEffect(() => {
     fetchSchedule();
   }, []);
 
-  // Update current time every second for time indicator
+  // Update current hour every minute
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+    const updateCurrentHour = () => {
+      setCurrentHour(new Date().getHours());
+    };
+    
+    updateCurrentHour(); // Set immediately
+    const interval = setInterval(updateCurrentHour, 60000); // Update every minute
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -84,41 +88,10 @@ const MaintenanceGrid = ({ equipment }) => {
     return !usage.inUse && eq.status === 'operational';
   };
 
-  // Calculate time indicator position
-  const getTimeIndicatorPosition = () => {
-    const hours = currentTime.getHours();
-    const minutes = currentTime.getMinutes();
-    const seconds = currentTime.getSeconds();
-    
-    // Calculate decimal hour position (0-23.999...)
-    const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
-    
-    // For multi-day grids, we need to check if current time falls within the grid range
-    // Grid starts at hour 0 and extends for gridHours (e.g., 24, 48, etc.)
-    // Current implementation assumes grid shows hours 0-23 (or 0-47 for 48-hour view)
-    
-    // Check if current hour is within the grid range
-    if (currentHourDecimal < 0 || currentHourDecimal >= gridHours) {
-      return { position: 0, show: false };
-    }
-    
-    // Calculate pixel position within the grid
-    // Each hour column is 45px wide
-    const positionInGrid = currentHourDecimal * 45;
-    
-    // Fixed columns: 490px (150 + 120 + 100 + 120)
-    const fixedColumnsWidth = 490;
-    const totalPosition = fixedColumnsWidth + positionInGrid;
-    
-    return { 
-      position: totalPosition, 
-      show: true 
-    };
+  // Check if a given hour column is the current hour
+  const isCurrentHour = (hour) => {
+    return hour === currentHour;
   };
-
-  const timeIndicator = getTimeIndicatorPosition();
-  const timeIndicatorPosition = timeIndicator.position;
-  const showTimeIndicator = timeIndicator.show;
 
   if (loading) {
     return (
@@ -131,15 +104,6 @@ const MaintenanceGrid = ({ equipment }) => {
   return (
     <div className="maintenance-grid-wrapper">
       <div className="maintenance-grid-scroll">
-        {showTimeIndicator && (
-          <div 
-            className="time-indicator-line" 
-            style={{ left: `${timeIndicatorPosition}px` }}
-            title={`Current Time: ${currentTime.toLocaleTimeString()}`}
-          >
-            <div className="time-indicator-dot"></div>
-          </div>
-        )}
         <table className="maintenance-grid">
           <thead>
             <tr>
@@ -148,7 +112,10 @@ const MaintenanceGrid = ({ equipment }) => {
               <th className="hours-col">Hours</th>
               <th className="task-col">Assigned Tasks</th>
               {Array.from({ length: gridHours }, (_, i) => (
-                <th key={i} className="hour-col">
+                <th 
+                  key={i} 
+                  className={`hour-col ${isCurrentHour(i) ? 'current-hour' : ''}`}
+                >
                   {i + 1}h
                 </th>
               ))}
@@ -208,11 +175,15 @@ const MaintenanceGrid = ({ equipment }) => {
                       tooltipText = 'Idle';
                     }
                     
+                    const currentHourStyle = isCurrentHour(hour) ? {
+                      boxShadow: 'inset 0 0 0 2px rgba(60, 202, 112, 0.3)'
+                    } : {};
+                    
                     return (
                       <Tooltip key={hour} title={tooltipText}>
                         <td 
-                          className={`hour-cell ${usage.inUse ? 'in-use' : ''} ${isMaintWindow ? 'maintenance-available' : ''}`}
-                          style={{ backgroundColor: cellColor }}
+                          className={`hour-cell ${usage.inUse ? 'in-use' : ''} ${isMaintWindow ? 'maintenance-available' : ''} ${isCurrentHour(hour) ? 'current-hour-cell' : ''}`}
+                          style={{ backgroundColor: cellColor, ...currentHourStyle }}
                         >
                           {usage.inUse && <span className="usage-marker">{usage.taskId}</span>}
                           {cellIcon && <div className="maintenance-marker">{cellIcon}</div>}
