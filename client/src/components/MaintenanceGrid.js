@@ -90,10 +90,10 @@ const MaintenanceGrid = ({ equipment }) => {
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Calculate current time as decimal hours (e.g., 10:40 = 10.667 hours)
-    // Grid columns are 1-indexed (1h, 2h, 3h... 24h)
-    // So hour 0 (midnight) is in column "1h", hour 10 (10 AM) is in column "11h"
-    const currentHourDecimal = hours + 1 + minutes / 60 + seconds / 3600;
+    // Calculate current time as decimal hours (e.g., 10:51 = 10.85 hours)
+    // Column index 9 is labeled "10h" and represents 10:00-10:59
+    // At 10:51, we should be at index 9 (85% through that column)
+    const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
     
     // Fixed columns width: 150 (equipment) + 120 (status) + 100 (hours) + 120 (tasks) = 490px
     const fixedColumnsWidth = 490;
