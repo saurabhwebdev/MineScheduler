@@ -90,20 +90,35 @@ const MaintenanceGrid = ({ equipment }) => {
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Simple calculation: position in pixels from start of grid
-    // Each hour column is 45px wide
-    // At 11:20 AM, hours=11, should be at (11 + 20/60) * 45px into the grid
+    // Calculate decimal hour position (0-23.999...)
     const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
+    
+    // For multi-day grids, we need to check if current time falls within the grid range
+    // Grid starts at hour 0 and extends for gridHours (e.g., 24, 48, etc.)
+    // Current implementation assumes grid shows hours 0-23 (or 0-47 for 48-hour view)
+    
+    // Check if current hour is within the grid range
+    if (currentHourDecimal < 0 || currentHourDecimal >= gridHours) {
+      return { position: 0, show: false };
+    }
+    
+    // Calculate pixel position within the grid
+    // Each hour column is 45px wide
     const positionInGrid = currentHourDecimal * 45;
     
     // Fixed columns: 490px (150 + 120 + 100 + 120)
-    const totalPosition = 490 + positionInGrid;
+    const fixedColumnsWidth = 490;
+    const totalPosition = fixedColumnsWidth + positionInGrid;
     
-    return totalPosition;
+    return { 
+      position: totalPosition, 
+      show: true 
+    };
   };
 
-  const timeIndicatorPosition = getTimeIndicatorPosition();
-  const showTimeIndicator = timeIndicatorPosition >= 490 && timeIndicatorPosition <= (490 + gridHours * 45);
+  const timeIndicator = getTimeIndicatorPosition();
+  const timeIndicatorPosition = timeIndicator.position;
+  const showTimeIndicator = timeIndicator.show;
 
   if (loading) {
     return (
