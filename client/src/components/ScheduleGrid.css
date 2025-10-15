@@ -1,83 +1,97 @@
 .schedule-grid-wrapper {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
 }
 
 .schedule-grid-scroll {
   overflow-x: auto;
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
-  border-radius: 8px;
+  border-radius: 12px;
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f3f4f6;
+}
+
+.schedule-grid-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.schedule-grid-scroll::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.schedule-grid-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.schedule-grid-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 .schedule-grid {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   table-layout: fixed;
   min-width: 100%;
+  font-feature-settings: 'tnum';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .schedule-grid th,
 .schedule-grid td {
   border: none;
-  border-right: 1px solid rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  padding: 10px 8px;
+  border-right: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+  padding: 12px 10px;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .schedule-grid th {
-  background: linear-gradient(to bottom, #fafafa 0%, #f7f7f7 100%);
-  color: #52525b;
+  background: #fafbfc;
+  color: #6b7280;
   font-weight: 600;
   font-size: 11px;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 2px solid #e5e7eb;
   text-transform: uppercase;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
 }
 
-/* Shift Row Styling - Ultra Modern Minimal */
+/* Shift Row Styling - Modern Minimal */
 .schedule-grid .shift-row th {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: #ffffff;
   font-size: 10px;
-  font-weight: 600;
-  padding: 12px 6px;
-  border-right: 1px solid rgba(0, 0, 0, 0.02);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  padding: 14px 8px;
+  border-right: 1px solid #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  backdrop-filter: blur(10px);
+  letter-spacing: 1.2px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .schedule-grid .shift-row .shift-cell {
-  font-weight: 600;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  opacity: 1;
+  font-weight: 700;
+  opacity: 0.92;
   position: relative;
-}
-
-.schedule-grid .shift-row .shift-cell::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background: currentColor;
-  opacity: 0.15;
-  border-radius: 2px;
 }
 
 /* Current Hour Highlighting - Flat & Minimal */
@@ -87,10 +101,11 @@
 
 /* Highlight current hour column header */
 .hour-col.current-hour {
-  background: linear-gradient(to bottom, rgba(60, 202, 112, 0.12) 0%, rgba(60, 202, 112, 0.08) 100%) !important;
-  color: #3cca70 !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+  color: #10b981 !important;
   font-weight: 700;
-  box-shadow: inset 0 -3px 0 rgba(60, 202, 112, 0.4);
+  border-bottom: 3px solid #10b981 !important;
+  border-radius: 4px 4px 0 0;
 }
 
 /* Subtle animation for current hour cells */
@@ -109,12 +124,12 @@
 }
 
 .schedule-grid tbody tr:hover {
-  background: linear-gradient(to right, rgba(60, 202, 112, 0.02) 0%, rgba(60, 202, 112, 0.03) 100%);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f9fafb;
+  transition: all 0.15s ease;
 }
 
 .schedule-grid tbody tr:hover td {
-  border-color: rgba(60, 202, 112, 0.08);
+  border-color: #e5e7eb;
 }
 
 
@@ -126,9 +141,10 @@
 }
 
 .priority-cell {
-  font-weight: 600;
-  color: #71717a;
-  font-size: 12px;
+  font-weight: 700;
+  color: #9ca3af;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
 }
 
 .site-col,
@@ -140,15 +156,18 @@
 
 .site-cell {
   font-weight: 500;
-  background: linear-gradient(to right, rgba(250, 250, 250, 0.5) 0%, transparent 100%);
+  background: #fafbfc;
+  text-align: left;
+  padding-left: 16px !important;
 }
 
 .hour-col {
-  width: 40px;
-  min-width: 40px;
+  width: 44px;
+  min-width: 44px;
   font-size: 11px;
-  color: #71717a;
+  color: #9ca3af;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Sortable Site Column */
@@ -160,94 +179,95 @@
 }
 
 .site-col.sortable:hover {
-  background: linear-gradient(135deg, rgba(60, 202, 112, 0.04) 0%, rgba(60, 202, 112, 0.02) 100%);
-  color: #3cca70;
+  background: #f3f4f6;
+  color: #10b981;
 }
 
 .site-col .sort-indicator {
   margin-left: 6px;
-  color: #3cca70;
+  color: #10b981;
   font-size: 10px;
   transition: all 0.2s ease;
+  opacity: 0.8;
 }
 
 .site-col.sortable:hover .sort-indicator {
-  transform: scale(1.1);
+  opacity: 1;
+  transform: translateY(-1px);
 }
 
 .site-col[data-sort-direction="none"] .sort-indicator {
   color: #e4e4e7;
 }
 
-/* Site Toggle Link - Modern Pill Design */
+/* Site Toggle Link - Clean Minimal */
 .site-toggle {
-  color: #3cca70;
+  color: #10b981;
   font-weight: 600;
   text-decoration: none;
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 8px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(60, 202, 112, 0.05);
-  letter-spacing: 0.2px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+  background: rgba(16, 185, 129, 0.06);
+  letter-spacing: 0.3px;
   font-size: 12px;
+  border: 1px solid transparent;
 }
 
 .site-toggle:hover {
-  background: rgba(60, 202, 112, 0.12);
-  color: #2ea055;
+  background: rgba(16, 185, 129, 0.10);
+  color: #059669;
   text-decoration: none;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(60, 202, 112, 0.15);
+  border-color: rgba(16, 185, 129, 0.2);
+  transform: translateX(2px);
 }
 
-/* Inactive Site Row - Subtle & Elegant */
+/* Inactive Site Row - Minimal */
 .inactive-site {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
-  opacity: 0.5;
+  background: #fafbfc;
+  opacity: 0.45;
 }
 
 .inactive-site .site-toggle {
-  color: #a1a1aa;
+  color: #9ca3af;
   text-decoration: line-through;
-  background: rgba(0, 0, 0, 0.02);
+  background: #f3f4f6;
+  border-color: #e5e7eb;
 }
 
 .inactive-site:hover {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.03) 0%, transparent 100%);
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
-/* Schedule Cell - Elevated Modern Design */
+/* Schedule Cell - Ultra Clean Design */
 .schedule-cell {
   position: relative;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 40px;
-  width: 40px;
-  min-width: 40px;
-  padding: 4px;
+  transition: all 0.15s ease;
+  height: 44px;
+  width: 44px;
+  min-width: 44px;
+  padding: 6px;
   background: #ffffff;
 }
 
 .schedule-cell:hover {
-  transform: translateY(-1px);
+  transform: scale(1.02);
   z-index: 5;
-  box-shadow: 0 4px 12px rgba(60, 202, 112, 0.12), 0 2px 4px rgba(60, 202, 112, 0.08);
-  border-color: rgba(60, 202, 112, 0.2) !important;
-  background: linear-gradient(135deg, #ffffff 0%, rgba(60, 202, 112, 0.02) 100%);
+  box-shadow: 0 0 0 2px #10b981 inset, 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
 }
 
 .schedule-cell.has-task .task-label {
   display: inline-block;
-  padding: 5px 7px;
-  border-radius: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
   font-size: 11px;
-  font-weight: 600;
-  color: #1a1a1a;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.2px;
-  backdrop-filter: blur(4px);
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.3px;
 }
 
 /* Delayed Cell */
