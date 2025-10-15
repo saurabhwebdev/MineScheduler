@@ -84,33 +84,30 @@ const MaintenanceGrid = ({ equipment }) => {
     return !usage.inUse && eq.status === 'operational';
   };
 
-  // Calculate time indicator position in pixels
+  // Calculate time indicator position
   const getTimeIndicatorPosition = () => {
     const hours = currentTime.getHours();
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
     
-    // Column labeled "11" should show time 11:00-11:59
-    // At 11:05 AM, hours=11, should be in column "11"
+    // Grid data: grid[site][0] = hour 0 (00:00-00:59), grid[site][11] = hour 11 (11:00-11:59)
+    // Column display: i=0 shows "1h", i=11 shows "12h" (i+1)
+    // But grid data index matches clock hour: at 11:05 AM (hours=11), check grid[site][11]
+    // So column displaying "12h" (i=11) shows grid[11] which is 11:00-11:59
+    // Therefore, at hours=11, we want position at column index 11 (labeled "12h")
+    
     const currentHourDecimal = hours + minutes / 60 + seconds / 3600;
     
-    // Fixed columns width: 150 (equipment) + 120 (status) + 100 (hours) + 120 (tasks) = 490px
-    const fixedColumnsWidth = 490;
+    // Use calc with percentage to handle any border/padding issues
+    // Grid portion width = gridHours * 45px
+    const gridWidthPx = gridHours * 45;
+    const percentageWithinGrid = (currentHourDecimal / gridHours) * 100;
     
-    // Each hour column is 45px wide
-    const hourColumnWidth = 45;
-    
-    // Calculate position within grid in pixels
-    const gridPosition = currentHourDecimal * hourColumnWidth;
-    
-    // Total position = fixed columns + grid position
-    const totalPosition = fixedColumnsWidth + gridPosition;
-    
-    return totalPosition;
+    return { gridWidthPx, percentageWithinGrid };
   };
 
-  const timeIndicatorPosition = getTimeIndicatorPosition();
-  const showTimeIndicator = timeIndicatorPosition >= 0 && timeIndicatorPosition <= (490 + gridHours * 45);
+  const { gridWidthPx, percentageWithinGrid } = getTimeIndicatorPosition();
+  const showTimeIndicator = percentageWithinGrid >= 0 && percentageWithinGrid <= 100;
 
   if (loading) {
     return (
@@ -126,7 +123,7 @@ const MaintenanceGrid = ({ equipment }) => {
         {showTimeIndicator && (
           <div 
             className="time-indicator-line" 
-            style={{ left: `${timeIndicatorPosition}px` }}
+            style={{ left: `calc(490px + (${gridWidthPx}px * ${percentageWithinGrid} / 100))` }}
             title={`Current Time: ${currentTime.toLocaleTimeString()}`}
           >
             <div className="time-indicator-dot"></div>
