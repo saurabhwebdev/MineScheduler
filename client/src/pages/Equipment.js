@@ -706,7 +706,7 @@ const Equipment = () => {
                 </span>
               ),
               children: (
-                <div style={{ padding: '16px 0', height: 'calc(100vh - 280px)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ padding: '16px 0', height: 'calc(100vh - 280px)', maxWidth: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <Alert
                     message="Equipment Usage Schedule"
                     description="View hourly equipment usage based on current schedule. Green indicates equipment in use, blue shows available for maintenance."
@@ -714,7 +714,7 @@ const Equipment = () => {
                     showIcon
                     style={{ marginBottom: 16, flexShrink: 0 }}
                   />
-                  <div style={{ flex: 1, overflow: 'hidden' }}>
+                  <div style={{ flex: 1, overflow: 'hidden', maxWidth: '100%' }}>
                     <MaintenanceGrid equipment={equipment} />
                   </div>
                 </div>

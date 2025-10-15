@@ -1,6 +1,8 @@
 /* Ultra Minimal Flat Design */
 .equipment-page {
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Header */
