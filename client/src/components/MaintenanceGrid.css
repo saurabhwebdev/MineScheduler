@@ -7,9 +7,87 @@
 }
 
 .maintenance-grid-scroll {
+  position: relative;
   overflow-x: auto;
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Time Indicator Line - positioned to start after fixed columns */
+.time-indicator-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    #ff4d4f 5%, 
+    #ff4d4f 95%, 
+    transparent 100%);
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(255, 77, 79, 0.5);
+  animation: pulse-line 2s ease-in-out infinite;
+  /* Position after fixed columns: 150px (equipment) + 120px (status) + 100px (hours) + 120px (tasks) = 490px */
+  margin-left: 490px;
+}
+
+.time-indicator-dot {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ff4d4f;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.6);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.time-indicator-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 77, 79, 0.3);
+  border-radius: 50%;
+  animation: ripple 2s ease-out infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.15);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+  }
+  100% {
+    width: 35px;
+    height: 35px;
+    opacity: 0;
+  }
 }
 
 .maintenance-grid {

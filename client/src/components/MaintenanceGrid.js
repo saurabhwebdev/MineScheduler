@@ -8,10 +8,19 @@ const MaintenanceGrid = ({ equipment }) => {
   const gridHours = 24; // Show 24 hours
   const [scheduleData, setScheduleData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Fetch current schedule to see equipment usage
   useEffect(() => {
     fetchSchedule();
+  }, []);
+
+  // Update current time every second for time indicator
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchSchedule = async () => {
@@ -75,6 +84,22 @@ const MaintenanceGrid = ({ equipment }) => {
     return !usage.inUse && eq.status === 'operational';
   };
 
+  // Calculate time indicator position (only for grid cells, not entire table)
+  const getTimeIndicatorPosition = () => {
+    const hours = currentTime.getHours();
+    const minutes = currentTime.getMinutes();
+    const seconds = currentTime.getSeconds();
+    
+    // Calculate precise position within the hour grid
+    const totalMinutes = hours * 60 + minutes + seconds / 60;
+    const percentage = (totalMinutes / (gridHours * 60)) * 100;
+    
+    return percentage;
+  };
+
+  const timeIndicatorPosition = getTimeIndicatorPosition();
+  const showTimeIndicator = timeIndicatorPosition >= 0 && timeIndicatorPosition <= 100;
+
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '40px 0' }}>
@@ -86,6 +111,15 @@ const MaintenanceGrid = ({ equipment }) => {
   return (
     <div className="maintenance-grid-wrapper">
       <div className="maintenance-grid-scroll">
+        {showTimeIndicator && (
+          <div 
+            className="time-indicator-line" 
+            style={{ left: `${timeIndicatorPosition}%` }}
+            title={`Current Time: ${currentTime.toLocaleTimeString()}`}
+          >
+            <div className="time-indicator-dot"></div>
+          </div>
+        )}
         <table className="maintenance-grid">
           <thead>
             <tr>
