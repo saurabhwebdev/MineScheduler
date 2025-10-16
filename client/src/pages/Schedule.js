@@ -116,7 +116,59 @@ const Schedule = () => {
   };
 
   const handleHoursChange = (e) => {
-    setGridHours(e.target.value);
+    const newHours = e.target.value;
+    setGridHours(newHours);
+    
+    // Auto-regenerate if schedule exists
+    if (scheduleData) {
+      // Small delay to ensure state is updated
+      setTimeout(() => {
+        generateScheduleWithHours(newHours);
+      }, 100);
+    }
+  };
+
+  const generateScheduleWithHours = async (hours) => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/schedule/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          gridHours: hours,
+          delayedSlots
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        setScheduleData(data.data);
+        setGeneratedAt(data.data.generatedAt);
+        notification.success({
+          message: 'Success',
+          description: `Schedule updated to ${hours} hours`,
+          duration: 2
+        });
+      } else {
+        notification.error({
+          message: 'Error',
+          description: data.message || 'Failed to generate schedule',
+        });
+      }
+    } catch (error) {
+      console.error('Error generating schedule:', error);
+      notification.error({
+        message: 'Network Error',
+        description: 'Failed to generate schedule. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleToggleSite = async (siteId) => {
