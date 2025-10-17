@@ -7,7 +7,6 @@ import Register from './pages/Register';
 import ComingSoon from './pages/ComingSoon';
 import Profile from './pages/Profile';
 import Schedule from './pages/Schedule';
-import Reports from './pages/Reports';
 import UserManagement from './pages/UserManagement';
 import Tasks from './pages/Tasks';
 import Delays from './pages/Delays';
@@ -64,7 +63,6 @@ function App() {
             <Route path="/dashboard" element={<PrivateRoute><ComingSoon /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/schedule" element={<PrivateRoute><Schedule /></PrivateRoute>} />
-            <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
             <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
             <Route path="/tasks" element={<PrivateRoute><Tasks /></PrivateRoute>} />
             <Route path="/delays" element={<PrivateRoute><Delays /></PrivateRoute>} />

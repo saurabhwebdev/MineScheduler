@@ -1,11 +1,10 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Avatar, Badge } from 'antd';
-import { BellOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Avatar } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
 import { 
   HomeOutlined, 
   CalendarOutlined, 
-  BarChartOutlined,
   UserOutlined,
   FileTextOutlined,
   ClockCircleOutlined,
@@ -37,7 +36,6 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     { key: 'equipment', icon: <ToolOutlined />, label: 'Equipment', path: '/equipment' },
     
     // Analysis & Configuration
-    { key: 'reports', icon: <BarChartOutlined />, label: 'Reports', path: '/reports' },
     { key: 'settings', icon: <SettingOutlined />, label: 'Settings', path: '/settings' },
     
     // Admin Only
