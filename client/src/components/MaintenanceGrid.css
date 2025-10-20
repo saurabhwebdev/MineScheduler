@@ -21,14 +21,24 @@
 
 /* Current Hour Highlighting - Flat & Minimal */
 .hour-col.current-hour {
-  background: #f0f9ff !important;
-  color: #0284c7 !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+  color: #10b981 !important;
   font-weight: 700;
+  border-bottom: 3px solid #10b981 !important;
 }
 
 .current-hour-cell {
   position: relative;
-  background: #f0f9ff !important;
+  animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.92;
+  }
 }
 
 .maintenance-grid {
@@ -157,8 +167,7 @@
 }
 
 .hour-cell:hover {
-  background: #f0f9ff !important;
-  border-color: #0284c7 !important;
+  filter: brightness(0.97);
   z-index: 5;
 }
 
