@@ -27,19 +27,6 @@
   border-bottom: 3px solid #10b981 !important;
 }
 
-.current-hour-cell {
-  position: relative;
-  animation: subtle-pulse 3s ease-in-out infinite;
-}
-
-@keyframes subtle-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.92;
-  }
-}
 
 .maintenance-grid {
   border-collapse: collapse;
@@ -167,8 +154,8 @@
 }
 
 .hour-cell:hover {
-  filter: brightness(0.97);
-  z-index: 5;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
 }
 
 .hour-cell.in-use {
@@ -178,7 +165,6 @@
 
 .hour-cell.maintenance-available {
   border: 2px dashed #0284c7;
-  background: #f0f9ff;
 }
 
 .usage-marker {

@@ -175,15 +175,11 @@ const MaintenanceGrid = ({ equipment }) => {
                       tooltipText = 'Idle';
                     }
                     
-                    const currentHourStyle = isCurrentHour(hour) ? {
-                      boxShadow: 'inset 0 0 0 2px rgba(60, 202, 112, 0.3)'
-                    } : {};
-                    
                     return (
                       <Tooltip key={hour} title={tooltipText}>
                         <td 
-                          className={`hour-cell ${usage.inUse ? 'in-use' : ''} ${isMaintWindow ? 'maintenance-available' : ''} ${isCurrentHour(hour) ? 'current-hour-cell' : ''}`}
-                          style={{ backgroundColor: cellColor, ...currentHourStyle }}
+                          className={`hour-cell ${usage.inUse ? 'in-use' : ''} ${isMaintWindow ? 'maintenance-available' : ''}`}
+                          style={{ backgroundColor: cellColor }}
                         >
                           {usage.inUse && <span className="usage-marker">{usage.taskId}</span>}
                           {cellIcon && <div className="maintenance-marker">{cellIcon}</div>}
