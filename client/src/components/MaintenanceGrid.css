@@ -1,8 +1,8 @@
 .maintenance-grid-wrapper {
-  background: #ffffff;
-  border-radius: 6px;
-  padding: 20px;
-  border: 1px solid #e8e8e8;
+  background: #fafafa;
+  border-radius: 0;
+  padding: 16px;
+  border: none;
   height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -20,148 +20,118 @@
 
 /* Current Hour Highlighting - Flat & Minimal */
 .hour-col.current-hour {
-  background: linear-gradient(to bottom, rgba(60, 202, 112, 0.12) 0%, rgba(60, 202, 112, 0.08) 100%) !important;
-  color: #3cca70 !important;
+  background: #f5f5f5 !important;
+  color: #262626 !important;
   font-weight: 700;
-  box-shadow: inset 0 -3px 0 rgba(60, 202, 112, 0.4);
 }
 
 .current-hour-cell {
   position: relative;
-  animation: subtle-pulse 3s ease-in-out infinite;
-}
-
-@keyframes subtle-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.92;
-  }
 }
 
 .maintenance-grid {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 8px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 13px;
-  table-layout: fixed;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
 }
 
-.maintenance-grid th,
+.maintenance-grid th {
+  border: none;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  height: 0;
+  visibility: hidden;
+}
+
 .maintenance-grid td {
-  border: 1px solid #e8e8e8;
-  padding: 8px;
+  border: none;
+  padding: 0;
   text-align: center;
   vertical-align: middle;
 }
 
-.maintenance-grid th {
-  background: #f9f9f9;
-  color: #262626;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.maintenance-grid tbody tr:hover {
-  background: #fafafa;
-  transition: background 0.15s ease;
+.maintenance-grid tbody tr {
+  transition: none;
 }
 
 /* Column Widths */
 .equipment-col {
   width: 150px;
   min-width: 150px;
-  text-align: left !important;
 }
 
-.status-col {
-  width: 120px;
-  min-width: 120px;
-}
-
-.hours-col {
-  width: 100px;
-  min-width: 100px;
+.status-col,
+.hours-col,
+.task-col {
+  display: none;
 }
 
 .hour-col {
-  width: 45px;
-  min-width: 45px;
-  font-size: 11px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.task-col {
-  width: 120px;
-  min-width: 120px;
-  font-size: 11px;
+  width: auto;
+  min-width: auto;
 }
 
 /* Equipment Cell */
 .equipment-cell {
   text-align: left !important;
-  padding: 12px !important;
+  padding: 0 !important;
+  vertical-align: middle;
 }
 
 .equipment-cell strong {
-  display: block;
-  color: #3cca70;
-  font-size: 14px;
-  margin-bottom: 4px;
+  display: none;
 }
 
 .equipment-name {
-  font-size: 12px;
-  color: #888;
+  display: none;
 }
 
-/* Status Indicator */
-.status-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 11px;
+/* Hide unused cells */
+.status-cell,
+.hours-cell,
+.task-cell {
+  display: none;
 }
 
-.status-indicator .anticon {
-  font-size: 14px;
-}
-
-/* Hours Cell */
-.hours-cell {
-  font-weight: 600;
-  color: #262626;
-}
-
-.interval-text {
-  font-size: 11px;
-  color: #888;
-  font-weight: normal;
-}
-
-/* Hour Cells */
+/* Hour Cells - Arrow Style */
 .hour-cell {
   position: relative;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  height: 36px;
-  padding: 4px !important;
-  font-size: 10px;
+  height: 32px;
+  padding: 0 !important;
+  transition: all 0.2s ease;
+  border: none !important;
+}
+
+/* Left side - Red with X */
+.hour-cell:nth-child(-n+13) {
+  background: #e74c3c;
+}
+
+/* Right side - Green with checkmark */
+.hour-cell:nth-child(n+14) {
+  background: #27ae60;
+}
+
+/* Center divider cells */
+.hour-cell:nth-child(13) {
+  position: relative;
+  clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+}
+
+.hour-cell:nth-child(14) {
+  position: relative;
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 10% 100%, 0 50%);
+  margin-left: -4px;
 }
 
 .hour-cell:hover {
-  transform: scale(1.05);
-  z-index: 5;
-  box-shadow: 0 0 0 2px #3cca70;
+  transform: none;
+  z-index: 1;
+  box-shadow: none;
+  filter: brightness(1.1);
 }
 
 .hour-cell.in-use {
@@ -169,51 +139,50 @@
 }
 
 .hour-cell.maintenance-available {
-  border: 2px dashed #1890ff;
+  border: none;
+}
+
+/* X marker for red cells */
+.hour-cell:nth-child(-n+13)::after {
+  content: '×';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 18px;
+  font-weight: 300;
+  pointer-events: none;
+}
+
+/* Checkmark for green cells */
+.hour-cell:nth-child(n+14)::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 16px;
+  font-weight: 700;
+  pointer-events: none;
 }
 
 .usage-marker {
-  font-size: 9px;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-}
-
-.task-cell {
-  font-size: 11px;
-  color: #595959;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: none;
 }
 
 .maintenance-marker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 14px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  display: none;
 }
 
 /* Inactive Equipment */
 .equipment-inactive {
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
-.equipment-inactive .equipment-cell strong {
-  color: #888;
-  text-decoration: line-through;
+.equipment-inactive .hour-cell {
+  background: #bdc3c7 !important;
 }
 
 /* Responsive */
@@ -221,25 +190,10 @@
   .maintenance-grid {
     font-size: 11px;
   }
-
-  .day-col {
-    width: 36px;
-    min-width: 36px;
-  }
 }
 
 @media (max-width: 768px) {
   .maintenance-grid-wrapper {
-    padding: 16px;
-  }
-
-  .equipment-col {
-    width: 120px;
-    min-width: 120px;
-  }
-
-  .status-col {
-    width: 100px;
-    min-width: 100px;
+    padding: 12px;
   }
 }
