@@ -108,20 +108,6 @@
   border-radius: 4px 4px 0 0;
 }
 
-/* Subtle animation for current hour cells */
-.current-hour-cell {
-  position: relative;
-  animation: subtle-pulse 3s ease-in-out infinite;
-}
-
-@keyframes subtle-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.92;
-  }
-}
 
 .schedule-grid tbody tr:hover {
   background: #f9fafb;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from '../components/DashboardLayout';
-import SunriseAnimation from '../components/SunriseAnimation';
+import EquipmentDashboard from '../components/EquipmentDashboard';
 
 const ComingSoon = () => {
   const { user } = useAuth();
@@ -16,10 +16,10 @@ const ComingSoon = () => {
   return (
     <DashboardLayout 
       title={`${getGreeting()} ${user?.name || 'User'}`}
-      subtitle="Here's what's happening in your Mine Scheduler account today"
+      subtitle="Equipment Performance Overview"
       page="dashboard"
     >
-      <SunriseAnimation />
+      <EquipmentDashboard />
     </DashboardLayout>
   );
 };
