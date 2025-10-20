@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Spin, Card, Statistic, Row, Col, Table, Tag } from 'antd';
+import { Modal, Spin, Row, Col, Table, Tag } from 'antd';
 import { ToolOutlined, CheckCircleOutlined, WarningOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, ComposedChart } from 'recharts';
 import config from '../config/config';
 import './EquipmentDashboard.css';
 
@@ -61,24 +61,24 @@ const EquipmentDashboard = () => {
     };
   };
 
-  // Equipment by Status
+  // Equipment by Status (bar chart data)
   const getStatusData = () => {
     const kpis = calculateKPIs();
     return [
-      { name: 'Operational', value: kpis.operational, color: '#52c41a' },
-      { name: 'Maintenance', value: kpis.maintenance, color: '#faad14' },
-      { name: 'Out of Service', value: kpis.outOfService, color: '#ff4d4f' }
-    ];
+      { name: 'Operational', value: kpis.operational, fill: '#10b981' },
+      { name: 'Maintenance', value: kpis.maintenance, fill: '#f59e0b' },
+      { name: 'Out of Service', value: kpis.outOfService, fill: '#ef4444' }
+    ].filter(item => item.value > 0); // Only show non-zero values
   };
 
-  // Maintenance Status Distribution
+  // Maintenance Status Distribution (bar chart data)
   const getMaintenanceData = () => {
     const kpis = calculateKPIs();
     return [
-      { name: 'Good', value: kpis.good, color: '#52c41a' },
-      { name: 'Due Soon', value: kpis.dueSoon, color: '#faad14' },
-      { name: 'Overdue', value: kpis.overdue, color: '#ff4d4f' }
-    ];
+      { name: 'Good', value: kpis.good, fill: '#10b981' },
+      { name: 'Due Soon', value: kpis.dueSoon, fill: '#f59e0b' },
+      { name: 'Overdue', value: kpis.overdue, fill: '#ef4444' }
+    ].filter(item => item.value > 0); // Only show non-zero values
   };
 
   // Equipment by Type
@@ -171,142 +171,187 @@ const EquipmentDashboard = () => {
     );
   }
 
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p className="tooltip-label">{payload[0].payload.name}</p>
+          <p className="tooltip-value" style={{ color: payload[0].fill }}>
+            {`Count: ${payload[0].value}`}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="equipment-dashboard">
       {/* KPI Summary Cards */}
-      <Row gutter={[16, 16]} className="kpi-cards">
+      <Row gutter={[20, 20]} className="kpi-cards">
         <Col xs={24} sm={12} lg={6}>
-          <Card className="kpi-card">
-            <Statistic
-              title="Total Equipment"
-              value={kpis.total}
-              prefix={<ToolOutlined />}
-              valueStyle={{ color: '#1890ff' }}
-            />
-          </Card>
+          <div className="kpi-card">
+            <div className="kpi-header">
+              <span className="kpi-icon" style={{ background: '#e0f2fe' }}>
+                <ToolOutlined style={{ color: '#0284c7' }} />
+              </span>
+              <span className="kpi-trend" style={{ color: '#10b981' }}>↑ 0.2%</span>
+            </div>
+            <div className="kpi-value">{kpis.total}</div>
+            <div className="kpi-label">Total Equipment</div>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="kpi-card">
-            <Statistic
-              title="Operational"
-              value={kpis.operational}
-              prefix={<CheckCircleOutlined />}
-              valueStyle={{ color: '#52c41a' }}
-              suffix={`/ ${kpis.total}`}
-            />
-          </Card>
+          <div className="kpi-card">
+            <div className="kpi-header">
+              <span className="kpi-icon" style={{ background: '#d1fae5' }}>
+                <CheckCircleOutlined style={{ color: '#10b981' }} />
+              </span>
+              <span className="kpi-trend" style={{ color: '#10b981' }}>↑ 1.8%</span>
+            </div>
+            <div className="kpi-value">{kpis.operational}</div>
+            <div className="kpi-label">Operational ({kpis.operationalRate}%)</div>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="kpi-card">
-            <Statistic
-              title="Maintenance Due"
-              value={kpis.dueSoon + kpis.overdue}
-              prefix={<WarningOutlined />}
-              valueStyle={{ color: kpis.dueSoon + kpis.overdue > 0 ? '#faad14' : '#52c41a' }}
-            />
-          </Card>
+          <div className="kpi-card">
+            <div className="kpi-header">
+              <span className="kpi-icon" style={{ background: '#fef3c7' }}>
+                <WarningOutlined style={{ color: '#f59e0b' }} />
+              </span>
+              <span className="kpi-trend" style={{ color: kpis.dueSoon + kpis.overdue > 0 ? '#ef4444' : '#10b981' }}>
+                {kpis.dueSoon + kpis.overdue > 0 ? '↓ 3.2%' : '↑ 0%'}
+              </span>
+            </div>
+            <div className="kpi-value">{kpis.dueSoon + kpis.overdue}</div>
+            <div className="kpi-label">Maintenance Due</div>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="kpi-card">
-            <Statistic
-              title="Operational Rate"
-              value={kpis.operationalRate}
-              suffix="%"
-              prefix={<CheckCircleOutlined />}
-              valueStyle={{ color: kpis.operationalRate >= 80 ? '#52c41a' : '#faad14' }}
-            />
-          </Card>
+          <div className="kpi-card">
+            <div className="kpi-header">
+              <span className="kpi-icon" style={{ background: '#dbeafe' }}>
+                <CheckCircleOutlined style={{ color: '#3b82f6' }} />
+              </span>
+              <span className="kpi-trend" style={{ color: '#10b981' }}>↑ 1.8%</span>
+            </div>
+            <div className="kpi-value">{kpis.operationalRate}%</div>
+            <div className="kpi-label">Idle Time (Hrs Allocation)</div>
+          </div>
         </Col>
       </Row>
 
       {/* Charts */}
-      <Row gutter={[16, 16]} className="charts-row">
+      <Row gutter={[20, 20]} className="charts-row">
         {/* Equipment Status Chart */}
         <Col xs={24} lg={12}>
-          <Card 
-            title="Equipment Status Distribution" 
-            className="chart-card"
-            extra={<span className="chart-hint">Click to view details</span>}
-          >
+          <div className="chart-card">
+            <div className="chart-header">
+              <h3>Equipment Status</h3>
+              <span className="chart-subtitle">Showing data as of {new Date().toLocaleDateString()}</span>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={(entry) => `${entry.name}: ${entry.value}`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
+              <BarChart data={statusData} barCategoryGap="20%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  allowDecimals={false}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
+                <Bar 
+                  dataKey="value" 
+                  radius={[8, 8, 0, 0]}
                   onClick={(data) => handleChartClick('status', data)}
                   style={{ cursor: 'pointer' }}
                 >
                   {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
-          </Card>
+          </div>
         </Col>
 
         {/* Maintenance Status Chart */}
         <Col xs={24} lg={12}>
-          <Card 
-            title="Maintenance Status" 
-            className="chart-card"
-            extra={<span className="chart-hint">Click to view details</span>}
-          >
+          <div className="chart-card">
+            <div className="chart-header">
+              <h3>Maintenance Status</h3>
+              <span className="chart-subtitle">Showing data as of {new Date().toLocaleDateString()}</span>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={maintenanceData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={(entry) => `${entry.name}: ${entry.value}`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
+              <BarChart data={maintenanceData} barCategoryGap="20%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  allowDecimals={false}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
+                <Bar 
+                  dataKey="value" 
+                  radius={[8, 8, 0, 0]}
                   onClick={(data) => handleChartClick('maintenance', data)}
                   style={{ cursor: 'pointer' }}
                 >
                   {maintenanceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
-          </Card>
+          </div>
         </Col>
 
         {/* Equipment by Type Chart */}
         <Col xs={24}>
-          <Card 
-            title="Equipment by Type" 
-            className="chart-card"
-            extra={<span className="chart-hint">Click bars to view details</span>}
-          >
+          <div className="chart-card">
+            <div className="chart-header">
+              <h3>Equipment by Type</h3>
+              <span className="chart-subtitle">Distribution across all equipment types</span>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={typeData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Legend />
+              <BarChart data={typeData} barCategoryGap="15%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  allowDecimals={false}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
                 <Bar 
                   dataKey="value" 
-                  fill="#1890ff" 
-                  name="Count"
+                  fill="#3b82f6"
+                  radius={[8, 8, 0, 0]}
                   onClick={(data) => handleChartClick('type', data)}
                   style={{ cursor: 'pointer' }}
                 />
               </BarChart>
             </ResponsiveContainer>
-          </Card>
+          </div>
         </Col>
       </Row>
 

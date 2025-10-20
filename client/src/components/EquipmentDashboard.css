@@ -9,67 +9,121 @@
   min-height: 400px;
 }
 
-/* KPI Cards */
+/* KPI Cards - Modern Flat Design */
 .kpi-cards {
   margin-bottom: 24px;
 }
 
 .kpi-card {
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #f3f4f6;
   transition: all 0.3s ease;
+  min-height: 140px;
 }
 
 .kpi-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transform: translateY(-2px);
+  border-color: #e5e7eb;
 }
 
-.kpi-card .ant-statistic-title {
-  font-size: 13px;
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.kpi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.kpi-trend {
+  font-size: 12px;
   font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
-.kpi-card .ant-statistic-content {
-  font-size: 28px;
+.kpi-value {
+  font-size: 36px;
   font-weight: 700;
+  color: #1f2937;
+  line-height: 1;
+  margin-bottom: 8px;
 }
 
-.kpi-card .anticon {
-  font-size: 20px;
-  margin-right: 8px;
+.kpi-label {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
 }
 
-/* Charts */
+/* Charts - Modern Flat Design */
 .charts-row {
   margin-bottom: 24px;
 }
 
 .chart-card {
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #f3f4f6;
   min-height: 400px;
+  transition: all 0.3s ease;
 }
 
-.chart-card .ant-card-head {
-  border-bottom: 2px solid #f0f0f0;
+.chart-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: #e5e7eb;
 }
 
-.chart-card .ant-card-head-title {
+.chart-header {
+  margin-bottom: 24px;
+}
+
+.chart-header h3 {
   font-size: 16px;
   font-weight: 600;
   color: #1f2937;
+  margin: 0 0 4px 0;
 }
 
-.chart-hint {
+.chart-subtitle {
   font-size: 12px;
   color: #9ca3af;
-  font-weight: normal;
+  font-weight: 400;
+}
+
+/* Custom Tooltip */
+.custom-tooltip {
+  background: rgba(31, 41, 55, 0.95);
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-tooltip .tooltip-label {
+  color: #f9fafb;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.custom-tooltip .tooltip-value {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
 }
 
 /* Recharts styling */
@@ -77,28 +131,18 @@
   margin: 0 auto;
 }
 
-.recharts-surface {
+.recharts-bar {
   cursor: pointer;
-}
-
-.recharts-pie-sector:hover {
-  opacity: 0.8;
   transition: opacity 0.2s ease;
 }
 
 .recharts-bar:hover {
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
+  opacity: 0.85;
 }
 
-.recharts-legend-item-text {
-  font-size: 13px;
-  color: #64748b;
-}
-
-.recharts-cartesian-axis-tick-value {
-  font-size: 12px;
-  fill: #9ca3af;
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #f3f4f6;
 }
 
 /* Modal */
