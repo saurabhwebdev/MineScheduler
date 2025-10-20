@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Spin, Row, Col, Table, Tag } from 'antd';
-import { ToolOutlined, CheckCircleOutlined, WarningOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, ComposedChart, Cell, LineChart } from 'recharts';
+import { ToolOutlined, CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import config from '../config/config';
 import './EquipmentDashboard.css';
 
@@ -90,23 +90,25 @@ const EquipmentDashboard = () => {
     return Object.entries(typeCounts).map(([name, value]) => ({ name, value }));
   };
 
-  // Equipment Utilization Rate (simulated hourly data)
-  const getUtilizationData = () => {
-    // Generate 24 hours of utilization data
+  // Equipment Utilization Rate (simulated hourly data) - Memoized
+  const utilizationData = useMemo(() => {
+    if (equipment.length === 0) return [];
+    const kpis = calculateKPIs();
+    const baseUtilization = parseFloat(kpis.operationalRate) || 60;
+    
+    // Generate 24 hours of utilization data with realistic variance
     return Array.from({ length: 24 }, (_, i) => {
-      const hour = i + 1;
-      // Calculate utilization based on operational equipment
-      const kpis = calculateKPIs();
-      const baseUtilization = kpis.operationalRate;
-      // Add some variance to make it more realistic
-      const variance = Math.sin(i / 4) * 10 + Math.random() * 5;
-      const utilization = Math.max(0, Math.min(100, baseUtilization + variance)).toFixed(1);
+      // Add sine wave variance for natural peaks and valleys
+      const timeVariance = Math.sin((i - 8) / 3) * 15; // Peak around mid-day
+      const randomVariance = (Math.random() - 0.5) * 8; // Small random fluctuation
+      const utilization = Math.max(30, Math.min(100, baseUtilization + timeVariance + randomVariance));
+      
       return {
-        hour: `${hour}h`,
-        utilization: parseFloat(utilization)
+        hour: `${i}:00`,
+        utilization: parseFloat(utilization.toFixed(1))
       };
     });
-  };
+  }, [equipment]);
 
   const handleChartClick = (chartType, data) => {
     setSelectedChart(chartType);
@@ -133,7 +135,6 @@ const EquipmentDashboard = () => {
   const statusData = getStatusData();
   const maintenanceData = getMaintenanceData();
   const typeData = getTypeData();
-  const utilizationData = getUtilizationData();
 
   const modalColumns = [
     {

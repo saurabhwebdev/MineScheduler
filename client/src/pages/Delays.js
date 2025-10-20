@@ -8,7 +8,6 @@ import config from '../config/config';
 import './Delays.css';
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 const Delays = () => {
   const [delays, setDelays] = useState([]);

@@ -141,10 +141,6 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     return delayedSlots.find(d => d.row === site && d.hourIndex === hour);
   };
 
-  const isDelayed = (site, hour) => {
-    return !!getDelayInfo(site, hour);
-  };
-
   // Get shift color for a delay if it's a shift changeover
   const getDelayColor = (delayInfo) => {
     if (!delayInfo) return null;

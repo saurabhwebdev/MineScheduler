@@ -51,6 +51,7 @@ const Profile = () => {
   useEffect(() => {
     // Fetch fresh data on mount
     fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

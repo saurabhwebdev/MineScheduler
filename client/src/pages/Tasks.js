@@ -52,7 +52,7 @@ const Tasks = () => {
 
   // Calculate output when form values change
   useEffect(() => {
-    const subscription = form.getFieldsValue();
+    form.getFieldsValue();
     const type = form.getFieldValue('taskType');
     const rate = form.getFieldValue('rate');
     const duration = form.getFieldValue('taskDuration');

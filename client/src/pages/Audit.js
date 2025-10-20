@@ -14,7 +14,7 @@ const Audit = () => {
     pageSize: 50,
     total: 0
   });
-  const [filters, setFilters] = useState({
+  const [filters] = useState({
     search: '',
     module: null,
     action: null,
@@ -63,6 +63,7 @@ const Audit = () => {
 
   useEffect(() => {
     fetchAuditLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const handleRowClick = (record) => {
