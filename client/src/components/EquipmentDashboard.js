@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Spin, Row, Col, Table, Tag } from 'antd';
 import { ToolOutlined, CheckCircleOutlined, WarningOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, ComposedChart } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, ComposedChart, Cell, LineChart } from 'recharts';
 import config from '../config/config';
 import './EquipmentDashboard.css';
 
@@ -90,6 +90,24 @@ const EquipmentDashboard = () => {
     return Object.entries(typeCounts).map(([name, value]) => ({ name, value }));
   };
 
+  // Equipment Utilization Rate (simulated hourly data)
+  const getUtilizationData = () => {
+    // Generate 24 hours of utilization data
+    return Array.from({ length: 24 }, (_, i) => {
+      const hour = i + 1;
+      // Calculate utilization based on operational equipment
+      const kpis = calculateKPIs();
+      const baseUtilization = kpis.operationalRate;
+      // Add some variance to make it more realistic
+      const variance = Math.sin(i / 4) * 10 + Math.random() * 5;
+      const utilization = Math.max(0, Math.min(100, baseUtilization + variance)).toFixed(1);
+      return {
+        hour: `${hour}h`,
+        utilization: parseFloat(utilization)
+      };
+    });
+  };
+
   const handleChartClick = (chartType, data) => {
     setSelectedChart(chartType);
     
@@ -115,6 +133,7 @@ const EquipmentDashboard = () => {
   const statusData = getStatusData();
   const maintenanceData = getMaintenanceData();
   const typeData = getTypeData();
+  const utilizationData = getUtilizationData();
 
   const modalColumns = [
     {
@@ -320,7 +339,7 @@ const EquipmentDashboard = () => {
         </Col>
 
         {/* Equipment by Type Chart */}
-        <Col xs={24}>
+        <Col xs={24} lg={12}>
           <div className="chart-card">
             <div className="chart-header">
               <h3>Equipment by Type</h3>
@@ -350,6 +369,63 @@ const EquipmentDashboard = () => {
                   style={{ cursor: 'pointer' }}
                 />
               </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Col>
+
+        {/* Equipment Utilization Rate Line Chart */}
+        <Col xs={24} lg={12}>
+          <div className="chart-card">
+            <div className="chart-header">
+              <h3>Hourly Utilization</h3>
+              <span className="chart-subtitle">Equipment utilization across 24 hours</span>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={utilizationData}>
+                <defs>
+                  <linearGradient id="utilizationGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                <XAxis 
+                  dataKey="hour" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 11 }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  domain={[0, 100]}
+                  tickFormatter={(value) => `${value}%`}
+                />
+                <Tooltip 
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="custom-tooltip">
+                          <p className="tooltip-label">{payload[0].payload.hour}</p>
+                          <p className="tooltip-value" style={{ color: '#10b981' }}>
+                            {`Utilization: ${payload[0].value}%`}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                  cursor={{ stroke: '#10b981', strokeWidth: 1 }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="utilization" 
+                  stroke="#10b981" 
+                  strokeWidth={2}
+                  fill="url(#utilizationGradient)"
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </Col>

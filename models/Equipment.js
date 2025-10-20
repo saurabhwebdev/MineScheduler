@@ -122,9 +122,15 @@ EquipmentSchema.virtual('maintenanceStatus').get(function() {
 
 // Virtual for hours until maintenance
 EquipmentSchema.virtual('hoursUntilMaintenance').get(function() {
-  if (!this.lastMaintenance || !this.maintenanceInterval) return null;
-  const hoursSinceLastMaintenance = this.operatingHours;
-  return Math.max(0, this.maintenanceInterval - hoursSinceLastMaintenance);
+  if (!this.maintenanceInterval) return null;
+  return Math.max(0, this.maintenanceInterval - this.operatingHours);
+});
+
+// Virtual for percentage of maintenance interval used
+EquipmentSchema.virtual('percentUsed').get(function() {
+  if (!this.maintenanceInterval || this.maintenanceInterval === 0) return 0;
+  const percent = (this.operatingHours / this.maintenanceInterval) * 100;
+  return Math.min(percent, 999).toFixed(1); // Cap at 999% for display
 });
 
 // Ensure virtuals are included when converting to JSON
