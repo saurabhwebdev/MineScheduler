@@ -1,8 +1,9 @@
 .maintenance-grid-wrapper {
   background: #ffffff;
-  border-radius: 6px;
-  padding: 20px;
-  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 24px;
+  border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -20,24 +21,14 @@
 
 /* Current Hour Highlighting - Flat & Minimal */
 .hour-col.current-hour {
-  background: linear-gradient(to bottom, rgba(60, 202, 112, 0.12) 0%, rgba(60, 202, 112, 0.08) 100%) !important;
-  color: #3cca70 !important;
+  background: #f0f9ff !important;
+  color: #0284c7 !important;
   font-weight: 700;
-  box-shadow: inset 0 -3px 0 rgba(60, 202, 112, 0.4);
 }
 
 .current-hour-cell {
   position: relative;
-  animation: subtle-pulse 3s ease-in-out infinite;
-}
-
-@keyframes subtle-pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.92;
-  }
+  background: #f0f9ff !important;
 }
 
 .maintenance-grid {
@@ -51,24 +42,28 @@
 
 .maintenance-grid th,
 .maintenance-grid td {
-  border: 1px solid #e8e8e8;
-  padding: 8px;
+  border: 1px solid #f0f0f0;
+  padding: 10px;
   text-align: center;
   vertical-align: middle;
 }
 
 .maintenance-grid th {
-  background: #f9f9f9;
-  color: #262626;
+  background: #fafafa;
+  color: #1f2937;
   font-weight: 600;
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 2px solid #e5e7eb;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
 }
 
 .maintenance-grid tbody tr:hover {
-  background: #fafafa;
-  transition: background 0.15s ease;
+  background: #f9fafb;
+  transition: background 0.2s ease;
 }
 
 /* Column Widths */
@@ -104,19 +99,20 @@
 /* Equipment Cell */
 .equipment-cell {
   text-align: left !important;
-  padding: 12px !important;
+  padding: 14px !important;
 }
 
 .equipment-cell strong {
   display: block;
-  color: #3cca70;
+  color: #0f172a;
   font-size: 14px;
+  font-weight: 600;
   margin-bottom: 4px;
 }
 
 .equipment-name {
   font-size: 12px;
-  color: #888;
+  color: #64748b;
 }
 
 /* Status Indicator */
@@ -125,15 +121,16 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 6px 14px;
+  border-radius: 6px;
   color: #ffffff;
   font-weight: 600;
   font-size: 11px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .status-indicator .anticon {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* Hours Cell */
@@ -152,31 +149,34 @@
 .hour-cell {
   position: relative;
   cursor: pointer;
-  transition: all 0.15s ease;
-  height: 36px;
-  padding: 4px !important;
+  transition: all 0.2s ease;
+  height: 40px;
+  padding: 6px !important;
   font-size: 10px;
+  border-radius: 4px;
 }
 
 .hour-cell:hover {
-  transform: scale(1.05);
+  background: #f0f9ff !important;
+  border-color: #0284c7 !important;
   z-index: 5;
-  box-shadow: 0 0 0 2px #3cca70;
 }
 
 .hour-cell.in-use {
   font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .hour-cell.maintenance-available {
-  border: 2px dashed #1890ff;
+  border: 2px dashed #0284c7;
+  background: #f0f9ff;
 }
 
 .usage-marker {
   font-size: 9px;
   font-weight: 700;
   color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  text-shadow: none;
 }
 
 .task-cell {
@@ -194,16 +194,6 @@
   justify-content: center;
   color: #ffffff;
   font-size: 14px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
 }
 
 /* Inactive Equipment */
