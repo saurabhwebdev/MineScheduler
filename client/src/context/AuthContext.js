@@ -13,6 +13,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [mustResetPassword, setMustResetPassword] = useState(false);
 
   useEffect(() => {
     // Check if user is logged in (check localStorage for token)
@@ -20,7 +21,9 @@ export const AuthProvider = ({ children }) => {
     const userData = localStorage.getItem('user');
     
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setMustResetPassword(parsedUser.mustResetPassword || false);
     }
     setLoading(false);
   }, []);
@@ -29,20 +32,30 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
+    setMustResetPassword(userData.mustResetPassword || false);
+  };
+
+  const updateUserData = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    setMustResetPassword(userData.mustResetPassword || false);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+    setMustResetPassword(false);
   };
 
   const value = {
     user,
     login,
     logout,
+    updateUserData,
     loading,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    mustResetPassword
   };
 
   return (

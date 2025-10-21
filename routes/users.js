@@ -76,7 +76,8 @@ router.post('/', protect, authorize('admin'), async (req, res) => {
       name,
       email,
       password,
-      role: role || 'user'
+      role: role || 'user',
+      mustResetPassword: true // Force new user to reset password on first login
     });
 
     // Log audit
@@ -230,6 +231,89 @@ router.put('/:id/role', protect, authorize('admin'), async (req, res) => {
       data: {
         user
       }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ 
+      status: 'error',
+      message: 'Server error' 
+    });
+  }
+});
+
+// @route   POST /api/users/reset-password
+// @desc    Reset own password (for forced reset)
+// @access  Private
+router.post('/reset-password', protect, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    // Validate input
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ 
+        status: 'error',
+        message: 'Please provide current and new password' 
+      });
+    }
+
+    // Validate new password length
+    if (newPassword.length < 6) {
+      return res.status(400).json({ 
+        status: 'error',
+        message: 'New password must be at least 6 characters' 
+      });
+    }
+
+    // Get user with password
+    const user = await User.findById(req.user.id).select('+password');
+
+    if (!user) {
+      return res.status(404).json({ 
+        status: 'error',
+        message: 'User not found' 
+      });
+    }
+
+    // Verify current password
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ 
+        status: 'error',
+        message: 'Current password is incorrect' 
+      });
+    }
+
+    // Ensure new password is different
+    const isSameAsOld = await user.matchPassword(newPassword);
+    if (isSameAsOld) {
+      return res.status(400).json({ 
+        status: 'error',
+        message: 'New password must be different from current password' 
+      });
+    }
+
+    // Update password and reset flag
+    user.password = newPassword;
+    user.mustResetPassword = false;
+    await user.save();
+
+    // Log audit
+    await logAudit({
+      user: req.user,
+      action: 'UPDATE',
+      module: 'USER',
+      resourceType: 'Password Reset',
+      resourceId: user._id,
+      resourceName: user.name,
+      oldValues: { mustResetPassword: true },
+      newValues: { mustResetPassword: false },
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req)
+    });
+
+    res.json({
+      status: 'success',
+      message: 'Password reset successfully'
     });
   } catch (error) {
     console.error(error);

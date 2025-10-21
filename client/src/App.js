@@ -15,6 +15,7 @@ import Equipment from './pages/Equipment';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Audit from './pages/Audit';
+import PasswordResetModal from './components/PasswordResetModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
@@ -42,21 +43,26 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
-function App() {
-  useEffect(() => {
-    // Configure notifications globally for bottom-right positioning
-    notification.config({
-      placement: 'bottomRight',
-      duration: 3,
-      maxCount: 3,
+function AppContent() {
+  const { mustResetPassword, updateUserData, user } = useAuth();
+
+  const handlePasswordResetSuccess = () => {
+    // Update user data to remove mustResetPassword flag
+    const updatedUser = { ...user, mustResetPassword: false };
+    updateUserData(updatedUser);
+    notification.success({
+      message: 'Password Reset Successful',
+      description: 'Your password has been updated. You can now access the system.',
     });
-  }, []);
+  };
 
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App">
-          <Routes>
+    <>
+      {mustResetPassword && (
+        <PasswordResetModal onSuccess={handlePasswordResetSuccess} />
+      )}
+      <div className="App">
+        <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -72,7 +78,25 @@ function App() {
             <Route path="/audit" element={<AdminRoute><Audit /></AdminRoute>} />
             <Route path="/help" element={<PrivateRoute><Help /></PrivateRoute>} />
           </Routes>
-        </div>
+      </div>
+    </>
+  );
+}
+
+function App() {
+  useEffect(() => {
+    // Configure notifications globally for bottom-right positioning
+    notification.config({
+      placement: 'bottomRight',
+      duration: 3,
+      maxCount: 3,
+    });
+  }, []);
+
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
       </Router>
     </AuthProvider>
   );

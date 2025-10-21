@@ -47,6 +47,11 @@ const UserSchema = new mongoose.Schema({
     enum: ['local', 'google', 'microsoft'],
     default: 'local'
   },
+  // Password reset flag for new users
+  mustResetPassword: {
+    type: Boolean,
+    default: false
+  },
   // Optional Employee Details
   phone: {
     type: String,
