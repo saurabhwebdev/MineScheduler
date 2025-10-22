@@ -1,10 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { Modal } from 'antd';
 import ScheduleCell from './ScheduleCell';
 import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
+  const [toggleModalVisible, setToggleModalVisible] = useState(false);
+  const [selectedSite, setSelectedSite] = useState(null);
 
   const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
@@ -63,64 +66,61 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     return hour === currentHour;
   };
 
-  // Sort sites based on sort direction with G7/G8 grouping
+  // Sort sites: Active first, then inactive, with sorting within each group
   const sortedSites = useMemo(() => {
     const sites = Object.keys(grid);
+    const activeSites = sites.filter(s => siteActive[s]);
+    const inactiveSites = sites.filter(s => !siteActive[s]);
 
-    if (sortDirection === 'none') {
-      // Original order (by priority)
-      return sites.sort((a, b) => {
-        if (siteActive[a] !== siteActive[b]) {
-          return siteActive[b] ? -1 : 1; // Active first
-        }
-        return sitePriority[a] - sitePriority[b];
-      });
-    }
-
-    // Sort with G7/G8 grouping
-    return sites.sort((a, b) => {
-      // Active sites first
-      if (siteActive[a] !== siteActive[b]) {
-        return siteActive[b] ? -1 : 1;
+    const sortSiteGroup = (siteList) => {
+      if (sortDirection === 'none') {
+        // Original order (by priority)
+        return siteList.sort((a, b) => sitePriority[a] - sitePriority[b]);
       }
 
-      // Extract group (3rd character)
-      const getGroup = (name) => {
-        const s = (name || '').replace(/\s+/g, '');
-        const ch = s.length >= 3 ? s[2] : '';
-        if (ch === '7') return 'G7';
-        if (ch === '8') return 'G8';
-        return 'OTHER';
-      };
+      // Sort with G7/G8 grouping
+      return siteList.sort((a, b) => {
+        // Extract group (3rd character)
+        const getGroup = (name) => {
+          const s = (name || '').replace(/\s+/g, '');
+          const ch = s.length >= 3 ? s[2] : '';
+          if (ch === '7') return 'G7';
+          if (ch === '8') return 'G8';
+          return 'OTHER';
+        };
 
-      const groupA = getGroup(a);
-      const groupB = getGroup(b);
+        const groupA = getGroup(a);
+        const groupB = getGroup(b);
 
-      // Group rank based on direction
-      const getGroupRank = (group) => {
-        if (sortDirection === 'asc') {
-          if (group === 'G8') return 0;
-          if (group === 'G7') return 1;
-          return 2;
-        } else {
-          if (group === 'G7') return 0;
-          if (group === 'G8') return 1;
-          return 2;
-        }
-      };
+        // Group rank based on direction
+        const getGroupRank = (group) => {
+          if (sortDirection === 'asc') {
+            if (group === 'G8') return 0;
+            if (group === 'G7') return 1;
+            return 2;
+          } else {
+            if (group === 'G7') return 0;
+            if (group === 'G8') return 1;
+            return 2;
+          }
+        };
 
-      const rankA = getGroupRank(groupA);
-      const rankB = getGroupRank(groupB);
+        const rankA = getGroupRank(groupA);
+        const rankB = getGroupRank(groupB);
 
-      if (rankA !== rankB) return rankA - rankB;
+        if (rankA !== rankB) return rankA - rankB;
 
-      // Tie-breaker: string compare
-      const cmp = a.toLowerCase().localeCompare(b.toLowerCase(), undefined, {
-        numeric: true,
-        sensitivity: 'base'
+        // Tie-breaker: string compare
+        const cmp = a.toLowerCase().localeCompare(b.toLowerCase(), undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        });
+        return sortDirection === 'asc' ? cmp : -cmp;
       });
-      return sortDirection === 'asc' ? cmp : -cmp;
-    });
+    };
+
+    // Combine: active sites first, then inactive sites
+    return [...sortSiteGroup(activeSites), ...sortSiteGroup(inactiveSites)];
   }, [grid, sortDirection, siteActive, sitePriority]);
 
   const handleSortClick = () => {
@@ -165,9 +165,21 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   };
 
   const handleSiteClick = (siteId) => {
-    if (window.confirm(`Toggle active status for ${siteId}?`)) {
-      onToggleSite(siteId);
+    setSelectedSite({ id: siteId, isActive: siteActive[siteId] });
+    setToggleModalVisible(true);
+  };
+
+  const handleConfirmToggle = () => {
+    if (selectedSite) {
+      onToggleSite(selectedSite.id);
+      setToggleModalVisible(false);
+      setSelectedSite(null);
     }
+  };
+
+  const handleCancelToggle = () => {
+    setToggleModalVisible(false);
+    setSelectedSite(null);
   };
 
   return (
@@ -268,6 +280,82 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
           </tbody>
         </table>
       </div>
+
+      {/* Modern Toggle Modal */}
+      <Modal
+        open={toggleModalVisible}
+        onOk={handleConfirmToggle}
+        onCancel={handleCancelToggle}
+        okText={selectedSite?.isActive ? 'Deactivate' : 'Activate'}
+        cancelText="Cancel"
+        centered
+        width={480}
+        okButtonProps={{ 
+          style: { 
+            backgroundColor: selectedSite?.isActive ? '#ff4d4f' : '#3cca70',
+            borderColor: selectedSite?.isActive ? '#ff4d4f' : '#3cca70',
+            height: '40px',
+            fontSize: '14px',
+            fontWeight: 600
+          } 
+        }}
+        cancelButtonProps={{
+          style: {
+            height: '40px',
+            fontSize: '14px',
+            borderColor: '#d9d9d9'
+          }
+        }}
+      >
+        <div style={{ padding: '20px 0' }}>
+          <div style={{ 
+            fontSize: '18px', 
+            fontWeight: 600, 
+            color: '#1f2937', 
+            marginBottom: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              borderRadius: '12px',
+              backgroundColor: selectedSite?.isActive ? '#fff1f0' : '#e6f9f0',
+              color: selectedSite?.isActive ? '#ff4d4f' : '#3cca70',
+              fontSize: '20px'
+            }}>
+              {selectedSite?.isActive ? '⏸' : '▶'}
+            </span>
+            Toggle Site Status
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#6b7280', 
+            lineHeight: 1.6,
+            marginBottom: '16px'
+          }}>
+            {selectedSite?.isActive ? (
+              <>
+                Are you sure you want to <strong style={{ color: '#ff4d4f' }}>deactivate</strong> site <strong style={{ color: '#062d54' }}>{selectedSite?.id}</strong>?
+                <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff7e6', borderRadius: '8px', fontSize: '13px' }}>
+                  ⚠️ Deactivated sites will be <strong>excluded from scheduling</strong> but remain visible in the grid.
+                </div>
+              </>
+            ) : (
+              <>
+                Are you sure you want to <strong style={{ color: '#3cca70' }}>activate</strong> site <strong style={{ color: '#062d54' }}>{selectedSite?.id}</strong>?
+                <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#e6f9f0', borderRadius: '8px', fontSize: '13px' }}>
+                  ✓ Activated sites will be <strong>included in scheduling</strong> on the next generation.
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
