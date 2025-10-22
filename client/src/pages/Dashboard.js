@@ -177,7 +177,7 @@ const Dashboard = () => {
       typeCounts[eq.type] = (typeCounts[eq.type] || 0) + 1;
     });
     
-    const colors = ['#3cca70', '#062d54', '#1890ff', '#faad14', '#ff4d4f', '#722ed1', '#13c2c2', '#52c41a'];
+    const colors = ['#3cca70', '#062d54']; // Alternating green and blue
     return Object.entries(typeCounts)
       .map(([name, value], index) => ({ 
         name, 
@@ -711,7 +711,7 @@ const Dashboard = () => {
                     <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} allowDecimals={false} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="value" fill="#ff4d4f" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="value" fill="#062d54" radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
