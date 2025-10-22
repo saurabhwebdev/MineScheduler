@@ -377,50 +377,50 @@ const Dashboard = () => {
         {/* Scheduler KPIs */}
         <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #062d54' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#e8f4ff' }}>
-                <EnvironmentOutlined style={{ color: '#062d54' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#e8f4ff' }}>
+                  <EnvironmentOutlined style={{ color: '#062d54' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#062d54' }}>{schedKPIs.activeSites}/{schedKPIs.totalSites}</div>
-                <div className="kpi-label">Active Sites</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{schedKPIs.activeSites}/{schedKPIs.totalSites}</div>
+              <div className="kpi-label">Active Sites</div>
             </div>
           </Col>
 
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #3cca70' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#e6f9f0' }}>
-                <FileTextOutlined style={{ color: '#3cca70' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#e6f9f0' }}>
+                  <FileTextOutlined style={{ color: '#3cca70' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#3cca70' }}>{schedKPIs.totalTasks}</div>
-                <div className="kpi-label">Total Tasks</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{schedKPIs.totalTasks}</div>
+              <div className="kpi-label">Total Tasks</div>
             </div>
           </Col>
 
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #3cca70' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#e6f9f0' }}>
-                <CheckCircleOutlined style={{ color: '#3cca70' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#e6f9f0' }}>
+                  <CheckCircleOutlined style={{ color: '#3cca70' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#3cca70' }}>{schedKPIs.utilization}%</div>
-                <div className="kpi-label">Schedule Utilization</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{schedKPIs.utilization}%</div>
+              <div className="kpi-label">Schedule Utilization</div>
             </div>
           </Col>
 
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #ff4d4f' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#fff1f0' }}>
-                <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#fff1f0' }}>
+                  <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#ff4d4f' }}>{schedKPIs.delays}</div>
-                <div className="kpi-label">Total Delays</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{schedKPIs.delays}</div>
+              <div className="kpi-label">Total Delays</div>
             </div>
           </Col>
         </Row>
@@ -428,50 +428,50 @@ const Dashboard = () => {
         {/* Equipment KPIs */}
         <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #062d54' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#e8f4ff' }}>
-                <ToolOutlined style={{ color: '#062d54' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#e8f4ff' }}>
+                  <ToolOutlined style={{ color: '#062d54' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#062d54' }}>{eqKPIs.total}</div>
-                <div className="kpi-label">Total Equipment</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{eqKPIs.total}</div>
+              <div className="kpi-label">Total Equipment</div>
             </div>
           </Col>
 
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #3cca70' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#e6f9f0' }}>
-                <CheckCircleOutlined style={{ color: '#3cca70' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#e6f9f0' }}>
+                  <CheckCircleOutlined style={{ color: '#3cca70' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#3cca70' }}>{eqKPIs.operational}</div>
-                <div className="kpi-label">Operational ({eqKPIs.operationalRate}%)</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{eqKPIs.operational}</div>
+              <div className="kpi-label">Operational ({eqKPIs.operationalRate}%)</div>
             </div>
           </Col>
 
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #faad14' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#fffbe6' }}>
-                <WarningOutlined style={{ color: '#faad14' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#fffbe6' }}>
+                  <WarningOutlined style={{ color: '#faad14' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#faad14' }}>{eqKPIs.dueSoon}</div>
-                <div className="kpi-label">Maintenance Due Soon</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{eqKPIs.dueSoon}</div>
+              <div className="kpi-label">Maintenance Due Soon</div>
             </div>
           </Col>
 
           <Col xs={24} sm={12} lg={6}>
-            <div className="kpi-card" style={{ borderLeft: '4px solid #ff4d4f' }}>
-              <div className="kpi-icon" style={{ backgroundColor: '#fff1f0' }}>
-                <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />
+            <div className="kpi-card">
+              <div className="kpi-header">
+                <span className="kpi-icon" style={{ backgroundColor: '#fff1f0' }}>
+                  <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />
+                </span>
               </div>
-              <div className="kpi-content">
-                <div className="kpi-value" style={{ color: '#ff4d4f' }}>{eqKPIs.overdue}</div>
-                <div className="kpi-label">Maintenance Overdue</div>
-              </div>
+              <div className="kpi-value" style={{ color: '#1f2937' }}>{eqKPIs.overdue}</div>
+              <div className="kpi-label">Maintenance Overdue</div>
             </div>
           </Col>
         </Row>
@@ -510,15 +510,21 @@ const Dashboard = () => {
                 <h3>Top Task Allocations</h3>
                 <span className="chart-subtitle">Most frequently scheduled tasks</span>
               </div>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={taskDist} layout="horizontal">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#8c8c8c' }} width={80} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" fill="#062d54" radius={[0, 8, 8, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              {taskDist.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={taskDist} layout="horizontal">
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                    <XAxis type="number" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#8c8c8c' }} width={80} axisLine={false} tickLine={false} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="value" fill="#062d54" radius={[0, 8, 8, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div style={{ height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8c8c8c' }}>
+                  No schedule data available. Generate a schedule to see task distribution.
+                </div>
+              )}
             </div>
           </Col>
 
@@ -653,35 +659,41 @@ const Dashboard = () => {
                 <h3>Upcoming Maintenance (7 Days)</h3>
                 <span className="chart-subtitle">Scheduled maintenance count</span>
               </div>
-              <ResponsiveContainer width="100%" height={280}>
-                <LineChart data={maintenanceTimeline}>
-                  <defs>
-                    <linearGradient id="colorMaintenance" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#062d54" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#062d54" stopOpacity={0.05}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <Tooltip 
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="custom-tooltip">
-                            <p className="tooltip-label">{payload[0].payload.date} ({payload[0].payload.day})</p>
-                            <p className="tooltip-value" style={{ color: '#062d54' }}>
-                              {`Maintenance: ${payload[0].value}`}
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Area type="monotone" dataKey="count" stroke="#062d54" strokeWidth={3} fill="url(#colorMaintenance)" />
-                </LineChart>
-              </ResponsiveContainer>
+              {maintenanceTimeline.some(d => d.count > 0) ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <LineChart data={maintenanceTimeline}>
+                    <defs>
+                      <linearGradient id="colorMaintenance" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#062d54" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#062d54" stopOpacity={0.05}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <Tooltip 
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="custom-tooltip">
+                              <p className="tooltip-label">{payload[0].payload.date} ({payload[0].payload.day})</p>
+                              <p className="tooltip-value" style={{ color: '#062d54' }}>
+                                {`Maintenance: ${payload[0].value}`}
+                              </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Area type="monotone" dataKey="count" stroke="#062d54" strokeWidth={3} fill="url(#colorMaintenance)" />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div style={{ height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8c8c8c' }}>
+                  No upcoming maintenance scheduled in the next 7 days.
+                </div>
+              )}
             </div>
           </Col>
 
