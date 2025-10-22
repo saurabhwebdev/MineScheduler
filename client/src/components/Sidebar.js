@@ -11,7 +11,8 @@ import {
   SettingOutlined,
   AuditOutlined,
   ToolOutlined,
-  EnvironmentOutlined
+  EnvironmentOutlined,
+  QuestionCircleOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
@@ -37,6 +38,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     
     // Analysis & Configuration
     { key: 'settings', icon: <SettingOutlined />, label: 'Settings', path: '/settings' },
+    { key: 'help', icon: <QuestionCircleOutlined />, label: 'Help', path: '/help' },
     
     // Admin Only
     { key: 'users', icon: <UserOutlined />, label: 'Users', path: '/users', adminOnly: true },
