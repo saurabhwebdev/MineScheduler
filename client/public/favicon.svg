@@ -1,6 +1,6 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Green Letter M - No Background -->
-  <text x="32" y="50" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="800" fill="#3cca70" text-anchor="middle" dominant-baseline="middle">
+  <!-- Green Letter M - Centered -->
+  <text x="32" y="48" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="800" fill="#3cca70" text-anchor="middle">
     M
   </text>
 </svg>
