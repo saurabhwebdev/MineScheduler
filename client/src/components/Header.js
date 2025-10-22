@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Badge, Dropdown } from 'antd';
-import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined, HomeOutlined, RightOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
@@ -43,7 +43,11 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
     <div className="header">
       <div className="header-content">
         <div className="header-left">
-          <h1 className="header-title">{title || 'Home'}</h1>
+          <div className="header-breadcrumb">
+            <HomeOutlined className="breadcrumb-home-icon" onClick={() => navigate('/dashboard')} />
+            <RightOutlined className="breadcrumb-separator" />
+            <span className="breadcrumb-current">{title || 'Home'}</span>
+          </div>
           {subtitle && <p className="header-subtitle">{subtitle}</p>}
         </div>
 

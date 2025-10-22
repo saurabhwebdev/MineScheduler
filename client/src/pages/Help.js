@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import { 
-  CheckCircleOutlined, 
+  CheckCircleFilled, 
   RightOutlined,
-  CalendarOutlined,
-  FileTextOutlined,
-  ClockCircleOutlined,
-  EnvironmentOutlined,
-  ToolOutlined,
-  SettingOutlined,
-  PlayCircleOutlined,
-  BulbOutlined,
-  ThunderboltOutlined
+  CalendarFilled,
+  FileTextFilled,
+  ClockCircleFilled,
+  EnvironmentFilled,
+  ToolFilled,
+  SettingFilled,
+  PlayCircleFilled,
+  BulbFilled,
+  ThunderboltFilled
 } from '@ant-design/icons';
 import './Help.css';
 
@@ -25,7 +25,7 @@ const Help = () => {
   const userJourney = [
     {
       id: 'getting-started',
-      icon: <PlayCircleOutlined />,
+      icon: <PlayCircleFilled />,
       title: 'Getting Started',
       description: 'Set up your system and understand the basics',
       steps: [
@@ -48,7 +48,7 @@ const Help = () => {
     },
     {
       id: 'setup',
-      icon: <SettingOutlined />,
+      icon: <SettingFilled />,
       title: 'Initial Configuration',
       description: 'Configure your system before creating schedules',
       steps: [
@@ -76,7 +76,7 @@ const Help = () => {
     },
     {
       id: 'tasks',
-      icon: <FileTextOutlined />,
+      icon: <FileTextFilled />,
       title: 'Creating Tasks',
       description: 'Define the tasks that will be scheduled',
       steps: [
@@ -104,7 +104,7 @@ const Help = () => {
     },
     {
       id: 'sites',
-      icon: <EnvironmentOutlined />,
+      icon: <EnvironmentFilled />,
       title: 'Managing Sites',
       description: 'Set up mining sites and their parameters',
       steps: [
@@ -132,7 +132,7 @@ const Help = () => {
     },
     {
       id: 'equipment',
-      icon: <ToolOutlined />,
+      icon: <ToolFilled />,
       title: 'Equipment Management',
       description: 'Track and assign equipment to tasks',
       steps: [
@@ -160,7 +160,7 @@ const Help = () => {
     },
     {
       id: 'delays',
-      icon: <ClockCircleOutlined />,
+      icon: <ClockCircleFilled />,
       title: 'Delay Management',
       description: 'Define and track operational delays',
       steps: [
@@ -183,7 +183,7 @@ const Help = () => {
     },
     {
       id: 'scheduling',
-      icon: <CalendarOutlined />,
+      icon: <CalendarFilled />,
       title: 'Creating a Schedule',
       description: 'Generate and manage your mine schedule',
       steps: [
@@ -226,7 +226,7 @@ const Help = () => {
     },
     {
       id: 'core-logic',
-      icon: <ThunderboltOutlined />,
+      icon: <ThunderboltFilled />,
       title: 'How the Core Logic Works',
       description: 'Understanding the scheduling and maintenance algorithms',
       steps: [
@@ -294,7 +294,7 @@ const Help = () => {
     },
     {
       id: 'tips',
-      icon: <BulbOutlined />,
+      icon: <BulbFilled />,
       title: 'Best Practices & Tips',
       description: 'Optimize your scheduling workflow',
       steps: [
@@ -386,7 +386,7 @@ const Help = () => {
                   {section.steps.map((step) => (
                     <div key={step.number} className="help-step">
                       <div className="help-step-number">
-                        <CheckCircleOutlined />
+                        <CheckCircleFilled />
                       </div>
                       <div className="help-step-content">
                         <h3>{step.number}. {step.title}</h3>

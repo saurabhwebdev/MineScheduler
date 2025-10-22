@@ -26,12 +26,33 @@
   gap: 4px;
 }
 
-.header-title {
+.header-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: 'Inter', sans-serif;
-  font-size: 24px;
+}
+
+.breadcrumb-home-icon {
+  font-size: 18px;
+  color: #8c8c8c;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.breadcrumb-home-icon:hover {
+  color: #3cca70;
+}
+
+.breadcrumb-separator {
+  font-size: 12px;
+  color: #d9d9d9;
+}
+
+.breadcrumb-current {
+  font-size: 20px;
   font-weight: 600;
   color: #062d54;
-  margin: 0;
 }
 
 .header-subtitle {
