@@ -10,7 +10,8 @@ import {
   ToolOutlined,
   SettingOutlined,
   PlayCircleOutlined,
-  BulbOutlined
+  BulbOutlined,
+  ThunderboltOutlined
 } from '@ant-design/icons';
 import './Help.css';
 
@@ -220,6 +221,74 @@ const Help = () => {
           number: 7,
           title: 'Toggle Site Status',
           content: 'Click site name in grid to toggle active/inactive. Inactive sites are skipped in scheduling but remain visible for reference.'
+        }
+      ]
+    },
+    {
+      id: 'core-logic',
+      icon: <ThunderboltOutlined />,
+      title: 'How the Core Logic Works',
+      description: 'Understanding the scheduling and maintenance algorithms',
+      steps: [
+        {
+          number: 1,
+          title: 'Task Duration Calculation',
+          content: 'The system calculates task durations based on Unit of Measure (UOM) types: (1) Area-based: Duration = (Total Plan Meters ÷ Rate m/h) × 60. For example, 100m at 10m/h = 10 hours. (2) Tonnage-based: Duration = (Total Backfill Tonnes × 60) ÷ Rate t/h. If tonnes not provided, calculates from Width × Height × Length × Density. (3) BOGT (Bogger/Trolley): Duration = (Remote Tonnes ÷ Rate) × 60. (4) BFP (Backfill Prep): Uses fixed duration only if tonnes > 0, skips if no backfill. (5) Task (Fixed): Uses configured duration in minutes directly. All durations are rounded up to next whole hour.'
+        },
+        {
+          number: 2,
+          title: 'Priority-Based Allocation',
+          content: 'Sites are sorted by Priority (lower number = higher priority) before scheduling. Active sites come first, then inactive. The scheduler processes sites in this order, allocating tasks sequentially. This ensures critical sites get scheduled first when resources are limited.'
+        },
+        {
+          number: 3,
+          title: 'Task Cycling & Firings',
+          content: 'Firings represent blast cycles. For Firings = 1: System schedules tasks from current task to end of cycle (no wrap). For Firings > 1: System schedules complete mining cycle (drill → charge → blast → ventilate → etc.) and repeats it "Firings" times. Tasks follow the Order sequence defined in Tasks page.'
+        },
+        {
+          number: 4,
+          title: 'Time to Complete Override',
+          content: 'When "Time to Complete" is set for a site, it overrides the calculated duration ONLY for the first occurrence of the current task. Subsequent tasks and cycles use normal duration calculations. This is useful when you know exact remaining time for an in-progress task.'
+        },
+        {
+          number: 5,
+          title: 'Task Limits Enforcement',
+          content: 'Each task has a "Limit" defining max simultaneous sites per hour. For example, if Drill limit = 2, only 2 sites can drill in the same hour. The scheduler checks hourly allocation and skips hours where limit is reached, moving to the next available hour. This prevents equipment conflicts.'
+        },
+        {
+          number: 6,
+          title: 'Delay Handling',
+          content: 'Delays block specific hours for specific sites. When generating schedule, the system builds a delay map and skips those hours during allocation. This forces tasks to be scheduled around delays. Shift changeover delays are automatically generated based on shift configuration.'
+        },
+        {
+          number: 7,
+          title: 'Hour Allocation Algorithm',
+          content: 'For each site, the scheduler: (1) Starts at hour 0 or last filled hour. (2) Checks if hour is delayed - if yes, skip to next hour. (3) Checks if cell already filled - if yes, skip to next hour. (4) Checks task limit for that hour - if reached, skip to next hour. (5) If all checks pass, allocate task to that hour and increment counter. (6) Repeat until all hours for task are allocated or grid ends.'
+        },
+        {
+          number: 8,
+          title: 'Maintenance Opportunity Grid Logic',
+          content: 'Equipment is assigned to specific tasks via "Assigned Tasks" field. The system: (1) Checks each hour to see which tasks are running (from schedule grid). (2) If ANY task assigned to an equipment is running, marks equipment as "In Use" (Green). (3) If equipment is operational AND not in use, marks hour as "Maintenance Window" (Blue). (4) Considers operating hours vs maintenance interval to show status: Good (< 80%), Due Soon (80-99%), Overdue (≥ 100%).'
+        },
+        {
+          number: 9,
+          title: 'Equipment Maintenance Calculation',
+          content: 'Maintenance status is calculated as: Percent Used = (Operating Hours ÷ Maintenance Interval) × 100. For example, equipment with 450 hours operated and 500-hour interval = 90% (Due Soon). Hours Until Maintenance = Maintenance Interval - Operating Hours. The system tracks this automatically and shows visual indicators (Green/Orange/Red).'
+        },
+        {
+          number: 10,
+          title: 'Shift Changeover Auto-Delay',
+          content: 'When shifts are configured with changeover duration (e.g., 30 minutes), the system automatically blocks the hour BEFORE each shift starts. For example: Day shift starts at 06:00 with 30-min changeover → Hour 5 (05:00-06:00) is automatically blocked for ALL active sites. This prevents task allocation during crew changes.'
+        },
+        {
+          number: 11,
+          title: 'Schedule Grid Color Coding',
+          content: 'Each task has a unique color defined in Tasks page. The grid uses these colors to visualize the schedule. Empty cells = white (available), Colored cells = task assigned, Gray cells = inactive site, Delayed cells show with visual indicators. This provides instant visual understanding of the schedule.'
+        },
+        {
+          number: 12,
+          title: 'Snapshot & History',
+          content: 'Snapshots save complete schedule state including: grid allocation, task durations, site priorities, delays, and all parameters. This allows: (1) Historical comparison - see how schedules evolved. (2) Rollback capability - restore previous versions. (3) Audit trail - track schedule changes over time. Snapshots are immutable once saved.'
         }
       ]
     },
