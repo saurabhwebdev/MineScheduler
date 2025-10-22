@@ -4,7 +4,7 @@ import { notification } from 'antd';
 import './App.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import ComingSoon from './pages/ComingSoon';
+import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Schedule from './pages/Schedule';
 import UserManagement from './pages/UserManagement';
@@ -66,7 +66,7 @@ function AppContent() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<PrivateRoute><ComingSoon /></PrivateRoute>} />
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/schedule" element={<PrivateRoute><Schedule /></PrivateRoute>} />
             <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
