@@ -282,14 +282,14 @@ const Dashboard = () => {
   const delaysBySite = getDelaysBySite();
 
   const equipmentStatusData = [
-    { name: 'Operational', value: eqKPIs.operational, fill: '#52c41a' },
-    { name: 'Maintenance', value: eqKPIs.maintenance, fill: '#faad14' },
+    { name: 'Operational', value: eqKPIs.operational, fill: '#3cca70' },
+    { name: 'Maintenance', value: eqKPIs.maintenance, fill: '#062d54' },
     { name: 'Out of Service', value: eqKPIs.outOfService, fill: '#ff4d4f' }
   ].filter(item => item.value > 0);
 
   const equipmentMaintenanceData = [
-    { name: 'Good', value: eqKPIs.total - eqKPIs.dueSoon - eqKPIs.overdue, fill: '#52c41a' },
-    { name: 'Due Soon', value: eqKPIs.dueSoon, fill: '#faad14' },
+    { name: 'Good', value: eqKPIs.total - eqKPIs.dueSoon - eqKPIs.overdue, fill: '#3cca70' },
+    { name: 'Due Soon', value: eqKPIs.dueSoon, fill: '#062d54' },
     { name: 'Overdue', value: eqKPIs.overdue, fill: '#ff4d4f' }
   ].filter(item => item.value > 0);
 
