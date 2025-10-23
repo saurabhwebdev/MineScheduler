@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Space, Spin, Tag, Dropdown } from 'antd';
-import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, FileExcelOutlined } from '@ant-design/icons';
+import { Button, notification, Radio, Spin, Tag } from 'antd';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
 import SnapshotManager from '../components/SnapshotManager';
@@ -322,10 +322,10 @@ const Schedule = () => {
 
         {/* Controls */}
         <div className="schedule-controls">
-          <Space size="large" wrap>
+          <div className="controls-top">
             <div className="control-group">
-              <label>Grid Hours:</label>
-              <Radio.Group value={gridHours} onChange={handleHoursChange}>
+              <label className="control-label">Grid Hours:</label>
+              <Radio.Group value={gridHours} onChange={handleHoursChange} size="large">
                 <Radio.Button value={6}>6 Hours</Radio.Button>
                 <Radio.Button value={12}>12 Hours</Radio.Button>
                 <Radio.Button value={24}>24 Hours</Radio.Button>
@@ -333,52 +333,81 @@ const Schedule = () => {
               </Radio.Group>
             </div>
 
-            <Button
-              type="primary"
-              size="large"
-              icon={<CalendarOutlined />}
-              onClick={generateSchedule}
-              loading={loading}
-            >
-              Generate Schedule
-            </Button>
+            {delayedSlots.length > 0 && (
+              <div className="delay-count">
+                <span className="delay-badge">{delayedSlots.length}</span>
+                <span className="delay-text">Delays Applied</span>
+              </div>
+            )}
+          </div>
 
-            {scheduleData && (
+          <div className="controls-bottom">
+            <div className="action-buttons">
               <Button
+                type="primary"
                 size="large"
-                icon={<ReloadOutlined />}
+                icon={<CalendarOutlined />}
                 onClick={generateSchedule}
                 loading={loading}
+                className="generate-btn"
               >
-                Regenerate
+                Generate Schedule
               </Button>
-            )}
 
-            {scheduleData && (
+              {scheduleData && (
+                <Button
+                  size="large"
+                  icon={<ReloadOutlined />}
+                  onClick={generateSchedule}
+                  loading={loading}
+                  className="regenerate-btn"
+                >
+                  Regenerate
+                </Button>
+              )}
+
+              {scheduleData && (
+                <Button
+                  size="large"
+                  icon={<DownloadOutlined />}
+                  onClick={handleDownloadExcel}
+                  className="download-btn"
+                >
+                  Download Excel
+                </Button>
+              )}
+
+              {scheduleData && (
+                <Button
+                  size="large"
+                  icon={<SaveOutlined />}
+                  onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
+                  className="save-btn"
+                >
+                  Save Snapshot
+                </Button>
+              )}
+
               <Button
                 size="large"
-                icon={<DownloadOutlined />}
-                onClick={handleDownloadExcel}
-                style={{ background: '#52c41a', borderColor: '#52c41a', color: 'white' }}
+                icon={<FolderOpenOutlined />}
+                onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
+                className="load-btn"
               >
-                Download Excel
+                Load Snapshot
               </Button>
-            )}
+            </div>
+          </div>
 
+          {/* Hidden SnapshotManager for modal functionality */}
+          <div style={{ display: 'none' }}>
             <SnapshotManager
               scheduleData={scheduleData}
               delayedSlots={delayedSlots}
               gridHours={gridHours}
               onLoadSnapshot={handleLoadSnapshot}
             />
-          </Space>
-
-          {delayedSlots.length > 0 && (
-            <div className="delay-count">
-              <span className="delay-badge">{delayedSlots.length}</span>
-              <span className="delay-text">Delays Applied</span>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Loading State */}
