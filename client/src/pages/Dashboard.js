@@ -525,16 +525,29 @@ const Dashboard = () => {
             <div className="dashboard-chart">
               <div className="chart-header">
                 <h3>Top Task Allocations</h3>
-                <span className="chart-subtitle">Most frequently scheduled tasks (Count: {taskDist.length})</span>
+                <span className="chart-subtitle">Most frequently scheduled tasks</span>
               </div>
               {taskDist.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={taskDist} layout="vertical" margin={{ top: 5, right: 30, left: 120, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={true} />
-                    <XAxis type="number" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
-                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#8c8c8c' }} width={110} axisLine={false} tickLine={false} />
+                  <BarChart data={taskDist} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                    <XAxis 
+                      dataKey="name" 
+                      tick={{ fontSize: 10, fill: '#8c8c8c' }} 
+                      angle={-45} 
+                      textAnchor="end" 
+                      height={100}
+                      interval={0}
+                      axisLine={false} 
+                      tickLine={false} 
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="value" fill="#062d54" radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="value" fill="#3cca70" radius={[8, 8, 0, 0]}>
+                      {taskDist.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3cca70' : '#062d54'} />
+                      ))}
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
