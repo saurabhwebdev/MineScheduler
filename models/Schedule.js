@@ -14,31 +14,31 @@ const ScheduleSchema = new mongoose.Schema({
   },
   // Schedule data
   grid: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     required: true
   },
   hourlyAllocation: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   taskDurations: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   sitePriority: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   siteActive: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   taskColors: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   taskLimits: {
-    type: Object,
+    type: mongoose.Schema.Types.Mixed,
     default: {}
   },
   // Delays applied

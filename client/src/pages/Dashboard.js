@@ -153,16 +153,32 @@ const Dashboard = () => {
 
   // Task Distribution from latest schedule
   const getTaskDistribution = () => {
+    console.log('=== DEBUG: getTaskDistribution ===');
+    console.log('Schedule object:', schedule);
+    console.log('hourlyAllocation:', schedule?.hourlyAllocation);
+    console.log('hourlyAllocation type:', typeof schedule?.hourlyAllocation);
+    console.log('Tasks array:', tasks);
+    
     if (!schedule || !schedule.hourlyAllocation) {
+      console.log('No schedule or hourlyAllocation available');
       return [];
     }
 
+    // Check if hourlyAllocation is an object with numeric keys
+    const hourlyAllocationObj = schedule.hourlyAllocation;
+    console.log('hourlyAllocation keys:', Object.keys(hourlyAllocationObj));
+    console.log('hourlyAllocation values sample:', Object.values(hourlyAllocationObj).slice(0, 3));
+
     const taskCounts = {};
-    Object.values(schedule.hourlyAllocation).forEach(hourData => {
-      Object.entries(hourData).forEach(([taskId, count]) => {
-        taskCounts[taskId] = (taskCounts[taskId] || 0) + count;
-      });
+    Object.values(hourlyAllocationObj).forEach(hourData => {
+      if (hourData && typeof hourData === 'object') {
+        Object.entries(hourData).forEach(([taskId, count]) => {
+          taskCounts[taskId] = (taskCounts[taskId] || 0) + count;
+        });
+      }
     });
+
+    console.log('Task counts calculated:', taskCounts);
 
     // Map taskId to task name for better display
     const taskNameMap = {};
@@ -170,13 +186,18 @@ const Dashboard = () => {
       taskNameMap[task.taskId] = task.taskName || task.taskId;
     });
 
-    return Object.entries(taskCounts)
+    console.log('Task name map:', taskNameMap);
+
+    const result = Object.entries(taskCounts)
       .map(([taskId, value]) => ({ 
         name: taskNameMap[taskId] || taskId, 
         value 
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Top 8 tasks
+
+    console.log('Final task distribution result:', result);
+    return result;
   };
 
   // Equipment Type Distribution
