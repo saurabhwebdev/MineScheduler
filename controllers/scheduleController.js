@@ -523,11 +523,55 @@ exports.exportScheduleToExcel = async (req, res) => {
       });
     }
 
+    // Helper function to convert hex color to Excel RGB
+    const hexToRGB = (hex) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        rgb: (parseInt(result[1], 16)).toString(16).padStart(2, '0').toUpperCase() +
+             (parseInt(result[2], 16)).toString(16).padStart(2, '0').toUpperCase() +
+             (parseInt(result[3], 16)).toString(16).padStart(2, '0').toUpperCase()
+      } : { rgb: 'FFFFFF' };
+    };
+
     // Create workbook
     const workbook = XLSX.utils.book_new();
 
     // Prepare schedule grid data
-    const { grid, taskColors, sitePriority, siteActive, gridHours } = schedule;
+    const { grid, taskColors, sitePriority, siteActive, gridHours, allDelays, shiftChangeoverDelays } = schedule;
+    
+    // Build delay map for marking delayed cells
+    const delayMap = {};
+    const shiftDelayMap = {};
+    
+    if (allDelays && Array.isArray(allDelays)) {
+      allDelays.forEach(d => {
+        const site = d.row || d.site;
+        const hour = d.hour !== undefined ? d.hour : d.hourIndex;
+        if (site && typeof hour === 'number') {
+          if (!delayMap[site]) delayMap[site] = {};
+          delayMap[site][hour] = {
+            category: d.category || d.delayCategory || '',
+            code: d.code || d.delayCode || '',
+            comments: d.comments || d.notes || '',
+            isAutomatic: d.isAutomatic || false
+          };
+        }
+      });
+    }
+    
+    if (shiftChangeoverDelays && Array.isArray(shiftChangeoverDelays)) {
+      shiftChangeoverDelays.forEach(d => {
+        const site = d.row || d.site;
+        const hour = d.hour !== undefined ? d.hour : d.hourIndex;
+        if (site && typeof hour === 'number') {
+          if (!shiftDelayMap[site]) shiftDelayMap[site] = {};
+          shiftDelayMap[site][hour] = {
+            shiftCode: d.shiftCode || '',
+            comments: d.comments || ''
+          };
+        }
+      });
+    }
     
     // Get all sites sorted by priority
     const sites = Object.keys(grid).sort((a, b) => {
@@ -556,7 +600,20 @@ exports.exportScheduleToExcel = async (req, res) => {
       ];
       
       for (let h = 0; h < gridHours; h++) {
-        row.push(grid[site][h] || '');
+        const taskId = grid[site][h] || '';
+        const delay = delayMap[site] && delayMap[site][h];
+        const shiftDelay = shiftDelayMap[site] && shiftDelayMap[site][h];
+        
+        // Show task, or delay marker if delayed
+        if (shiftDelay) {
+          row.push(`[SHIFT: ${shiftDelay.shiftCode}]`);
+        } else if (delay && delay.isAutomatic) {
+          row.push(`[AUTO DELAY]`);
+        } else if (delay) {
+          row.push(`[DELAY: ${delay.code}]`);
+        } else {
+          row.push(taskId);
+        }
       }
       
       scheduleData.push(row);
@@ -565,6 +622,78 @@ exports.exportScheduleToExcel = async (req, res) => {
     // Create worksheet
     const worksheet = XLSX.utils.aoa_to_sheet(scheduleData);
 
+    // Apply cell styles (colors and formatting)
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    
+    // Style header row
+    for (let col = range.s.c; col <= range.e.c; col++) {
+      const cellAddr = XLSX.utils.encode_cell({ r: 0, c: col });
+      if (!worksheet[cellAddr]) continue;
+      worksheet[cellAddr].s = {
+        fill: { fgColor: { rgb: '0F0E17' } },
+        font: { color: { rgb: 'FF8906' }, bold: true },
+        alignment: { horizontal: 'center', vertical: 'center' }
+      };
+    }
+
+    // Style data cells with colors
+    sites.forEach((site, siteIdx) => {
+      const rowIdx = siteIdx + 1; // +1 for header row
+      
+      // Style priority, site, status columns
+      for (let col = 0; col < 3; col++) {
+        const cellAddr = XLSX.utils.encode_cell({ r: rowIdx, c: col });
+        if (!worksheet[cellAddr]) continue;
+        worksheet[cellAddr].s = {
+          alignment: { horizontal: 'center', vertical: 'center' },
+          font: { bold: col === 1 } // Bold site name
+        };
+        
+        // Gray out inactive sites
+        if (!siteActive[site]) {
+          worksheet[cellAddr].s.fill = { fgColor: { rgb: 'D3D3D3' } };
+          worksheet[cellAddr].s.font.color = { rgb: '666666' };
+        }
+      }
+      
+      // Style hour columns with task colors
+      for (let h = 0; h < gridHours; h++) {
+        const col = h + 3; // +3 for Priority, Site, Status columns
+        const cellAddr = XLSX.utils.encode_cell({ r: rowIdx, c: col });
+        if (!worksheet[cellAddr]) continue;
+        
+        const taskId = grid[site][h];
+        const delay = delayMap[site] && delayMap[site][h];
+        const shiftDelay = shiftDelayMap[site] && shiftDelayMap[site][h];
+        
+        let cellStyle = {
+          alignment: { horizontal: 'center', vertical: 'center' }
+        };
+        
+        // Apply colors based on cell content
+        if (shiftDelay) {
+          // Shift changeover - Orange background
+          cellStyle.fill = { fgColor: { rgb: 'FFA500' } };
+          cellStyle.font = { color: { rgb: 'FFFFFF' }, bold: true };
+        } else if (delay) {
+          // Delay - Red background
+          cellStyle.fill = { fgColor: { rgb: 'FF6B6B' } };
+          cellStyle.font = { color: { rgb: 'FFFFFF' }, bold: true };
+        } else if (taskId && taskColors[taskId]) {
+          // Task with color
+          const rgbColor = hexToRGB(taskColors[taskId]);
+          cellStyle.fill = { fgColor: { rgb: rgbColor.rgb } };
+          cellStyle.font = { color: { rgb: '000000' }, bold: true };
+        } else if (!siteActive[site]) {
+          // Inactive site
+          cellStyle.fill = { fgColor: { rgb: 'D3D3D3' } };
+          cellStyle.font = { color: { rgb: '666666' } };
+        }
+        
+        worksheet[cellAddr].s = cellStyle;
+      }
+    });
+
     // Set column widths
     const colWidths = [
       { wch: 8 },  // Priority
@@ -572,7 +701,7 @@ exports.exportScheduleToExcel = async (req, res) => {
       { wch: 10 }  // Status
     ];
     for (let h = 0; h < gridHours; h++) {
-      colWidths.push({ wch: 8 }); // Hour columns
+      colWidths.push({ wch: 10 }); // Hour columns (wider for delay text)
     }
     worksheet['!cols'] = colWidths;
 
@@ -597,9 +726,38 @@ exports.exportScheduleToExcel = async (req, res) => {
     Object.keys(taskColors).forEach(taskId => {
       summaryData.push([taskId, taskColors[taskId]]);
     });
+    
+    // Add delay information
+    summaryData.push([''], ['Shift Changeover Delays:']);
+    if (shiftChangeoverDelays && shiftChangeoverDelays.length > 0) {
+      const uniqueShiftDelays = [...new Set(shiftChangeoverDelays.map(d => 
+        `Hour ${(d.hour || d.hourIndex) + 1}: ${d.shiftCode} - ${d.comments}`
+      ))];
+      uniqueShiftDelays.forEach(delay => {
+        summaryData.push([delay]);
+      });
+    } else {
+      summaryData.push(['No shift changeover delays']);
+    }
+    
+    // Add color legend
+    summaryData.push([''], ['Color Legend:']);
+    summaryData.push(['Orange Background', 'Shift Changeover']);
+    summaryData.push(['Red Background', 'Manual Delay']);
+    summaryData.push(['Colored Cells', 'Scheduled Tasks']);
+    summaryData.push(['Gray Cells', 'Inactive Sites']);
 
     const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
-    summarySheet['!cols'] = [{ wch: 20 }, { wch: 20 }];
+    summarySheet['!cols'] = [{ wch: 40 }, { wch: 20 }];
+    
+    // Style summary sheet header
+    if (summarySheet['A1']) {
+      summarySheet['A1'].s = {
+        font: { bold: true, sz: 16, color: { rgb: '0F0E17' } },
+        alignment: { horizontal: 'left' }
+      };
+    }
+    
     XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
 
     // Generate buffer
