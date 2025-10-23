@@ -164,8 +164,17 @@ const Dashboard = () => {
       });
     });
 
+    // Map taskId to task name for better display
+    const taskNameMap = {};
+    tasks.forEach(task => {
+      taskNameMap[task.taskId] = task.taskName || task.taskId;
+    });
+
     return Object.entries(taskCounts)
-      .map(([name, value]) => ({ name, value }))
+      .map(([taskId, value]) => ({ 
+        name: taskNameMap[taskId] || taskId, 
+        value 
+      }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Top 8 tasks
   };
@@ -521,8 +530,10 @@ const Dashboard = () => {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div style={{ height: 280, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8c8c8c' }}>
-                  No schedule data available. Generate a schedule to see task distribution.
+                <div style={{ height: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#8c8c8c', padding: '20px', textAlign: 'center' }}>
+                  <FileTextOutlined style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.3 }} />
+                  <div style={{ fontSize: '14px', fontWeight: 500 }}>No task allocation data available</div>
+                  <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.7 }}>Generate a schedule with active sites and tasks to see the distribution</div>
                 </div>
               )}
             </div>

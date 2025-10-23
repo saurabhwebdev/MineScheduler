@@ -160,8 +160,17 @@ const Dashboard = () => {
       });
     });
 
+    // Map taskId to task name for better display
+    const taskNameMap = {};
+    tasks.forEach(task => {
+      taskNameMap[task.taskId] = task.taskName || task.taskId;
+    });
+
     return Object.entries(taskCounts)
-      .map(([name, value]) => ({ name, value }))
+      .map(([taskId, value]) => ({ 
+        name: taskNameMap[taskId] || taskId, 
+        value 
+      }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Top 8 tasks
   };
@@ -400,15 +409,23 @@ const Dashboard = () => {
               <h3>Task Distribution</h3>
               <span className="chart-subtitle">Most allocated tasks</span>
             </div>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={taskDist}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#8c8c8c' }} />
-                <YAxis tick={{ fontSize: 12, fill: '#8c8c8c' }} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="value" fill="#597ef7" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {taskDist.length > 0 ? (
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={taskDist}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#8c8c8c' }} />
+                  <YAxis tick={{ fontSize: 12, fill: '#8c8c8c' }} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar dataKey="value" fill="#597ef7" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ height: 250, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#8c8c8c', padding: '20px', textAlign: 'center' }}>
+                <FileTextOutlined style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.3 }} />
+                <div style={{ fontSize: '14px', fontWeight: 500 }}>No task allocation data available</div>
+                <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.7 }}>Generate a schedule to see task distribution</div>
+              </div>
+            )}
           </div>
         </Col>
 
