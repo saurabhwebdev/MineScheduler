@@ -148,16 +148,6 @@ exports.generateSchedule = async (req, res) => {
     }
 
     // 11. Prepare schedule data
-    console.log('=== DEBUG: Schedule Generation ===');
-    console.log('hourlyAllocation keys:', Object.keys(hourlyAllocation));
-    console.log('hourlyAllocation sample (hour 0-2):', {
-      0: hourlyAllocation[0],
-      1: hourlyAllocation[1],
-      2: hourlyAllocation[2]
-    });
-    console.log('taskLimits:', taskLimits);
-    console.log('taskColors:', taskColors);
-    
     const scheduleData = {
       grid,
       hourlyAllocation,
@@ -410,16 +400,6 @@ exports.getLatestSchedule = async (req, res) => {
         message: 'No schedule found. Please generate a schedule first.'
       });
     }
-
-    console.log('=== DEBUG: Get Latest Schedule ===');
-    console.log('Schedule ID:', latestSchedule._id);
-    console.log('hourlyAllocation type:', typeof latestSchedule.hourlyAllocation);
-    console.log('hourlyAllocation keys:', Object.keys(latestSchedule.hourlyAllocation || {}));
-    console.log('hourlyAllocation sample:', {
-      0: latestSchedule.hourlyAllocation?.[0],
-      1: latestSchedule.hourlyAllocation?.[1],
-      2: latestSchedule.hourlyAllocation?.[2]
-    });
 
     res.json({
       status: 'success',

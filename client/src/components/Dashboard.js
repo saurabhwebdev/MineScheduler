@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Spin, Row, Col, Table, Tag } from 'antd';
 import { 
   ToolOutlined, 
@@ -147,17 +147,19 @@ const Dashboard = () => {
     });
   };
 
-  // Task Distribution from latest schedule
-  const getTaskDistribution = () => {
-    if (!schedule || !schedule.hourlyAllocation) {
+  // Task Distribution from latest schedule - memoized to update when data changes
+  const taskDist = useMemo(() => {
+    if (!schedule || !schedule.hourlyAllocation || tasks.length === 0) {
       return [];
     }
 
     const taskCounts = {};
     Object.values(schedule.hourlyAllocation).forEach(hourData => {
-      Object.entries(hourData).forEach(([taskId, count]) => {
-        taskCounts[taskId] = (taskCounts[taskId] || 0) + count;
-      });
+      if (hourData && typeof hourData === 'object') {
+        Object.entries(hourData).forEach(([taskId, count]) => {
+          taskCounts[taskId] = (taskCounts[taskId] || 0) + count;
+        });
+      }
     });
 
     // Map taskId to task name for better display
@@ -173,7 +175,7 @@ const Dashboard = () => {
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Top 8 tasks
-  };
+  }, [schedule, tasks]);
 
   const handleChartClick = (chartType, data) => {
     setSelectedChart(chartType);
@@ -197,7 +199,7 @@ const Dashboard = () => {
   const eqKPIs = calculateEquipmentKPIs();
   const schedKPIs = calculateScheduleKPIs();
   const hourlyUtil = getHourlyUtilization();
-  const taskDist = getTaskDistribution();
+  // taskDist is now defined with useMemo above
 
   const equipmentStatusData = [
     { name: 'Operational', value: eqKPIs.operational, fill: '#52c41a' },

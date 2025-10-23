@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Row, Col, Spin, Modal, Table, Tag, Alert } from 'antd';
 import { 
   ToolOutlined, 
@@ -151,26 +151,14 @@ const Dashboard = () => {
     });
   };
 
-  // Task Distribution from latest schedule
-  const getTaskDistribution = () => {
-    console.log('=== DEBUG: getTaskDistribution ===');
-    console.log('Schedule object:', schedule);
-    console.log('hourlyAllocation:', schedule?.hourlyAllocation);
-    console.log('hourlyAllocation type:', typeof schedule?.hourlyAllocation);
-    console.log('Tasks array:', tasks);
-    
-    if (!schedule || !schedule.hourlyAllocation) {
-      console.log('No schedule or hourlyAllocation available');
+  // Task Distribution from latest schedule - memoized to update when data changes
+  const taskDist = useMemo(() => {
+    if (!schedule || !schedule.hourlyAllocation || tasks.length === 0) {
       return [];
     }
 
-    // Check if hourlyAllocation is an object with numeric keys
-    const hourlyAllocationObj = schedule.hourlyAllocation;
-    console.log('hourlyAllocation keys:', Object.keys(hourlyAllocationObj));
-    console.log('hourlyAllocation values sample:', Object.values(hourlyAllocationObj).slice(0, 3));
-
     const taskCounts = {};
-    Object.values(hourlyAllocationObj).forEach(hourData => {
+    Object.values(schedule.hourlyAllocation).forEach(hourData => {
       if (hourData && typeof hourData === 'object') {
         Object.entries(hourData).forEach(([taskId, count]) => {
           taskCounts[taskId] = (taskCounts[taskId] || 0) + count;
@@ -178,27 +166,20 @@ const Dashboard = () => {
       }
     });
 
-    console.log('Task counts calculated:', taskCounts);
-
     // Map taskId to task name for better display
     const taskNameMap = {};
     tasks.forEach(task => {
       taskNameMap[task.taskId] = task.taskName || task.taskId;
     });
 
-    console.log('Task name map:', taskNameMap);
-
-    const result = Object.entries(taskCounts)
+    return Object.entries(taskCounts)
       .map(([taskId, value]) => ({ 
         name: taskNameMap[taskId] || taskId, 
         value 
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Top 8 tasks
-
-    console.log('Final task distribution result:', result);
-    return result;
-  };
+  }, [schedule, tasks]);
 
   // Equipment Type Distribution
   const getEquipmentTypeDistribution = () => {
@@ -304,7 +285,7 @@ const Dashboard = () => {
   const eqKPIs = calculateEquipmentKPIs();
   const schedKPIs = calculateScheduleKPIs();
   const hourlyUtil = getHourlyUtilization();
-  const taskDist = getTaskDistribution();
+  // taskDist is now defined with useMemo above
   const equipmentTypeDist = getEquipmentTypeDistribution();
   const siteStatusDist = getSiteStatusDistribution();
   const maintenanceTimeline = getMaintenanceTimeline();
