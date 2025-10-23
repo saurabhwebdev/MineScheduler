@@ -534,8 +534,8 @@ const Dashboard = () => {
                       data={taskDist}
                       cx="50%"
                       cy="50%"
-                      labelLine={true}
-                      label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                      labelLine={false}
+                      label={false}
                       outerRadius={90}
                       fill="#8884d8"
                       dataKey="value"
@@ -545,7 +545,27 @@ const Dashboard = () => {
                         return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
                       })}
                     </Pie>
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip 
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0];
+                          const total = taskDist.reduce((sum, item) => sum + item.value, 0);
+                          const percent = ((data.value / total) * 100).toFixed(1);
+                          return (
+                            <div className="custom-tooltip">
+                              <p className="tooltip-label" style={{ fontWeight: 600 }}>{data.name}</p>
+                              <p className="tooltip-value" style={{ color: data.payload.fill }}>
+                                {`Count: ${data.value}`}
+                              </p>
+                              <p className="tooltip-value" style={{ color: data.payload.fill }}>
+                                {`Percentage: ${percent}%`}
+                              </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
                     <Legend 
                       verticalAlign="bottom" 
                       height={36}
