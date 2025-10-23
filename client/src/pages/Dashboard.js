@@ -524,31 +524,34 @@ const Dashboard = () => {
           <Col xs={24} lg={12}>
             <div className="dashboard-chart">
               <div className="chart-header">
-                <h3>Top Task Allocations</h3>
-                <span className="chart-subtitle">Most frequently scheduled tasks</span>
+                <h3>Task Allocation Distribution</h3>
+                <span className="chart-subtitle">Proportional view of scheduled tasks</span>
               </div>
               {taskDist.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={taskDist} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                    <XAxis 
-                      dataKey="name" 
-                      tick={{ fontSize: 10, fill: '#8c8c8c' }} 
-                      angle={-45} 
-                      textAnchor="end" 
-                      height={100}
-                      interval={0}
-                      axisLine={false} 
-                      tickLine={false} 
-                    />
-                    <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                  <PieChart>
+                    <Pie
+                      data={taskDist}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                      outerRadius={90}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {taskDist.map((entry, index) => {
+                        const colors = ['#3cca70', '#062d54', '#faad14', '#597ef7', '#ff4d4f', '#13c2c2', '#eb2f96', '#722ed1'];
+                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                      })}
+                    </Pie>
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="value" fill="#3cca70" radius={[8, 8, 0, 0]}>
-                      {taskDist.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#3cca70' : '#062d54'} />
-                      ))}
-                    </Bar>
-                  </BarChart>
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={36}
+                      wrapperStyle={{ fontSize: '11px' }}
+                    />
+                  </PieChart>
                 </ResponsiveContainer>
               ) : (
                 <div style={{ height: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#8c8c8c', padding: '20px', textAlign: 'center' }}>
