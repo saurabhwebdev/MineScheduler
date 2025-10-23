@@ -153,7 +153,18 @@ const Dashboard = () => {
 
   // Task Distribution from latest schedule - memoized to update when data changes
   const taskDist = useMemo(() => {
-    if (!schedule || !schedule.hourlyAllocation || tasks.length === 0) {
+    console.log('🔥 TaskDist recalculating...');
+    console.log('Schedule:', schedule);
+    console.log('Tasks:', tasks);
+    console.log('Tasks length:', tasks.length);
+    
+    if (!schedule || !schedule.hourlyAllocation) {
+      console.log('❌ No schedule or hourlyAllocation');
+      return [];
+    }
+    
+    if (tasks.length === 0) {
+      console.log('⚠️ Tasks array is empty, waiting...');
       return [];
     }
 
@@ -166,19 +177,27 @@ const Dashboard = () => {
       }
     });
 
+    console.log('✅ Task counts:', taskCounts);
+
     // Map taskId to task name for better display
     const taskNameMap = {};
     tasks.forEach(task => {
       taskNameMap[task.taskId] = task.taskName || task.taskId;
     });
 
-    return Object.entries(taskCounts)
+    console.log('✅ Task name map:', taskNameMap);
+
+    const result = Object.entries(taskCounts)
       .map(([taskId, value]) => ({ 
         name: taskNameMap[taskId] || taskId, 
         value 
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 8); // Top 8 tasks
+
+    console.log('✅ Final result:', result);
+    console.log('✅ Result length:', result.length);
+    return result;
   }, [schedule, tasks]);
 
   // Equipment Type Distribution
@@ -519,8 +538,9 @@ const Dashboard = () => {
             <div className="dashboard-chart">
               <div className="chart-header">
                 <h3>Top Task Allocations</h3>
-                <span className="chart-subtitle">Most frequently scheduled tasks</span>
+                <span className="chart-subtitle">Most frequently scheduled tasks (Count: {taskDist.length})</span>
               </div>
+              {console.log('🎨 Rendering chart, taskDist:', taskDist)}
               {taskDist.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={taskDist} layout="horizontal">
@@ -536,6 +556,13 @@ const Dashboard = () => {
                   <FileTextOutlined style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.3 }} />
                   <div style={{ fontSize: '14px', fontWeight: 500 }}>No task allocation data available</div>
                   <div style={{ fontSize: '12px', marginTop: '8px', opacity: 0.7 }}>Generate a schedule with active sites and tasks to see the distribution</div>
+                  <div style={{ fontSize: '10px', marginTop: '8px', color: '#ff4d4f' }}>Debug: taskDist length = {taskDist.length}, schedule = {schedule ? 'yes' : 'no'}, tasks = {tasks.length}</div>
+                </div>
+              )}
+              {/* Debug: Raw Data Display */}
+              {taskDist.length > 0 && (
+                <div style={{ padding: '10px', fontSize: '10px', background: '#f5f5f5', marginTop: '10px' }}>
+                  <strong>DEBUG DATA:</strong> {JSON.stringify(taskDist)}
                 </div>
               )}
             </div>
