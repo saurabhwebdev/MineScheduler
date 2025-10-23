@@ -547,18 +547,24 @@ const Dashboard = () => {
                     </Pie>
                     <Tooltip 
                       content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const data = payload[0];
+                        if (active && payload && payload.length > 0) {
+                          const data = payload[0].payload;
                           const total = taskDist.reduce((sum, item) => sum + item.value, 0);
                           const percent = ((data.value / total) * 100).toFixed(1);
                           return (
-                            <div className="custom-tooltip">
-                              <p className="tooltip-label" style={{ fontWeight: 600 }}>{data.name}</p>
-                              <p className="tooltip-value" style={{ color: data.payload.fill }}>
-                                {`Count: ${data.value}`}
+                            <div style={{
+                              backgroundColor: 'white',
+                              padding: '10px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                            }}>
+                              <p style={{ margin: '0 0 5px 0', fontWeight: 600, fontSize: '13px' }}>{data.name}</p>
+                              <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>
+                                Count: <strong>{data.value}</strong>
                               </p>
-                              <p className="tooltip-value" style={{ color: data.payload.fill }}>
-                                {`Percentage: ${percent}%`}
+                              <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>
+                                Percentage: <strong>{percent}%</strong>
                               </p>
                             </div>
                           );
