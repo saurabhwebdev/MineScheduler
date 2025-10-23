@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Space, Spin, Tag } from 'antd';
-import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Button, notification, Radio, Space, Spin, Tag, Dropdown } from 'antd';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, FileExcelOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
 import SnapshotManager from '../components/SnapshotManager';
@@ -246,6 +246,54 @@ const Schedule = () => {
     setGridHours(loadedGridHours);
   };
 
+  const handleDownloadExcel = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/schedule/export/latest`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download schedule');
+      }
+
+      // Get filename from response headers or use default
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let filename = 'MineSchedule.xlsx';
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      // Convert response to blob and download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      notification.success({
+        message: 'Download Started',
+        description: 'Schedule is being downloaded as Excel file',
+        duration: 2
+      });
+    } catch (error) {
+      console.error('Error downloading schedule:', error);
+      notification.error({
+        message: 'Download Failed',
+        description: 'Failed to download schedule. Please try again.',
+      });
+    }
+  };
+
   return (
     <DashboardLayout 
       title="Schedule"
@@ -303,6 +351,17 @@ const Schedule = () => {
                 loading={loading}
               >
                 Regenerate
+              </Button>
+            )}
+
+            {scheduleData && (
+              <Button
+                size="large"
+                icon={<DownloadOutlined />}
+                onClick={handleDownloadExcel}
+                style={{ background: '#52c41a', borderColor: '#52c41a', color: 'white' }}
+              >
+                Download Excel
               </Button>
             )}
 

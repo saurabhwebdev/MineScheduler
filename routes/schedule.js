@@ -31,4 +31,11 @@ router.get('/history', protect, scheduleController.getScheduleHistory);
  */
 router.put('/sites/:siteId/toggle', protect, scheduleController.toggleSiteStatus);
 
+/**
+ * @route   GET /api/schedule/export/:scheduleId
+ * @desc    Export schedule to Excel (use 'latest' for most recent)
+ * @access  Private
+ */
+router.get('/export/:scheduleId', protect, scheduleController.exportScheduleToExcel);
+
 module.exports = router;

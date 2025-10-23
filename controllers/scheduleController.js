@@ -496,3 +496,129 @@ exports.toggleSiteStatus = async (req, res) => {
     });
   }
 };
+
+/**
+ * Export schedule to Excel
+ * GET /api/schedule/export/:scheduleId
+ */
+exports.exportScheduleToExcel = async (req, res) => {
+  try {
+    const XLSX = require('xlsx');
+    const { scheduleId } = req.params;
+
+    // Fetch schedule data
+    let schedule;
+    if (scheduleId === 'latest') {
+      schedule = await Schedule.findOne()
+        .sort({ generatedAt: -1 })
+        .lean();
+    } else {
+      schedule = await Schedule.findById(scheduleId).lean();
+    }
+
+    if (!schedule) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Schedule not found'
+      });
+    }
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+
+    // Prepare schedule grid data
+    const { grid, taskColors, sitePriority, siteActive, gridHours } = schedule;
+    
+    // Get all sites sorted by priority
+    const sites = Object.keys(grid).sort((a, b) => {
+      const activeA = siteActive[a] ? 0 : 1;
+      const activeB = siteActive[b] ? 0 : 1;
+      if (activeA !== activeB) return activeA - activeB;
+      return (sitePriority[a] || 999) - (sitePriority[b] || 999);
+    });
+
+    // Build schedule sheet
+    const scheduleData = [];
+    
+    // Header row
+    const headerRow = ['Priority', 'Site', 'Status'];
+    for (let h = 0; h < gridHours; h++) {
+      headerRow.push(`Hour ${h + 1}`);
+    }
+    scheduleData.push(headerRow);
+
+    // Data rows
+    sites.forEach(site => {
+      const row = [
+        sitePriority[site] || '',
+        site,
+        siteActive[site] ? 'Active' : 'Inactive'
+      ];
+      
+      for (let h = 0; h < gridHours; h++) {
+        row.push(grid[site][h] || '');
+      }
+      
+      scheduleData.push(row);
+    });
+
+    // Create worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(scheduleData);
+
+    // Set column widths
+    const colWidths = [
+      { wch: 8 },  // Priority
+      { wch: 15 }, // Site
+      { wch: 10 }  // Status
+    ];
+    for (let h = 0; h < gridHours; h++) {
+      colWidths.push({ wch: 8 }); // Hour columns
+    }
+    worksheet['!cols'] = colWidths;
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Schedule');
+
+    // Create summary sheet
+    const summaryData = [
+      ['Mine Schedule Report'],
+      [''],
+      ['Generated At:', new Date(schedule.generatedAt).toLocaleString()],
+      ['Grid Hours:', gridHours],
+      ['Total Sites:', sites.length],
+      ['Active Sites:', sites.filter(s => siteActive[s]).length],
+      ['Inactive Sites:', sites.filter(s => !siteActive[s]).length],
+      [''],
+      ['Task Legend:'],
+      ['Task ID', 'Color']
+    ];
+
+    // Add task colors
+    Object.keys(taskColors).forEach(taskId => {
+      summaryData.push([taskId, taskColors[taskId]]);
+    });
+
+    const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
+    summarySheet['!cols'] = [{ wch: 20 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
+
+    // Generate buffer
+    const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    // Set headers for download
+    const filename = `MineSchedule_${new Date(schedule.generatedAt).toISOString().split('T')[0]}_${Date.now()}.xlsx`;
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', excelBuffer.length);
+
+    res.send(excelBuffer);
+
+  } catch (error) {
+    console.error('Export schedule error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to export schedule',
+      error: error.message
+    });
+  }
+};
