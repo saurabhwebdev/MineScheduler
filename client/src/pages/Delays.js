@@ -581,15 +581,46 @@ const Delays = () => {
               message="Excel Format Instructions"
               description={
                 <div>
-                  <p style={{ marginBottom: '8px' }}>The Excel file should contain the following columns:</p>
-                  <ul style={{ marginLeft: '20px', marginBottom: '8px' }}>
-                    <li><strong>delayCategory</strong> - Category of the delay (required)</li>
-                    <li><strong>delayCode</strong> - Unique code for the delay (required)</li>
-                    <li><strong>description</strong> - Description of the delay (required)</li>
-                    <li><strong>color</strong> - Hex color code (optional, defaults to #ff4d4f)</li>
-                    <li><strong>isActive</strong> - Status: Active/Inactive (optional, defaults to Active)</li>
-                  </ul>
-                  <p style={{ marginBottom: 0 }}>Download the template below to see the format.</p>
+                  <p style={{ marginBottom: '12px', fontWeight: 500 }}>Required columns in your Excel file:</p>
+                  <table style={{ width: '100%', fontSize: '12px', marginBottom: '12px', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ backgroundColor: '#fafafa' }}>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>Column</th>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>Required</th>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>Example</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>delayCategory</strong></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">Yes</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>Equipment, Safety, Weather</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>delayCode</strong></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">Yes</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>EQ-001, SF-001, WT-001</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>description</strong></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">Yes</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>Equipment breakdown delay</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>color</strong></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="blue">No</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>#ff4d4f, #faad14, #1890ff</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '6px' }}><strong>isActive</strong></td>
+                        <td style={{ padding: '6px' }}><Tag color="blue">No</Tag></td>
+                        <td style={{ padding: '6px' }}>Active, Inactive, Yes, No, 1, 0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p style={{ marginBottom: 0, fontSize: '12px', color: '#666' }}>
+                    💡 <strong>Tip:</strong> Download the template below to get started with the correct format.
+                  </p>
                 </div>
               }
               type="info"
