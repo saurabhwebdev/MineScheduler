@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Tooltip, notification } from 'antd';
+import { Tooltip, notification, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import DelayModal from './DelayModal';
 
 const ScheduleCell = ({ 
@@ -32,10 +33,49 @@ const ScheduleCell = ({
         return;
       }
       
-      // Allow removal of manual delays
-      if (window.confirm(`Remove delay from ${siteId} at hour ${hour + 1}?`)) {
-        onRemoveDelay(siteId, hour);
-      }
+      // Show styled confirmation modal for removing manual delays
+      Modal.confirm({
+        title: 'Remove Delay',
+        icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+        content: (
+          <div>
+            <p style={{ marginBottom: '12px', fontSize: '14px' }}>Are you sure you want to remove this delay?</p>
+            <div style={{ 
+              background: '#f5f5f5', 
+              padding: '12px', 
+              borderRadius: '8px',
+              fontSize: '13px'
+            }}>
+              <div><strong>Site:</strong> {siteId}</div>
+              <div><strong>Hour:</strong> {hour + 1}</div>
+              {delayInfo?.category && <div><strong>Category:</strong> {delayInfo.category}</div>}
+              {delayInfo?.code && <div><strong>Code:</strong> {delayInfo.code}</div>}
+            </div>
+          </div>
+        ),
+        okText: 'Remove',
+        cancelText: 'Cancel',
+        okButtonProps: {
+          danger: true,
+          style: {
+            background: '#ff4d4f',
+            borderColor: '#ff4d4f',
+            height: '38px',
+            fontWeight: 600
+          }
+        },
+        cancelButtonProps: {
+          style: {
+            height: '38px',
+            fontWeight: 600
+          }
+        },
+        centered: true,
+        width: 440,
+        onOk: () => {
+          onRemoveDelay(siteId, hour);
+        }
+      });
     } else {
       // Open modal to add delay
       setModalVisible(true);
