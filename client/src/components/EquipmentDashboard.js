@@ -65,7 +65,7 @@ const EquipmentDashboard = () => {
   const getStatusData = () => {
     const kpis = calculateKPIs();
     return [
-      { name: 'Operational', value: kpis.operational, fill: '#10b981' },
+      { name: 'Operational', value: kpis.operational, fill: '#3cca70' },
       { name: 'Maintenance', value: kpis.maintenance, fill: '#f59e0b' },
       { name: 'Out of Service', value: kpis.outOfService, fill: '#ef4444' }
     ].filter(item => item.value > 0); // Only show non-zero values
@@ -75,7 +75,7 @@ const EquipmentDashboard = () => {
   const getMaintenanceData = () => {
     const kpis = calculateKPIs();
     return [
-      { name: 'Good', value: kpis.good, fill: '#10b981' },
+      { name: 'Good', value: kpis.good, fill: '#3cca70' },
       { name: 'Due Soon', value: kpis.dueSoon, fill: '#f59e0b' },
       { name: 'Overdue', value: kpis.overdue, fill: '#ef4444' }
     ].filter(item => item.value > 0); // Only show non-zero values
@@ -364,7 +364,7 @@ const EquipmentDashboard = () => {
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
                 <Bar 
                   dataKey="value" 
-                  fill="#3b82f6"
+                  fill="#062d54"
                   radius={[8, 8, 0, 0]}
                   onClick={(data) => handleChartClick('type', data)}
                   style={{ cursor: 'pointer' }}
@@ -385,8 +385,8 @@ const EquipmentDashboard = () => {
               <AreaChart data={utilizationData}>
                 <defs>
                   <linearGradient id="utilizationGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#3cca70" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3cca70" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
@@ -409,7 +409,7 @@ const EquipmentDashboard = () => {
                       return (
                         <div className="custom-tooltip">
                           <p className="tooltip-label">{payload[0].payload.hour}</p>
-                          <p className="tooltip-value" style={{ color: '#10b981' }}>
+                          <p className="tooltip-value" style={{ color: '#3cca70' }}>
                             {`Utilization: ${payload[0].value}%`}
                           </p>
                         </div>
@@ -417,12 +417,12 @@ const EquipmentDashboard = () => {
                     }
                     return null;
                   }}
-                  cursor={{ stroke: '#10b981', strokeWidth: 1 }}
+                  cursor={{ stroke: '#3cca70', strokeWidth: 1 }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="utilization" 
-                  stroke="#10b981" 
+                  stroke="#3cca70" 
                   strokeWidth={2}
                   fill="url(#utilizationGradient)"
                 />
@@ -446,7 +446,7 @@ const EquipmentDashboard = () => {
           columns={modalColumns}
           rowKey="_id"
           pagination={{ pageSize: 10 }}
-          scroll={{ x: 800 }}
+          scroll={{ x: 800, y: null }}
         />
       </Modal>
     </div>
