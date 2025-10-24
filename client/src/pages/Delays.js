@@ -329,29 +329,25 @@ const Delays = () => {
       title: 'DELAY CATEGORY',
       dataIndex: 'delayCategory',
       key: 'delayCategory',
-      width: 130,
       sorter: (a, b) => a.delayCategory.localeCompare(b.delayCategory),
     },
     {
       title: 'DELAY CODE',
       dataIndex: 'delayCode',
       key: 'delayCode',
-      width: 110,
       sorter: (a, b) => a.delayCode.localeCompare(b.delayCode),
     },
     {
       title: 'DESCRIPTION',
       dataIndex: 'description',
       key: 'description',
-      ellipsis: true,
     },
     {
       title: 'COLOR',
       dataIndex: 'color',
       key: 'color',
-      width: 140,
       render: (color) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
           <div 
             style={{ 
               width: '20px', 
@@ -369,7 +365,6 @@ const Delays = () => {
       title: 'STATUS',
       dataIndex: 'isActive',
       key: 'isActive',
-      width: 100,
       render: (isActive) => (
         <span className={`status-badge ${isActive ? 'active' : 'inactive'}`}>
           {isActive ? 'Active' : 'Inactive'}
@@ -385,7 +380,6 @@ const Delays = () => {
       title: 'CREATED',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      width: 110,
       render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
@@ -393,7 +387,6 @@ const Delays = () => {
       title: 'ACTIONS',
       key: 'actions',
       align: 'center',
-      width: 90,
       render: (_, record) => (
         <div className="action-buttons" style={{ display: 'inline-flex', gap: '4px' }}>
           <button className="icon-btn" onClick={(e) => { e.stopPropagation(); handleEditDelay(record); }}>
