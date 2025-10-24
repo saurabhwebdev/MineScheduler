@@ -76,7 +76,7 @@
 
 /* Hero KPIs Row */
 .kpis-row {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .hero-kpi-card {
@@ -86,7 +86,7 @@
   transition: all 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 140px;
+  height: 160px;
 }
 
 .hero-kpi-card:hover {
@@ -249,7 +249,7 @@
 
 /* Secondary KPIs Row */
 .secondary-kpis-row {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .mini-kpi-card {
@@ -287,7 +287,7 @@
 
 /* Charts Section */
 .charts-section {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .chart-card {
@@ -303,11 +303,11 @@
 }
 
 .chart-card .ant-card-body {
-  padding: 20px;
+  padding: 16px;
 }
 
 .chart-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .chart-header h3 {
@@ -325,7 +325,7 @@
 
 /* Fleet Health Card */
 .fleet-health-card .ant-card-body {
-  padding: 20px;
+  padding: 16px;
 }
 
 .health-list {
@@ -360,7 +360,7 @@
 
 /* Quality Detail Card */
 .quality-detail-card .ant-card-body {
-  padding: 20px;
+  padding: 16px;
 }
 
 .quality-breakdown {
@@ -492,7 +492,7 @@
 @media (max-width: 1200px) {
   .hero-kpi-card {
     height: auto;
-    min-height: 120px;
+    min-height: 140px;
   }
   
   .kpi-value {

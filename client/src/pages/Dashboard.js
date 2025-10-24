@@ -247,8 +247,8 @@ const Dashboard = () => {
         {/* Hero KPIs Row */}
         {metrics && (
           <Row gutter={[16, 16]} className="kpis-row">
-            {/* Fleet Availability - Largest Card */}
-            <Col xs={24} sm={12} lg={8}>
+            {/* Fleet Availability */}
+            <Col xs={24} sm={12} lg={6}>
               <Card className="hero-kpi-card fleet-card">
                 <div className="kpi-icon-wrapper fleet">
                   <ToolOutlined />
@@ -271,7 +271,7 @@ const Dashboard = () => {
             </Col>
 
             {/* Critical Alerts */}
-            <Col xs={24} sm={12} lg={4}>
+            <Col xs={24} sm={12} lg={6}>
               <Card 
                 className={`hero-kpi-card critical-card ${metrics.criticalAlerts.severity === 'critical' ? 'severity-critical' : ''}`}
                 onClick={handleShowCritical}
@@ -344,7 +344,7 @@ const Dashboard = () => {
         {/* Secondary KPIs Row */}
         {metrics && (
           <Row gutter={[16, 16]} className="secondary-kpis-row">
-            <Col xs={12} sm={6} lg={3}>
+            <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
                   title="Active Sites"
@@ -355,7 +355,7 @@ const Dashboard = () => {
                 />
               </Card>
             </Col>
-            <Col xs={12} sm={6} lg={3}>
+            <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
                   title="Total Tasks"
@@ -365,7 +365,7 @@ const Dashboard = () => {
                 />
               </Card>
             </Col>
-            <Col xs={12} sm={6} lg={3}>
+            <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
                   title="Delays"
@@ -375,7 +375,7 @@ const Dashboard = () => {
                 />
               </Card>
             </Col>
-            <Col xs={12} sm={6} lg={3}>
+            <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
                   title="Due Soon (7d)"
@@ -474,7 +474,7 @@ const Dashboard = () => {
                   <h3>Critical Equipment Attention</h3>
                   <p>Equipment requiring immediate action by type</p>
                 </div>
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={300}>
                   <BarChart 
                     data={getCriticalEquipmentData(equipment)}
                     layout="vertical"
@@ -509,7 +509,7 @@ const Dashboard = () => {
                   <h3>Maintenance Cost by Equipment Type</h3>
                   <p>Total: ${metrics?.maintenanceCost.total.toLocaleString()}</p>
                 </div>
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
                       data={trends.costByEquipmentType.slice(0, 6)}
@@ -543,7 +543,7 @@ const Dashboard = () => {
                   <h3>Delay Impact</h3>
                   <p>Delays by category</p>
                 </div>
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={trends.delaysByCategory}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                     <XAxis 
@@ -572,7 +572,7 @@ const Dashboard = () => {
                   <h3>Fleet Health Score</h3>
                   <p>Operational status by type</p>
                 </div>
-                <div className="health-list">
+                <div className="health-list" style={{ minHeight: '300px' }}>
                   {getFleetHealthData(equipment).slice(0, 5).map((item, index) => (
                     <div key={index} className="health-item">
                       <div className="health-header">
@@ -602,7 +602,7 @@ const Dashboard = () => {
                   <h3>Schedule Quality Breakdown</h3>
                   <p>Components contributing to overall score</p>
                 </div>
-                <div className="quality-breakdown">
+                <div className="quality-breakdown" style={{ minHeight: '300px' }}>
                   <div className="quality-score-circle">
                     <Progress 
                       type="circle" 
