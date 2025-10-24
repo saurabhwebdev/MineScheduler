@@ -312,15 +312,15 @@ exports.getMaintenanceStats = async (req, res) => {
     
     const yearCost = yearLogs.reduce((sum, log) => sum + (log.cost || 0), 0);
     
-    // Upcoming maintenance (next 7 days)
+    // Upcoming maintenance (next 7 days) - check Equipment.nextMaintenance instead of MaintenanceLog.nextDue
     const upcomingDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const upcoming = await MaintenanceLog.countDocuments({
-      nextDue: { $gte: now, $lte: upcomingDate }
+    const upcoming = await Equipment.countDocuments({
+      nextMaintenance: { $gte: now, $lte: upcomingDate }
     });
     
-    // Overdue maintenance
-    const overdue = await MaintenanceLog.countDocuments({
-      nextDue: { $lt: now, $ne: null }
+    // Overdue maintenance - check Equipment.nextMaintenance instead of MaintenanceLog.nextDue
+    const overdue = await Equipment.countDocuments({
+      nextMaintenance: { $lt: now, $ne: null }
     });
     
     // Average cost
