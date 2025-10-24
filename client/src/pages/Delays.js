@@ -329,14 +329,14 @@ const Delays = () => {
       title: 'DELAY CATEGORY',
       dataIndex: 'delayCategory',
       key: 'delayCategory',
-      width: 150,
+      width: 130,
       sorter: (a, b) => a.delayCategory.localeCompare(b.delayCategory),
     },
     {
       title: 'DELAY CODE',
       dataIndex: 'delayCode',
       key: 'delayCode',
-      width: 120,
+      width: 110,
       sorter: (a, b) => a.delayCode.localeCompare(b.delayCode),
     },
     {
@@ -349,19 +349,19 @@ const Delays = () => {
       title: 'COLOR',
       dataIndex: 'color',
       key: 'color',
-      width: 100,
+      width: 140,
       render: (color) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <div 
             style={{ 
-              width: '24px', 
-              height: '24px', 
+              width: '20px', 
+              height: '20px', 
               backgroundColor: color || '#ff4d4f',
               border: '1px solid #d9d9d9',
-              borderRadius: '4px'
+              borderRadius: '2px'
             }}
           />
-          <span style={{ fontSize: '11px', color: '#8c8c8c' }}>{color || '#ff4d4f'}</span>
+          <span style={{ fontSize: '11px', color: '#666' }}>{color || '#ff4d4f'}</span>
         </div>
       ),
     },
@@ -369,7 +369,7 @@ const Delays = () => {
       title: 'STATUS',
       dataIndex: 'isActive',
       key: 'isActive',
-      width: 90,
+      width: 100,
       render: (isActive) => (
         <span className={`status-badge ${isActive ? 'active' : 'inactive'}`}>
           {isActive ? 'Active' : 'Inactive'}
@@ -385,6 +385,7 @@ const Delays = () => {
       title: 'CREATED',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: 110,
       render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
@@ -392,15 +393,15 @@ const Delays = () => {
       title: 'ACTIONS',
       key: 'actions',
       align: 'center',
-      width: 100,
+      width: 90,
       render: (_, record) => (
-        <div className="action-buttons">
-          <button className="icon-btn" onClick={() => handleEditDelay(record)}>
+        <div className="action-buttons" style={{ display: 'inline-flex', gap: '4px' }}>
+          <button className="icon-btn" onClick={(e) => { e.stopPropagation(); handleEditDelay(record); }}>
             <EditOutlined />
           </button>
           <button 
             className="icon-btn delete"
-            onClick={() => showDeleteConfirm(record)}
+            onClick={(e) => { e.stopPropagation(); showDeleteConfirm(record); }}
           >
             <DeleteOutlined />
           </button>

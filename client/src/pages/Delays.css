@@ -83,12 +83,13 @@
   background-color: #fafafa;
   color: #000000;
   font-weight: 600;
-  font-size: 12px;
-  padding: 12px 12px;
+  font-size: 11px;
+  padding: 10px 12px;
   border-bottom: 1px solid #e0e0e0;
   border-right: 1px solid #f0f0f0;
   letter-spacing: 0;
   text-transform: none;
+  white-space: nowrap;
 }
 
 .table-container .ant-table-thead > tr > th:last-child {
@@ -100,12 +101,13 @@
 }
 
 .table-container .ant-table-tbody > tr > td {
-  padding: 12px 12px;
+  padding: 10px 12px;
   border-bottom: 1px solid #f0f0f0;
   border-right: 1px solid #f5f5f5;
   color: #000000;
   vertical-align: middle;
   background-color: #ffffff;
+  line-height: 1.4;
 }
 
 .table-container .ant-table-tbody > tr > td:last-child {
@@ -161,11 +163,12 @@
 
 /* Action Buttons - Flat inline */
 .action-buttons {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex !important;
+  flex-direction: row !important;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 .icon-btn {
