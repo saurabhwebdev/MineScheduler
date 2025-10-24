@@ -180,10 +180,9 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
           >
             {filteredCodes.map(item => (
               <Option key={item.code} value={item.code}>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{item.code}</div>
-                  <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>{item.description}</div>
-                </div>
+                <span style={{ fontSize: '13px' }}>
+                  <strong>{item.code}</strong> - {item.description}
+                </span>
               </Option>
             ))}
           </Select>
