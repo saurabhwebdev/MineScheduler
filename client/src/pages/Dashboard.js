@@ -216,13 +216,22 @@ const Dashboard = () => {
   // Maintenance Timeline (Next 7 days)
   const getMaintenanceTimeline = () => {
     const today = moment();
+    console.log('Equipment data:', equipment);
+    console.log('Equipment with nextMaintenance:', equipment.filter(eq => eq.nextMaintenance).map(eq => ({
+      id: eq.equipmentId,
+      nextMaintenance: eq.nextMaintenance,
+      parsed: moment(eq.nextMaintenance).format('YYYY-MM-DD')
+    })));
+    
     const timeline = Array.from({ length: 7 }, (_, i) => {
-      const date = moment().add(i, 'days');
+      const date = moment().add(i, 'days').startOf('day');
       const count = equipment.filter(eq => {
         if (!eq.nextMaintenance) return false;
-        const nextDate = moment(eq.nextMaintenance);
+        const nextDate = moment(eq.nextMaintenance).startOf('day');
         return nextDate.isSame(date, 'day');
       }).length;
+      
+      console.log(`Date: ${date.format('YYYY-MM-DD')}, Count: ${count}`);
       
       return {
         date: date.format('MMM DD'),
@@ -230,6 +239,8 @@ const Dashboard = () => {
         day: date.format('ddd')
       };
     });
+    
+    console.log('Maintenance timeline:', timeline);
     return timeline;
   };
 
@@ -723,12 +734,6 @@ const Dashboard = () => {
               {maintenanceTimeline.some(d => d.count > 0) ? (
                 <ResponsiveContainer width="100%" height={280}>
                   <LineChart data={maintenanceTimeline}>
-                    <defs>
-                      <linearGradient id="colorMaintenance" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#062d54" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#062d54" stopOpacity={0.05}/>
-                      </linearGradient>
-                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                     <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} allowDecimals={false} />
@@ -747,7 +752,7 @@ const Dashboard = () => {
                         return null;
                       }}
                     />
-                    <Area type="monotone" dataKey="count" stroke="#062d54" strokeWidth={3} fill="url(#colorMaintenance)" />
+                    <Line type="monotone" dataKey="count" stroke="#062d54" strokeWidth={3} dot={{ fill: '#062d54', r: 4 }} activeDot={{ r: 6 }} />
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
