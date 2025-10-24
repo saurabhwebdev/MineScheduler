@@ -519,6 +519,217 @@ exports.importMaintenanceLogs = async (req, res) => {
 };
 
 /**
+ * Get comprehensive analytics data
+ * GET /api/maintenance-logs/analytics
+ */
+exports.getMaintenanceAnalytics = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    
+    // Build date filter
+    let dateFilter = {};
+    if (startDate || endDate) {
+      dateFilter.performedDate = {};
+      if (startDate) dateFilter.performedDate.$gte = new Date(startDate);
+      if (endDate) dateFilter.performedDate.$lte = new Date(endDate);
+    }
+    
+    // Get all maintenance logs with equipment
+    const logs = await MaintenanceLog.find(dateFilter)
+      .populate('equipment', 'equipmentId name type status manufacturer model operatingHours maintenanceInterval')
+      .sort({ performedDate: -1 });
+    
+    // 1. Cost by Equipment Type
+    const costByType = {};
+    const laborByType = {};
+    const partsByType = {};
+    const countByType = {};
+    
+    logs.forEach(log => {
+      if (log.equipment && log.equipment.type) {
+        const type = log.equipment.type;
+        costByType[type] = (costByType[type] || 0) + (log.cost || 0);
+        laborByType[type] = (laborByType[type] || 0) + (log.laborCost || 0);
+        partsByType[type] = (partsByType[type] || 0) + (log.partsCost || 0);
+        countByType[type] = (countByType[type] || 0) + 1;
+      }
+    });
+    
+    const costByEquipmentType = Object.keys(costByType).map(type => ({
+      type,
+      cost: costByType[type],
+      laborCost: laborByType[type],
+      partsCost: partsByType[type],
+      count: countByType[type]
+    })).sort((a, b) => b.cost - a.cost);
+    
+    // 2. Monthly Cost Trend
+    const monthlyData = {};
+    logs.forEach(log => {
+      const month = new Date(log.performedDate).toISOString().substring(0, 7);
+      if (!monthlyData[month]) {
+        monthlyData[month] = { cost: 0, laborCost: 0, partsCost: 0, count: 0 };
+      }
+      monthlyData[month].cost += (log.cost || 0);
+      monthlyData[month].laborCost += (log.laborCost || 0);
+      monthlyData[month].partsCost += (log.partsCost || 0);
+      monthlyData[month].count += 1;
+    });
+    
+    const monthlyCostTrend = Object.keys(monthlyData)
+      .sort()
+      .map(month => ({
+        month,
+        ...monthlyData[month]
+      }));
+    
+    // 3. Maintenance Type Distribution
+    const typeDistribution = {};
+    logs.forEach(log => {
+      typeDistribution[log.maintenanceType] = (typeDistribution[log.maintenanceType] || 0) + 1;
+    });
+    
+    const maintenanceTypeDistribution = Object.keys(typeDistribution).map(type => ({
+      type,
+      count: typeDistribution[type]
+    }));
+    
+    // 4. Top 10 Most Expensive Equipment
+    const equipmentCosts = {};
+    logs.forEach(log => {
+      if (log.equipment) {
+        const eqId = log.equipment._id.toString();
+        if (!equipmentCosts[eqId]) {
+          equipmentCosts[eqId] = {
+            equipmentId: log.equipment.equipmentId,
+            name: log.equipment.name,
+            type: log.equipment.type,
+            cost: 0,
+            count: 0
+          };
+        }
+        equipmentCosts[eqId].cost += (log.cost || 0);
+        equipmentCosts[eqId].count += 1;
+      }
+    });
+    
+    const topEquipment = Object.values(equipmentCosts)
+      .sort((a, b) => b.cost - a.cost)
+      .slice(0, 10);
+    
+    // 5. MTBF (Mean Time Between Failures) by Equipment Type
+    const Equipment = require('../models/Equipment');
+    const allEquipment = await Equipment.find({});
+    
+    const mtbfByType = {};
+    allEquipment.forEach(eq => {
+      if (!mtbfByType[eq.type]) {
+        mtbfByType[eq.type] = { totalHours: 0, count: 0, failures: 0 };
+      }
+      mtbfByType[eq.type].totalHours += eq.operatingHours || 0;
+      mtbfByType[eq.type].count += 1;
+    });
+    
+    logs.filter(log => log.maintenanceType === 'emergency' || log.maintenanceType === 'unscheduled')
+      .forEach(log => {
+        if (log.equipment && mtbfByType[log.equipment.type]) {
+          mtbfByType[log.equipment.type].failures += 1;
+        }
+      });
+    
+    const mtbfData = Object.keys(mtbfByType).map(type => ({
+      type,
+      mtbf: mtbfByType[type].failures > 0 
+        ? (mtbfByType[type].totalHours / mtbfByType[type].failures).toFixed(0)
+        : mtbfByType[type].totalHours.toFixed(0),
+      failures: mtbfByType[type].failures
+    })).sort((a, b) => b.mtbf - a.mtbf);
+    
+    // 6. MTTR (Mean Time To Repair) by Equipment Type
+    const mttrByType = {};
+    logs.forEach(log => {
+      if (log.equipment && log.duration) {
+        if (!mttrByType[log.equipment.type]) {
+          mttrByType[log.equipment.type] = { totalDuration: 0, count: 0 };
+        }
+        mttrByType[log.equipment.type].totalDuration += log.duration;
+        mttrByType[log.equipment.type].count += 1;
+      }
+    });
+    
+    const mttrData = Object.keys(mttrByType).map(type => ({
+      type,
+      mttr: (mttrByType[type].totalDuration / mttrByType[type].count).toFixed(1),
+      count: mttrByType[type].count
+    })).sort((a, b) => a.mttr - b.mttr);
+    
+    // 7. Labor vs Parts Cost Summary
+    const totalLaborCost = logs.reduce((sum, log) => sum + (log.laborCost || 0), 0);
+    const totalPartsCost = logs.reduce((sum, log) => sum + (log.partsCost || 0), 0);
+    
+    const laborVsParts = [
+      { category: 'Labor', cost: totalLaborCost },
+      { category: 'Parts', cost: totalPartsCost }
+    ];
+    
+    // 8. Key Performance Indicators
+    const totalCost = logs.reduce((sum, log) => sum + (log.cost || 0), 0);
+    const totalEvents = logs.length;
+    const avgCost = totalEvents > 0 ? totalCost / totalEvents : 0;
+    const avgDuration = logs.filter(l => l.duration).length > 0
+      ? logs.reduce((sum, l) => sum + (l.duration || 0), 0) / logs.filter(l => l.duration).length
+      : 0;
+    
+    // 9. Overdue Maintenance by Equipment Type
+    const now = new Date();
+    const overdueByType = {};
+    
+    const upcomingLogs = await MaintenanceLog.find({
+      nextDue: { $lt: now, $ne: null }
+    }).populate('equipment', 'type');
+    
+    upcomingLogs.forEach(log => {
+      if (log.equipment && log.equipment.type) {
+        overdueByType[log.equipment.type] = (overdueByType[log.equipment.type] || 0) + 1;
+      }
+    });
+    
+    const overdueData = Object.keys(overdueByType).map(type => ({
+      type,
+      count: overdueByType[type]
+    })).sort((a, b) => b.count - a.count);
+    
+    res.status(200).json({
+      status: 'success',
+      data: {
+        kpis: {
+          totalCost,
+          totalEvents,
+          avgCost,
+          avgDuration,
+          totalLaborCost,
+          totalPartsCost
+        },
+        costByEquipmentType,
+        monthlyCostTrend,
+        maintenanceTypeDistribution,
+        topEquipment,
+        mtbfData,
+        mttrData,
+        laborVsParts,
+        overdueData
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching maintenance analytics:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch maintenance analytics'
+    });
+  }
+};
+
+/**
  * Get upcoming maintenance
  * GET /api/maintenance-logs/upcoming
  */

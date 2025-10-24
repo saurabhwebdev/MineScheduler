@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Form, Input, InputNumber, Select, DatePicker, notification, Upload, Alert, Tag, Card, Row, Col, Statistic } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined, DollarOutlined, ToolOutlined, CalendarOutlined, WarningOutlined } from '@ant-design/icons';
+import { Table, Modal, Form, Input, InputNumber, Select, DatePicker, notification, Upload, Alert, Tag, Card, Row, Col, Statistic, Tabs } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined, DollarOutlined, ToolOutlined, CalendarOutlined, WarningOutlined, BarChartOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 import DashboardLayout from '../components/DashboardLayout';
+import MaintenanceAnalytics from '../components/MaintenanceAnalytics';
 import config from '../config/config';
 import './MaintenanceLogs.css';
 
@@ -515,6 +516,20 @@ const MaintenanceLogs = () => {
       page="maintenance-logs"
     >
       <div className="maintenance-logs-page">
+        <Tabs
+          defaultActiveKey="logs"
+          size="large"
+          style={{ marginBottom: 16 }}
+          items={[
+            {
+              key: 'logs',
+              label: (
+                <span>
+                  <UnorderedListOutlined /> Maintenance Logs
+                </span>
+              ),
+              children: (
+                <div>
         {/* Statistics Cards */}
         {stats && (
           <Row gutter={16} style={{ marginBottom: 24 }}>
@@ -922,6 +937,22 @@ const MaintenanceLogs = () => {
             />
           )}
         </Modal>
+                </div>
+              )
+            },
+            {
+              key: 'analytics',
+              label: (
+                <span>
+                  <BarChartOutlined /> Analytics Dashboard
+                </span>
+              ),
+              children: (
+                <MaintenanceAnalytics />
+              )
+            }
+          ]}
+        />
       </div>
     </DashboardLayout>
   );

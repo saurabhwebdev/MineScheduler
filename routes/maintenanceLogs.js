@@ -10,11 +10,17 @@ const {
   getMaintenanceStats,
   exportMaintenanceLogs,
   importMaintenanceLogs,
-  getUpcomingMaintenance
+  getUpcomingMaintenance,
+  getMaintenanceAnalytics
 } = require('../controllers/maintenanceLogController');
 
 // Protect all routes
 router.use(protect);
+
+// @route   GET /api/maintenance-logs/analytics
+// @desc    Get comprehensive maintenance analytics
+// @access  Private
+router.get('/analytics', getMaintenanceAnalytics);
 
 // @route   GET /api/maintenance-logs/stats
 // @desc    Get maintenance statistics
