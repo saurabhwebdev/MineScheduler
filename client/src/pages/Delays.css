@@ -66,28 +66,33 @@
   background-color: #f6ffed;
 }
 
-/* Table */
+/* Table - Excel-style Clean Minimal Flat Design */
 .table-container {
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .table-container .ant-table {
   font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 .table-container .ant-table-thead > tr > th {
-  background: linear-gradient(to bottom, #fafbfc 0%, #f6f8fa 100%);
-  color: #1f2937;
+  background-color: #fafafa;
+  color: #000000;
   font-weight: 600;
-  font-size: 11px;
-  padding: 14px 16px;
-  border-bottom: 2px solid #e5e7eb;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-size: 12px;
+  padding: 12px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #f0f0f0;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.table-container .ant-table-thead > tr > th:last-child {
+  border-right: none;
 }
 
 .table-container .ant-table-thead > tr > th::before {
@@ -95,83 +100,97 @@
 }
 
 .table-container .ant-table-tbody > tr > td {
-  padding: 16px 16px;
-  border-bottom: 1px solid #f3f4f6;
-  color: #1f2937;
+  padding: 12px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f5f5f5;
+  color: #000000;
   vertical-align: middle;
+  background-color: #ffffff;
+}
+
+.table-container .ant-table-tbody > tr > td:last-child {
+  border-right: none;
 }
 
 .table-container .ant-table-tbody > tr:last-child > td {
-  border-bottom: none;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .table-container .ant-table-tbody > tr:hover > td {
-  background-color: #f9fafb;
+  background-color: #f5f9ff;
 }
 
 /* Clickable row styling */
 .table-container .ant-table-tbody > tr {
-  transition: all 0.15s ease;
+  transition: background-color 0.1s ease;
 }
 
 .table-container .ant-table-tbody > tr:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: none;
 }
 
-/* Status Badge */
+/* Remove ant design default styles */
+.table-container .ant-table-container {
+  border: none;
+}
+
+.table-container .ant-table-content {
+  border: none;
+}
+
+/* Status Badge - Flat minimal */
 .status-badge {
   display: inline-block;
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .status-badge.active {
-  background-color: #e6f7ed;
-  color: #237804;
+  background-color: #d4edda;
+  color: #155724;
 }
 
 .status-badge.inactive {
-  background-color: #fff1f0;
-  color: #cf1322;
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
-/* Action Buttons */
+/* Action Buttons - Flat inline */
 .action-buttons {
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .icon-btn {
-  width: 32px;
-  height: 32px;
-  border: 1px solid transparent;
+  width: 30px;
+  height: 30px;
+  border: none;
   background: transparent;
-  color: #8c8c8c;
+  color: #666666;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  font-size: 14px;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  font-size: 15px;
 }
 
 .icon-btn:hover {
-  background-color: #f0f0f0;
-  border-color: #d9d9d9;
-  color: #062d54;
-  transform: translateY(-1px);
+  background-color: #e8e8e8;
+  color: #000000;
 }
 
 .icon-btn.delete:hover {
-  background-color: #fff1f0;
-  border-color: #ffccc7;
-  color: #ff4d4f;
+  background-color: #ffebee;
+  color: #d32f2f;
 }
 
 /* Pagination - Minimal Flat Design */
