@@ -10,26 +10,23 @@ const DelaySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add a delay code'],
     unique: true,
-    trim: true
-  },
-  delayType: {
-    type: String,
-    enum: ['standard', 'custom'],
-    required: [true, 'Please specify delay type'],
-    default: 'custom'
+    trim: true,
+    uppercase: true
   },
   description: {
     type: String,
     required: [true, 'Please add a description'],
     trim: true
   },
-  delayDuration: {
-    type: Number,
-    min: 0,
-    default: null,
-    // Duration is optional but recommended for standard delays
-    required: function() {
-      return this.delayType === 'standard';
+  color: {
+    type: String,
+    default: '#ff4d4f',
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(v);
+      },
+      message: props => `${props.value} is not a valid hex color code!`
     }
   },
   isActive: {

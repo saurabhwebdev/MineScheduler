@@ -82,7 +82,7 @@ router.get('/:id', protect, async (req, res) => {
 // @access  Private
 router.post('/', protect, async (req, res) => {
   try {
-    const { delayCategory, delayCode, description, isActive, delayType, delayDuration } = req.body;
+    const { delayCategory, delayCode, description, color, isActive } = req.body;
 
     // Check if delay code already exists
     const delayExists = await Delay.findOne({ delayCode });
@@ -96,9 +96,8 @@ router.post('/', protect, async (req, res) => {
     const delay = await Delay.create({
       delayCategory,
       delayCode,
-      delayType: delayType || 'custom',
       description,
-      delayDuration: delayType === 'standard' ? (delayDuration !== undefined ? delayDuration : null) : null,
+      color: color || '#ff4d4f',
       isActive: isActive !== undefined ? isActive : true,
       createdBy: req.user.id
     });
@@ -111,7 +110,7 @@ router.post('/', protect, async (req, res) => {
       resourceType: 'Delay',
       resourceId: delay._id,
       resourceName: delay.delayCode,
-      newValues: { delayCategory: delay.delayCategory, delayCode: delay.delayCode, delayType: delay.delayType, description: delay.description, delayDuration: delay.delayDuration, isActive: delay.isActive },
+      newValues: { delayCategory: delay.delayCategory, delayCode: delay.delayCode, description: delay.description, color: delay.color, isActive: delay.isActive },
       ipAddress: getClientIp(req),
       userAgent: getUserAgent(req)
     });
@@ -136,7 +135,7 @@ router.post('/', protect, async (req, res) => {
 // @access  Private
 router.put('/:id', protect, async (req, res) => {
   try {
-    const { delayCategory, delayCode, description, isActive, delayType, delayDuration } = req.body;
+    const { delayCategory, delayCode, description, color, isActive } = req.body;
     
     // Get old values for audit
     const oldDelay = await Delay.findById(req.params.id);
@@ -161,9 +160,8 @@ router.put('/:id', protect, async (req, res) => {
     const updateData = {};
     if (delayCategory !== undefined) updateData.delayCategory = delayCategory;
     if (delayCode !== undefined) updateData.delayCode = delayCode;
-    if (delayType !== undefined) updateData.delayType = delayType;
     if (description !== undefined) updateData.description = description;
-    if (delayDuration !== undefined) updateData.delayDuration = delayType === 'standard' ? delayDuration : null;
+    if (color !== undefined) updateData.color = color;
     if (isActive !== undefined) updateData.isActive = isActive;
 
     const delay = await Delay.findByIdAndUpdate(
@@ -180,8 +178,8 @@ router.put('/:id', protect, async (req, res) => {
       resourceType: 'Delay',
       resourceId: delay._id,
       resourceName: delay.delayCode,
-      oldValues: { delayCategory: oldDelay.delayCategory, delayCode: oldDelay.delayCode, delayType: oldDelay.delayType, description: oldDelay.description, delayDuration: oldDelay.delayDuration, isActive: oldDelay.isActive },
-      newValues: { delayCategory: delay.delayCategory, delayCode: delay.delayCode, delayType: delay.delayType, description: delay.description, delayDuration: delay.delayDuration, isActive: delay.isActive },
+      oldValues: { delayCategory: oldDelay.delayCategory, delayCode: oldDelay.delayCode, description: oldDelay.description, color: oldDelay.color, isActive: oldDelay.isActive },
+      newValues: { delayCategory: delay.delayCategory, delayCode: delay.delayCode, description: delay.description, color: delay.color, isActive: delay.isActive },
       ipAddress: getClientIp(req),
       userAgent: getUserAgent(req)
     });
@@ -223,7 +221,7 @@ router.delete('/:id', protect, async (req, res) => {
       resourceType: 'Delay',
       resourceId: delay._id,
       resourceName: delay.delayCode,
-      oldValues: { delayCategory: delay.delayCategory, delayCode: delay.delayCode, delayType: delay.delayType, description: delay.description, delayDuration: delay.delayDuration, isActive: delay.isActive },
+      oldValues: { delayCategory: delay.delayCategory, delayCode: delay.delayCode, description: delay.description, color: delay.color, isActive: delay.isActive },
       ipAddress: getClientIp(req),
       userAgent: getUserAgent(req)
     });
@@ -307,19 +305,13 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
           }
         }
 
-        // Parse delayType (default custom)
-        let delayType = 'custom';
-        if (row.delayType) {
-          const type = row.delayType.toString().toLowerCase().trim();
-          delayType = (type === 'standard' || type === 'std') ? 'standard' : 'custom';
-        }
-
-        // Parse delayDuration (only for standard delays)
-        let delayDuration = null;
-        if (delayType === 'standard' && row.delayDuration !== undefined && row.delayDuration !== null && row.delayDuration !== '') {
-          const parsed = parseFloat(row.delayDuration);
-          if (!isNaN(parsed) && parsed >= 0) {
-            delayDuration = parsed;
+        // Parse color (default red)
+        let color = '#ff4d4f';
+        if (row.color) {
+          const colorStr = row.color.toString().trim();
+          // Validate hex color
+          if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(colorStr)) {
+            color = colorStr;
           }
         }
 
@@ -327,9 +319,8 @@ router.post('/import', protect, upload.single('file'), async (req, res) => {
         const delay = await Delay.create({
           delayCategory: row.delayCategory.toString().trim(),
           delayCode: row.delayCode.toString().trim(),
-          delayType: delayType,
           description: row.description.toString().trim(),
-          delayDuration: delayDuration,
+          color: color,
           isActive: isActive,
           createdBy: req.user.id
         });
