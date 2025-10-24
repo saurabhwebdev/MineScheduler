@@ -14,7 +14,7 @@
 **Visual**: Dark animated mining tunnel transitioning to light
 **Text Overlay**: "Mining Operations. Simplified."
 **Voiceover/Text**: 
-*"Managing a mine's operations shouldn't be complicated."*
+*"Managing a mine's operations shouldn't be complicated. Every day, mine operators face overwhelming challenges coordinating teams, equipment, and schedules across complex operations."*
 
 **Canva Instructions**:
 - Use "Mining Tunnel" stock video or create with gradient dark-to-light animation
@@ -32,7 +32,7 @@
 - "Costly Delays"
 
 **Voiceover/Text**: 
-*"Traditional scheduling methods lead to inefficiencies, equipment downtime, and costly delays."*
+*"Traditional scheduling methods lead to inefficiencies, equipment downtime, and costly delays. Manual spreadsheets create confusion, important maintenance dates get missed, and communication breakdowns cause expensive work stoppages that hurt your bottom line."*
 
 **Canva Instructions**:
 - Use 3-panel grid template
@@ -47,7 +47,7 @@
 **Visual**: Logo animation + App dashboard preview
 **Text Overlay**: "Introducing MineScheduler"
 **Voiceover/Text**: 
-*"Introducing MineScheduler - Your intelligent mine operations management platform."*
+*"Introducing MineScheduler - Your intelligent mine operations management platform. Built by industry experts who understand the unique challenges of mining operations, MineScheduler brings cutting-edge technology to streamline every aspect of your daily workflow."*
 
 **Canva Instructions**:
 - Create logo reveal animation (scale from center)
@@ -67,7 +67,7 @@
 - "Automated Conflict Resolution"
 
 **Voiceover/Text**: 
-*"Automatically schedule tasks, track equipment status in real-time, and resolve conflicts before they happen."*
+*"Automatically schedule tasks with intelligent algorithms that optimize your workforce allocation. Track equipment status in real-time across your entire fleet, and resolve scheduling conflicts before they happen with smart notifications and automated recommendations that keep your operations running smoothly."*
 
 **Canva Instructions**:
 - Use calendar template or create grid with Canva shapes
@@ -88,7 +88,7 @@
 - "Visual Reports"
 
 **Voiceover/Text**: 
-*"Monitor KPIs with beautiful visualizations. See task distribution, equipment utilization, and maintenance schedules at a glance."*
+*"Monitor your key performance indicators with beautiful, intuitive visualizations that make complex data easy to understand. See task distribution across teams, equipment utilization rates, maintenance schedules, and productivity trends at a glance. Make data-driven decisions with confidence using powerful analytics that transform raw numbers into actionable insights."*
 
 **Canva Instructions**:
 - Screenshot your actual dashboard or create mockup
@@ -108,7 +108,7 @@
 - "Minimize Downtime"
 
 **Voiceover/Text**: 
-*"Track delays instantly, identify root causes, and minimize downtime with intelligent insights."*
+*"Track delays instantly with real-time alerts that keep you informed the moment issues arise. Identify root causes with detailed reporting and historical analysis, then minimize downtime with intelligent insights and recommendations that help you prevent similar problems in the future."*
 
 **Canva Instructions**:
 - Use warning/alert icons (yellow/orange)
@@ -127,7 +127,7 @@
 - "Maximize Fleet Uptime"
 
 **Voiceover/Text**: 
-*"Manage your entire fleet with proactive maintenance tracking. Never miss a service date and maximize equipment uptime."*
+*"Manage your entire fleet with proactive maintenance tracking that automatically reminds you of upcoming service requirements. Never miss a critical service date with customizable alerts and notifications. Maximize equipment uptime and extend the life of your valuable assets with organized maintenance records and comprehensive service history tracking."*
 
 **Canva Instructions**:
 - Create equipment cards (use rounded rectangles)
@@ -147,7 +147,7 @@
 - "↑ 99% Equipment Uptime"
 
 **Voiceover/Text**: 
-*"Increase efficiency by 40%, reduce scheduling time by 60%, and achieve near-perfect equipment uptime."*
+*"Our clients see remarkable results. Increase operational efficiency by up to 40% through optimized scheduling and resource allocation. Reduce scheduling time by 60% with automated workflows that eliminate manual data entry. And achieve near-perfect equipment uptime of 99% or higher with proactive maintenance management."*
 
 **Canva Instructions**:
 - Use large bold numbers (counting up animation)
@@ -167,7 +167,7 @@
 - "START FREE TRIAL"
 
 **Voiceover/Text**: 
-*"Transform your mine operations today. Visit minescheduler.com and start your free trial."*
+*"Ready to transform your mine operations today? Visit minescheduler.com to learn more and start your free trial. Join leading mining operations around the world who trust MineScheduler to optimize their workflows and boost productivity."*
 
 **Canva Instructions**:
 - Center logo (medium size)
