@@ -16,6 +16,16 @@ const MaintenanceLogSchema = new mongoose.Schema({
     required: [true, 'Please add a description'],
     trim: true
   },
+  laborCost: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
+  partsCost: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
   cost: {
     type: Number,
     min: 0,
@@ -61,6 +71,12 @@ const MaintenanceLogSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+});
+
+// Pre-save hook to calculate total cost
+MaintenanceLogSchema.pre('save', function(next) {
+  this.cost = (this.laborCost || 0) + (this.partsCost || 0);
+  next();
 });
 
 // Index for faster queries

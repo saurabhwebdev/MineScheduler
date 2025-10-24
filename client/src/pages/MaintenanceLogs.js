@@ -132,7 +132,8 @@ const MaintenanceLogs = () => {
     form.setFieldsValue({
       maintenanceType: 'scheduled',
       performedDate: moment(),
-      cost: 0,
+      laborCost: 0,
+      partsCost: 0,
       duration: 0
     });
     setIsModalVisible(true);
@@ -146,7 +147,8 @@ const MaintenanceLogs = () => {
       description: log.description,
       performedDate: moment(log.performedDate),
       nextDue: log.nextDue ? moment(log.nextDue) : null,
-      cost: log.cost,
+      laborCost: log.laborCost || 0,
+      partsCost: log.partsCost || 0,
       duration: log.duration,
       performedBy: log.performedBy,
       notes: log.notes
@@ -282,7 +284,8 @@ const MaintenanceLogs = () => {
         description: 'Regular maintenance check',
         performedDate: new Date().toISOString(),
         nextDue: null,
-        cost: 500,
+        laborCost: 300,
+        partsCost: 200,
         duration: 2,
         performedBy: 'John Doe',
         notes: 'All systems operational'
@@ -446,12 +449,26 @@ const MaintenanceLogs = () => {
       width: 140,
     },
     {
-      title: 'COST',
+      title: 'LABOR',
+      dataIndex: 'laborCost',
+      key: 'laborCost',
+      render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
+      width: 90,
+    },
+    {
+      title: 'PARTS',
+      dataIndex: 'partsCost',
+      key: 'partsCost',
+      render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
+      width: 90,
+    },
+    {
+      title: 'TOTAL',
       dataIndex: 'cost',
       key: 'cost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
       sorter: (a, b) => (a.cost || 0) - (b.cost || 0),
-      width: 100,
+      width: 90,
     },
     {
       title: 'DURATION',
@@ -697,13 +714,20 @@ const MaintenanceLogs = () => {
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
-              <Form.Item label="Cost ($)" name="cost" style={{ flex: 1 }}>
-                <InputNumber min={0} style={{ width: '100%' }} />
+              <Form.Item label="Labor Cost ($)" name="laborCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter labor cost" />
               </Form.Item>
 
+              <Form.Item label="Parts Cost ($)" name="partsCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter parts cost" />
+              </Form.Item>
+            </div>
+
+            <div style={{ display: 'flex', gap: '16px' }}>
               <Form.Item label="Duration (hours)" name="duration" style={{ flex: 1 }}>
                 <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
+              <div style={{ flex: 1 }} />
             </div>
 
             <Form.Item label="Performed By" name="performedBy">
@@ -808,7 +832,15 @@ const MaintenanceLogs = () => {
                     <span>{selectedLog.performedBy || '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Cost:</label>
+                    <label>Labor Cost:</label>
+                    <span>{selectedLog.laborCost ? `$${selectedLog.laborCost.toFixed(2)}` : '-'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Parts Cost:</label>
+                    <span>{selectedLog.partsCost ? `$${selectedLog.partsCost.toFixed(2)}` : '-'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Total Cost:</label>
                     <span>{selectedLog.cost ? `$${selectedLog.cost.toFixed(2)}` : '-'}</span>
                   </div>
                   <div className="detail-item">

@@ -278,7 +278,8 @@ const Equipment = () => {
     maintenanceForm.setFieldsValue({
       maintenanceType: 'scheduled',
       performedDate: moment(),
-      cost: 0,
+      laborCost: 0,
+      partsCost: 0,
       duration: 0
     });
     setIsMaintenanceModalVisible(true);
@@ -631,10 +632,25 @@ const Equipment = () => {
       render: (by) => by || '-',
     },
     {
-      title: 'COST',
+      title: 'LABOR',
+      dataIndex: 'laborCost',
+      key: 'laborCost',
+      render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
+      width: 100,
+    },
+    {
+      title: 'PARTS',
+      dataIndex: 'partsCost',
+      key: 'partsCost',
+      render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
+      width: 100,
+    },
+    {
+      title: 'TOTAL',
       dataIndex: 'cost',
       key: 'cost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
+      width: 100,
     },
     {
       title: 'DURATION',
@@ -948,13 +964,20 @@ const Equipment = () => {
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
-              <Form.Item label="Cost ($)" name="cost" style={{ flex: 1 }}>
-                <InputNumber min={0} style={{ width: '100%' }} />
+              <Form.Item label="Labor Cost ($)" name="laborCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter labor cost" />
               </Form.Item>
 
+              <Form.Item label="Parts Cost ($)" name="partsCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter parts cost" />
+              </Form.Item>
+            </div>
+
+            <div style={{ display: 'flex', gap: '16px' }}>
               <Form.Item label="Duration (hours)" name="duration" style={{ flex: 1 }}>
                 <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
+              <div style={{ flex: 1 }} />
             </div>
 
             <Form.Item label="Performed By" name="performedBy">

@@ -413,6 +413,8 @@ exports.exportMaintenanceLogs = async (req, res) => {
       description: log.description,
       performedDate: log.performedDate,
       nextDue: log.nextDue,
+      laborCost: log.laborCost || 0,
+      partsCost: log.partsCost || 0,
       cost: log.cost,
       duration: log.duration,
       performedBy: log.performedBy,
