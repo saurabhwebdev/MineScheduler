@@ -225,18 +225,23 @@ const Dashboard = () => {
     
     const timeline = Array.from({ length: 7 }, (_, i) => {
       const date = moment().add(i, 'days').startOf('day');
-      const count = equipment.filter(eq => {
+      const equipmentList = equipment.filter(eq => {
         if (!eq.nextMaintenance) return false;
         const nextDate = moment(eq.nextMaintenance).startOf('day');
         return nextDate.isSame(date, 'day');
-      }).length;
+      });
       
-      console.log(`Date: ${date.format('YYYY-MM-DD')}, Count: ${count}`);
+      console.log(`Date: ${date.format('YYYY-MM-DD')}, Count: ${equipmentList.length}`);
       
       return {
         date: date.format('MMM DD'),
-        count,
-        day: date.format('ddd')
+        count: equipmentList.length,
+        day: date.format('ddd'),
+        equipment: equipmentList.map(eq => ({
+          id: eq.equipmentId,
+          name: eq.name,
+          type: eq.type
+        }))
       };
     });
     
@@ -740,12 +745,40 @@ const Dashboard = () => {
                     <Tooltip 
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
+                          const data = payload[0].payload;
                           return (
-                            <div className="custom-tooltip">
-                              <p className="tooltip-label">{payload[0].payload.date} ({payload[0].payload.day})</p>
-                              <p className="tooltip-value" style={{ color: '#062d54' }}>
-                                {`Maintenance: ${payload[0].value}`}
+                            <div style={{
+                              backgroundColor: 'white',
+                              padding: '12px',
+                              border: '1px solid #d9d9d9',
+                              borderRadius: '6px',
+                              boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
+                              maxWidth: '280px'
+                            }}>
+                              <p style={{ margin: '0 0 8px 0', fontWeight: 600, fontSize: '14px', color: '#1f2937' }}>
+                                {data.date} ({data.day})
                               </p>
+                              <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#062d54', fontWeight: 600 }}>
+                                {`${data.count} Equipment Maintenance${data.count !== 1 ? 's' : ''}`}
+                              </p>
+                              {data.equipment && data.equipment.length > 0 && (
+                                <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '8px' }}>
+                                  {data.equipment.map((eq, idx) => (
+                                    <div key={idx} style={{
+                                      fontSize: '12px',
+                                      marginBottom: idx < data.equipment.length - 1 ? '6px' : '0',
+                                      padding: '4px 0'
+                                    }}>
+                                      <div style={{ color: '#1f2937', fontWeight: 500 }}>
+                                        {eq.id}
+                                      </div>
+                                      <div style={{ color: '#8c8c8c', fontSize: '11px' }}>
+                                        {eq.name} • {eq.type}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           );
                         }
