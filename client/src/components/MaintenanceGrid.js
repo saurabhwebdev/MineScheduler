@@ -53,7 +53,7 @@ const MaintenanceGrid = ({ equipment }) => {
   const getMaintenanceColor = (percentUsed) => {
     if (percentUsed >= 100) return '#ff4d4f'; // Red - Overdue
     if (percentUsed >= 80) return '#fa8c16'; // Orange - Due Soon
-    return '#52c41a'; // Green - Good
+    return '#3cca70'; // Green - Good (app theme)
   };
 
   const getMaintenanceIcon = (percentUsed) => {
@@ -158,11 +158,11 @@ const MaintenanceGrid = ({ equipment }) => {
                     
                     if (usage.inUse) {
                       // Equipment in use (task running)
-                      cellColor = '#52c41a'; // Green
+                      cellColor = '#3cca70'; // Green (app theme)
                       tooltipText = `IN USE: ${usage.taskId} at ${usage.siteId}`;
                     } else if (isMaintWindow) {
                       // Available for maintenance
-                      cellColor = '#1890ff'; // Blue
+                      cellColor = '#062d54'; // Blue (app theme)
                       cellIcon = <ToolOutlined />;
                       tooltipText = 'Available for Maintenance';
                     } else if (eq.status !== 'operational') {
