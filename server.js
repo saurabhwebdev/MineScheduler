@@ -53,6 +53,7 @@ app.use('/api/audit', require('./routes/audit'));
 app.use('/api/schedule', require('./routes/schedule'));
 app.use('/api/snapshots', require('./routes/snapshots'));
 app.use('/api/maintenance', require('./routes/maintenance'));
+app.use('/api/maintenance-logs', require('./routes/maintenanceLogs'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

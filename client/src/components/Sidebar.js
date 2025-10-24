@@ -12,7 +12,8 @@ import {
   AuditOutlined,
   ToolOutlined,
   EnvironmentOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  HistoryOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
@@ -35,6 +36,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     // Resources
     { key: 'sites', icon: <EnvironmentOutlined />, label: 'Sites', path: '/sites' },
     { key: 'equipment', icon: <ToolOutlined />, label: 'Equipment', path: '/equipment' },
+    { key: 'maintenance-logs', icon: <HistoryOutlined />, label: 'Maintenance Logs', path: '/maintenance-logs' },
     
     // Analysis & Configuration
     { key: 'settings', icon: <SettingOutlined />, label: 'Settings', path: '/settings' },

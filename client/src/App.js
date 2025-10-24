@@ -12,6 +12,7 @@ import Tasks from './pages/Tasks';
 import Delays from './pages/Delays';
 import Sites from './pages/Sites';
 import Equipment from './pages/Equipment';
+import MaintenanceLogs from './pages/MaintenanceLogs';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Audit from './pages/Audit';
@@ -74,6 +75,7 @@ function AppContent() {
             <Route path="/delays" element={<PrivateRoute><Delays /></PrivateRoute>} />
             <Route path="/sites" element={<PrivateRoute><Sites /></PrivateRoute>} />
             <Route path="/equipment" element={<PrivateRoute><Equipment /></PrivateRoute>} />
+            <Route path="/maintenance-logs" element={<PrivateRoute><MaintenanceLogs /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
             <Route path="/audit" element={<AdminRoute><Audit /></AdminRoute>} />
             <Route path="/help" element={<PrivateRoute><Help /></PrivateRoute>} />
