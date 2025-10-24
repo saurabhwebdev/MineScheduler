@@ -212,6 +212,29 @@ const Schedule = () => {
     const isGlobal = delay.isGlobal || delay.row === '__ALL__';
     const newDelays = [];
     
+    // Fetch delay color from backend based on delay code
+    let delayColor = '#ff4d4f'; // Default red
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/delays`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (response.ok && data.status === 'success') {
+        const matchingDelay = data.data.delays.find(
+          d => d.delayCode === delay.code && d.delayCategory === delay.category
+        );
+        if (matchingDelay && matchingDelay.color) {
+          delayColor = matchingDelay.color;
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching delay color:', error);
+      // Continue with default color
+    }
+    
     // Get list of sites to apply delay to
     let sitesToDelay = [];
     if (isGlobal && scheduleData) {
@@ -251,6 +274,7 @@ const Schedule = () => {
           category: delay.category,
           code: delay.code,
           comments: delay.comments,
+          color: delayColor, // Store the fetched color
           duration: 1 // Each cell is 1 hour
         });
       }

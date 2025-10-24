@@ -144,26 +144,22 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     return delayedSlots.find(d => d.row === site && d.hourIndex === hour);
   };
 
-  // Get shift color for a delay if it's a shift changeover
+  // Get delay color - uses color from delay model or defaults
   const getDelayColor = (delayInfo) => {
     if (!delayInfo) return null;
     
     // If this is an automatic shift changeover delay
     if (delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE') {
-      console.log('SHIFT CHANGEOVER DELAY:', delayInfo);
-      console.log('Available shifts:', shifts);
-      
       // ALWAYS return light grey for shift changeover
       return '#d3d3d3'; // Light grey
-      
-      // Original logic (commented for debugging):
-      // const shift = shifts.find(s => s.shiftCode === delayInfo.shiftCode);
-      // if (shift && shift.color) {
-      //   return shift.color;
-      // }
     }
     
-    // Default delay color (red for manual delays)
+    // Use the color from the delay object (fetched from Delay model)
+    if (delayInfo.color) {
+      return delayInfo.color;
+    }
+    
+    // Fallback to default red if no color specified
     return '#ff4d4f';
   };
 
