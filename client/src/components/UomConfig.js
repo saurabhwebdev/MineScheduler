@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Modal, Form, Input, notification, Upload } from 'antd';
+import { Table, Modal, Form, Input, notification } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import config from '../config/config';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Select, Input, InputNumber, notification } from 'antd';
-import { ClockCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { Modal, Form, Select, Input, InputNumber } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import config from '../config/config';
 import './DelayModal.css';
 

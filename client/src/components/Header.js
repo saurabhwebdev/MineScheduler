@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Avatar, Badge, Dropdown } from 'antd';
 import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined, HomeOutlined, RightOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';

@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Statistic, Space } from 'antd';
 import { 
   ToolOutlined, 
-  CheckCircleOutlined, 
-  WarningOutlined,
   CalendarOutlined,
-  FileTextOutlined,
   ExclamationCircleOutlined,
   RiseOutlined,
   FallOutlined,
   DollarOutlined,
   ThunderboltOutlined,
   EyeOutlined,
-  SafetyOutlined,
   LineChartOutlined,
-  PieChartOutlined,
-  EnvironmentOutlined
+  PieChartOutlined
 } from '@ant-design/icons';
 import { 
-  BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, 
+  BarChart, Bar, Line, PieChart, Pie, XAxis, YAxis, 
   CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, 
-  AreaChart, Area, ComposedChart 
+  Area, ComposedChart 
 } from 'recharts';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
@@ -41,17 +36,12 @@ const Dashboard = () => {
   const [trends, setTrends] = useState(null);
   const [performance, setPerformance] = useState(null);
   const [equipment, setEquipment] = useState([]);
-  const [sites, setSites] = useState([]);
   
   // Modal states
   const [criticalModalVisible, setCriticalModalVisible] = useState(false);
   const [criticalEquipment, setCriticalEquipment] = useState([]);
 
-  useEffect(() => {
-    fetchAllData();
-  }, [dateRange, customDateRange]);
-
-  const fetchAllData = async () => {
+  const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -87,19 +77,16 @@ const Dashboard = () => {
       const eqData = await eqRes.json();
       if (eqData.status === 'success') setEquipment(eqData.data.equipment);
 
-      // Fetch sites
-      const sitesRes = await fetch(`${config.apiUrl}/sites`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const sitesData = await sitesRes.json();
-      if (sitesData.status === 'success') setSites(sitesData.data.sites);
-
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [dateRange, customDateRange]);
+
+  useEffect(() => {
+    fetchAllData();
+  }, [fetchAllData]);
 
   const handleShowCritical = () => {
     const now = new Date();

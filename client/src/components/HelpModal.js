@@ -4,7 +4,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import './HelpModal.css';
 
 const { Panel } = Collapse;
-const { Title, Paragraph, Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 const HelpModal = ({ visible, onClose, helpData }) => {
   if (!helpData) return null;

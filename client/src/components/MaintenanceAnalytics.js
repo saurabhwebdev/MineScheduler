@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Spin, DatePicker } from 'antd';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
-import { DollarOutlined, ToolOutlined, ClockCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { DollarOutlined, ToolOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import config from '../config/config';
 import './MaintenanceAnalytics.css';
@@ -28,6 +28,7 @@ const MaintenanceAnalytics = () => {
 
   useEffect(() => {
     fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange]);
 
   const fetchAnalytics = async () => {

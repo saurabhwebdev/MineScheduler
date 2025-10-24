@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
-import { SettingOutlined, DatabaseOutlined, ClockCircleOutlined, CalculatorOutlined, ToolOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, ClockCircleOutlined, CalculatorOutlined, ToolOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import UomConfig from '../components/UomConfig';
 import ShiftConfig from '../components/ShiftConfig';
