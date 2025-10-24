@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Modal } from 'antd';
 import ScheduleCell from './ScheduleCell';
+import DelayModal from './DelayModal';
 import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
@@ -8,6 +9,8 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [toggleModalVisible, setToggleModalVisible] = useState(false);
   const [selectedSite, setSelectedSite] = useState(null);
+  const [globalDelayModalVisible, setGlobalDelayModalVisible] = useState(false);
+  const [selectedHourForGlobalDelay, setSelectedHourForGlobalDelay] = useState(null);
 
   const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
@@ -182,6 +185,23 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     setSelectedSite(null);
   };
 
+  const handleHourHeaderClick = (hour) => {
+    setSelectedHourForGlobalDelay(hour);
+    setGlobalDelayModalVisible(true);
+  };
+
+  const handleGlobalDelaySubmit = (delayData) => {
+    // Mark as global delay for all sites
+    const globalDelay = {
+      ...delayData,
+      row: '__ALL__',
+      isGlobal: true
+    };
+    onAddDelay(globalDelay);
+    setGlobalDelayModalVisible(false);
+    setSelectedHourForGlobalDelay(null);
+  };
+
   return (
     <div className="schedule-grid-wrapper">
       <div className="schedule-grid-scroll">
@@ -219,7 +239,10 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
               {Array.from({ length: gridHours }, (_, i) => (
                 <th 
                   key={i} 
-                  className={`hour-col ${isCurrentHour(i) ? 'current-hour' : ''}`}
+                  className={`hour-col hour-header-clickable ${isCurrentHour(i) ? 'current-hour' : ''}`}
+                  onClick={() => handleHourHeaderClick(i)}
+                  title="Click to add delay for all active sites"
+                  style={{ cursor: 'pointer' }}
                 >
                   {i + 1}
                 </th>
@@ -356,6 +379,19 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
           </div>
         </div>
       </Modal>
+
+      {/* Global Delay Modal (All Sites) */}
+      <DelayModal
+        visible={globalDelayModalVisible}
+        siteId="__ALL__"
+        hour={selectedHourForGlobalDelay}
+        isGlobal={true}
+        onClose={() => {
+          setGlobalDelayModalVisible(false);
+          setSelectedHourForGlobalDelay(null);
+        }}
+        onSubmit={handleGlobalDelaySubmit}
+      />
     </div>
   );
 };

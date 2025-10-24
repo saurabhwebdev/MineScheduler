@@ -7,7 +7,7 @@ import './DelayModal.css';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
+const DelayModal = ({ visible, siteId, hour, isGlobal = false, onClose, onSubmit }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [delays, setDelays] = useState([]);
@@ -128,15 +128,30 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
       }}
     >
       <div className="delay-modal-info">
-        <div className="info-item">
-          <span className="info-label">Site:</span>
-          <span className="info-value">{siteId}</span>
-        </div>
-        <div className="info-divider">•</div>
-        <div className="info-item">
-          <span className="info-label">Hour:</span>
-          <span className="info-value">{hour + 1}</span>
-        </div>
+        {isGlobal ? (
+          <>
+            <div className="info-item">
+              <span className="info-label">🌍 All Active Sites</span>
+            </div>
+            <div className="info-divider">•</div>
+            <div className="info-item">
+              <span className="info-label">Hour:</span>
+              <span className="info-value">{hour !== null ? hour + 1 : '-'}</span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="info-item">
+              <span className="info-label">Site:</span>
+              <span className="info-value">{siteId}</span>
+            </div>
+            <div className="info-divider">•</div>
+            <div className="info-item">
+              <span className="info-label">Hour:</span>
+              <span className="info-value">{hour !== null ? hour + 1 : '-'}</span>
+            </div>
+          </>
+        )}
       </div>
 
       <Form

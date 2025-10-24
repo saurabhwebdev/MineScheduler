@@ -159,6 +159,25 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Clickable Hour Header Styling */
+.hour-header-clickable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.hour-header-clickable:hover {
+  background: #e6f4ff !important;
+  color: #062d54 !important;
+  font-weight: 700;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.hour-header-clickable:active {
+  transform: translateY(0);
+}
+
 /* Sortable Site Column */
 .site-col.sortable {
   cursor: pointer;

@@ -209,23 +209,51 @@ const Schedule = () => {
   const handleAddDelay = async (delay) => {
     // Add delays for multiple consecutive hours based on duration
     const duration = delay.duration || 1;
+    const isGlobal = delay.isGlobal || delay.row === '__ALL__';
     const newDelays = [];
     
-    // Remove any existing delays in the range that will be affected
-    let updatedDelayedSlots = delayedSlots.filter(
-      d => !(d.row === delay.row && d.hourIndex >= delay.hourIndex && d.hourIndex < delay.hourIndex + duration)
-    );
+    // Get list of sites to apply delay to
+    let sitesToDelay = [];
+    if (isGlobal && scheduleData) {
+      // Apply to all ACTIVE sites only
+      const allSites = Object.keys(scheduleData.grid || {});
+      sitesToDelay = allSites.filter(site => scheduleData.siteActive[site]);
+    } else {
+      // Apply to single site
+      sitesToDelay = [delay.row];
+    }
     
-    // Add delay for each hour in the duration
-    for (let i = 0; i < duration; i++) {
-      newDelays.push({
-        row: delay.row,
-        hourIndex: delay.hourIndex + i,
-        category: delay.category,
-        code: delay.code,
-        comments: delay.comments,
-        duration: 1 // Each cell is 1 hour
-      });
+    // Remove any existing delays in the range that will be affected
+    let updatedDelayedSlots = delayedSlots.filter(d => {
+      if (isGlobal) {
+        // For global delays, remove delays from ALL sites in the hour range
+        return !(
+          sitesToDelay.includes(d.row) && 
+          d.hourIndex >= delay.hourIndex && 
+          d.hourIndex < delay.hourIndex + duration
+        );
+      } else {
+        // For single site, remove only from that site
+        return !(
+          d.row === delay.row && 
+          d.hourIndex >= delay.hourIndex && 
+          d.hourIndex < delay.hourIndex + duration
+        );
+      }
+    });
+    
+    // Add delay for each site and each hour in the duration
+    for (const site of sitesToDelay) {
+      for (let i = 0; i < duration; i++) {
+        newDelays.push({
+          row: site,
+          hourIndex: delay.hourIndex + i,
+          category: delay.category,
+          code: delay.code,
+          comments: delay.comments,
+          duration: 1 // Each cell is 1 hour
+        });
+      }
     }
     
     // Combine with existing delays
@@ -233,9 +261,13 @@ const Schedule = () => {
     setDelayedSlots(updatedDelayedSlots);
 
     // Auto-regenerate schedule
+    const delayMessage = isGlobal 
+      ? `Adding ${duration} hour(s) delay to ${sitesToDelay.length} active sites and regenerating...`
+      : `Adding ${duration} hour(s) delay and regenerating schedule...`;
+    
     notification.info({
       message: 'Adding Delay',
-      description: `Adding ${duration} hour(s) delay and regenerating schedule...`,
+      description: delayMessage,
       duration: 2
     });
 
@@ -261,12 +293,15 @@ const Schedule = () => {
         if (response.ok && data.status === 'success') {
           setScheduleData(data.data);
           setGeneratedAt(data.data.generatedAt);
+          const successMsg = isGlobal
+            ? `${duration} hour(s) delay added to ${sitesToDelay.length} sites and schedule regenerated`
+            : `${duration} hour(s) delay added and schedule regenerated`;
           notification.success({
             message: 'Delay Added',
-            description: `${duration} hour(s) delay added and schedule regenerated`,
+            description: successMsg,
             duration: 2
           });
-        } else {
+        }
           notification.error({
             message: 'Error',
             description: data.message || 'Failed to regenerate schedule',
