@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Space, Card, Statistic } from 'antd';
+import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Space, Card, Statistic, Divider } from 'antd';
 import { 
   ToolOutlined, 
   CalendarOutlined,
@@ -13,7 +13,8 @@ import {
   PieChartOutlined,
   WarningOutlined,
   ClockCircleOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons';
 import { 
   BarChart, Bar, Line, PieChart, Pie, XAxis, YAxis, 
@@ -43,6 +44,7 @@ const Dashboard = () => {
   // Modal states
   const [criticalModalVisible, setCriticalModalVisible] = useState(false);
   const [criticalEquipment, setCriticalEquipment] = useState([]);
+  const [qualityInfoVisible, setQualityInfoVisible] = useState(false);
 
   const fetchAllData = useCallback(async () => {
     setLoading(true);
@@ -316,6 +318,13 @@ const Dashboard = () => {
             {/* Schedule Quality */}
             <Col xs={24} sm={12} lg={6}>
               <Card className="hero-kpi-card quality-card">
+                <Button
+                  type="text"
+                  icon={<InfoCircleOutlined />}
+                  className="card-info-button"
+                  onClick={() => setQualityInfoVisible(true)}
+                  title="How is this calculated?"
+                />
                 <div className="kpi-icon-wrapper quality">
                   <LineChartOutlined />
                 </div>
@@ -562,6 +571,13 @@ const Dashboard = () => {
           {metrics && metrics.scheduleEfficiency && (
             <Col xs={24} lg={12}>
               <Card className="chart-card quality-detail-card">
+                <Button
+                  type="text"
+                  icon={<InfoCircleOutlined />}
+                  className="chart-info-button"
+                  onClick={() => setQualityInfoVisible(true)}
+                  title="How is this calculated?"
+                />
                 <div className="chart-header">
                   <h3>Schedule Quality Breakdown</h3>
                   <p>Components contributing to overall score</p>
@@ -665,6 +681,150 @@ const Dashboard = () => {
               }
             ]}
           />
+        </Modal>
+
+        {/* Schedule Quality Info Modal */}
+        <Modal
+          title={
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <LineChartOutlined style={{ color: '#2563eb' }} />
+              <span>Schedule Quality Score Explained</span>
+            </div>
+          }
+          open={qualityInfoVisible}
+          onCancel={() => setQualityInfoVisible(false)}
+          footer={[
+            <Button key="close" type="primary" onClick={() => setQualityInfoVisible(false)}>
+              Got it!
+            </Button>
+          ]}
+          width={700}
+          className="modern-modal quality-info-modal"
+        >
+          <div style={{ fontSize: '14px', lineHeight: '1.8' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '8px' }}>
+                What is Schedule Quality?
+              </p>
+              <p style={{ color: '#6b7280', margin: 0 }}>
+                Schedule Quality is a composite score (0-100) that measures how well your schedule is optimized. 
+                Higher scores indicate efficient resource utilization, minimal conflicts, and optimal task completion.
+              </p>
+            </div>
+
+            <Divider style={{ margin: '16px 0' }} />
+
+            <div style={{ marginBottom: '20px' }}>
+              <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '12px' }}>
+                How is it Calculated?
+              </p>
+              <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', marginBottom: '12px' }}>
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 600, color: '#374151' }}>Utilization (40%)</span>
+                    <span style={{ color: '#6b7280' }}>{metrics?.scheduleEfficiency.utilization.toFixed(1)}%</span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
+                    Tasks scheduled vs. available capacity. Higher is better.
+                  </p>
+                </div>
+
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 600, color: '#374151' }}>Task Completion (30%)</span>
+                    <span style={{ color: '#6b7280' }}>{metrics?.scheduleEfficiency.taskCompletion}%</span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
+                    Completed tasks vs. planned tasks. Higher is better.
+                  </p>
+                </div>
+
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ fontWeight: 600, color: '#374151' }}>Conflicts (30% penalty)</span>
+                    <span style={{ color: '#6b7280' }}>{metrics?.scheduleEfficiency.conflicts} conflicts</span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
+                    Scheduling conflicts and constraint violations. Lower is better.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ padding: '12px', background: '#dbeafe', borderRadius: '8px', borderLeft: '4px solid #2563eb' }}>
+                <p style={{ margin: 0, fontSize: '13px', color: '#1e40af', fontWeight: 500 }}>
+                  <strong>Formula:</strong> Quality = (Utilization × 0.4) + (TaskCompletion × 0.3) - (Conflicts × 0.3)
+                </p>
+              </div>
+            </div>
+
+            <Divider style={{ margin: '16px 0' }} />
+
+            <div style={{ marginBottom: '20px' }}>
+              <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '12px' }}>
+                Score Ranges
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '60px', padding: '4px 8px', background: '#d1fae5', color: '#059669', borderRadius: '4px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>
+                    80-100
+                  </div>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Excellent - Highly optimized schedule</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '60px', padding: '4px 8px', background: '#fef3c7', color: '#d97706', borderRadius: '4px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>
+                    60-79
+                  </div>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Good - Room for improvement</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '60px', padding: '4px 8px', background: '#fee2e2', color: '#dc2626', borderRadius: '4px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>
+                    0-59
+                  </div>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Needs Attention - Optimize schedule</span>
+                </div>
+              </div>
+            </div>
+
+            <Divider style={{ margin: '16px 0' }} />
+
+            <div>
+              <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '12px' }}>
+                💡 How to Improve Your Score
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#374151' }}>
+                    <strong>Increase Utilization:</strong> Assign more tasks to available equipment during low-utilization hours
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#374151' }}>
+                    <strong>Reduce Conflicts:</strong> Review equipment availability, task dependencies, and site constraints
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#374151' }}>
+                    <strong>Maintain Equipment:</strong> Keep equipment operational to maximize scheduling flexibility
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#374151' }}>
+                    <strong>Balance Task Limits:</strong> Adjust task limits in Settings to match operational capacity
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '13px', color: '#374151' }}>
+                    <strong>Monitor Delays:</strong> Address recurring delays to improve task completion rates
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </Modal>
       </div>
     </DashboardLayout>
