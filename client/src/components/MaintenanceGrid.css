@@ -1,9 +1,11 @@
 .maintenance-grid-wrapper {
   background: #ffffff;
-  border-radius: 8px;
-  padding: 24px;
+  border-radius: 20px;
+  padding: 32px;
   border: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.03),
+              0 0 0 1px rgba(0, 0, 0, 0.02);
   height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -14,9 +16,34 @@
 .maintenance-grid-scroll {
   position: relative;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: hidden;
   flex: 1;
   -webkit-overflow-scrolling: touch;
+  border-radius: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #9ca3af #f9fafb;
+}
+
+.maintenance-grid-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.maintenance-grid-scroll::-webkit-scrollbar-track {
+  background: #f9fafb;
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+.maintenance-grid-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d1d5db, #9ca3af);
+  border-radius: 8px;
+  border: 2px solid #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.maintenance-grid-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #9ca3af, #6b7280);
+  border-width: 1px;
 }
 
 /* Current Hour Highlighting - Flat & Minimal */
@@ -29,87 +56,93 @@
 
 
 .maintenance-grid {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 4px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 13px;
-  table-layout: fixed;
+  font-size: 15px;
+  table-layout: auto;
   width: max-content;
   min-width: 100%;
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
 }
 
 .maintenance-grid th,
 .maintenance-grid td {
-  border: 1px solid #f0f0f0;
-  padding: 10px;
+  border: none;
+  padding: 8px;
   text-align: center;
   vertical-align: middle;
-}
-
-.maintenance-grid th {
-  background: #fafafa;
-  color: #1f2937;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  border-bottom: 2px solid #e5e7eb;
-  text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-}
-
-.maintenance-grid tbody tr:hover {
-  background: #f9fafb;
-  transition: background 0.2s ease;
-}
-
-/* Column Widths */
-.equipment-col {
-  width: 150px;
-  min-width: 150px;
-  text-align: left !important;
-}
-
-.status-col {
-  width: 120px;
-  min-width: 120px;
-}
-
-.hours-col {
-  width: 100px;
-  min-width: 100px;
-}
-
-.hour-col {
-  width: 45px;
-  min-width: 45px;
-  font-size: 11px;
+  background: #fafbfc;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.task-col {
-  width: 120px;
-  min-width: 120px;
-  font-size: 11px;
+.maintenance-grid th {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #374151;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08),
+              0 1px 2px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+}
+
+.maintenance-grid tbody tr:hover {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.maintenance-grid tbody tr:hover td {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
+              0 2px 4px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+/* Column Widths - Auto-size based on content */
+.equipment-col {
+  text-align: left !important;
+}
+
+.hour-col {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b5563;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 10px;
 }
 
 /* Equipment Cell */
 .equipment-cell {
   text-align: left !important;
-  padding: 14px !important;
+  padding: 12px !important;
+  font-weight: 600;
+  background: linear-gradient(90deg, #ffffff 0%, #fafbfc 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .equipment-cell strong {
   display: block;
   color: #0f172a;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
 .equipment-name {
-  font-size: 12px;
+  font-size: 13px;
   color: #64748b;
+  font-weight: 500;
 }
 
 /* Status Indicator */
@@ -146,25 +179,28 @@
 .hour-cell {
   position: relative;
   cursor: pointer;
-  transition: all 0.2s ease;
-  height: 40px;
-  padding: 6px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 42px;
+  padding: 4px !important;
   font-size: 10px;
-  border-radius: 4px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .hour-cell:hover {
-  opacity: 0.9;
-  transition: opacity 0.2s ease;
+  transform: translateY(-3px) scale(1.05);
+  z-index: 10;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12),
+              0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .hour-cell.in-use {
-  font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .hour-cell.maintenance-available {
-  border: 2px dashed #0284c7;
+  border: 2px dashed rgba(255, 255, 255, 0.5);
 }
 
 .usage-marker {

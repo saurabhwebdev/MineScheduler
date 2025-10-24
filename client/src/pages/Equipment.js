@@ -497,7 +497,6 @@ const Equipment = () => {
       title: 'ID',
       dataIndex: 'equipmentId',
       key: 'equipmentId',
-      width: 100,
       sorter: (a, b) => a.equipmentId.localeCompare(b.equipmentId),
     },
     {
@@ -574,7 +573,6 @@ const Equipment = () => {
       title: 'ACTIONS',
       key: 'actions',
       align: 'center',
-      width: 150,
       render: (_, record) => (
         <div className="action-buttons">
           <button className="icon-btn" onClick={() => showDetailModal(record)} title="View Details">
