@@ -301,7 +301,7 @@ const Schedule = () => {
             description: successMsg,
             duration: 2
           });
-        }
+        } else {
           notification.error({
             message: 'Error',
             description: data.message || 'Failed to regenerate schedule',
