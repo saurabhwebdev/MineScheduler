@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Spin, Tag, Space } from 'antd';
-import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { Button, notification, Radio, Spin, Tag, Space, Modal } from 'antd';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
 import SnapshotManager from '../components/SnapshotManager';
@@ -354,6 +354,113 @@ const Schedule = () => {
     });
   };
 
+  const handleClearAllDelays = () => {
+    const delayCount = delayedSlots.length;
+    
+    if (delayCount === 0) {
+      notification.info({
+        message: 'No Delays',
+        description: 'There are no delays to remove.',
+        duration: 2
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: 'Clear All Delays',
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p style={{ marginBottom: '12px', fontSize: '14px' }}>
+            Are you sure you want to remove <strong>ALL {delayCount} delays</strong> and regenerate the schedule?
+          </p>
+          <div style={{ 
+            background: '#fff7e6', 
+            padding: '12px', 
+            borderRadius: '8px',
+            border: '1px solid #ffd591',
+            fontSize: '13px'
+          }}>
+            ⚠️ <strong>Warning:</strong> This action cannot be undone. All delays will be permanently removed.
+          </div>
+        </div>
+      ),
+      okText: 'Yes, Clear All Delays',
+      cancelText: 'Cancel',
+      okButtonProps: {
+        danger: true,
+        style: {
+          background: '#ff4d4f',
+          borderColor: '#ff4d4f',
+          height: '40px',
+          fontWeight: 600
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          height: '40px',
+          fontWeight: 600
+        }
+      },
+      centered: true,
+      width: 480,
+      onOk: async () => {
+        // Clear all delays
+        setDelayedSlots([]);
+        
+        // Auto-regenerate schedule
+        notification.info({
+          message: 'Clearing Delays',
+          description: 'Removing all delays and regenerating schedule...',
+          duration: 2
+        });
+
+        setTimeout(async () => {
+          setLoading(true);
+          try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${config.apiUrl}/schedule/generate`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                gridHours,
+                delayedSlots: [] // Empty array - no delays
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.status === 'success') {
+              setScheduleData(data.data);
+              setGeneratedAt(data.data.generatedAt);
+              notification.success({
+                message: 'All Delays Cleared',
+                description: `${delayCount} delays removed and schedule regenerated successfully`,
+                duration: 3
+              });
+            } else {
+              notification.error({
+                message: 'Error',
+                description: data.message || 'Failed to regenerate schedule',
+              });
+            }
+          } catch (error) {
+            console.error('Error regenerating schedule:', error);
+            notification.error({
+              message: 'Network Error',
+              description: 'Failed to regenerate schedule. Please try again.',
+            });
+          } finally {
+            setLoading(false);
+          }
+        }, 100);
+      }
+    });
+  };
+
   const handleLoadSnapshot = (loadedScheduleData, loadedDelayedSlots, loadedGridHours) => {
     setScheduleData(loadedScheduleData);
     setDelayedSlots(loadedDelayedSlots);
@@ -510,6 +617,23 @@ const Schedule = () => {
               >
                 Load Snapshot
               </Button>
+
+              {scheduleData && delayedSlots.length > 0 && (
+                <Button
+                  size="large"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={handleClearAllDelays}
+                  className="clear-delays-btn"
+                  style={{
+                    background: '#ff4d4f',
+                    borderColor: '#ff4d4f',
+                    color: '#ffffff'
+                  }}
+                >
+                  Clear All Delays ({delayedSlots.length})
+                </Button>
+              )}
             </div>
           </div>
 
