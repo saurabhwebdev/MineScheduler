@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Form, Select, Input, InputNumber, notification } from 'antd';
 import { ClockCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import config from '../config/config';
+import './DelayModal.css';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -102,27 +103,39 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
 
   return (
     <Modal
-      title={
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <WarningOutlined style={{ color: '#ff4d4f' }} />
-          <span>Add Delay</span>
-        </div>
-      }
+      title="Add Delay"
       open={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={loading}
-      width={500}
+      width={480}
       okText="Add Delay"
       cancelText="Cancel"
-      okButtonProps={{ 
-        danger: true,
-        style: { background: '#ff4d4f', borderColor: '#ff4d4f' }
+      className="delay-modal"
+      okButtonProps={{
+        style: { 
+          background: '#062d54', 
+          borderColor: '#062d54',
+          height: '38px',
+          fontWeight: 600
+        }
+      }}
+      cancelButtonProps={{
+        style: {
+          height: '38px',
+          fontWeight: 600
+        }
       }}
     >
-      <div style={{ marginBottom: '16px', padding: '12px', background: '#fff7e6', borderRadius: '6px', border: '1px solid #ffd591' }}>
-        <div style={{ fontSize: '13px', color: '#595959' }}>
-          <strong>Site:</strong> {siteId} <span style={{ margin: '0 8px' }}>•</span> <strong>Hour:</strong> {hour + 1}
+      <div className="delay-modal-info">
+        <div className="info-item">
+          <span className="info-label">Site:</span>
+          <span className="info-value">{siteId}</span>
+        </div>
+        <div className="info-divider">•</div>
+        <div className="info-item">
+          <span className="info-label">Hour:</span>
+          <span className="info-value">{hour + 1}</span>
         </div>
       </div>
 
@@ -130,6 +143,7 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
         form={form}
         layout="vertical"
         initialValues={{ duration: 1 }}
+        className="delay-form"
       >
         <Form.Item
           name="category"
@@ -137,9 +151,8 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
           rules={[{ required: true, message: 'Please select a delay category' }]}
         >
           <Select
-            placeholder="Select delay category"
+            placeholder="Select category"
             onChange={handleCategoryChange}
-            size="large"
             showSearch
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -157,10 +170,9 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
           rules={[{ required: true, message: 'Please select a delay code' }]}
         >
           <Select
-            placeholder="Select delay code"
+            placeholder="Select code"
             disabled={!selectedCategory}
             onChange={handleCodeChange}
-            size="large"
             showSearch
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -169,8 +181,8 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
             {filteredCodes.map(item => (
               <Option key={item.code} value={item.code}>
                 <div>
-                  <div style={{ fontWeight: 600 }}>{item.code}</div>
-                  <div style={{ fontSize: '12px', color: '#8c8c8c' }}>{item.description}</div>
+                  <div style={{ fontWeight: 600, fontSize: '13px' }}>{item.code}</div>
+                  <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>{item.description}</div>
                 </div>
               </Option>
             ))}
@@ -189,9 +201,8 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
             min={1}
             max={48}
             style={{ width: '100%' }}
-            size="large"
             prefix={<ClockCircleOutlined />}
-            placeholder="Enter duration in hours"
+            placeholder="Duration in hours"
           />
         </Form.Item>
 
@@ -201,7 +212,7 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
         >
           <TextArea
             rows={3}
-            placeholder="Add any additional comments about this delay..."
+            placeholder="Add any additional comments..."
             maxLength={500}
             showCount
           />
