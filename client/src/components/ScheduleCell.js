@@ -10,6 +10,8 @@ const ScheduleCell = ({
   isActive, 
   isDelayed,
   delayInfo,
+  allDelays = [],
+  hasMultipleDelays = false,
   delayColor,
   isCurrentHour,
   onAddDelay,
@@ -56,6 +58,17 @@ const ScheduleCell = ({
     }
 
     if (isDelayed) {
+      if (hasMultipleDelays && allDelays.length > 1) {
+        // Get colors for diagonal split (first two delays)
+        const delay1Color = allDelays[0]?.color || (allDelays[0]?.isAutomatic && allDelays[0]?.code === 'SHIFT_CHANGE' ? '#d3d3d3' : '#ff4d4f');
+        const delay2Color = allDelays[1]?.color || (allDelays[1]?.isAutomatic && allDelays[1]?.code === 'SHIFT_CHANGE' ? '#d3d3d3' : '#ff4d4f');
+        
+        return {
+          background: `linear-gradient(to bottom right, ${delay1Color} 0%, ${delay1Color} 49%, transparent 49%, transparent 51%, ${delay2Color} 51%, ${delay2Color} 100%)`,
+          position: 'relative'
+        };
+      }
+      
       return {
         backgroundColor: delayColor || '#ff4d4f',
         position: 'relative'
@@ -73,10 +86,28 @@ const ScheduleCell = ({
 
   const tooltipTitle = () => {
     if (isDelayed) {
+      if (hasMultipleDelays && allDelays.length > 0) {
+        // Show all delays in tooltip
+        const delayDescriptions = allDelays.map((d, idx) => {
+          if (d.isAutomatic && d.code === 'SHIFT_CHANGE') {
+            return `${idx + 1}. Shift Changeover: ${d.shiftCode || d.comments || 'Automatic'}`;
+          }
+          return `${idx + 1}. ${d.category || ''} - ${d.code || ''}: ${d.comments || 'Manual delay'}`;
+        });
+        return (
+          <div style={{ textAlign: 'left' }}>
+            <strong>Multiple Delays ({allDelays.length}):</strong>
+            {delayDescriptions.map((desc, idx) => (
+              <div key={idx} style={{ marginTop: '4px', fontSize: '11px' }}>{desc}</div>
+            ))}
+            <div style={{ marginTop: '8px', fontSize: '10px', opacity: 0.8 }}>Click to remove</div>
+          </div>
+        );
+      }
       if (delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE') {
         return `Shift Changeover: ${delayInfo.comments || 'Automatic delay'}`;
       }
-      return `Delayed - Click to remove`;
+      return `${delayInfo?.category || ''} - ${delayInfo?.code || ''} - Click to remove`;
     }
     if (taskId) return `${taskId} - Click to add delay`;
     return 'Empty - Click to add delay';
@@ -94,7 +125,12 @@ const ScheduleCell = ({
         >
           {isDelayed && (
             <div className="delay-overlay">
-              {delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE' ? (
+              {hasMultipleDelays ? (
+                <>
+                  <span className="delay-icon">⚠</span>
+                  <span className="multiple-delay-badge">{allDelays.length}</span>
+                </>
+              ) : delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE' ? (
                 <>
                   <span className="delay-icon shift-change-icon">↻</span>
                   <span className="shift-change-label">{delayInfo.shiftCode || 'SHIFT'}</span>

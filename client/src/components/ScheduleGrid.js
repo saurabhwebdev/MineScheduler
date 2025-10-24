@@ -141,7 +141,15 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   };
 
   const getDelayInfo = (site, hour) => {
-    return delayedSlots.find(d => d.row === site && d.hourIndex === hour);
+    // Return ALL delays for this cell (can be multiple)
+    return delayedSlots.filter(d => d.row === site && d.hourIndex === hour);
+  };
+
+  const getPrimaryDelay = (delays) => {
+    if (!delays || delays.length === 0) return null;
+    // Prioritize manual delays over automatic shift changeovers
+    const manualDelay = delays.find(d => !d.isAutomatic);
+    return manualDelay || delays[0];
   };
 
   // Get delay color - uses color from delay model or defaults
@@ -272,9 +280,11 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                   {Array.from({ length: gridHours }, (_, hour) => {
                     const taskId = grid[siteId][hour];
                     const taskColor = taskId ? taskColors[taskId] : null;
-                    const delayInfo = getDelayInfo(siteId, hour);
-                    const delayed = !!delayInfo;
-                    const delayColor = getDelayColor(delayInfo);
+                    const allDelays = getDelayInfo(siteId, hour);
+                    const hasMultipleDelays = allDelays && allDelays.length > 1;
+                    const primaryDelay = getPrimaryDelay(allDelays);
+                    const delayed = allDelays && allDelays.length > 0;
+                    const delayColor = primaryDelay ? getDelayColor(primaryDelay) : null;
 
                     return (
                       <ScheduleCell
@@ -285,7 +295,9 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                         taskColor={taskColor}
                         isActive={isActive}
                         isDelayed={delayed}
-                        delayInfo={delayInfo}
+                        delayInfo={primaryDelay}
+                        allDelays={allDelays}
+                        hasMultipleDelays={hasMultipleDelays}
                         delayColor={delayColor}
                         isCurrentHour={isCurrentHour(hour)}
                         onAddDelay={onAddDelay}
