@@ -466,7 +466,7 @@ const Dashboard = () => {
             </Col>
           )}
 
-          {/* Critical Equipment Attention Board */}
+          {/* Row 1: Critical Equipment & Maintenance Cost */}
           {equipment && equipment.length > 0 && (
             <Col xs={24} lg={12}>
               <Card className="chart-card">
@@ -501,47 +501,12 @@ const Dashboard = () => {
             </Col>
           )}
 
-          {/* Maintenance Cost Breakdown */}
-          {trends && trends.costByEquipmentType && trends.costByEquipmentType.length > 0 && (
+          {trends && trends.delaysByCategory && trends.delaysByCategory.length > 0 && (
             <Col xs={24} lg={12}>
               <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Maintenance Cost by Equipment Type</h3>
-                  <p>Total: ${metrics?.maintenanceCost.total.toLocaleString()}</p>
-                </div>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={trends.costByEquipmentType.slice(0, 6)}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={90}
-                      innerRadius={50}
-                      fill="#8884d8"
-                      dataKey="cost"
-                      nameKey="type"
-                    >
-                      {trends.costByEquipmentType.slice(0, 6).map((entry, index) => {
-                        const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
-                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
-                      })}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </Card>
-            </Col>
-          )}
-
-          {/* Delay Impact Analysis */}
-          {trends && trends.delaysByCategory && trends.delaysByCategory.length > 0 && (
-            <Col xs={24} lg={8}>
-              <Card className="chart-card">
-                <div className="chart-header">
-                  <h3>Delay Impact</h3>
-                  <p>Delays by category</p>
+                  <h3>Delay Impact Analysis</h3>
+                  <p>Delays by category affecting schedule</p>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={trends.delaysByCategory}>
@@ -557,16 +522,16 @@ const Dashboard = () => {
                     />
                     <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="count" fill="#ef4444" radius={[8, 8, 0, 0]} name="Count" />
+                    <Bar dataKey="count" fill="#ef4444" radius={[8, 8, 0, 0]} name="Delays" />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
             </Col>
           )}
 
-          {/* Fleet Health Score */}
+          {/* Row 2: Fleet Health & Schedule Quality */}
           {equipment && equipment.length > 0 && (
-            <Col xs={24} lg={8}>
+            <Col xs={24} lg={12}>
               <Card className="chart-card fleet-health-card">
                 <div className="chart-header">
                   <h3>Fleet Health Score</h3>
@@ -594,9 +559,8 @@ const Dashboard = () => {
             </Col>
           )}
 
-          {/* Schedule Quality Detail */}
           {metrics && metrics.scheduleEfficiency && (
-            <Col xs={24} lg={8}>
+            <Col xs={24} lg={12}>
               <Card className="chart-card quality-detail-card">
                 <div className="chart-header">
                   <h3>Schedule Quality Breakdown</h3>
