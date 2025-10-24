@@ -21,7 +21,7 @@ const DashboardLayout = ({ children, title, subtitle, page }) => {
           {children}
         </div>
         <footer className="dashboard-footer">
-          <p>© {new Date().getFullYear()} Copyright Unison Mining</p>
+          <p>Mine Scheduler™ Powered by Unison Mining Pte Limited</p>
         </footer>
       </div>
       
