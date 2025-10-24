@@ -206,27 +206,82 @@ const Schedule = () => {
     }
   };
 
-  const handleAddDelay = (delay) => {
-    // Add or update delay
-    const existingIndex = delayedSlots.findIndex(
-      d => d.row === delay.row && d.hourIndex === delay.hourIndex
+  const handleAddDelay = async (delay) => {
+    // Add delays for multiple consecutive hours based on duration
+    const duration = delay.duration || 1;
+    const newDelays = [];
+    
+    // Remove any existing delays in the range that will be affected
+    let updatedDelayedSlots = delayedSlots.filter(
+      d => !(d.row === delay.row && d.hourIndex >= delay.hourIndex && d.hourIndex < delay.hourIndex + duration)
     );
-
-    if (existingIndex >= 0) {
-      // Update existing delay
-      const updated = [...delayedSlots];
-      updated[existingIndex] = delay;
-      setDelayedSlots(updated);
-    } else {
-      // Add new delay
-      setDelayedSlots([...delayedSlots, delay]);
+    
+    // Add delay for each hour in the duration
+    for (let i = 0; i < duration; i++) {
+      newDelays.push({
+        row: delay.row,
+        hourIndex: delay.hourIndex + i,
+        category: delay.category,
+        code: delay.code,
+        comments: delay.comments,
+        duration: 1 // Each cell is 1 hour
+      });
     }
+    
+    // Combine with existing delays
+    updatedDelayedSlots = [...updatedDelayedSlots, ...newDelays];
+    setDelayedSlots(updatedDelayedSlots);
 
-    notification.success({
-      message: 'Delay Added',
-      description: 'Delay has been added. Click "Generate Schedule" to apply.',
-      duration: 3
+    // Auto-regenerate schedule
+    notification.info({
+      message: 'Adding Delay',
+      description: `Adding ${duration} hour(s) delay and regenerating schedule...`,
+      duration: 2
     });
+
+    // Wait a moment for state to update, then regenerate
+    setTimeout(async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiUrl}/schedule/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            gridHours,
+            delayedSlots: updatedDelayedSlots
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 'success') {
+          setScheduleData(data.data);
+          setGeneratedAt(data.data.generatedAt);
+          notification.success({
+            message: 'Delay Added',
+            description: `${duration} hour(s) delay added and schedule regenerated`,
+            duration: 2
+          });
+        } else {
+          notification.error({
+            message: 'Error',
+            description: data.message || 'Failed to regenerate schedule',
+          });
+        }
+      } catch (error) {
+        console.error('Error regenerating schedule:', error);
+        notification.error({
+          message: 'Network Error',
+          description: 'Failed to regenerate schedule. Please try again.',
+        });
+      } finally {
+        setLoading(false);
+      }
+    }, 100);
   };
 
   const handleRemoveDelay = (row, hourIndex) => {

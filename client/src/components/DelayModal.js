@@ -109,7 +109,7 @@ const DelayModal = ({ visible, siteId, hour, onClose, onSubmit }) => {
       onCancel={handleCancel}
       confirmLoading={loading}
       width={480}
-      okText="Add Delay"
+      okText="Add Delay & Regenerate"
       cancelText="Cancel"
       className="delay-modal"
       okButtonProps={{
