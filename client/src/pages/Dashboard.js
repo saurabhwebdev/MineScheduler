@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Statistic, Space } from 'antd';
+import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Space, Card, Statistic } from 'antd';
 import { 
   ToolOutlined, 
   CalendarOutlined,
@@ -10,7 +10,10 @@ import {
   ThunderboltOutlined,
   EyeOutlined,
   LineChartOutlined,
-  PieChartOutlined
+  PieChartOutlined,
+  WarningOutlined,
+  ClockCircleOutlined,
+  CheckCircleOutlined
 } from '@ant-design/icons';
 import { 
   BarChart, Bar, Line, PieChart, Pie, XAxis, YAxis, 
@@ -21,7 +24,7 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
 import config from '../config/config';
-import '../components/EquipmentDashboard.css';
+import './Dashboard.css';
 
 const { RangePicker } = DatePicker;
 
@@ -115,21 +118,19 @@ const Dashboard = () => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div style={{
-          backgroundColor: 'rgba(31, 41, 55, 0.95)',
-          padding: '12px',
-          border: 'none',
-          borderRadius: '6px',
-          boxShadow: '0 3px 10px rgba(0,0,0,0.3)'
-        }}>
-          <p style={{ color: '#fff', margin: '0 0 8px 0', fontWeight: 600, fontSize: '13px' }}>
-            {label}
-          </p>
+        <div className="modern-tooltip">
+          <div className="tooltip-label">{label}</div>
           {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color, margin: '4px 0', fontSize: '12px' }}>
-              {entry.name}: <strong>{typeof entry.value === 'number' ? entry.value.toFixed(entry.name.includes('Cost') || entry.name.includes('$') ? 2 : 0) : entry.value}</strong>
-              {entry.name.includes('Cost') || entry.name.includes('$') ? ' $' : entry.name.includes('utilization') || entry.name.includes('%') ? '%' : ''}
-            </p>
+            <div key={index} className="tooltip-item" style={{ color: entry.color }}>
+              <span className="tooltip-name">{entry.name}:</span>
+              <span className="tooltip-value">
+                {typeof entry.value === 'number' ? 
+                  entry.value.toFixed(entry.name.includes('Cost') || entry.name.includes('$') ? 2 : 0) : 
+                  entry.value}
+                {entry.name.includes('Cost') || entry.name.includes('$') ? ' $' : 
+                 entry.name.includes('utilization') || entry.name.includes('%') ? '%' : ''}
+              </span>
+            </div>
           ))}
         </div>
       );
@@ -139,33 +140,32 @@ const Dashboard = () => {
 
   if (loading && !metrics) {
     return (
-      <DashboardLayout title="Dashboard" subtitle="Comprehensive business overview" page="dashboard">
-        <div className="equipment-dashboard-loading">
-          <Spin size="large" tip="Loading dashboard data..." />
+      <DashboardLayout title="Dashboard" subtitle="Business Overview & Analytics" page="dashboard">
+        <div className="dashboard-loading">
+          <Spin size="large" tip="Loading dashboard..." />
         </div>
       </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout title="Dashboard" subtitle="Comprehensive business overview" page="dashboard">
-      <div className="equipment-dashboard">
+    <DashboardLayout title="Dashboard" subtitle="Business Overview & Analytics" page="dashboard">
+      <div className="modern-dashboard">
         {/* Smart Alerts Banner */}
         {metrics && metrics.criticalAlerts && metrics.criticalAlerts.count > 0 && (
           <Alert
-            message="Critical Attention Required"
+            message={`⚠️ ${metrics.criticalAlerts.count} Critical Issue${metrics.criticalAlerts.count > 1 ? 's' : ''} Detected`}
             description={
-              <div>
-                {metrics.criticalAlerts.overdue > 0 && <div>⚠️ {metrics.criticalAlerts.overdue} equipment overdue for maintenance</div>}
-                {metrics.criticalAlerts.outOfService > 0 && <div>🔴 {metrics.criticalAlerts.outOfService} equipment out of service</div>}
-                {metrics.fleetAvailability && parseFloat(metrics.fleetAvailability.percentage) < 80 && <div>📉 Fleet availability below 80%</div>}
-                {metrics.maintenanceCost && metrics.maintenanceCost.trend > 20 && <div>💰 Maintenance costs up {metrics.maintenanceCost.trend}% this period</div>}
-              </div>
+              <Space direction="vertical" size={4}>
+                {metrics.criticalAlerts.overdue > 0 && <span>• {metrics.criticalAlerts.overdue} equipment overdue for maintenance</span>}
+                {metrics.criticalAlerts.outOfService > 0 && <span>• {metrics.criticalAlerts.outOfService} equipment out of service</span>}
+                {metrics.fleetAvailability && parseFloat(metrics.fleetAvailability.percentage) < 80 && <span>• Fleet availability below 80%</span>}
+              </Space>
             }
             type="error"
             showIcon
             closable
-            style={{ marginBottom: 24 }}
+            className="alert-banner"
             action={
               <Button size="small" danger onClick={handleShowCritical}>
                 View Details
@@ -174,300 +174,252 @@ const Dashboard = () => {
           />
         )}
 
-        {/* Quick Action Cards */}
-        <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-          <Col xs={24} sm={12} md={6}>
-            <Button 
-              block 
-              size="large" 
-              icon={<EyeOutlined />}
-              onClick={handleShowCritical}
-              style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-              View Critical Items
-            </Button>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Button 
-              block 
-              size="large"
-              icon={<CalendarOutlined />}
-              onClick={() => navigate('/maintenance-logs')}
-              style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-              Schedule Maintenance
-            </Button>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Button 
-              block 
-              size="large"
-              type="primary"
-              icon={<LineChartOutlined />}
-              onClick={() => navigate('/schedule')}
-              style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-              Generate Schedule
-            </Button>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Button 
-              block 
-              size="large"
-              icon={<PieChartOutlined />}
-              onClick={() => navigate('/maintenance-logs?tab=analytics')}
-              style={{ height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-            >
-              View Cost Report
-            </Button>
-          </Col>
-        </Row>
-
-        {/* Date Range Filter */}
-        <Row gutter={[16, 16]} style={{ marginBottom: 24 }} align="middle">
-          <Col>
-            <span style={{ fontWeight: 600, marginRight: 16 }}>Time Period:</span>
-          </Col>
-          <Col>
+        {/* Quick Actions Bar */}
+        <Card className="actions-card">
+          <div className="actions-header">
+            <div>
+              <h3>Quick Actions</h3>
+              <p>Common workflows and reports</p>
+            </div>
             <Space>
               <Button 
                 type={dateRange === 7 ? 'primary' : 'default'}
                 onClick={() => handleDateRangeChange(7)}
+                size="small"
               >
-                7 Days
+                7d
               </Button>
               <Button 
                 type={dateRange === 30 ? 'primary' : 'default'}
                 onClick={() => handleDateRangeChange(30)}
+                size="small"
               >
-                30 Days
+                30d
               </Button>
               <Button 
                 type={dateRange === 90 ? 'primary' : 'default'}
                 onClick={() => handleDateRangeChange(90)}
+                size="small"
               >
-                90 Days
+                90d
               </Button>
               <RangePicker
                 value={customDateRange}
                 onChange={handleCustomDateRange}
                 format="YYYY-MM-DD"
+                size="small"
               />
             </Space>
-          </Col>
-        </Row>
+          </div>
+          <div className="actions-buttons">
+            <Button 
+              icon={<EyeOutlined />}
+              onClick={handleShowCritical}
+              className="action-btn"
+            >
+              Critical Items
+            </Button>
+            <Button 
+              icon={<CalendarOutlined />}
+              onClick={() => navigate('/maintenance-logs')}
+              className="action-btn"
+            >
+              Maintenance
+            </Button>
+            <Button 
+              type="primary"
+              icon={<LineChartOutlined />}
+              onClick={() => navigate('/schedule')}
+              className="action-btn"
+            >
+              Generate Schedule
+            </Button>
+            <Button 
+              icon={<PieChartOutlined />}
+              onClick={() => navigate('/maintenance-logs')}
+              className="action-btn"
+            >
+              Cost Reports
+            </Button>
+          </div>
+        </Card>
 
-        {/* Hero KPIs - 5 Large Cards */}
+        {/* Hero KPIs Row */}
         {metrics && (
-          <Row gutter={[16, 16]} style={{ marginBottom: 32 }}>
-            {/* Fleet Availability */}
-            <Col xs={24} sm={12} lg={12} xl={12} xxl={12}>
-              <div className="kpi-card" style={{ height: '140px', cursor: 'default' }}>
-                <div className="kpi-header">
-                  <span className="kpi-icon" style={{ backgroundColor: '#e6f9f0', width: '48px', height: '48px' }}>
-                    <ToolOutlined style={{ color: '#3cca70', fontSize: '24px' }} />
-                  </span>
+          <Row gutter={[16, 16]} className="kpis-row">
+            {/* Fleet Availability - Largest Card */}
+            <Col xs={24} sm={12} lg={8}>
+              <Card className="hero-kpi-card fleet-card">
+                <div className="kpi-icon-wrapper fleet">
+                  <ToolOutlined />
                 </div>
-                <Row align="middle" style={{ marginTop: 16 }}>
-                  <Col flex="auto">
-                    <div style={{ fontSize: '36px', fontWeight: 700, color: '#1f2937', lineHeight: 1 }}>
-                      {metrics.fleetAvailability.operational}/{metrics.fleetAvailability.total}
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#6b7280', marginTop: 8 }}>
-                      Fleet Availability
-                    </div>
-                  </Col>
-                  <Col>
-                    <div style={{ 
-                      fontSize: '32px', 
-                      fontWeight: 700, 
-                      color: parseFloat(metrics.fleetAvailability.percentage) >= 90 ? '#3cca70' : 
-                             parseFloat(metrics.fleetAvailability.percentage) >= 75 ? '#faad14' : '#ff4d4f'
-                    }}>
-                      {metrics.fleetAvailability.percentage}%
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+                <div className="kpi-content">
+                  <div className="kpi-main">
+                    <span className="kpi-value">{metrics.fleetAvailability.operational}</span>
+                    <span className="kpi-separator">/</span>
+                    <span className="kpi-total">{metrics.fleetAvailability.total}</span>
+                  </div>
+                  <div className="kpi-label">Fleet Availability</div>
+                  <div className="kpi-percentage" style={{
+                    color: parseFloat(metrics.fleetAvailability.percentage) >= 90 ? '#10b981' : 
+                           parseFloat(metrics.fleetAvailability.percentage) >= 75 ? '#f59e0b' : '#ef4444'
+                  }}>
+                    {metrics.fleetAvailability.percentage}% Available
+                  </div>
+                </div>
+              </Card>
             </Col>
 
             {/* Critical Alerts */}
-            <Col xs={24} sm={12} lg={6} xl={6} xxl={6}>
-              <div 
-                className="kpi-card" 
-                style={{ 
-                  height: '140px', 
-                  cursor: 'pointer',
-                  border: metrics.criticalAlerts.severity === 'critical' ? '2px solid #ff4d4f' : undefined
-                }}
+            <Col xs={24} sm={12} lg={4}>
+              <Card 
+                className={`hero-kpi-card critical-card ${metrics.criticalAlerts.severity === 'critical' ? 'severity-critical' : ''}`}
                 onClick={handleShowCritical}
               >
-                <div className="kpi-header">
-                  <span className="kpi-icon" style={{ 
-                    backgroundColor: metrics.criticalAlerts.severity === 'critical' ? '#fff1f0' : '#fffbe6',
-                    width: '48px', 
-                    height: '48px' 
-                  }}>
-                    <ExclamationCircleOutlined style={{ 
-                      color: metrics.criticalAlerts.severity === 'critical' ? '#ff4d4f' : '#faad14',
-                      fontSize: '24px' 
-                    }} />
-                  </span>
+                <div className="kpi-icon-wrapper critical">
+                  <ExclamationCircleOutlined />
                 </div>
-                <div style={{ fontSize: '48px', fontWeight: 700, color: '#1f2937', marginTop: 16, lineHeight: 1 }}>
-                  {metrics.criticalAlerts.count}
-                </div>
-                <div style={{ fontSize: '14px', color: '#6b7280', marginTop: 8 }}>
-                  Critical Alerts
-                </div>
-                <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: 4 }}>
-                  {metrics.criticalAlerts.overdue} overdue · {metrics.criticalAlerts.outOfService} out-of-service
-                </div>
-              </div>
-            </Col>
-
-            {/* Schedule Efficiency */}
-            <Col xs={24} sm={12} lg={6} xl={6} xxl={6}>
-              <div className="kpi-card" style={{ height: '140px', cursor: 'default' }}>
-                <div className="kpi-header">
-                  <span className="kpi-icon" style={{ backgroundColor: '#e8f4ff', width: '48px', height: '48px' }}>
-                    <LineChartOutlined style={{ color: '#062d54', fontSize: '24px' }} />
-                  </span>
-                </div>
-                <div style={{ marginTop: 16 }}>
-                  <div style={{ fontSize: '32px', fontWeight: 700, color: '#1f2937', lineHeight: 1 }}>
-                    {metrics.scheduleEfficiency.quality}
-                    <span style={{ fontSize: '18px', color: '#6b7280' }}>/100</span>
-                  </div>
-                  <div style={{ fontSize: '14px', color: '#6b7280', marginTop: 8 }}>
-                    Schedule Quality
-                  </div>
-                  <div style={{ marginTop: 8 }}>
-                    <Progress 
-                      percent={metrics.scheduleEfficiency.quality} 
-                      size="small"
-                      strokeColor={
-                        metrics.scheduleEfficiency.quality >= 80 ? '#3cca70' :
-                        metrics.scheduleEfficiency.quality >= 60 ? '#faad14' : '#ff4d4f'
-                      }
-                      showInfo={false}
-                    />
+                <div className="kpi-content">
+                  <div className="kpi-value-large">{metrics.criticalAlerts.count}</div>
+                  <div className="kpi-label">Critical Alerts</div>
+                  <div className="kpi-sublabel">
+                    {metrics.criticalAlerts.overdue} overdue · {metrics.criticalAlerts.outOfService} offline
                   </div>
                 </div>
-              </div>
+              </Card>
             </Col>
 
             {/* Maintenance Cost */}
-            <Col xs={24} sm={12} lg={12} xl={12} xxl={12}>
-              <div className="kpi-card" style={{ height: '140px', cursor: 'default' }}>
-                <div className="kpi-header">
-                  <span className="kpi-icon" style={{ backgroundColor: '#fffbe6', width: '48px', height: '48px' }}>
-                    <DollarOutlined style={{ color: '#faad14', fontSize: '24px' }} />
-                  </span>
+            <Col xs={24} sm={12} lg={6}>
+              <Card className="hero-kpi-card cost-card">
+                <div className="kpi-icon-wrapper cost">
+                  <DollarOutlined />
                 </div>
-                <Row align="middle" style={{ marginTop: 16 }}>
-                  <Col flex="auto">
-                    <div style={{ fontSize: '36px', fontWeight: 700, color: '#1f2937', lineHeight: 1 }}>
-                      ${(metrics.maintenanceCost.total / 1000).toFixed(1)}k
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#6b7280', marginTop: 8 }}>
-                      Maintenance Cost ({dateRange}d)
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: 4 }}>
-                      Labor: ${(metrics.maintenanceCost.laborCost / 1000).toFixed(1)}k · Parts: ${(metrics.maintenanceCost.partsCost / 1000).toFixed(1)}k
-                    </div>
-                  </Col>
-                  <Col>
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '4px',
-                      fontSize: '20px',
-                      fontWeight: 600,
-                      color: metrics.maintenanceCost.trend > 0 ? '#ff4d4f' : '#3cca70'
-                    }}>
+                <div className="kpi-content">
+                  <div className="kpi-value-large">
+                    ${(metrics.maintenanceCost.total / 1000).toFixed(1)}k
+                  </div>
+                  <div className="kpi-label">Maintenance Cost ({dateRange}d)</div>
+                  <div className="kpi-trend-row">
+                    <span className="kpi-sublabel">
+                      Labor ${(metrics.maintenanceCost.laborCost / 1000).toFixed(1)}k · Parts ${(metrics.maintenanceCost.partsCost / 1000).toFixed(1)}k
+                    </span>
+                    <span className={`kpi-trend ${metrics.maintenanceCost.trend > 0 ? 'negative' : 'positive'}`}>
                       {metrics.maintenanceCost.trend > 0 ? <RiseOutlined /> : <FallOutlined />}
                       {Math.abs(metrics.maintenanceCost.trend)}%
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+                    </span>
+                  </div>
+                </div>
+              </Card>
             </Col>
 
-            {/* Active Operations */}
-            <Col xs={24} sm={12} lg={12} xl={12} xxl={12}>
-              <div className="kpi-card" style={{ height: '140px', cursor: 'default' }}>
-                <div className="kpi-header">
-                  <span className="kpi-icon" style={{ backgroundColor: '#e8f4ff', width: '48px', height: '48px' }}>
-                    <ThunderboltOutlined style={{ color: '#062d54', fontSize: '24px' }} />
-                  </span>
+            {/* Schedule Quality */}
+            <Col xs={24} sm={12} lg={6}>
+              <Card className="hero-kpi-card quality-card">
+                <div className="kpi-icon-wrapper quality">
+                  <LineChartOutlined />
                 </div>
-                <div style={{ marginTop: 16 }}>
-                  <Row gutter={16}>
-                    <Col span={8}>
-                      <Statistic 
-                        title="Active Sites" 
-                        value={metrics.activeOperations.activeSites}
-                        suffix={`/${metrics.activeOperations.totalSites}`}
-                        valueStyle={{ fontSize: '24px', fontWeight: 700 }}
-                      />
-                    </Col>
-                    <Col span={8}>
-                      <Statistic 
-                        title="Total Tasks" 
-                        value={metrics.activeOperations.totalTasks}
-                        valueStyle={{ fontSize: '24px', fontWeight: 700 }}
-                      />
-                    </Col>
-                    <Col span={8}>
-                      <Statistic 
-                        title="Delays" 
-                        value={metrics.activeOperations.delays}
-                        valueStyle={{ fontSize: '24px', fontWeight: 700, color: '#ff4d4f' }}
-                      />
-                    </Col>
-                  </Row>
+                <div className="kpi-content">
+                  <div className="kpi-value-with-max">
+                    <span className="kpi-value-large">{metrics.scheduleEfficiency.quality}</span>
+                    <span className="kpi-max">/100</span>
+                  </div>
+                  <div className="kpi-label">Schedule Quality</div>
+                  <Progress 
+                    percent={metrics.scheduleEfficiency.quality} 
+                    strokeColor={
+                      metrics.scheduleEfficiency.quality >= 80 ? '#10b981' :
+                      metrics.scheduleEfficiency.quality >= 60 ? '#f59e0b' : '#ef4444'
+                    }
+                    showInfo={false}
+                    size="small"
+                    className="quality-progress"
+                  />
                 </div>
-              </div>
+              </Card>
+            </Col>
+          </Row>
+        )}
+
+        {/* Secondary KPIs Row */}
+        {metrics && (
+          <Row gutter={[16, 16]} className="secondary-kpis-row">
+            <Col xs={12} sm={6} lg={3}>
+              <Card className="mini-kpi-card">
+                <Statistic
+                  title="Active Sites"
+                  value={metrics.activeOperations.activeSites}
+                  suffix={`/${metrics.activeOperations.totalSites}`}
+                  prefix={<ThunderboltOutlined />}
+                  valueStyle={{ fontSize: '20px', fontWeight: 700 }}
+                />
+              </Card>
+            </Col>
+            <Col xs={12} sm={6} lg={3}>
+              <Card className="mini-kpi-card">
+                <Statistic
+                  title="Total Tasks"
+                  value={metrics.activeOperations.totalTasks}
+                  prefix={<CheckCircleOutlined />}
+                  valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#10b981' }}
+                />
+              </Card>
+            </Col>
+            <Col xs={12} sm={6} lg={3}>
+              <Card className="mini-kpi-card">
+                <Statistic
+                  title="Delays"
+                  value={metrics.activeOperations.delays}
+                  prefix={<WarningOutlined />}
+                  valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#ef4444' }}
+                />
+              </Card>
+            </Col>
+            <Col xs={12} sm={6} lg={3}>
+              <Card className="mini-kpi-card">
+                <Statistic
+                  title="Due Soon (7d)"
+                  value={metrics.criticalAlerts.dueSoon}
+                  prefix={<ClockCircleOutlined />}
+                  valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#f59e0b' }}
+                />
+              </Card>
             </Col>
           </Row>
         )}
 
         {/* Charts Section */}
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} className="charts-section">
           {/* Fleet Performance Timeline - Full Width */}
           {performance && performance.length > 0 && (
             <Col xs={24}>
-              <div className="dashboard-chart">
+              <Card className="chart-card">
                 <div className="chart-header">
                   <h3>Fleet Performance Timeline (24 Hours)</h3>
-                  <span className="chart-subtitle">Equipment status and schedule utilization by hour</span>
+                  <p>Equipment status distribution and schedule utilization by hour</p>
                 </div>
-                <ResponsiveContainer width="100%" height={320}>
+                <ResponsiveContainer width="100%" height={300}>
                   <ComposedChart data={performance}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                     <XAxis 
                       dataKey="hour" 
-                      tick={{ fontSize: 11, fill: '#8c8c8c' }} 
+                      tick={{ fontSize: 11, fill: '#6b7280' }} 
                       axisLine={false} 
                       tickLine={false}
-                      label={{ value: 'Hour', position: 'insideBottom', offset: -5, style: { fontSize: 12, fill: '#6b7280' } }}
                     />
                     <YAxis 
                       yAxisId="left"
-                      tick={{ fontSize: 11, fill: '#8c8c8c' }} 
+                      tick={{ fontSize: 11, fill: '#6b7280' }} 
                       axisLine={false} 
                       tickLine={false}
-                      label={{ value: 'Equipment Count', angle: -90, position: 'insideLeft', style: { fontSize: 12, fill: '#6b7280' } }}
                     />
                     <YAxis 
                       yAxisId="right"
                       orientation="right"
-                      tick={{ fontSize: 11, fill: '#8c8c8c' }} 
+                      tick={{ fontSize: 11, fill: '#6b7280' }} 
                       axisLine={false} 
                       tickLine={false}
                       domain={[0, 100]}
-                      label={{ value: 'Utilization %', angle: 90, position: 'insideRight', style: { fontSize: 12, fill: '#6b7280' } }}
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
@@ -475,228 +427,224 @@ const Dashboard = () => {
                       yAxisId="left"
                       type="monotone" 
                       dataKey="operational" 
-                      stroke="#3cca70" 
+                      stroke="#10b981" 
                       strokeWidth={3}
                       name="Operational"
-                      dot={{ fill: '#3cca70', r: 3 }}
+                      dot={{ fill: '#10b981', r: 3 }}
                     />
                     <Line 
                       yAxisId="left"
                       type="monotone" 
                       dataKey="maintenance" 
-                      stroke="#faad14" 
+                      stroke="#f59e0b" 
                       strokeWidth={2}
                       name="In Maintenance"
-                      dot={{ fill: '#faad14', r: 3 }}
+                      dot={{ fill: '#f59e0b', r: 3 }}
                     />
                     <Line 
                       yAxisId="left"
                       type="monotone" 
                       dataKey="outOfService" 
-                      stroke="#ff4d4f" 
+                      stroke="#ef4444" 
                       strokeWidth={2}
                       name="Out of Service"
-                      dot={{ fill: '#ff4d4f', r: 3 }}
+                      dot={{ fill: '#ef4444', r: 3 }}
                     />
                     <Area
                       yAxisId="right"
                       type="monotone"
                       dataKey="utilization"
-                      fill="#062d54"
+                      fill="#3b82f6"
                       fillOpacity={0.1}
-                      stroke="#062d54"
+                      stroke="#3b82f6"
                       strokeWidth={2}
                       name="Utilization %"
                     />
                   </ComposedChart>
                 </ResponsiveContainer>
-              </div>
+              </Card>
             </Col>
           )}
 
           {/* Critical Equipment Attention Board */}
           {equipment && equipment.length > 0 && (
             <Col xs={24} lg={12}>
-              <div className="dashboard-chart">
+              <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Critical Equipment Attention Board</h3>
-                  <span className="chart-subtitle">Equipment requiring immediate action by type</span>
+                  <h3>Critical Equipment Attention</h3>
+                  <p>Equipment requiring immediate action by type</p>
                 </div>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={280}>
                   <BarChart 
                     data={getCriticalEquipmentData(equipment)}
                     layout="vertical"
                     margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis type="number" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                    <XAxis type="number" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} />
                     <YAxis 
                       type="category" 
                       dataKey="type" 
-                      tick={{ fontSize: 11, fill: '#8c8c8c' }} 
+                      tick={{ fontSize: 11, fill: '#374151' }} 
                       axisLine={false} 
                       tickLine={false}
                       width={90}
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="overdue" stackId="a" fill="#ff4d4f" name="Overdue" radius={[0, 8, 8, 0]} />
-                    <Bar dataKey="dueSoon" stackId="a" fill="#faad14" name="Due Soon" radius={[0, 8, 8, 0]} />
-                    <Bar dataKey="outOfService" stackId="a" fill="#8c8c8c" name="Out of Service" radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="overdue" stackId="a" fill="#ef4444" name="Overdue" radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="dueSoon" stackId="a" fill="#f59e0b" name="Due Soon" radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="outOfService" stackId="a" fill="#6b7280" name="Offline" radius={[0, 8, 8, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
+              </Card>
             </Col>
           )}
 
           {/* Maintenance Cost Breakdown */}
           {trends && trends.costByEquipmentType && trends.costByEquipmentType.length > 0 && (
             <Col xs={24} lg={12}>
-              <div className="dashboard-chart">
+              <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Maintenance Cost Breakdown ({dateRange} Days)</h3>
-                  <span className="chart-subtitle">Total: ${metrics?.maintenanceCost.total.toFixed(0)}</span>
+                  <h3>Maintenance Cost by Equipment Type</h3>
+                  <p>Total: ${metrics?.maintenanceCost.total.toLocaleString()}</p>
                 </div>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
                     <Pie
-                      data={trends.costByEquipmentType.slice(0, 8)}
+                      data={trends.costByEquipmentType.slice(0, 6)}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
                       label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={100}
-                      innerRadius={60}
+                      outerRadius={90}
+                      innerRadius={50}
                       fill="#8884d8"
                       dataKey="cost"
                       nameKey="type"
                     >
-                      {trends.costByEquipmentType.slice(0, 8).map((entry, index) => {
-                        const colors = ['#ff4d4f', '#faad14', '#3cca70', '#062d54', '#597ef7', '#13c2c2', '#eb2f96', '#722ed1'];
+                      {trends.costByEquipmentType.slice(0, 6).map((entry, index) => {
+                        const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
                         return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
                       })}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
-              </div>
-            </Col>
-          )}
-
-          {/* Schedule Quality Score */}
-          {metrics && metrics.scheduleEfficiency && (
-            <Col xs={24} lg={8}>
-              <div className="dashboard-chart">
-                <div className="chart-header">
-                  <h3>Schedule Quality Score</h3>
-                  <span className="chart-subtitle">Overall scheduling effectiveness</span>
-                </div>
-                <div style={{ 
-                  height: 300, 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  padding: '20px'
-                }}>
-                  <div style={{ 
-                    fontSize: '72px', 
-                    fontWeight: 700,
-                    color: metrics.scheduleEfficiency.quality >= 80 ? '#3cca70' :
-                           metrics.scheduleEfficiency.quality >= 60 ? '#faad14' : '#ff4d4f'
-                  }}>
-                    {metrics.scheduleEfficiency.quality}
-                  </div>
-                  <div style={{ fontSize: '20px', color: '#6b7280', marginBottom: 20 }}>
-                    out of 100
-                  </div>
-                  <Progress 
-                    type="dashboard" 
-                    percent={metrics.scheduleEfficiency.quality}
-                    strokeColor={{
-                      '0%': metrics.scheduleEfficiency.quality >= 80 ? '#3cca70' :
-                            metrics.scheduleEfficiency.quality >= 60 ? '#faad14' : '#ff4d4f',
-                      '100%': metrics.scheduleEfficiency.quality >= 80 ? '#3cca70' :
-                              metrics.scheduleEfficiency.quality >= 60 ? '#faad14' : '#ff4d4f',
-                    }}
-                    style={{ marginBottom: 20 }}
-                  />
-                  <div style={{ textAlign: 'center', fontSize: '12px', color: '#6b7280' }}>
-                    <div>Utilization: {metrics.scheduleEfficiency.utilization.toFixed(1)}%</div>
-                    <div>Conflicts: {metrics.scheduleEfficiency.conflicts}</div>
-                    <div>Task Completion: {metrics.scheduleEfficiency.taskCompletion}%</div>
-                  </div>
-                </div>
-              </div>
+              </Card>
             </Col>
           )}
 
           {/* Delay Impact Analysis */}
           {trends && trends.delaysByCategory && trends.delaysByCategory.length > 0 && (
             <Col xs={24} lg={8}>
-              <div className="dashboard-chart">
+              <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Delay Impact Analysis</h3>
-                  <span className="chart-subtitle">Delays by category</span>
+                  <h3>Delay Impact</h3>
+                  <p>Delays by category</p>
                 </div>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={trends.delaysByCategory}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                     <XAxis 
                       dataKey="category" 
-                      tick={{ fontSize: 10, fill: '#8c8c8c' }} 
+                      tick={{ fontSize: 10, fill: '#6b7280' }} 
                       axisLine={false} 
                       tickLine={false}
                       angle={-45}
                       textAnchor="end"
                       height={80}
                     />
-                    <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="count" fill="#ff4d4f" radius={[8, 8, 0, 0]} name="Delay Count" />
+                    <Bar dataKey="count" fill="#ef4444" radius={[8, 8, 0, 0]} name="Count" />
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
+              </Card>
             </Col>
           )}
 
           {/* Fleet Health Score */}
           {equipment && equipment.length > 0 && (
             <Col xs={24} lg={8}>
-              <div className="dashboard-chart">
+              <Card className="chart-card fleet-health-card">
                 <div className="chart-header">
                   <h3>Fleet Health Score</h3>
-                  <span className="chart-subtitle">Status distribution by equipment type</span>
+                  <p>Operational status by type</p>
                 </div>
-                <div style={{ padding: '20px' }}>
-                  {getFleetHealthData(equipment).map((item, index) => (
-                    <div key={index} style={{ marginBottom: 16 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <span style={{ fontSize: '13px', fontWeight: 500 }}>{item.type}</span>
-                        <span style={{ fontSize: '12px', color: '#6b7280' }}>
-                          {item.operational}/{item.total}
-                        </span>
+                <div className="health-list">
+                  {getFleetHealthData(equipment).slice(0, 5).map((item, index) => (
+                    <div key={index} className="health-item">
+                      <div className="health-header">
+                        <span className="health-type">{item.type}</span>
+                        <span className="health-stats">{item.operational}/{item.total}</span>
                       </div>
                       <Progress 
-                        percent={item.percentage}
-                        strokeColor={item.percentage >= 90 ? '#3cca70' : item.percentage >= 75 ? '#faad14' : '#ff4d4f'}
+                        percent={parseFloat(item.percentage)}
+                        strokeColor={
+                          parseFloat(item.percentage) >= 90 ? '#10b981' : 
+                          parseFloat(item.percentage) >= 75 ? '#f59e0b' : '#ef4444'
+                        }
                         size="small"
                       />
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
+            </Col>
+          )}
+
+          {/* Schedule Quality Detail */}
+          {metrics && metrics.scheduleEfficiency && (
+            <Col xs={24} lg={8}>
+              <Card className="chart-card quality-detail-card">
+                <div className="chart-header">
+                  <h3>Schedule Quality Breakdown</h3>
+                  <p>Components contributing to overall score</p>
+                </div>
+                <div className="quality-breakdown">
+                  <div className="quality-score-circle">
+                    <Progress 
+                      type="circle" 
+                      percent={metrics.scheduleEfficiency.quality}
+                      strokeColor={{
+                        '0%': metrics.scheduleEfficiency.quality >= 80 ? '#10b981' :
+                              metrics.scheduleEfficiency.quality >= 60 ? '#f59e0b' : '#ef4444',
+                        '100%': metrics.scheduleEfficiency.quality >= 80 ? '#10b981' :
+                                metrics.scheduleEfficiency.quality >= 60 ? '#f59e0b' : '#ef4444',
+                      }}
+                      format={() => <div className="score-text">{metrics.scheduleEfficiency.quality}<span className="score-label">/100</span></div>}
+                      width={120}
+                    />
+                  </div>
+                  <div className="quality-metrics">
+                    <div className="quality-metric">
+                      <span className="metric-label">Utilization</span>
+                      <span className="metric-value">{metrics.scheduleEfficiency.utilization.toFixed(1)}%</span>
+                    </div>
+                    <div className="quality-metric">
+                      <span className="metric-label">Conflicts</span>
+                      <span className="metric-value">{metrics.scheduleEfficiency.conflicts}</span>
+                    </div>
+                    <div className="quality-metric">
+                      <span className="metric-label">Completion</span>
+                      <span className="metric-value">{metrics.scheduleEfficiency.taskCompletion}%</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </Col>
           )}
         </Row>
 
         {/* Critical Equipment Modal */}
         <Modal
-          title="Critical Equipment Attention Required"
+          title="Critical Equipment Requiring Attention"
           open={criticalModalVisible}
           onCancel={() => setCriticalModalVisible(false)}
           footer={null}
           width={900}
+          className="modern-modal"
         >
           <Table
             dataSource={criticalEquipment}
@@ -707,7 +655,8 @@ const Dashboard = () => {
                 title: 'Equipment ID',
                 dataIndex: 'equipmentId',
                 key: 'equipmentId',
-                width: 120
+                width: 120,
+                render: (text) => <strong>{text}</strong>
               },
               {
                 title: 'Name',
@@ -725,9 +674,9 @@ const Dashboard = () => {
                 key: 'status',
                 render: (status) => {
                   const colors = {
-                    operational: 'green',
-                    maintenance: 'orange',
-                    'out-of-service': 'red'
+                    operational: 'success',
+                    maintenance: 'warning',
+                    'out-of-service': 'error'
                   };
                   return <Tag color={colors[status]}>{status.replace('-', ' ').toUpperCase()}</Tag>;
                 }
@@ -742,10 +691,10 @@ const Dashboard = () => {
                   
                   if (isOverdue) {
                     const daysOverdue = Math.floor((now - new Date(record.nextMaintenance)) / (1000 * 60 * 60 * 24));
-                    return <Tag color="red">Maintenance Overdue ({daysOverdue} days)</Tag>;
+                    return <Tag color="error">Maintenance Overdue ({daysOverdue} days)</Tag>;
                   }
                   if (isOutOfService) {
-                    return <Tag color="red">Out of Service</Tag>;
+                    return <Tag color="error">Out of Service</Tag>;
                   }
                   return '-';
                 }
