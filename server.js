@@ -54,6 +54,7 @@ app.use('/api/schedule', require('./routes/schedule'));
 app.use('/api/snapshots', require('./routes/snapshots'));
 app.use('/api/maintenance', require('./routes/maintenance'));
 app.use('/api/maintenance-logs', require('./routes/maintenanceLogs'));
+app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
