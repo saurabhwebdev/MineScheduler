@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Form, Input, Switch, notification, Upload, Alert, Descriptions, Tag, Select, InputNumber, Radio } from 'antd';
+import { Table, Modal, Form, Input, Switch, notification, Upload, Alert, Descriptions, Tag, ColorPicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
@@ -22,7 +22,6 @@ const Delays = () => {
   const [importResults, setImportResults] = useState(null);
   const [selectedDelay, setSelectedDelay] = useState(null);
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
-  const [delayType, setDelayType] = useState('custom');
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 15,
@@ -68,21 +67,18 @@ const Delays = () => {
     form.resetFields();
     form.setFieldsValue({ 
       isActive: true,
-      delayType: 'custom'
+      color: '#ff4d4f'
     });
-    setDelayType('custom');
     setIsModalVisible(true);
   };
 
   const handleEditDelay = (delay) => {
     setEditingDelay(delay);
-    setDelayType(delay.delayType || 'custom');
     form.setFieldsValue({
       delayCategory: delay.delayCategory,
       delayCode: delay.delayCode,
-      delayType: delay.delayType || 'custom',
       description: delay.description,
-      delayDuration: delay.delayDuration || null,
+      color: delay.color || '#ff4d4f',
       isActive: delay.isActive,
     });
     setIsModalVisible(true);
@@ -91,6 +87,10 @@ const Delays = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
+      // Convert color object to hex string if needed
+      if (values.color && typeof values.color === 'object') {
+        values.color = values.color.toHexString();
+      }
       const token = localStorage.getItem('token');
 
       if (editingDelay) {
@@ -198,25 +198,22 @@ const Delays = () => {
       {
         delayCategory: 'Equipment',
         delayCode: 'EQ-001',
-        delayType: 'standard',
-        delayDuration: 60,
         description: 'Equipment breakdown or maintenance delay',
+        color: '#ff4d4f',
         isActive: 'Active'
       },
       {
         delayCategory: 'Safety',
         delayCode: 'SF-001',
-        delayType: 'standard',
-        delayDuration: 30,
         description: 'Safety inspection delay',
+        color: '#faad14',
         isActive: 'Active'
       },
       {
         delayCategory: 'Weather',
         delayCode: 'WT-001',
-        delayType: 'custom',
-        delayDuration: '',
-        description: 'Heavy rain delay (custom duration)',
+        description: 'Heavy rain delay',
+        color: '#1890ff',
         isActive: 'Active'
       }
     ];
@@ -228,9 +225,8 @@ const Delays = () => {
     ws['!cols'] = [
       { wch: 20 },  // delayCategory
       { wch: 15 },  // delayCode
-      { wch: 15 },  // delayType
-      { wch: 15 },  // delayDuration
       { wch: 50 },  // description
+      { wch: 12 },  // color
       { wch: 12 }   // isActive
     ];
 
@@ -344,35 +340,30 @@ const Delays = () => {
       sorter: (a, b) => a.delayCode.localeCompare(b.delayCode),
     },
     {
-      title: 'TYPE',
-      dataIndex: 'delayType',
-      key: 'delayType',
-      width: 110,
-      render: (type) => (
-        <Tag color={type === 'standard' ? 'blue' : 'default'}>
-          {type === 'standard' ? 'Standard' : 'Custom'}
-        </Tag>
-      ),
-      filters: [
-        { text: 'Standard', value: 'standard' },
-        { text: 'Custom', value: 'custom' },
-      ],
-      onFilter: (value, record) => record.delayType === value,
-    },
-    {
       title: 'DESCRIPTION',
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
     },
     {
-      title: 'DURATION (MIN)',
-      dataIndex: 'delayDuration',
-      key: 'delayDuration',
-      width: 130,
-      render: (duration, record) => 
-        record.delayType === 'standard' && duration !== null ? `${duration} min` : '-',
-      sorter: (a, b) => (a.delayDuration || 0) - (b.delayDuration || 0),
+      title: 'COLOR',
+      dataIndex: 'color',
+      key: 'color',
+      width: 100,
+      render: (color) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div 
+            style={{ 
+              width: '24px', 
+              height: '24px', 
+              backgroundColor: color || '#ff4d4f',
+              border: '1px solid #d9d9d9',
+              borderRadius: '4px'
+            }}
+          />
+          <span style={{ fontSize: '11px', color: '#8c8c8c' }}>{color || '#ff4d4f'}</span>
+        </div>
+      ),
     },
     {
       title: 'STATUS',
@@ -492,38 +483,30 @@ const Delays = () => {
             </Form.Item>
 
             <Form.Item
-              label="Delay Type"
-              name="delayType"
-              rules={[{ required: true, message: 'Required' }]}
-              tooltip="Standard delays have pre-defined durations, Custom delays are ad-hoc"
+              label="Delay Color"
+              name="color"
+              tooltip="Visual color for this delay category"
             >
-              <Radio.Group 
-                onChange={(e) => setDelayType(e.target.value)}
-                buttonStyle="solid"
-              >
-                <Radio.Button value="standard">Standard Delay</Radio.Button>
-                <Radio.Button value="custom">Custom Delay</Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-
-            {delayType === 'standard' && (
-              <Form.Item
-                label="Delay Duration (Minutes)"
-                name="delayDuration"
-                rules={[
-                  { required: true, message: 'Duration is required for standard delays' },
-                  { type: 'number', min: 0, message: 'Must be positive' }
+              <ColorPicker 
+                showText
+                format="hex"
+                presets={[
+                  {
+                    label: 'Recommended',
+                    colors: [
+                      '#ff4d4f',
+                      '#faad14',
+                      '#1890ff',
+                      '#52c41a',
+                      '#722ed1',
+                      '#eb2f96',
+                      '#fa8c16',
+                      '#13c2c2',
+                    ],
+                  },
                 ]}
-                tooltip="Typical duration for this standard delay in minutes"
-              >
-                <InputNumber 
-                  style={{ width: '100%' }}
-                  min={0}
-                  placeholder="e.g., 30, 60, 120"
-                  addonAfter="minutes"
-                />
-              </Form.Item>
-            )}
+              />
+            </Form.Item>
 
             <Form.Item
               label="Description"
@@ -602,9 +585,8 @@ const Delays = () => {
                   <ul style={{ marginLeft: '20px', marginBottom: '8px' }}>
                     <li><strong>delayCategory</strong> - Category of the delay (required)</li>
                     <li><strong>delayCode</strong> - Unique code for the delay (required)</li>
-                    <li><strong>delayType</strong> - Type: "standard" or "custom" (optional, defaults to custom)</li>
-                    <li><strong>delayDuration</strong> - Duration in minutes (required for standard delays)</li>
                     <li><strong>description</strong> - Description of the delay (required)</li>
+                    <li><strong>color</strong> - Hex color code (optional, defaults to #ff4d4f)</li>
                     <li><strong>isActive</strong> - Status: Active/Inactive (optional, defaults to Active)</li>
                   </ul>
                   <p style={{ marginBottom: 0 }}>Download the template below to see the format.</p>
@@ -707,16 +689,20 @@ const Delays = () => {
               <Descriptions.Item label="Delay Code">
                 <strong style={{ color: '#062d54' }}>{selectedDelay.delayCode}</strong>
               </Descriptions.Item>
-              <Descriptions.Item label="Delay Type">
-                <Tag color={selectedDelay.delayType === 'standard' ? 'blue' : 'default'}>
-                  {selectedDelay.delayType === 'standard' ? 'Standard Delay' : 'Custom Delay'}
-                </Tag>
+              <Descriptions.Item label="Color">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div 
+                    style={{ 
+                      width: '32px', 
+                      height: '32px', 
+                      backgroundColor: selectedDelay.color || '#ff4d4f',
+                      border: '2px solid #d9d9d9',
+                      borderRadius: '6px'
+                    }}
+                  />
+                  <span style={{ fontWeight: 500 }}>{selectedDelay.color || '#ff4d4f'}</span>
+                </div>
               </Descriptions.Item>
-              {selectedDelay.delayType === 'standard' && selectedDelay.delayDuration && (
-                <Descriptions.Item label="Delay Duration">
-                  <strong>{selectedDelay.delayDuration} minutes</strong>
-                </Descriptions.Item>
-              )}
               <Descriptions.Item label="Description">
                 {selectedDelay.description}
               </Descriptions.Item>
