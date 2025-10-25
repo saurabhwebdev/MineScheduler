@@ -41,10 +41,12 @@ const MaintenanceLogs = () => {
     fetchLogs();
     fetchEquipment();
     fetchStats();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchLogs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const fetchLogs = async () => {

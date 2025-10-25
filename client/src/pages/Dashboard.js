@@ -17,8 +17,8 @@ import {
   InfoCircleOutlined
 } from '@ant-design/icons';
 import { 
-  BarChart, Bar, Line, PieChart, Pie, XAxis, YAxis, 
-  CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, 
+  BarChart, Bar, Line, XAxis, YAxis, 
+  CartesianGrid, Tooltip, ResponsiveContainer, Legend, 
   Area, ComposedChart 
 } from 'recharts';
 import moment from 'moment';
