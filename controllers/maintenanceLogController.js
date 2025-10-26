@@ -637,13 +637,20 @@ exports.getMaintenanceAnalytics = async (req, res) => {
         }
       });
     
-    const mtbfData = Object.keys(mtbfByType).map(type => ({
-      type,
-      mtbf: mtbfByType[type].failures > 0 
-        ? (mtbfByType[type].totalHours / mtbfByType[type].failures).toFixed(0)
-        : mtbfByType[type].totalHours.toFixed(0),
-      failures: mtbfByType[type].failures
-    })).sort((a, b) => b.mtbf - a.mtbf);
+    const mtbfData = Object.keys(mtbfByType)
+      .filter(type => mtbfByType[type].totalHours > 0) // Filter out types with no operating hours
+      .map(type => {
+        const mtbfValue = mtbfByType[type].failures > 0 
+          ? mtbfByType[type].totalHours / mtbfByType[type].failures
+          : mtbfByType[type].totalHours;
+        return {
+          type,
+          mtbf: parseFloat(mtbfValue.toFixed(0)),
+          failures: mtbfByType[type].failures,
+          totalHours: mtbfByType[type].totalHours
+        };
+      })
+      .sort((a, b) => b.mtbf - a.mtbf);
     
     // 6. MTTR (Mean Time To Repair) by Equipment Type
     const mttrByType = {};
@@ -659,7 +666,7 @@ exports.getMaintenanceAnalytics = async (req, res) => {
     
     const mttrData = Object.keys(mttrByType).map(type => ({
       type,
-      mttr: (mttrByType[type].totalDuration / mttrByType[type].count).toFixed(1),
+      mttr: parseFloat((mttrByType[type].totalDuration / mttrByType[type].count).toFixed(1)),
       count: mttrByType[type].count
     })).sort((a, b) => a.mttr - b.mttr);
     
