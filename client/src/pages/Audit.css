@@ -1,41 +1,112 @@
-/* Ultra Minimal Flat Design - Same as User Management */
+/* Ultra Minimal Flat Design - No Rounded Corners, No Hover Effects */
 .audit-page {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Table */
+/* Table Container - Pure flat white box */
 .table-container {
   background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border: 1px solid #dfe3e8;
+  border-radius: 0;
+  overflow: hidden;
 }
 
+/* Table - Minimal flat styling */
 .table-container .ant-table {
   font-size: 13px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
+/* Remove all border radius */
+.table-container .ant-table-container,
+.table-container .ant-table-content,
+.table-container .ant-table-wrapper {
+  border-radius: 0 !important;
+}
+
+/* Table Header - Flat minimal header */
 .table-container .ant-table-thead > tr > th {
-  background-color: #f8f9fa;
-  color: #595959;
+  background-color: #f5f7fa;
+  color: #4a5568;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid #e0e0e0;
-  letter-spacing: 0.3px;
+  border-right: 1px solid #dfe3e8;
+  border-bottom: 1px solid #dfe3e8;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: none;
+  border-radius: 0 !important;
 }
 
+/* Remove last header border */
+.table-container .ant-table-thead > tr > th:last-child {
+  border-right: none;
+}
+
+/* Remove column resize handle */
 .table-container .ant-table-thead > tr > th::before {
-  display: none;
+  display: none !important;
 }
 
+/* Table Body Cells - Flat cells with grid lines */
 .table-container .ant-table-tbody > tr > td {
   padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  color: #262626;
+  border-right: 1px solid #dfe3e8;
+  border-bottom: 1px solid #dfe3e8;
+  color: #2d3748;
+  background-color: #ffffff;
+  transition: none;
+  border-radius: 0 !important;
 }
 
+/* Remove last cell border */
+.table-container .ant-table-tbody > tr > td:last-child {
+  border-right: none;
+}
+
+/* No hover effects */
 .table-container .ant-table-tbody > tr:hover > td {
-  background-color: #fafafa;
+  background-color: #ffffff;
+  cursor: default;
+}
+
+/* Disable all Ant Design animations and effects */
+.table-container .ant-table-cell,
+.table-container .ant-table-tbody > tr,
+.table-container .ant-table-tbody > tr > td,
+.table-container .ant-table-thead > tr > th,
+.table-container .ant-pagination-item,
+.table-container .ant-pagination-item a,
+.table-container .ant-pagination-prev button,
+.table-container .ant-pagination-next button {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Remove ripple effect and any transform on hover */
+.table-container .ant-table-tbody > tr::after,
+.table-container .ant-table-cell::after,
+.table-container .ant-pagination-item::after,
+.table-container .ant-wave {
+  display: none !important;
+  animation: none !important;
+}
+
+/* Force no transform on hover or any state */
+.table-container .ant-table-tbody > tr:hover,
+.table-container .ant-table-tbody > tr:active,
+.table-container .ant-table-tbody > tr:focus {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.table-container .ant-table-tbody > tr:hover > td,
+.table-container .ant-table-tbody > tr:active > td,
+.table-container .ant-table-tbody > tr:focus > td {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Action Badge */
@@ -62,7 +133,7 @@
   color: #cf1322;
 }
 
-/* Pagination - Minimal Flat Design */
+/* Pagination - Ultra Flat Minimal Design */
 .table-container .ant-pagination {
   margin: 16px;
   font-size: 13px;
@@ -70,40 +141,44 @@
 
 /* Pagination Items */
 .table-container .ant-pagination-item {
-  border: 1px solid #e0e0e0;
-  border-radius: 3px;
+  border: 1px solid #dfe3e8;
+  border-radius: 0;
   background-color: #ffffff;
-  min-width: 30px;
-  height: 30px;
-  line-height: 28px;
+  min-width: 32px;
+  height: 32px;
+  line-height: 30px;
+  transition: none;
 }
 
 .table-container .ant-pagination-item a {
-  color: #595959;
+  color: #4a5568;
   font-size: 13px;
+  font-weight: 500;
 }
 
 .table-container .ant-pagination-item:hover {
-  border-color: #3cca70;
+  border-color: #dfe3e8;
+  background-color: #ffffff;
 }
 
 .table-container .ant-pagination-item:hover a {
-  color: #3cca70;
+  color: #4a5568;
 }
 
 /* Active Page */
 .table-container .ant-pagination-item-active {
-  border-color: #3cca70;
-  background-color: #3cca70;
+  border-color: #2d3748;
+  background-color: #2d3748;
 }
 
 .table-container .ant-pagination-item-active a {
   color: #ffffff;
+  font-weight: 600;
 }
 
 .table-container .ant-pagination-item-active:hover {
-  border-color: #3cca70;
-  background-color: #3cca70;
+  border-color: #2d3748;
+  background-color: #2d3748;
 }
 
 .table-container .ant-pagination-item-active:hover a {
@@ -113,35 +188,38 @@
 /* Previous/Next Buttons */
 .table-container .ant-pagination-prev,
 .table-container .ant-pagination-next {
-  min-width: 30px;
-  height: 30px;
-  line-height: 28px;
+  min-width: 32px;
+  height: 32px;
+  line-height: 30px;
 }
 
 .table-container .ant-pagination-prev button,
 .table-container .ant-pagination-next button {
-  border: 1px solid #e0e0e0;
-  border-radius: 3px;
+  border: 1px solid #dfe3e8;
+  border-radius: 0;
   background-color: #ffffff;
-  color: #595959;
-  height: 30px;
+  color: #4a5568;
+  height: 32px;
+  transition: none;
 }
 
 .table-container .ant-pagination-prev:hover button,
 .table-container .ant-pagination-next:hover button {
-  border-color: #3cca70;
-  color: #3cca70;
+  border-color: #dfe3e8;
+  background-color: #ffffff;
+  color: #4a5568;
 }
 
 .table-container .ant-pagination-disabled button {
-  border-color: #e0e0e0;
-  color: #d9d9d9;
-  background-color: #fafafa;
+  border-color: #e8eaed;
+  color: #cbd5e1;
+  background-color: #f5f7fa;
 }
 
 .table-container .ant-pagination-disabled:hover button {
-  border-color: #e0e0e0;
-  color: #d9d9d9;
+  border-color: #e8eaed;
+  color: #cbd5e1;
+  background-color: #f5f7fa;
 }
 
 /* Audit Detail Modal */
@@ -231,14 +309,6 @@
   background-color: #fafafa;
 }
 
-/* Clickable rows */
-.table-container .ant-table-tbody > tr {
-  cursor: pointer;
-}
-
-.table-container .ant-table-tbody > tr:hover {
-  background-color: #f0f5ff !important;
-}
 
 /* ============================================
    MOBILE RESPONSIVE STYLES
