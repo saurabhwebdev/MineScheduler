@@ -93,30 +93,36 @@ const MaintenanceAnalytics = () => {
     return null;
   };
 
-  const renderCustomLabel = ({ x, y, width, value }) => {
+  const renderCustomLabel = (props) => {
+    const { x, y, width, value, index } = props;
+    if (value === null || value === undefined) return null;
+    
     return (
       <text 
         x={x + width / 2} 
-        y={y - 5} 
+        y={y - 8} 
         fill="#262626" 
         textAnchor="middle" 
-        fontSize="12"
-        fontWeight="600"
+        fontSize="11"
+        fontWeight="700"
       >
         {typeof value === 'number' ? value.toLocaleString() : value}
       </text>
     );
   };
 
-  const renderCustomLabelVertical = ({ x, y, width, height, value }) => {
+  const renderCustomLabelVertical = (props) => {
+    const { x, y, width, height, value } = props;
+    if (value === null || value === undefined) return null;
+    
     return (
       <text 
-        x={x + width + 5} 
+        x={x + width + 8} 
         y={y + height / 2} 
         fill="#262626" 
         textAnchor="start" 
         fontSize="11"
-        fontWeight="600"
+        fontWeight="700"
         dominantBaseline="middle"
       >
         {typeof value === 'number' ? value.toLocaleString() : value}
@@ -254,8 +260,8 @@ const MaintenanceAnalytics = () => {
                 <p className="chart-subtitle">Total maintenance cost breakdown</p>
               </div>
             </AntTooltip>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={analytics.costByEquipmentType}>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={analytics.costByEquipmentType} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
@@ -281,8 +287,8 @@ const MaintenanceAnalytics = () => {
                 <p className="chart-subtitle">Cost progression over time</p>
               </div>
             </AntTooltip>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={analytics.monthlyCostTrend}>
+            <ResponsiveContainer width="100%" height={350}>
+              <LineChart data={analytics.monthlyCostTrend} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis 
                   dataKey="month" 
@@ -361,8 +367,8 @@ const MaintenanceAnalytics = () => {
                 <p className="chart-subtitle">Cost breakdown analysis</p>
               </div>
             </AntTooltip>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={analytics.laborVsParts}>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={analytics.laborVsParts} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="category" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
@@ -434,8 +440,8 @@ const MaintenanceAnalytics = () => {
                 <p className="chart-subtitle">Mean Time Between Failures (hours)</p>
               </div>
             </AntTooltip>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={analytics.mtbfData}>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={analytics.mtbfData} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
@@ -461,8 +467,8 @@ const MaintenanceAnalytics = () => {
                 <p className="chart-subtitle">Mean Time To Repair (hours)</p>
               </div>
             </AntTooltip>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={analytics.mttrData}>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={analytics.mttrData} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
@@ -492,8 +498,8 @@ const MaintenanceAnalytics = () => {
                   <p className="chart-subtitle">Equipment requiring immediate attention</p>
                 </div>
               </AntTooltip>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={analytics.overdueData}>
+              <ResponsiveContainer width="100%" height={350}>
+                <BarChart data={analytics.overdueData} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
