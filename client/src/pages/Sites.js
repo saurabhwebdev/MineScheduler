@@ -375,7 +375,6 @@ const Sites = () => {
       title: 'PRIORITY',
       dataIndex: 'priority',
       key: 'priority',
-      width: 80,
       sorter: (a, b) => a.priority - b.priority,
       render: (priority) => (
         <span className="priority-badge">{priority}</span>
@@ -443,7 +442,6 @@ const Sites = () => {
       title: 'ACTIONS',
       key: 'actions',
       align: 'center',
-      width: 120,
       render: (_, record) => (
         <div className="action-buttons">
           <button className="icon-btn" onClick={() => showDetailModal(record)} title="View Details">
