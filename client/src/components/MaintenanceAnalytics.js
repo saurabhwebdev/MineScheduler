@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Spin, DatePicker, Modal, Button, Divider } from 'antd';
+import { Row, Col, Card, Spin, DatePicker, Modal, Button, Divider, Tooltip as AntTooltip } from 'antd';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend } from 'recharts';
 import { DollarOutlined, ToolOutlined, ClockCircleOutlined, InfoCircleOutlined, BarChartOutlined, LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -102,74 +102,90 @@ const MaintenanceAnalytics = () => {
       <Row gutter={16} className="kpi-cards">
         <Col xs={24} sm={12} lg={6}>
           <Card className="kpi-card">
-            <Button
-              type="text"
-              icon={<InfoCircleOutlined />}
-              className="card-info-button"
-              onClick={() => setActiveModal('totalCost')}
-              title="How is this calculated?"
-            />
-            <div className="kpi-header">
-              <div className="kpi-icon" style={{ background: '#e6f7ff', color: COLORS.lightBlue }}>
-                <DollarOutlined />
+            <AntTooltip title="Click for detailed explanation and tips" placement="left">
+              <Button
+                type="text"
+                icon={<InfoCircleOutlined />}
+                className="card-info-button"
+                onClick={() => setActiveModal('totalCost')}
+                title="How is this calculated?"
+              />
+            </AntTooltip>
+            <AntTooltip title="Sum of all maintenance costs" placement="bottom">
+              <div className="kpi-header">
+                <div className="kpi-icon" style={{ background: '#e6f7ff', color: COLORS.lightBlue }}>
+                  <DollarOutlined />
+                </div>
               </div>
-            </div>
-            <div className="kpi-value">${(analytics.kpis.totalCost || 0).toLocaleString()}</div>
-            <div className="kpi-label">Total Cost</div>
+              <div className="kpi-value">${(analytics.kpis.totalCost || 0).toLocaleString()}</div>
+              <div className="kpi-label">Total Cost</div>
+            </AntTooltip>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card className="kpi-card">
-            <Button
-              type="text"
-              icon={<InfoCircleOutlined />}
-              className="card-info-button"
-              onClick={() => setActiveModal('totalEvents')}
-              title="How is this calculated?"
-            />
-            <div className="kpi-header">
-              <div className="kpi-icon" style={{ background: '#f6ffed', color: COLORS.green }}>
-                <ToolOutlined />
+            <AntTooltip title="Click for detailed explanation and tips" placement="left">
+              <Button
+                type="text"
+                icon={<InfoCircleOutlined />}
+                className="card-info-button"
+                onClick={() => setActiveModal('totalEvents')}
+                title="How is this calculated?"
+              />
+            </AntTooltip>
+            <AntTooltip title="Total number of maintenance events" placement="bottom">
+              <div className="kpi-header">
+                <div className="kpi-icon" style={{ background: '#f6ffed', color: COLORS.green }}>
+                  <ToolOutlined />
+                </div>
               </div>
-            </div>
-            <div className="kpi-value">{analytics.kpis.totalEvents}</div>
-            <div className="kpi-label">Total Events</div>
+              <div className="kpi-value">{analytics.kpis.totalEvents}</div>
+              <div className="kpi-label">Total Events</div>
+            </AntTooltip>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card className="kpi-card">
-            <Button
-              type="text"
-              icon={<InfoCircleOutlined />}
-              className="card-info-button"
-              onClick={() => setActiveModal('avgCost')}
-              title="How is this calculated?"
-            />
-            <div className="kpi-header">
-              <div className="kpi-icon" style={{ background: '#fff7e6', color: COLORS.orange }}>
-                <DollarOutlined />
+            <AntTooltip title="Click for detailed explanation and tips" placement="left">
+              <Button
+                type="text"
+                icon={<InfoCircleOutlined />}
+                className="card-info-button"
+                onClick={() => setActiveModal('avgCost')}
+                title="How is this calculated?"
+              />
+            </AntTooltip>
+            <AntTooltip title="Average maintenance cost per event" placement="bottom">
+              <div className="kpi-header">
+                <div className="kpi-icon" style={{ background: '#fff7e6', color: COLORS.orange }}>
+                  <DollarOutlined />
+                </div>
               </div>
-            </div>
-            <div className="kpi-value">${(analytics.kpis.avgCost || 0).toFixed(0)}</div>
-            <div className="kpi-label">Avg Cost per Event</div>
+              <div className="kpi-value">${(analytics.kpis.avgCost || 0).toFixed(0)}</div>
+              <div className="kpi-label">Avg Cost per Event</div>
+            </AntTooltip>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card className="kpi-card">
-            <Button
-              type="text"
-              icon={<InfoCircleOutlined />}
-              className="card-info-button"
-              onClick={() => setActiveModal('avgDuration')}
-              title="How is this calculated?"
-            />
-            <div className="kpi-header">
-              <div className="kpi-icon" style={{ background: '#fff1f0', color: COLORS.red }}>
-                <ClockCircleOutlined />
+            <AntTooltip title="Click for detailed explanation and tips" placement="left">
+              <Button
+                type="text"
+                icon={<InfoCircleOutlined />}
+                className="card-info-button"
+                onClick={() => setActiveModal('avgDuration')}
+                title="How is this calculated?"
+              />
+            </AntTooltip>
+            <AntTooltip title="Average time to complete maintenance" placement="bottom">
+              <div className="kpi-header">
+                <div className="kpi-icon" style={{ background: '#fff1f0', color: COLORS.red }}>
+                  <ClockCircleOutlined />
+                </div>
               </div>
-            </div>
-            <div className="kpi-value">{(analytics.kpis.avgDuration || 0).toFixed(1)}h</div>
-            <div className="kpi-label">Avg Repair Time</div>
+              <div className="kpi-value">{(analytics.kpis.avgDuration || 0).toFixed(1)}h</div>
+              <div className="kpi-label">Avg Repair Time</div>
+            </AntTooltip>
           </Card>
         </Col>
       </Row>
@@ -185,10 +201,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('costByType')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>Cost by Equipment Type</h3>
-              <p className="chart-subtitle">Total maintenance cost breakdown</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>Cost by Equipment Type</h3>
+                <p className="chart-subtitle">Total maintenance cost breakdown</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={analytics.costByEquipmentType}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -210,10 +228,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('monthlyTrend')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>Monthly Cost Trend</h3>
-              <p className="chart-subtitle">Cost progression over time</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>Monthly Cost Trend</h3>
+                <p className="chart-subtitle">Cost progression over time</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={analytics.monthlyCostTrend}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -250,10 +270,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('typeDistribution')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>Maintenance Type Distribution</h3>
-              <p className="chart-subtitle">Breakdown by maintenance category</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>Maintenance Type Distribution</h3>
+                <p className="chart-subtitle">Breakdown by maintenance category</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -285,10 +307,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('laborVsParts')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>Labor vs Parts Cost</h3>
-              <p className="chart-subtitle">Cost breakdown analysis</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>Labor vs Parts Cost</h3>
+                <p className="chart-subtitle">Cost breakdown analysis</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={analytics.laborVsParts}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -317,10 +341,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('topEquipment')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>Top 10 Most Expensive Equipment</h3>
-              <p className="chart-subtitle">Highest maintenance costs by equipment</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>Top 10 Most Expensive Equipment</h3>
+                <p className="chart-subtitle">Highest maintenance costs by equipment</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={350}>
               <BarChart 
                 data={analytics.topEquipment} 
@@ -354,10 +380,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('mtbf')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>MTBF by Equipment Type</h3>
-              <p className="chart-subtitle">Mean Time Between Failures (hours)</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>MTBF by Equipment Type</h3>
+                <p className="chart-subtitle">Mean Time Between Failures (hours)</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={analytics.mtbfData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -379,10 +407,12 @@ const MaintenanceAnalytics = () => {
               onClick={() => setActiveModal('mttr')}
               title="How is this calculated?"
             />
-            <div className="chart-header">
-              <h3>MTTR by Equipment Type</h3>
-              <p className="chart-subtitle">Mean Time To Repair (hours)</p>
-            </div>
+            <AntTooltip title="Click the info button for detailed explanation" placement="top">
+              <div className="chart-header">
+                <h3>MTTR by Equipment Type</h3>
+                <p className="chart-subtitle">Mean Time To Repair (hours)</p>
+              </div>
+            </AntTooltip>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={analytics.mttrData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -408,10 +438,12 @@ const MaintenanceAnalytics = () => {
                 onClick={() => setActiveModal('overdue')}
                 title="How is this calculated?"
               />
-              <div className="chart-header">
-                <h3>Overdue Maintenance by Equipment Type</h3>
-                <p className="chart-subtitle">Equipment requiring immediate attention</p>
-              </div>
+              <AntTooltip title="Click the info button for detailed explanation" placement="top">
+                <div className="chart-header">
+                  <h3>Overdue Maintenance by Equipment Type</h3>
+                  <p className="chart-subtitle">Equipment requiring immediate attention</p>
+                </div>
+              </AntTooltip>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={analytics.overdueData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
