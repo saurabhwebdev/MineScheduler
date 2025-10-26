@@ -64,10 +64,26 @@ const MaintenanceAnalytics = () => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-tooltip">
-          <p className="tooltip-label">{label}</p>
+        <div className="custom-tooltip" style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          padding: '12px 16px',
+          border: '1px solid #e0e0e0',
+          borderRadius: '6px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}>
+          <p className="tooltip-label" style={{
+            fontWeight: 600,
+            marginBottom: '8px',
+            color: '#262626',
+            fontSize: '13px'
+          }}>{label}</p>
           {payload.map((entry, index) => (
-            <p key={index} className="tooltip-value" style={{ color: entry.color }}>
+            <p key={index} className="tooltip-value" style={{
+              color: entry.color,
+              margin: '4px 0',
+              fontSize: '14px',
+              fontWeight: 500
+            }}>
               {entry.name}: {typeof entry.value === 'number' ? entry.value.toLocaleString() : entry.value}
             </p>
           ))}
@@ -75,6 +91,37 @@ const MaintenanceAnalytics = () => {
       );
     }
     return null;
+  };
+
+  const renderCustomLabel = ({ x, y, width, value }) => {
+    return (
+      <text 
+        x={x + width / 2} 
+        y={y - 5} 
+        fill="#262626" 
+        textAnchor="middle" 
+        fontSize="12"
+        fontWeight="600"
+      >
+        {typeof value === 'number' ? value.toLocaleString() : value}
+      </text>
+    );
+  };
+
+  const renderCustomLabelVertical = ({ x, y, width, height, value }) => {
+    return (
+      <text 
+        x={x + width + 5} 
+        y={y + height / 2} 
+        fill="#262626" 
+        textAnchor="start" 
+        fontSize="11"
+        fontWeight="600"
+        dominantBaseline="middle"
+      >
+        {typeof value === 'number' ? value.toLocaleString() : value}
+      </text>
+    );
   };
 
   if (loading || !analytics) {
@@ -212,8 +259,8 @@ const MaintenanceAnalytics = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="cost" fill={COLORS.blue} radius={[8, 8, 0, 0]} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(6, 45, 84, 0.05)' }} />
+                <Bar dataKey="cost" fill={COLORS.blue} radius={[8, 8, 0, 0]} label={renderCustomLabel} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -243,7 +290,7 @@ const MaintenanceAnalytics = () => {
                   tickFormatter={(value) => moment(value).format('MMM YY')}
                 />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: COLORS.blue, strokeWidth: 2 }} />
                 <Legend />
                 <Line 
                   type="monotone" 
@@ -252,6 +299,7 @@ const MaintenanceAnalytics = () => {
                   strokeWidth={3}
                   dot={{ fill: COLORS.blue, r: 4 }}
                   name="Total Cost"
+                  label={{ position: 'top', fill: '#262626', fontSize: 11, fontWeight: 600 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -283,7 +331,7 @@ const MaintenanceAnalytics = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ type, percent, count }) => `${type}: ${count} (${(percent * 100).toFixed(0)}%)`}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="count"
@@ -292,7 +340,7 @@ const MaintenanceAnalytics = () => {
                     <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip content={<CustomTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           </Card>
@@ -318,8 +366,8 @@ const MaintenanceAnalytics = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="category" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="cost" radius={[8, 8, 0, 0]}>
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(6, 45, 84, 0.05)' }} />
+                <Bar dataKey="cost" radius={[8, 8, 0, 0]} label={renderCustomLabel}>
                   {analytics.laborVsParts.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.category === 'Labor' ? COLORS.green : COLORS.blue} />
                   ))}
@@ -351,7 +399,7 @@ const MaintenanceAnalytics = () => {
               <BarChart 
                 data={analytics.topEquipment} 
                 layout="vertical"
-                margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+                margin={{ top: 5, right: 100, left: 100, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis type="number" tick={{ fontSize: 12 }} />
@@ -361,8 +409,8 @@ const MaintenanceAnalytics = () => {
                   tick={{ fontSize: 11 }}
                   width={90}
                 />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="cost" fill={COLORS.red} radius={[0, 8, 8, 0]} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 77, 79, 0.05)' }} />
+                <Bar dataKey="cost" fill={COLORS.red} radius={[0, 8, 8, 0]} label={renderCustomLabelVertical} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -391,8 +439,8 @@ const MaintenanceAnalytics = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="mtbf" fill={COLORS.green} radius={[8, 8, 0, 0]} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(60, 202, 112, 0.05)' }} />
+                <Bar dataKey="mtbf" fill={COLORS.green} radius={[8, 8, 0, 0]} label={renderCustomLabel} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -418,8 +466,8 @@ const MaintenanceAnalytics = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="mttr" fill={COLORS.orange} radius={[8, 8, 0, 0]} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(250, 173, 20, 0.05)' }} />
+                <Bar dataKey="mttr" fill={COLORS.orange} radius={[8, 8, 0, 0]} label={renderCustomLabel} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -449,8 +497,8 @@ const MaintenanceAnalytics = () => {
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis dataKey="type" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="count" fill={COLORS.red} radius={[8, 8, 0, 0]} />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 77, 79, 0.05)' }} />
+                  <Bar dataKey="count" fill={COLORS.red} radius={[8, 8, 0, 0]} label={renderCustomLabel} />
                 </BarChart>
               </ResponsiveContainer>
             </Card>
