@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Table, Modal, Form, Input, InputNumber, Select, Switch, notification, Tabs, Upload, Alert, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import config from '../config/config';
 import './Sites.css';
@@ -10,6 +11,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const Sites = () => {
+  const { t } = useTranslation();
   const [sites, setSites] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,15 +47,15 @@ const Sites = () => {
         setSites(data.data.sites);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch sites',
+          message: t('sites.messages.error'),
+          description: data.message || t('sites.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching sites:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch sites',
+        message: t('sites.messages.networkError'),
+        description: t('sites.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -137,14 +139,14 @@ const Sites = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Site updated successfully',
+            message: t('sites.messages.success'),
+            description: t('sites.messages.updateSuccess'),
           });
           fetchSites();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update site',
+            message: t('sites.messages.error'),
+            description: data.message || t('sites.messages.updateError'),
           });
         }
       } else {
@@ -161,14 +163,14 @@ const Sites = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Site created successfully',
+            message: t('sites.messages.success'),
+            description: t('sites.messages.createSuccess'),
           });
           fetchSites();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create site',
+            message: t('sites.messages.error'),
+            description: data.message || t('sites.messages.createError'),
           });
         }
       }
@@ -200,21 +202,21 @@ const Sites = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Site deleted successfully',
+          message: t('sites.messages.success'),
+          description: t('sites.messages.deleteSuccess'),
         });
         fetchSites();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete site',
+          message: t('sites.messages.error'),
+          description: data.message || t('sites.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting site:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete site',
+        message: t('sites.messages.networkError'),
+        description: t('sites.messages.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -235,21 +237,23 @@ const Sites = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: `Site ${data.data.site.isActive ? 'activated' : 'deactivated'} successfully`,
+          message: t('sites.messages.success'),
+          description: t('sites.messages.toggleSuccess', { 
+            status: data.data.site.isActive ? t('sites.messages.activated') : t('sites.messages.deactivated') 
+          }),
         });
         fetchSites();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to toggle site status',
+          message: t('sites.messages.error'),
+          description: data.message || t('sites.messages.toggleError'),
         });
       }
     } catch (error) {
       console.error('Error toggling site status:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to toggle site status',
+        message: t('sites.messages.networkError'),
+        description: t('sites.messages.toggleError'),
       });
     }
   };
@@ -302,15 +306,15 @@ const Sites = () => {
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sites');
         XLSX.writeFile(workbook, 'sites_export.xlsx');
         notification.success({
-          message: 'Success',
-          description: 'Sites exported successfully',
+          message: t('sites.messages.success'),
+          description: t('sites.messages.exportSuccess'),
         });
       }
     } catch (error) {
       console.error('Error exporting sites:', error);
       notification.error({
-        message: 'Error',
-        description: 'Failed to export sites',
+        message: t('sites.messages.error'),
+        description: t('sites.messages.exportError'),
       });
     }
   };
@@ -318,8 +322,8 @@ const Sites = () => {
   const handleImport = async () => {
     if (!importFile) {
       notification.error({
-        message: 'Error',
-        description: 'Please select a file to import',
+        message: t('sites.messages.error'),
+        description: t('sites.messages.selectFileError'),
       });
       return;
     }
@@ -347,14 +351,14 @@ const Sites = () => {
         if (response.ok && result.status === 'success') {
           setImportResults(result.data);
           notification.success({
-            message: 'Import Complete',
-            description: `Imported ${result.data.imported} sites successfully`,
+            message: t('sites.messages.importComplete'),
+            description: t('sites.messages.importSuccess', { count: result.data.imported }),
           });
           fetchSites();
         } else {
           notification.error({
-            message: 'Error',
-            description: result.message || 'Failed to import sites',
+            message: t('sites.messages.error'),
+            description: result.message || t('sites.messages.importError'),
           });
         }
       };
@@ -362,17 +366,17 @@ const Sites = () => {
     } catch (error) {
       console.error('Error importing sites:', error);
       notification.error({
-        message: 'Error',
-        description: 'Failed to import sites',
+        message: t('sites.messages.error'),
+        description: t('sites.messages.importError'),
       });
     } finally {
       setImporting(false);
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      title: 'PRIORITY',
+      title: t('sites.columns.priority'),
       dataIndex: 'priority',
       key: 'priority',
       sorter: (a, b) => a.priority - b.priority,
@@ -381,45 +385,45 @@ const Sites = () => {
       ),
     },
     {
-      title: 'SITE ID',
+      title: t('sites.columns.siteId'),
       dataIndex: 'siteId',
       key: 'siteId',
       sorter: (a, b) => a.siteId.localeCompare(b.siteId),
     },
     {
-      title: 'SITE NAME',
+      title: t('sites.columns.siteName'),
       dataIndex: 'siteName',
       key: 'siteName',
       sorter: (a, b) => a.siteName.localeCompare(b.siteName),
     },
     {
-      title: 'TYPE',
+      title: t('sites.columns.type'),
       dataIndex: 'siteType',
       key: 'siteType',
       filters: [
-        { text: 'Mining', value: 'mining' },
-        { text: 'Backfill', value: 'backfill' },
-        { text: 'Development', value: 'development' },
-        { text: 'Exploration', value: 'exploration' },
-        { text: 'Other', value: 'other' },
+        { text: t('sites.types.mining'), value: 'mining' },
+        { text: t('sites.types.backfill'), value: 'backfill' },
+        { text: t('sites.types.development'), value: 'development' },
+        { text: t('sites.types.exploration'), value: 'exploration' },
+        { text: t('sites.types.other'), value: 'other' },
       ],
       onFilter: (value, record) => record.siteType === value,
       render: (type) => (
-        <Tag color="blue">{type.charAt(0).toUpperCase() + type.slice(1)}</Tag>
+        <Tag color="blue">{t(`sites.types.${type}`)}</Tag>
       ),
     },
     {
-      title: 'LOCATION',
+      title: t('sites.columns.location'),
       dataIndex: 'location',
       key: 'location',
     },
     {
-      title: 'STATUS',
+      title: t('sites.columns.status'),
       dataIndex: 'isActive',
       key: 'isActive',
       filters: [
-        { text: 'Active', value: true },
-        { text: 'Inactive', value: false },
+        { text: t('sites.filters.active'), value: true },
+        { text: t('sites.filters.inactive'), value: false },
       ],
       onFilter: (value, record) => record.isActive === value,
       render: (isActive, record) => (
@@ -428,23 +432,23 @@ const Sites = () => {
           onClick={() => handleToggleStatus(record)}
           style={{ cursor: 'pointer' }}
         >
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? t('sites.status.active') : t('sites.status.inactive')}
         </span>
       ),
     },
     {
-      title: 'CURRENT TASK',
+      title: t('sites.columns.currentTask'),
       dataIndex: 'currentTask',
       key: 'currentTask',
       render: (task) => task || '-',
     },
     {
-      title: 'ACTIONS',
+      title: t('sites.columns.actions'),
       key: 'actions',
       align: 'center',
       render: (_, record) => (
         <div className="action-buttons">
-          <button className="icon-btn" onClick={() => showDetailModal(record)} title="View Details">
+          <button className="icon-btn" onClick={() => showDetailModal(record)} title={t('sites.viewDetails')}>
             <EyeOutlined />
           </button>
           <button className="icon-btn" onClick={() => handleEditSite(record)}>
@@ -459,28 +463,28 @@ const Sites = () => {
         </div>
       ),
     },
-  ];
+  ], [t]);
 
   return (
     <DashboardLayout
-      title="Site Management"
-      subtitle="Manage mining sites and scheduling priorities"
+      title={t('sites.title')}
+      subtitle={t('sites.subtitle')}
       page="sites"
     >
       <div className="site-page">
         <div className="page-header">
           <div className="header-actions">
             <button className="btn-secondary" onClick={handleDownloadTemplate}>
-              <DownloadOutlined /> Template
+              <DownloadOutlined /> {t('sites.template')}
             </button>
             <button className="btn-secondary" onClick={() => setIsImportModalVisible(true)}>
-              <UploadOutlined /> Import
+              <UploadOutlined /> {t('sites.import')}
             </button>
             <button className="btn-secondary" onClick={handleExport}>
-              <DownloadOutlined /> Export
+              <DownloadOutlined /> {t('sites.export')}
             </button>
             <button className="btn-primary" onClick={handleCreateSite}>
-              <PlusOutlined /> New Site
+              <PlusOutlined /> {t('sites.newSite')}
             </button>
           </div>
         </div>
@@ -501,72 +505,72 @@ const Sites = () => {
 
         {/* Create/Edit Modal */}
         <Modal
-          title={editingSite ? 'Edit Site' : 'New Site'}
+          title={editingSite ? t('sites.editSite') : t('sites.newSite')}
           open={isModalVisible}
           onOk={handleModalOk}
           onCancel={() => {
             setIsModalVisible(false);
             form.resetFields();
           }}
-          okText={editingSite ? 'Save' : 'Create'}
-          cancelText="Cancel"
+          okText={editingSite ? t('sites.save') : t('sites.create')}
+          cancelText={t('sites.cancel')}
           width={600}
           className="simple-modal"
         >
           <Form form={form} layout="vertical">
             <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab="Basic Info" key="1">
+              <Tabs.TabPane tab={t('sites.tabs.basicInfo')} key="1">
                 <Form.Item
-                  label="Site ID"
+                  label={t('sites.form.siteId')}
                   name="siteId"
-                  rules={[{ required: true, message: 'Required' }]}
+                  rules={[{ required: true, message: t('sites.form.required') }]}
                 >
-                  <Input placeholder="e.g., SITE-001" disabled={editingSite} />
+                  <Input placeholder={t('sites.form.siteIdPlaceholder')} disabled={editingSite} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Site Name"
+                  label={t('sites.form.siteName')}
                   name="siteName"
-                  rules={[{ required: true, message: 'Required' }]}
+                  rules={[{ required: true, message: t('sites.form.required') }]}
                 >
-                  <Input placeholder="Enter site name" />
+                  <Input placeholder={t('sites.form.siteNamePlaceholder')} />
                 </Form.Item>
 
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <Form.Item
-                    label="Priority"
+                    label={t('sites.form.priority')}
                     name="priority"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: t('sites.form.required') }]}
                     style={{ flex: 1 }}
                   >
                     <InputNumber min={1} style={{ width: '100%' }} />
                   </Form.Item>
 
                   <Form.Item
-                    label="Type"
+                    label={t('sites.form.type')}
                     name="siteType"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: t('sites.form.required') }]}
                     style={{ flex: 1 }}
                   >
                     <Select>
-                      <Option value="mining">Mining</Option>
-                      <Option value="backfill">Backfill</Option>
-                      <Option value="development">Development</Option>
-                      <Option value="exploration">Exploration</Option>
-                      <Option value="other">Other</Option>
+                      <Option value="mining">{t('sites.types.mining')}</Option>
+                      <Option value="backfill">{t('sites.types.backfill')}</Option>
+                      <Option value="development">{t('sites.types.development')}</Option>
+                      <Option value="exploration">{t('sites.types.exploration')}</Option>
+                      <Option value="other">{t('sites.types.other')}</Option>
                     </Select>
                   </Form.Item>
                 </div>
 
                 <Form.Item
-                  label="Location"
+                  label={t('sites.form.location')}
                   name="location"
                 >
-                  <Input placeholder="Enter location/area" />
+                  <Input placeholder={t('sites.form.locationPlaceholder')} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Active"
+                  label={t('sites.form.active')}
                   name="isActive"
                   valuePropName="checked"
                 >
@@ -574,10 +578,10 @@ const Sites = () => {
                 </Form.Item>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab="Planning Data" key="2">
+              <Tabs.TabPane tab={t('sites.tabs.planningData')} key="2">
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <Form.Item
-                    label="Total Backfill Tonnes"
+                    label={t('sites.form.totalBackfillTonnes')}
                     name="totalBackfillTonnes"
                     style={{ flex: 1 }}
                   >
@@ -585,7 +589,7 @@ const Sites = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Total Plan Meters"
+                    label={t('sites.form.totalPlanMeters')}
                     name="totalPlanMeters"
                     style={{ flex: 1 }}
                   >
@@ -595,7 +599,7 @@ const Sites = () => {
 
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <Form.Item
-                    label="Remote Tonnes"
+                    label={t('sites.form.remoteTonnes')}
                     name="remoteTonnes"
                     style={{ flex: 1 }}
                   >
@@ -603,7 +607,7 @@ const Sites = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Firings"
+                    label={t('sites.form.firings')}
                     name="firings"
                     style={{ flex: 1 }}
                   >
@@ -613,7 +617,7 @@ const Sites = () => {
 
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <Form.Item
-                    label="Width (m)"
+                    label={t('sites.form.width')}
                     name="width"
                     style={{ flex: 1 }}
                   >
@@ -621,7 +625,7 @@ const Sites = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Height (m)"
+                    label={t('sites.form.height')}
                     name="height"
                     style={{ flex: 1 }}
                   >
@@ -630,10 +634,10 @@ const Sites = () => {
                 </div>
 
                 <Form.Item
-                  label="Current Task"
+                  label={t('sites.form.currentTask')}
                   name="currentTask"
                 >
-                  <Select placeholder="Select task" allowClear>
+                  <Select placeholder={t('sites.form.selectTask')} allowClear>
                     {tasks.map(task => (
                       <Option key={task._id} value={task.taskId}>{task.taskId} - {task.taskName}</Option>
                     ))}
@@ -641,19 +645,19 @@ const Sites = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Time to Complete (hours)"
+                  label={t('sites.form.timeToComplete')}
                   name="timeToComplete"
                 >
                   <InputNumber min={0} style={{ width: '100%' }} />
                 </Form.Item>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab="Notes" key="3">
+              <Tabs.TabPane tab={t('sites.tabs.notes')} key="3">
                 <Form.Item
-                  label="Notes"
+                  label={t('sites.form.notes')}
                   name="notes"
                 >
-                  <TextArea rows={6} placeholder="Additional notes..." />
+                  <TextArea rows={6} placeholder={t('sites.form.notesPlaceholder')} />
                 </Form.Item>
               </Tabs.TabPane>
             </Tabs>
@@ -662,15 +666,15 @@ const Sites = () => {
 
         {/* Delete Modal */}
         <Modal
-          title="Delete Site"
+          title={t('sites.deleteModal.title')}
           open={isDeleteModalVisible}
           onOk={handleDeleteSite}
           onCancel={() => {
             setIsDeleteModalVisible(false);
             setDeletingSite(null);
           }}
-          okText="Delete"
-          cancelText="Cancel"
+          okText={t('sites.delete')}
+          cancelText={t('sites.cancel')}
           width={400}
           className="delete-modal"
           okButtonProps={{ danger: true }}
@@ -679,10 +683,10 @@ const Sites = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to delete <strong>{deletingSite?.siteId}</strong>?
+                {t('sites.deleteModal.message')} <strong>{deletingSite?.siteId}</strong>?
               </p>
               <p className="delete-warning">
-                This action cannot be undone.
+                {t('sites.deleteModal.warning')}
               </p>
             </div>
           </div>
@@ -690,7 +694,7 @@ const Sites = () => {
 
         {/* Import Modal */}
         <Modal
-          title="Import Sites"
+          title={t('sites.importModal.title')}
           open={isImportModalVisible}
           onOk={handleImport}
           onCancel={() => {
@@ -698,15 +702,15 @@ const Sites = () => {
             setImportFile(null);
             setImportResults(null);
           }}
-          okText="Import"
-          cancelText="Cancel"
+          okText={t('sites.import')}
+          cancelText={t('sites.cancel')}
           confirmLoading={importing}
           width={500}
           className="simple-modal"
         >
           <Alert
-            message="Import Instructions"
-            description="Download the template, fill it with your site data, and upload it here."
+            message={t('sites.importModal.instructions')}
+            description={t('sites.importModal.instructionsDesc')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -722,13 +726,13 @@ const Sites = () => {
             accept=".xlsx,.xls"
           >
             <button className="btn-secondary" style={{ marginBottom: 16 }}>
-              <UploadOutlined /> Select Excel File
+              <UploadOutlined /> {t('sites.importModal.selectFile')}
             </button>
           </Upload>
 
           {importResults && (
             <Alert
-              message={`Import Results: ${importResults.imported} succeeded, ${importResults.failed} failed`}
+              message={t('sites.importModal.importResults', { imported: importResults.imported, failed: importResults.failed })}
               type={importResults.failed > 0 ? 'warning' : 'success'}
               showIcon
               description={
@@ -748,7 +752,7 @@ const Sites = () => {
 
         {/* Detail Modal */}
         <Modal
-          title="Site Details"
+          title={t('sites.detailModal.title')}
           open={isDetailModalVisible}
           onCancel={() => {
             setIsDetailModalVisible(false);
@@ -761,78 +765,78 @@ const Sites = () => {
           {selectedSite && (
             <div className="site-details">
               <div className="detail-section">
-                <h4>Basic Information</h4>
+                <h4>{t('sites.detailModal.basicInfo')}</h4>
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Site ID:</label>
+                    <label>{t('sites.detailModal.siteId')}</label>
                     <span>{selectedSite.siteId}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Site Name:</label>
+                    <label>{t('sites.detailModal.siteName')}</label>
                     <span>{selectedSite.siteName}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Priority:</label>
+                    <label>{t('sites.detailModal.priority')}</label>
                     <span className="priority-badge">{selectedSite.priority}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Status:</label>
+                    <label>{t('sites.detailModal.status')}</label>
                     <span className={`status-badge ${selectedSite.isActive ? 'active' : 'inactive'}`}>
-                      {selectedSite.isActive ? 'Active' : 'Inactive'}
+                      {selectedSite.isActive ? t('sites.status.active') : t('sites.status.inactive')}
                     </span>
                   </div>
                   <div className="detail-item">
-                    <label>Type:</label>
-                    <Tag color="blue">{selectedSite.siteType}</Tag>
+                    <label>{t('sites.detailModal.type')}</label>
+                    <Tag color="blue">{t(`sites.types.${selectedSite.siteType}`)}</Tag>
                   </div>
                   <div className="detail-item">
-                    <label>Location:</label>
+                    <label>{t('sites.detailModal.location')}</label>
                     <span>{selectedSite.location || '-'}</span>
                   </div>
                 </div>
               </div>
 
               <div className="detail-section">
-                <h4>Planning Data</h4>
+                <h4>{t('sites.detailModal.planningData')}</h4>
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Backfill Tonnes:</label>
+                    <label>{t('sites.detailModal.backfillTonnes')}</label>
                     <span>{selectedSite.totalBackfillTonnes}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Plan Meters:</label>
+                    <label>{t('sites.detailModal.planMeters')}</label>
                     <span>{selectedSite.totalPlanMeters}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Remote Tonnes:</label>
+                    <label>{t('sites.detailModal.remoteTonnes')}</label>
                     <span>{selectedSite.remoteTonnes}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Firings:</label>
+                    <label>{t('sites.detailModal.firings')}</label>
                     <span>{selectedSite.firings}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Width (m):</label>
+                    <label>{t('sites.detailModal.width')}</label>
                     <span>{selectedSite.width}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Height (m):</label>
+                    <label>{t('sites.detailModal.height')}</label>
                     <span>{selectedSite.height}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Current Task:</label>
+                    <label>{t('sites.detailModal.currentTask')}</label>
                     <span>{selectedSite.currentTask || '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Time to Complete:</label>
-                    <span>{selectedSite.timeToComplete} hours</span>
+                    <label>{t('sites.detailModal.timeToComplete')}</label>
+                    <span>{selectedSite.timeToComplete} {t('sites.detailModal.hours')}</span>
                   </div>
                 </div>
               </div>
 
               {selectedSite.notes && (
                 <div className="detail-section">
-                  <h4>Notes</h4>
+                  <h4>{t('sites.detailModal.notes')}</h4>
                   <p>{selectedSite.notes}</p>
                 </div>
               )}

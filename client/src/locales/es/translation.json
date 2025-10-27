@@ -385,5 +385,128 @@
       "exportError": "Error al exportar constantes",
       "exportErrorOccurred": "Ocurrió un error durante la exportación"
     }
+  },
+  "sites": {
+    "title": "Gestión de Sitios",
+    "subtitle": "Administrar sitios mineros y prioridades de programación",
+    "template": "Plantilla",
+    "import": "Importar",
+    "export": "Exportar",
+    "newSite": "Nuevo Sitio",
+    "editSite": "Editar Sitio",
+    "deleteSite": "Eliminar Sitio",
+    "save": "Guardar",
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "viewDetails": "Ver Detalles",
+    "columns": {
+      "priority": "PRIORIDAD",
+      "siteId": "ID DEL SITIO",
+      "siteName": "NOMBRE DEL SITIO",
+      "type": "TIPO",
+      "location": "UBICACIÓN",
+      "status": "ESTADO",
+      "currentTask": "TAREA ACTUAL",
+      "actions": "ACCIONES"
+    },
+    "types": {
+      "mining": "Minería",
+      "backfill": "Relleno",
+      "development": "Desarrollo",
+      "exploration": "Exploración",
+      "other": "Otro"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "filters": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "tabs": {
+      "basicInfo": "Información Básica",
+      "planningData": "Datos de Planificación",
+      "notes": "Notas"
+    },
+    "form": {
+      "siteId": "ID del Sitio",
+      "siteName": "Nombre del Sitio",
+      "priority": "Prioridad",
+      "type": "Tipo",
+      "location": "Ubicación",
+      "active": "Activo",
+      "totalBackfillTonnes": "Total de Toneladas de Relleno",
+      "totalPlanMeters": "Total de Metros Planificados",
+      "remoteTonnes": "Toneladas Remotas",
+      "firings": "Voladuras",
+      "width": "Ancho (m)",
+      "height": "Altura (m)",
+      "currentTask": "Tarea Actual",
+      "timeToComplete": "Tiempo para Completar (horas)",
+      "notes": "Notas",
+      "required": "Requerido",
+      "siteIdPlaceholder": "ej., SITIO-001",
+      "siteNamePlaceholder": "Ingrese nombre del sitio",
+      "locationPlaceholder": "Ingrese ubicación/área",
+      "selectTask": "Seleccione tarea",
+      "notesPlaceholder": "Notas adicionales..."
+    },
+    "deleteModal": {
+      "title": "Eliminar Sitio",
+      "message": "¿Está seguro de que desea eliminar",
+      "warning": "Esta acción no se puede deshacer."
+    },
+    "importModal": {
+      "title": "Importar Sitios",
+      "instructions": "Instrucciones de Importación",
+      "instructionsDesc": "Descargue la plantilla, llénela con los datos de sus sitios y cárguela aquí.",
+      "selectFile": "Seleccionar Archivo Excel",
+      "importResults": "Resultados de Importación: {{imported}} exitosos, {{failed}} fallidos"
+    },
+    "detailModal": {
+      "title": "Detalles del Sitio",
+      "basicInfo": "Información Básica",
+      "planningData": "Datos de Planificación",
+      "notes": "Notas",
+      "siteId": "ID del Sitio:",
+      "siteName": "Nombre del Sitio:",
+      "priority": "Prioridad:",
+      "status": "Estado:",
+      "type": "Tipo:",
+      "location": "Ubicación:",
+      "backfillTonnes": "Toneladas de Relleno:",
+      "planMeters": "Metros Planificados:",
+      "remoteTonnes": "Toneladas Remotas:",
+      "firings": "Voladuras:",
+      "width": "Ancho (m):",
+      "height": "Altura (m):",
+      "currentTask": "Tarea Actual:",
+      "timeToComplete": "Tiempo para Completar:",
+      "hours": "horas"
+    },
+    "messages": {
+      "error": "Error",
+      "success": "Éxito",
+      "networkError": "Error de Red",
+      "fetchError": "Error al cargar sitios",
+      "updateSuccess": "Sitio actualizado exitosamente",
+      "updateError": "Error al actualizar sitio",
+      "createSuccess": "Sitio creado exitosamente",
+      "createError": "Error al crear sitio",
+      "deleteSuccess": "Sitio eliminado exitosamente",
+      "deleteError": "Error al eliminar sitio",
+      "toggleSuccess": "Sitio {{status}} exitosamente",
+      "toggleError": "Error al cambiar estado del sitio",
+      "activated": "activado",
+      "deactivated": "desactivado",
+      "exportSuccess": "Sitios exportados exitosamente",
+      "exportError": "Error al exportar sitios",
+      "importComplete": "Importación Completa",
+      "importSuccess": "{{count}} sitios importados exitosamente",
+      "importError": "Error al importar sitios",
+      "selectFileError": "Por favor seleccione un archivo para importar"
+    }
   }
 }

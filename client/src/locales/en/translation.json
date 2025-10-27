@@ -385,5 +385,128 @@
       "exportError": "Failed to export constants",
       "exportErrorOccurred": "An error occurred during export"
     }
+  },
+  "sites": {
+    "title": "Site Management",
+    "subtitle": "Manage mining sites and scheduling priorities",
+    "template": "Template",
+    "import": "Import",
+    "export": "Export",
+    "newSite": "New Site",
+    "editSite": "Edit Site",
+    "deleteSite": "Delete Site",
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "viewDetails": "View Details",
+    "columns": {
+      "priority": "PRIORITY",
+      "siteId": "SITE ID",
+      "siteName": "SITE NAME",
+      "type": "TYPE",
+      "location": "LOCATION",
+      "status": "STATUS",
+      "currentTask": "CURRENT TASK",
+      "actions": "ACTIONS"
+    },
+    "types": {
+      "mining": "Mining",
+      "backfill": "Backfill",
+      "development": "Development",
+      "exploration": "Exploration",
+      "other": "Other"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "filters": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "tabs": {
+      "basicInfo": "Basic Info",
+      "planningData": "Planning Data",
+      "notes": "Notes"
+    },
+    "form": {
+      "siteId": "Site ID",
+      "siteName": "Site Name",
+      "priority": "Priority",
+      "type": "Type",
+      "location": "Location",
+      "active": "Active",
+      "totalBackfillTonnes": "Total Backfill Tonnes",
+      "totalPlanMeters": "Total Plan Meters",
+      "remoteTonnes": "Remote Tonnes",
+      "firings": "Firings",
+      "width": "Width (m)",
+      "height": "Height (m)",
+      "currentTask": "Current Task",
+      "timeToComplete": "Time to Complete (hours)",
+      "notes": "Notes",
+      "required": "Required",
+      "siteIdPlaceholder": "e.g., SITE-001",
+      "siteNamePlaceholder": "Enter site name",
+      "locationPlaceholder": "Enter location/area",
+      "selectTask": "Select task",
+      "notesPlaceholder": "Additional notes..."
+    },
+    "deleteModal": {
+      "title": "Delete Site",
+      "message": "Are you sure you want to delete",
+      "warning": "This action cannot be undone."
+    },
+    "importModal": {
+      "title": "Import Sites",
+      "instructions": "Import Instructions",
+      "instructionsDesc": "Download the template, fill it with your site data, and upload it here.",
+      "selectFile": "Select Excel File",
+      "importResults": "Import Results: {{imported}} succeeded, {{failed}} failed"
+    },
+    "detailModal": {
+      "title": "Site Details",
+      "basicInfo": "Basic Information",
+      "planningData": "Planning Data",
+      "notes": "Notes",
+      "siteId": "Site ID:",
+      "siteName": "Site Name:",
+      "priority": "Priority:",
+      "status": "Status:",
+      "type": "Type:",
+      "location": "Location:",
+      "backfillTonnes": "Backfill Tonnes:",
+      "planMeters": "Plan Meters:",
+      "remoteTonnes": "Remote Tonnes:",
+      "firings": "Firings:",
+      "width": "Width (m):",
+      "height": "Height (m):",
+      "currentTask": "Current Task:",
+      "timeToComplete": "Time to Complete:",
+      "hours": "hours"
+    },
+    "messages": {
+      "error": "Error",
+      "success": "Success",
+      "networkError": "Network Error",
+      "fetchError": "Failed to fetch sites",
+      "updateSuccess": "Site updated successfully",
+      "updateError": "Failed to update site",
+      "createSuccess": "Site created successfully",
+      "createError": "Failed to create site",
+      "deleteSuccess": "Site deleted successfully",
+      "deleteError": "Failed to delete site",
+      "toggleSuccess": "Site {{status}} successfully",
+      "toggleError": "Failed to toggle site status",
+      "activated": "activated",
+      "deactivated": "deactivated",
+      "exportSuccess": "Sites exported successfully",
+      "exportError": "Failed to export sites",
+      "importComplete": "Import Complete",
+      "importSuccess": "Imported {{count}} sites successfully",
+      "importError": "Failed to import sites",
+      "selectFileError": "Please select a file to import"
+    }
   }
 }
