@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Table, Modal, Form, Input, notification, TimePicker, InputNumber, ColorPicker, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, ClockCircleOutlined, DownloadOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import config from '../config/config';
 
 const { TextArea } = Input;
 
 const ShiftConfig = () => {
+  const { t } = useTranslation();
   const [shifts, setShifts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,15 +36,15 @@ const ShiftConfig = () => {
         setShifts(data.data.shifts);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch shifts',
+          message: t('settings.shiftConfig.error'),
+          description: data.message || t('settings.shiftConfig.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching shifts:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch shifts',
+        message: t('settings.shiftConfig.networkError'),
+        description: t('settings.shiftConfig.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -101,14 +103,14 @@ const ShiftConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Shift updated successfully',
+            message: t('settings.shiftConfig.success'),
+            description: t('settings.shiftConfig.updateSuccess'),
           });
           fetchShifts();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update shift',
+            message: t('settings.shiftConfig.error'),
+            description: data.message || t('settings.shiftConfig.updateError'),
           });
         }
       } else {
@@ -124,14 +126,14 @@ const ShiftConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Shift created successfully',
+            message: t('settings.shiftConfig.success'),
+            description: t('settings.shiftConfig.createSuccess'),
           });
           fetchShifts();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create shift',
+            message: t('settings.shiftConfig.error'),
+            description: data.message || t('settings.shiftConfig.createError'),
           });
         }
       }
@@ -163,21 +165,21 @@ const ShiftConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Shift deleted successfully',
+          message: t('settings.shiftConfig.success'),
+          description: t('settings.shiftConfig.deleteSuccess'),
         });
         fetchShifts();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete shift',
+          message: t('settings.shiftConfig.error'),
+          description: data.message || t('settings.shiftConfig.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting shift:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete shift',
+        message: t('settings.shiftConfig.networkError'),
+        description: t('settings.shiftConfig.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -206,27 +208,27 @@ const ShiftConfig = () => {
         document.body.removeChild(a);
 
         notification.success({
-          message: 'Export Successful',
-          description: 'Shifts exported successfully',
+          message: t('settings.shiftConfig.exportSuccess'),
+          description: t('settings.shiftConfig.exportSuccessDesc'),
         });
       } else {
         notification.error({
-          message: 'Export Failed',
-          description: 'Failed to export shifts',
+          message: t('settings.shiftConfig.exportFailed'),
+          description: t('settings.shiftConfig.exportError'),
         });
       }
     } catch (error) {
       console.error('Export error:', error);
       notification.error({
-        message: 'Export Error',
-        description: 'An error occurred during export',
+        message: t('settings.shiftConfig.exportError'),
+        description: t('settings.shiftConfig.exportErrorOccurred'),
       });
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      title: 'COLOR',
+      title: t('settings.shiftConfig.columnColor'),
       dataIndex: 'color',
       key: 'color',
       width: 80,
@@ -244,19 +246,19 @@ const ShiftConfig = () => {
       ),
     },
     {
-      title: 'SHIFT NAME',
+      title: t('settings.shiftConfig.columnShiftName'),
       dataIndex: 'shiftName',
       key: 'shiftName',
       sorter: (a, b) => a.shiftName.localeCompare(b.shiftName),
     },
     {
-      title: 'SHIFT CODE',
+      title: t('settings.shiftConfig.columnShiftCode'),
       dataIndex: 'shiftCode',
       key: 'shiftCode',
       sorter: (a, b) => a.shiftCode.localeCompare(b.shiftCode),
     },
     {
-      title: 'START TIME',
+      title: t('settings.shiftConfig.columnStartTime'),
       dataIndex: 'startTime',
       key: 'startTime',
       render: (time) => (
@@ -267,7 +269,7 @@ const ShiftConfig = () => {
       ),
     },
     {
-      title: 'END TIME',
+      title: t('settings.shiftConfig.columnEndTime'),
       dataIndex: 'endTime',
       key: 'endTime',
       render: (time) => (
@@ -278,7 +280,7 @@ const ShiftConfig = () => {
       ),
     },
     {
-      title: 'SHIFT CHANGE (MIN)',
+      title: t('settings.shiftConfig.columnShiftChange'),
       dataIndex: 'shiftChangeDuration',
       key: 'shiftChangeDuration',
       align: 'center',
@@ -286,23 +288,23 @@ const ShiftConfig = () => {
       sorter: (a, b) => a.shiftChangeDuration - b.shiftChangeDuration,
     },
     {
-      title: 'STATUS',
+      title: t('settings.shiftConfig.columnStatus'),
       dataIndex: 'isActive',
       key: 'isActive',
       width: 90,
       render: (isActive) => (
         <span className={`status-badge ${isActive ? 'active' : 'inactive'}`}>
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? t('settings.shiftConfig.active') : t('settings.shiftConfig.inactive')}
         </span>
       ),
       filters: [
-        { text: 'Active', value: true },
-        { text: 'Inactive', value: false },
+        { text: t('settings.shiftConfig.active'), value: true },
+        { text: t('settings.shiftConfig.inactive'), value: false },
       ],
       onFilter: (value, record) => record.isActive === value,
     },
     {
-      title: 'ACTIONS',
+      title: t('settings.shiftConfig.columnActions'),
       key: 'actions',
       align: 'center',
       width: 100,
@@ -320,16 +322,16 @@ const ShiftConfig = () => {
         </div>
       ),
     },
-  ];
+  ], [t]);
 
   return (
     <div>
       <div className="uom-actions">
         <button className="btn-primary" onClick={handleCreateShift}>
-          <PlusOutlined /> New Shift
+          <PlusOutlined /> {t('settings.shiftConfig.newShift')}
         </button>
         <button className="btn-secondary" onClick={handleExport}>
-          <DownloadOutlined /> Export
+          <DownloadOutlined /> {t('settings.shiftConfig.export')}
         </button>
       </div>
 
@@ -342,92 +344,92 @@ const ShiftConfig = () => {
           defaultPageSize: 10,
           showSizeChanger: true,
           pageSizeOptions: ['10', '25', '50'],
-          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} shifts`,
+          showTotal: (total, range) => t('settings.shiftConfig.paginationText', { start: range[0], end: range[1], total }),
         }}
       />
 
       <Modal
-        title={editingShift ? 'Edit Shift' : 'New Shift'}
+        title={editingShift ? t('settings.shiftConfig.editShift') : t('settings.shiftConfig.newShift')}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => {
           setIsModalVisible(false);
           form.resetFields();
         }}
-        okText={editingShift ? 'Save' : 'Create'}
-        cancelText="Cancel"
+        okText={editingShift ? t('settings.shiftConfig.save') : t('settings.shiftConfig.create')}
+        cancelText={t('settings.shiftConfig.cancel')}
         width={600}
         className="simple-modal"
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="Shift Name"
+            label={t('settings.shiftConfig.shiftName')}
             name="shiftName"
-            rules={[{ required: true, message: 'Required' }]}
+            rules={[{ required: true, message: t('settings.shiftConfig.required') }]}
           >
-            <Input placeholder="e.g., Day Shift, Night Shift" />
+            <Input placeholder={t('settings.shiftConfig.shiftNamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="Shift Code"
+            label={t('settings.shiftConfig.shiftCode')}
             name="shiftCode"
-            rules={[{ required: true, message: 'Required' }]}
-            tooltip="Unique code for this shift (auto-converted to uppercase)"
+            rules={[{ required: true, message: t('settings.shiftConfig.required') }]}
+            tooltip={t('settings.shiftConfig.shiftCodeTooltip')}
           >
-            <Input placeholder="e.g., DAY, NIGHT, GENERAL" style={{ textTransform: 'uppercase' }} />
+            <Input placeholder={t('settings.shiftConfig.shiftCodePlaceholder')} style={{ textTransform: 'uppercase' }} />
           </Form.Item>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <Form.Item
-              label="Start Time"
+              label={t('settings.shiftConfig.startTime')}
               name="startTime"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('settings.shiftConfig.required') }]}
             >
               <TimePicker 
                 format="HH:mm" 
                 style={{ width: '100%' }}
-                placeholder="Select start time"
+                placeholder={t('settings.shiftConfig.startTimePlaceholder')}
               />
             </Form.Item>
 
             <Form.Item
-              label="End Time"
+              label={t('settings.shiftConfig.endTime')}
               name="endTime"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('settings.shiftConfig.required') }]}
             >
               <TimePicker 
                 format="HH:mm" 
                 style={{ width: '100%' }}
-                placeholder="Select end time"
+                placeholder={t('settings.shiftConfig.endTimePlaceholder')}
               />
             </Form.Item>
           </div>
 
           <Form.Item
-            label="Shift Change Duration (Minutes)"
+            label={t('settings.shiftConfig.shiftChangeDuration')}
             name="shiftChangeDuration"
             rules={[
-              { required: true, message: 'Required' },
-              { type: 'number', min: 0, message: 'Must be positive' }
+              { required: true, message: t('settings.shiftConfig.required') },
+              { type: 'number', min: 0, message: t('settings.shiftConfig.mustBePositive') }
             ]}
-            tooltip="Time allocated for shift handover/changeover"
+            tooltip={t('settings.shiftConfig.shiftChangeTooltip')}
           >
             <InputNumber 
               style={{ width: '100%' }}
               min={0}
-              placeholder="e.g., 30"
+              placeholder={t('settings.shiftConfig.shiftChangePlaceholder')}
               addonAfter="minutes"
             />
           </Form.Item>
 
           <Form.Item
-            label="Shift Color"
+            label={t('settings.shiftConfig.shiftColor')}
             name="color"
-            rules={[{ required: true, message: 'Required' }]}
+            rules={[{ required: true, message: t('settings.shiftConfig.required') }]}
             getValueFromEvent={(color) => {
               return typeof color === 'string' ? color : color?.toHexString();
             }}
-            tooltip="Color for visual identification in schedules"
+            tooltip={t('settings.shiftConfig.shiftColorTooltip')}
           >
             <ColorPicker 
               showText
@@ -445,11 +447,11 @@ const ShiftConfig = () => {
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label={t('settings.shiftConfig.description')}
             name="description"
           >
             <TextArea 
-              placeholder="Additional notes about this shift" 
+              placeholder={t('settings.shiftConfig.descriptionPlaceholder')} 
               rows={3}
               maxLength={500}
               showCount
@@ -457,28 +459,28 @@ const ShiftConfig = () => {
           </Form.Item>
 
           <Form.Item
-            label="Status"
+            label={t('settings.shiftConfig.status')}
             name="isActive"
             valuePropName="checked"
           >
             <Switch 
-              checkedChildren="Active" 
-              unCheckedChildren="Inactive"
+              checkedChildren={t('settings.shiftConfig.active')} 
+              unCheckedChildren={t('settings.shiftConfig.inactive')}
             />
           </Form.Item>
         </Form>
       </Modal>
 
       <Modal
-        title="Delete Shift"
+        title={t('settings.shiftConfig.deleteShift')}
         open={isDeleteModalVisible}
         onOk={handleDeleteShift}
         onCancel={() => {
           setIsDeleteModalVisible(false);
           setDeletingShift(null);
         }}
-        okText="Delete"
-        cancelText="Cancel"
+        okText={t('settings.shiftConfig.delete')}
+        cancelText={t('settings.shiftConfig.cancel')}
         width={400}
         className="delete-modal"
         okButtonProps={{ danger: true }}
@@ -487,10 +489,10 @@ const ShiftConfig = () => {
           <ExclamationCircleOutlined className="delete-icon" />
           <div>
             <p className="delete-message">
-              Are you sure you want to delete <strong>{deletingShift?.shiftName}</strong>?
+              {t('settings.shiftConfig.deleteConfirm', { name: deletingShift?.shiftName })}
             </p>
             <p className="delete-warning">
-              This action cannot be undone.
+              {t('settings.shiftConfig.deleteWarning')}
             </p>
           </div>
         </div>
