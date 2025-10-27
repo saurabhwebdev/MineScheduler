@@ -74,6 +74,22 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Primary Button - App Blue Color */
+.modern-dashboard .ant-btn-primary {
+  background-color: #062d54;
+  border-color: #062d54;
+}
+
+.modern-dashboard .ant-btn-primary:hover {
+  background-color: #0a3d6e;
+  border-color: #0a3d6e;
+}
+
+.modern-dashboard .ant-btn-primary:focus {
+  background-color: #062d54;
+  border-color: #062d54;
+}
+
 /* Hero KPIs Row */
 .kpis-row {
   margin-bottom: 12px;
