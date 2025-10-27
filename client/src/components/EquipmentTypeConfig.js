@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Table, Modal, Form, Input, Switch, notification } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { 
   PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, 
   UploadOutlined, DownloadOutlined, ToolOutlined, CarOutlined, 
@@ -46,6 +47,7 @@ const EQUIPMENT_ICONS = [
 ];
 
 const EquipmentTypeConfig = () => {
+  const { t } = useTranslation();
   const [equipmentTypes, setEquipmentTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -78,15 +80,15 @@ const EquipmentTypeConfig = () => {
         setEquipmentTypes(data.data.equipmentTypes);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch equipment types',
+          message: t('settings.equipmentTypeConfig.error'),
+          description: data.message || t('settings.equipmentTypeConfig.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching equipment types:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch equipment types',
+        message: t('settings.equipmentTypeConfig.networkError'),
+        description: t('settings.equipmentTypeConfig.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -96,8 +98,8 @@ const EquipmentTypeConfig = () => {
   const handleCreateType = () => {
     if (!isAdmin) {
       notification.warning({
-        message: 'Permission Denied',
-        description: 'Only administrators can create equipment types',
+        message: t('settings.equipmentTypeConfig.permissionDenied'),
+        description: t('settings.equipmentTypeConfig.adminOnlyCreate'),
       });
       return;
     }
@@ -110,8 +112,8 @@ const EquipmentTypeConfig = () => {
   const handleEditType = (type) => {
     if (!isAdmin) {
       notification.warning({
-        message: 'Permission Denied',
-        description: 'Only administrators can edit equipment types',
+        message: t('settings.equipmentTypeConfig.permissionDenied'),
+        description: t('settings.equipmentTypeConfig.adminOnlyEdit'),
       });
       return;
     }
@@ -146,14 +148,14 @@ const EquipmentTypeConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Equipment type updated successfully',
+            message: t('settings.equipmentTypeConfig.success'),
+            description: t('settings.equipmentTypeConfig.updateSuccess'),
           });
           fetchEquipmentTypes();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update equipment type',
+            message: t('settings.equipmentTypeConfig.error'),
+            description: data.message || t('settings.equipmentTypeConfig.updateError'),
           });
         }
       } else {
@@ -169,14 +171,14 @@ const EquipmentTypeConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Equipment type created successfully',
+            message: t('settings.equipmentTypeConfig.success'),
+            description: t('settings.equipmentTypeConfig.createSuccess'),
           });
           fetchEquipmentTypes();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create equipment type',
+            message: t('settings.equipmentTypeConfig.error'),
+            description: data.message || t('settings.equipmentTypeConfig.createError'),
           });
         }
       }
@@ -192,8 +194,8 @@ const EquipmentTypeConfig = () => {
   const showDeleteConfirm = (type) => {
     if (!isAdmin) {
       notification.warning({
-        message: 'Permission Denied',
-        description: 'Only administrators can delete equipment types',
+        message: t('settings.equipmentTypeConfig.permissionDenied'),
+        description: t('settings.equipmentTypeConfig.adminOnlyDelete'),
       });
       return;
     }
@@ -216,21 +218,21 @@ const EquipmentTypeConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Equipment type deleted successfully',
+          message: t('settings.equipmentTypeConfig.success'),
+          description: t('settings.equipmentTypeConfig.deleteSuccess'),
         });
         fetchEquipmentTypes();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete equipment type',
+          message: t('settings.equipmentTypeConfig.error'),
+          description: data.message || t('settings.equipmentTypeConfig.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting equipment type:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete equipment type',
+        message: t('settings.equipmentTypeConfig.networkError'),
+        description: t('settings.equipmentTypeConfig.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -259,22 +261,22 @@ const EquipmentTypeConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Import Successful',
+          message: t('settings.equipmentTypeConfig.importSuccess'),
           description: data.message,
           duration: 5,
         });
         fetchEquipmentTypes();
       } else {
         notification.error({
-          message: 'Import Failed',
-          description: data.message || 'Failed to import equipment types',
+          message: t('settings.equipmentTypeConfig.importFailed'),
+          description: data.message || t('settings.equipmentTypeConfig.importError'),
         });
       }
     } catch (error) {
       console.error('Import error:', error);
       notification.error({
-        message: 'Import Error',
-        description: 'An error occurred during import',
+        message: t('settings.equipmentTypeConfig.importError'),
+        description: t('settings.equipmentTypeConfig.importErrorOccurred'),
       });
     }
 
@@ -302,39 +304,39 @@ const EquipmentTypeConfig = () => {
         document.body.removeChild(a);
 
         notification.success({
-          message: 'Export Successful',
-          description: 'Equipment types exported successfully',
+          message: t('settings.equipmentTypeConfig.exportSuccess'),
+          description: t('settings.equipmentTypeConfig.exportSuccessDesc'),
         });
       } else {
         notification.error({
-          message: 'Export Failed',
-          description: 'Failed to export equipment types',
+          message: t('settings.equipmentTypeConfig.exportFailed'),
+          description: t('settings.equipmentTypeConfig.exportError'),
         });
       }
     } catch (error) {
       console.error('Export error:', error);
       notification.error({
-        message: 'Export Error',
-        description: 'An error occurred during export',
+        message: t('settings.equipmentTypeConfig.exportError'),
+        description: t('settings.equipmentTypeConfig.exportErrorOccurred'),
       });
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      title: 'TYPE NAME',
+      title: t('settings.equipmentTypeConfig.columnTypeName'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'DESCRIPTION',
+      title: t('settings.equipmentTypeConfig.columnDescription'),
       dataIndex: 'description',
       key: 'description',
       render: (text) => text || '-',
     },
     {
-      title: 'ICON',
+      title: t('settings.equipmentTypeConfig.columnIcon'),
       dataIndex: 'icon',
       key: 'icon',
       render: (iconName) => {
@@ -348,28 +350,28 @@ const EquipmentTypeConfig = () => {
       },
     },
     {
-      title: 'STATUS',
+      title: t('settings.equipmentTypeConfig.columnStatus'),
       dataIndex: 'isActive',
       key: 'isActive',
       filters: [
-        { text: 'Active', value: true },
-        { text: 'Inactive', value: false },
+        { text: t('settings.equipmentTypeConfig.active'), value: true },
+        { text: t('settings.equipmentTypeConfig.inactive'), value: false },
       ],
       onFilter: (value, record) => record.isActive === value,
       render: (isActive) => (
         <span className={`status-badge ${isActive ? 'active' : 'inactive'}`}>
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? t('settings.equipmentTypeConfig.active') : t('settings.equipmentTypeConfig.inactive')}
         </span>
       ),
     },
     {
-      title: 'CREATED BY',
+      title: t('settings.equipmentTypeConfig.columnCreatedBy'),
       dataIndex: 'createdBy',
       key: 'createdBy',
       render: (createdBy) => createdBy?.name || '-',
     },
     {
-      title: 'ACTIONS',
+      title: t('settings.equipmentTypeConfig.columnActions'),
       key: 'actions',
       align: 'center',
       width: 100,
@@ -394,7 +396,7 @@ const EquipmentTypeConfig = () => {
         </div>
       ),
     },
-  ];
+  ], [t, isAdmin]);
 
   return (
     <div>
@@ -405,7 +407,7 @@ const EquipmentTypeConfig = () => {
           disabled={!isAdmin}
           style={{ opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
         >
-          <PlusOutlined /> New Equipment Type
+          <PlusOutlined /> {t('settings.equipmentTypeConfig.newEquipmentType')}
         </button>
         <input
           type="file"
@@ -420,14 +422,14 @@ const EquipmentTypeConfig = () => {
           disabled={!isAdmin}
           style={{ opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
         >
-          <UploadOutlined /> Import
+          <UploadOutlined /> {t('settings.equipmentTypeConfig.import')}
         </button>
         <button className="btn-secondary" onClick={handleExport}>
-          <DownloadOutlined /> Export
+          <DownloadOutlined /> {t('settings.equipmentTypeConfig.export')}
         </button>
         {!isAdmin && (
           <span style={{ marginLeft: '10px', color: '#999', fontSize: '12px' }}>
-            (Admin access required)
+            {t('settings.equipmentTypeConfig.adminRequired')}
           </span>
         )}
       </div>
@@ -447,7 +449,7 @@ const EquipmentTypeConfig = () => {
       </div>
 
       <Modal
-        title={editingType ? 'Edit Equipment Type' : 'New Equipment Type'}
+        title={editingType ? t('settings.equipmentTypeConfig.editEquipmentType') : t('settings.equipmentTypeConfig.newEquipmentType')}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => {
@@ -455,36 +457,36 @@ const EquipmentTypeConfig = () => {
           setSelectedIcon('');
           form.resetFields();
         }}
-        okText={editingType ? 'Save' : 'Create'}
-        cancelText="Cancel"
+        okText={editingType ? t('settings.equipmentTypeConfig.save') : t('settings.equipmentTypeConfig.create')}
+        cancelText={t('settings.equipmentTypeConfig.cancel')}
         width={500}
         className="simple-modal"
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="Type Name"
+            label={t('settings.equipmentTypeConfig.typeName')}
             name="name"
-            rules={[{ required: true, message: 'Required' }]}
+            rules={[{ required: true, message: t('settings.equipmentTypeConfig.required') }]}
           >
-            <Input placeholder="Enter equipment type name (e.g., Excavator, Drill)" />
+            <Input placeholder={t('settings.equipmentTypeConfig.typeNamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label={t('settings.equipmentTypeConfig.description')}
             name="description"
           >
             <TextArea 
               rows={3}
-              placeholder="Enter description (optional)" 
+              placeholder={t('settings.equipmentTypeConfig.descriptionPlaceholder')} 
             />
           </Form.Item>
 
           <Form.Item
-            label="Icon"
+            label={t('settings.equipmentTypeConfig.icon')}
             name="icon"
           >
             <div className="icon-picker">
-              <div className="icon-picker-label">Select an icon for this equipment type:</div>
+              <div className="icon-picker-label">{t('settings.equipmentTypeConfig.iconPickerLabel')}</div>
               <div className="icon-picker-grid">
                 {EQUIPMENT_ICONS.map((icon) => {
                   const IconComponent = icon.component;
@@ -508,7 +510,7 @@ const EquipmentTypeConfig = () => {
               </div>
               {selectedIcon && (
                 <div className="icon-picker-selected">
-                  Selected: <strong>{EQUIPMENT_ICONS.find(i => i.name === selectedIcon)?.label || selectedIcon}</strong>
+                  {t('settings.equipmentTypeConfig.iconSelected')} <strong>{EQUIPMENT_ICONS.find(i => i.name === selectedIcon)?.label || selectedIcon}</strong>
                 </div>
               )}
             </div>
@@ -516,13 +518,13 @@ const EquipmentTypeConfig = () => {
 
           {editingType && (
             <Form.Item
-              label="Status"
+              label={t('settings.equipmentTypeConfig.status')}
               name="isActive"
               valuePropName="checked"
             >
               <Switch 
-                checkedChildren="Active" 
-                unCheckedChildren="Inactive"
+                checkedChildren={t('settings.equipmentTypeConfig.active')} 
+                unCheckedChildren={t('settings.equipmentTypeConfig.inactive')}
               />
             </Form.Item>
           )}
@@ -530,15 +532,15 @@ const EquipmentTypeConfig = () => {
       </Modal>
 
       <Modal
-        title="Delete Equipment Type"
+        title={t('settings.equipmentTypeConfig.deleteEquipmentType')}
         open={isDeleteModalVisible}
         onOk={handleDeleteType}
         onCancel={() => {
           setIsDeleteModalVisible(false);
           setDeletingType(null);
         }}
-        okText="Delete"
-        cancelText="Cancel"
+        okText={t('settings.equipmentTypeConfig.delete')}
+        cancelText={t('settings.equipmentTypeConfig.cancel')}
         width={400}
         className="delete-modal"
         okButtonProps={{ danger: true }}
@@ -547,10 +549,10 @@ const EquipmentTypeConfig = () => {
           <ExclamationCircleOutlined className="delete-icon" />
           <div>
             <p className="delete-message">
-              Are you sure you want to delete <strong>{deletingType?.name}</strong>?
+              {t('settings.equipmentTypeConfig.deleteConfirm', { name: deletingType?.name })}
             </p>
             <p className="delete-warning">
-              This action cannot be undone. Existing equipment using this type may be affected.
+              {t('settings.equipmentTypeConfig.deleteWarning')}
             </p>
           </div>
         </div>
