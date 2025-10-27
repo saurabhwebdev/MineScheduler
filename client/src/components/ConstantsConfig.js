@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Table, Modal, Form, Input, InputNumber, Select, Switch, notification, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import config from '../config/config';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 const ConstantsConfig = () => {
+  const { t } = useTranslation();
   const [constants, setConstants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -39,15 +41,15 @@ const ConstantsConfig = () => {
         setConstants(data.data.constants);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch constants',
+          message: t('settings.constantsConfig.error'),
+          description: data.message || t('settings.constantsConfig.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching constants:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch constants',
+        message: t('settings.constantsConfig.networkError'),
+        description: t('settings.constantsConfig.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -57,8 +59,8 @@ const ConstantsConfig = () => {
   const handleCreateConstant = () => {
     if (!isAdmin) {
       notification.warning({
-        message: 'Permission Denied',
-        description: 'Only administrators can create constants',
+        message: t('settings.constantsConfig.permissionDenied'),
+        description: t('settings.constantsConfig.adminOnlyCreate'),
       });
       return;
     }
@@ -70,8 +72,8 @@ const ConstantsConfig = () => {
   const handleEditConstant = (constant) => {
     if (!isAdmin) {
       notification.warning({
-        message: 'Permission Denied',
-        description: 'Only administrators can edit constants',
+        message: t('settings.constantsConfig.permissionDenied'),
+        description: t('settings.constantsConfig.adminOnlyEdit'),
       });
       return;
     }
@@ -106,14 +108,14 @@ const ConstantsConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Constant updated successfully',
+            message: t('settings.constantsConfig.success'),
+            description: t('settings.constantsConfig.updateSuccess'),
           });
           fetchConstants();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update constant',
+            message: t('settings.constantsConfig.error'),
+            description: data.message || t('settings.constantsConfig.updateError'),
           });
         }
       } else {
@@ -130,14 +132,14 @@ const ConstantsConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Constant created successfully',
+            message: t('settings.constantsConfig.success'),
+            description: t('settings.constantsConfig.createSuccess'),
           });
           fetchConstants();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create constant',
+            message: t('settings.constantsConfig.error'),
+            description: data.message || t('settings.constantsConfig.createError'),
           });
         }
       }
@@ -152,8 +154,8 @@ const ConstantsConfig = () => {
   const showDeleteConfirm = (constant) => {
     if (!isAdmin) {
       notification.warning({
-        message: 'Permission Denied',
-        description: 'Only administrators can delete constants',
+        message: t('settings.constantsConfig.permissionDenied'),
+        description: t('settings.constantsConfig.adminOnlyDelete'),
       });
       return;
     }
@@ -176,21 +178,21 @@ const ConstantsConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Constant deleted successfully',
+          message: t('settings.constantsConfig.success'),
+          description: t('settings.constantsConfig.deleteSuccess'),
         });
         fetchConstants();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete constant',
+          message: t('settings.constantsConfig.error'),
+          description: data.message || t('settings.constantsConfig.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting constant:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete constant',
+        message: t('settings.constantsConfig.networkError'),
+        description: t('settings.constantsConfig.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -219,22 +221,26 @@ const ConstantsConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Import Successful',
-          description: `${data.data.success.length} constants imported successfully. ${data.data.skipped.length} skipped. ${data.data.failed.length} failed.`,
+          message: t('settings.constantsConfig.importSuccess'),
+          description: t('settings.constantsConfig.importDetails', {
+            success: data.data.success.length,
+            skipped: data.data.skipped.length,
+            failed: data.data.failed.length
+          }),
           duration: 5,
         });
         fetchConstants();
       } else {
         notification.error({
-          message: 'Import Failed',
-          description: data.message || 'Failed to import constants',
+          message: t('settings.constantsConfig.importFailed'),
+          description: data.message || t('settings.constantsConfig.importError'),
         });
       }
     } catch (error) {
       console.error('Import error:', error);
       notification.error({
-        message: 'Import Error',
-        description: 'An error occurred during import',
+        message: t('settings.constantsConfig.importError'),
+        description: t('settings.constantsConfig.importErrorOccurred'),
       });
     }
 
@@ -262,55 +268,55 @@ const ConstantsConfig = () => {
         document.body.removeChild(a);
 
         notification.success({
-          message: 'Export Successful',
-          description: 'Constants exported successfully',
+          message: t('settings.constantsConfig.exportSuccess'),
+          description: t('settings.constantsConfig.exportSuccessDesc'),
         });
       } else {
         notification.error({
-          message: 'Export Failed',
-          description: 'Failed to export constants',
+          message: t('settings.constantsConfig.exportFailed'),
+          description: t('settings.constantsConfig.exportError'),
         });
       }
     } catch (error) {
       console.error('Export error:', error);
       notification.error({
-        message: 'Export Error',
-        description: 'An error occurred during export',
+        message: t('settings.constantsConfig.exportError'),
+        description: t('settings.constantsConfig.exportErrorOccurred'),
       });
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      title: 'KEYWORD',
+      title: t('settings.constantsConfig.columnKeyword'),
       dataIndex: 'keyword',
       key: 'keyword',
       sorter: (a, b) => a.keyword.localeCompare(b.keyword),
       render: (text) => <strong style={{ color: '#ff8906' }}>{text}</strong>
     },
     {
-      title: 'VALUE',
+      title: t('settings.constantsConfig.columnValue'),
       dataIndex: 'value',
       key: 'value',
       align: 'center',
       render: (value) => <strong>{value}</strong>
     },
     {
-      title: 'UNIT',
+      title: t('settings.constantsConfig.columnUnit'),
       dataIndex: 'unit',
       key: 'unit',
       align: 'center',
     },
     {
-      title: 'CATEGORY',
+      title: t('settings.constantsConfig.columnCategory'),
       dataIndex: 'category',
       key: 'category',
       align: 'center',
       filters: [
-        { text: 'Mining', value: 'Mining' },
-        { text: 'Calculation', value: 'Calculation' },
-        { text: 'System', value: 'System' },
-        { text: 'Other', value: 'Other' },
+        { text: t('settings.constantsConfig.categoryMining'), value: 'Mining' },
+        { text: t('settings.constantsConfig.categoryCalculation'), value: 'Calculation' },
+        { text: t('settings.constantsConfig.categorySystem'), value: 'System' },
+        { text: t('settings.constantsConfig.categoryOther'), value: 'Other' },
       ],
       onFilter: (value, record) => record.category === value,
       render: (category) => {
@@ -320,40 +326,46 @@ const ConstantsConfig = () => {
           System: 'green',
           Other: 'default'
         };
-        return <Tag color={colors[category] || 'default'}>{category}</Tag>;
+        const categoryLabels = {
+          Mining: t('settings.constantsConfig.categoryMining'),
+          Calculation: t('settings.constantsConfig.categoryCalculation'),
+          System: t('settings.constantsConfig.categorySystem'),
+          Other: t('settings.constantsConfig.categoryOther')
+        };
+        return <Tag color={colors[category] || 'default'}>{categoryLabels[category] || category}</Tag>;
       }
     },
     {
-      title: 'DESCRIPTION',
+      title: t('settings.constantsConfig.columnDescription'),
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
       render: (text) => text || '-',
     },
     {
-      title: 'STATUS',
+      title: t('settings.constantsConfig.columnStatus'),
       dataIndex: 'isActive',
       key: 'isActive',
       align: 'center',
       filters: [
-        { text: 'Active', value: true },
-        { text: 'Inactive', value: false },
+        { text: t('settings.constantsConfig.active'), value: true },
+        { text: t('settings.constantsConfig.inactive'), value: false },
       ],
       onFilter: (value, record) => record.isActive === value,
       render: (isActive) => (
         <Tag color={isActive ? 'green' : 'red'}>
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? t('settings.constantsConfig.active') : t('settings.constantsConfig.inactive')}
         </Tag>
       ),
     },
     {
-      title: 'CREATED BY',
+      title: t('settings.constantsConfig.columnCreatedBy'),
       dataIndex: 'createdBy',
       key: 'createdBy',
       render: (createdBy) => createdBy?.name || '-',
     },
     {
-      title: 'ACTIONS',
+      title: t('settings.constantsConfig.columnActions'),
       key: 'actions',
       align: 'center',
       width: 100,
@@ -378,7 +390,7 @@ const ConstantsConfig = () => {
         </div>
       ),
     },
-  ];
+  ], [t, isAdmin]);
 
   return (
     <div>
@@ -389,7 +401,7 @@ const ConstantsConfig = () => {
           disabled={!isAdmin}
           style={{ opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
         >
-          <PlusOutlined /> New Constant
+          <PlusOutlined /> {t('settings.constantsConfig.newConstant')}
         </button>
         <input
           type="file"
@@ -404,14 +416,14 @@ const ConstantsConfig = () => {
           disabled={!isAdmin}
           style={{ opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
         >
-          <UploadOutlined /> Import
+          <UploadOutlined /> {t('settings.constantsConfig.import')}
         </button>
         <button className="btn-secondary" onClick={handleExport}>
-          <DownloadOutlined /> Export
+          <DownloadOutlined /> {t('settings.constantsConfig.export')}
         </button>
         {!isAdmin && (
           <span style={{ marginLeft: '10px', color: '#999', fontSize: '12px' }}>
-            (Admin access required)
+            {t('settings.constantsConfig.adminRequired')}
           </span>
         )}
       </div>
@@ -431,30 +443,30 @@ const ConstantsConfig = () => {
       </div>
 
       <Modal
-        title={editingConstant ? 'Edit Constant' : 'New Constant'}
+        title={editingConstant ? t('settings.constantsConfig.editConstant') : t('settings.constantsConfig.newConstant')}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => {
           setIsModalVisible(false);
           form.resetFields();
         }}
-        okText={editingConstant ? 'Save' : 'Create'}
-        cancelText="Cancel"
+        okText={editingConstant ? t('settings.constantsConfig.save') : t('settings.constantsConfig.create')}
+        cancelText={t('settings.constantsConfig.cancel')}
         width={600}
         className="simple-modal"
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="Keyword"
+            label={t('settings.constantsConfig.keyword')}
             name="keyword"
             rules={[
-              { required: true, message: 'Required' },
-              { pattern: /^[A-Z_]+$/, message: 'Only uppercase letters and underscores' }
+              { required: true, message: t('settings.constantsConfig.required') },
+              { pattern: /^[A-Z_]+$/, message: t('settings.constantsConfig.onlyUppercaseUnderscore') }
             ]}
-            extra="Use uppercase letters and underscores only (e.g., WIDTH, MAX_DEPTH)"
+            extra={t('settings.constantsConfig.keywordExtra')}
           >
             <Input 
-              placeholder="Enter keyword (e.g., WIDTH)" 
+              placeholder={t('settings.constantsConfig.keywordPlaceholder')} 
               disabled={!!editingConstant}
               style={{ textTransform: 'uppercase' }}
             />
@@ -462,15 +474,15 @@ const ConstantsConfig = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <Form.Item
-              label="Value"
+              label={t('settings.constantsConfig.value')}
               name="value"
               rules={[
-                { required: true, message: 'Required' },
-                { type: 'number', min: 0, message: 'Must be positive' }
+                { required: true, message: t('settings.constantsConfig.required') },
+                { type: 'number', min: 0, message: t('settings.constantsConfig.mustBePositive') }
               ]}
             >
               <InputNumber 
-                placeholder="Enter value" 
+                placeholder={t('settings.constantsConfig.valuePlaceholder')} 
                 style={{ width: '100%' }}
                 step={0.1}
                 precision={2}
@@ -478,47 +490,47 @@ const ConstantsConfig = () => {
             </Form.Item>
 
             <Form.Item
-              label="Unit"
+              label={t('settings.constantsConfig.unit')}
               name="unit"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('settings.constantsConfig.required') }]}
             >
-              <Input placeholder="Enter unit (e.g., meters, tonnes/m³)" />
+              <Input placeholder={t('settings.constantsConfig.unitPlaceholder')} />
             </Form.Item>
           </div>
 
           <Form.Item
-            label="Category"
+            label={t('settings.constantsConfig.category')}
             name="category"
-            rules={[{ required: true, message: 'Required' }]}
+            rules={[{ required: true, message: t('settings.constantsConfig.required') }]}
             initialValue="Mining"
           >
-            <Select placeholder="Select category">
-              <Option value="Mining">Mining</Option>
-              <Option value="Calculation">Calculation</Option>
-              <Option value="System">System</Option>
-              <Option value="Other">Other</Option>
+            <Select placeholder={t('settings.constantsConfig.categoryPlaceholder')}>
+              <Option value="Mining">{t('settings.constantsConfig.categoryMining')}</Option>
+              <Option value="Calculation">{t('settings.constantsConfig.categoryCalculation')}</Option>
+              <Option value="System">{t('settings.constantsConfig.categorySystem')}</Option>
+              <Option value="Other">{t('settings.constantsConfig.categoryOther')}</Option>
             </Select>
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label={t('settings.constantsConfig.description')}
             name="description"
           >
             <TextArea 
               rows={3}
-              placeholder="Enter description (optional)" 
+              placeholder={t('settings.constantsConfig.descriptionPlaceholder')} 
             />
           </Form.Item>
 
           {editingConstant && (
             <Form.Item
-              label="Status"
+              label={t('settings.constantsConfig.status')}
               name="isActive"
               valuePropName="checked"
             >
               <Switch 
-                checkedChildren="Active" 
-                unCheckedChildren="Inactive"
+                checkedChildren={t('settings.constantsConfig.active')} 
+                unCheckedChildren={t('settings.constantsConfig.inactive')}
               />
             </Form.Item>
           )}
@@ -526,15 +538,15 @@ const ConstantsConfig = () => {
       </Modal>
 
       <Modal
-        title="Delete Constant"
+        title={t('settings.constantsConfig.deleteConstant')}
         open={isDeleteModalVisible}
         onOk={handleDeleteConstant}
         onCancel={() => {
           setIsDeleteModalVisible(false);
           setDeletingConstant(null);
         }}
-        okText="Delete"
-        cancelText="Cancel"
+        okText={t('settings.constantsConfig.delete')}
+        cancelText={t('settings.constantsConfig.cancel')}
         width={400}
         className="delete-modal"
         okButtonProps={{ danger: true }}
@@ -543,10 +555,10 @@ const ConstantsConfig = () => {
           <ExclamationCircleOutlined className="delete-icon" />
           <div>
             <p className="delete-message">
-              Are you sure you want to delete <strong>{deletingConstant?.keyword}</strong>?
+              {t('settings.constantsConfig.deleteConfirm', { keyword: deletingConstant?.keyword })}
             </p>
             <p className="delete-warning">
-              This action cannot be undone. This constant is used in scheduling calculations.
+              {t('settings.constantsConfig.deleteWarning')}
             </p>
           </div>
         </div>
