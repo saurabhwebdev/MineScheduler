@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification, Radio, Spin, Tag, Space, Modal } from 'antd';
 import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
 import SnapshotManager from '../components/SnapshotManager';
@@ -8,6 +9,7 @@ import config from '../config/config';
 import './Schedule.css';
 
 const Schedule = () => {
+  const { t } = useTranslation();
   const [gridHours, setGridHours] = useState(24);
   const [scheduleData, setScheduleData] = useState(null);
   const [delayedSlots, setDelayedSlots] = useState([]);
@@ -94,21 +96,21 @@ const Schedule = () => {
         setScheduleData(data.data);
         setGeneratedAt(data.data.generatedAt);
         notification.success({
-          message: 'Success',
-          description: 'Schedule generated successfully',
+          message: t('schedule.messages.success'),
+          description: t('schedule.messages.scheduleGenerated'),
           duration: 2
         });
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to generate schedule',
+          message: t('schedule.messages.error'),
+          description: data.message || t('schedule.messages.generateError'),
         });
       }
     } catch (error) {
       console.error('Error generating schedule:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to generate schedule. Please try again.',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.messages.generateRetry'),
       });
     } finally {
       setLoading(false);
@@ -150,21 +152,21 @@ const Schedule = () => {
         setScheduleData(data.data);
         setGeneratedAt(data.data.generatedAt);
         notification.success({
-          message: 'Success',
-          description: `Schedule updated to ${hours} hours`,
+          message: t('schedule.messages.success'),
+          description: t('schedule.messages.scheduleUpdated', { hours }),
           duration: 2
         });
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to generate schedule',
+          message: t('schedule.messages.error'),
+          description: data.message || t('schedule.messages.generateError'),
         });
       }
     } catch (error) {
       console.error('Error generating schedule:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to generate schedule. Please try again.',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.messages.generateRetry'),
       });
     } finally {
       setLoading(false);
@@ -185,23 +187,23 @@ const Schedule = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: `Site ${siteId} status toggled`,
+          message: t('schedule.messages.success'),
+          description: t('schedule.messages.siteToggled', { siteId }),
           duration: 2
         });
         // Regenerate schedule to reflect changes
         generateSchedule();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to toggle site status',
+          message: t('schedule.messages.error'),
+          description: data.message || t('schedule.messages.siteToggleError'),
         });
       }
     } catch (error) {
       console.error('Error toggling site:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to toggle site status',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.messages.siteToggleError'),
       });
     }
   };
@@ -286,11 +288,11 @@ const Schedule = () => {
 
     // Auto-regenerate schedule
     const delayMessage = isGlobal 
-      ? `Adding ${duration} hour(s) delay to ${sitesToDelay.length} active sites and regenerating...`
-      : `Adding ${duration} hour(s) delay and regenerating schedule...`;
+      ? t('schedule.messages.addingDelayGlobal', { duration, count: sitesToDelay.length })
+      : t('schedule.messages.addingDelayLocal', { duration });
     
     notification.info({
-      message: 'Adding Delay',
+      message: t('schedule.messages.addingDelay'),
       description: delayMessage,
       duration: 2
     });
@@ -318,24 +320,24 @@ const Schedule = () => {
           setScheduleData(data.data);
           setGeneratedAt(data.data.generatedAt);
           const successMsg = isGlobal
-            ? `${duration} hour(s) delay added to ${sitesToDelay.length} sites and schedule regenerated`
-            : `${duration} hour(s) delay added and schedule regenerated`;
+            ? t('schedule.messages.delayAddedGlobal', { duration, count: sitesToDelay.length })
+            : t('schedule.messages.delayAddedLocal', { duration });
           notification.success({
-            message: 'Delay Added',
+            message: t('schedule.messages.delayAdded'),
             description: successMsg,
             duration: 2
           });
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to regenerate schedule',
+            message: t('schedule.messages.error'),
+            description: data.message || t('schedule.messages.regenerateError'),
           });
         }
       } catch (error) {
         console.error('Error regenerating schedule:', error);
         notification.error({
-          message: 'Network Error',
-          description: 'Failed to regenerate schedule. Please try again.',
+          message: t('schedule.messages.networkError'),
+          description: t('schedule.messages.regenerateRetry'),
         });
       } finally {
         setLoading(false);
@@ -348,8 +350,8 @@ const Schedule = () => {
       delayedSlots.filter(d => !(d.row === row && d.hourIndex === hourIndex))
     );
     notification.info({
-      message: 'Delay Removed',
-      description: 'Click "Generate Schedule" to apply changes.',
+      message: t('schedule.messages.delayRemoved'),
+      description: t('schedule.messages.delayRemovedDesc'),
       duration: 2
     });
   };
@@ -359,20 +361,20 @@ const Schedule = () => {
     
     if (delayCount === 0) {
       notification.info({
-        message: 'No Delays',
-        description: 'There are no delays to remove.',
+        message: t('schedule.messages.noDelays'),
+        description: t('schedule.messages.noDelaysDesc'),
         duration: 2
       });
       return;
     }
 
     Modal.confirm({
-      title: 'Clear All Delays',
+      title: t('schedule.clearDelaysModal.title'),
       icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
       content: (
         <div>
           <p style={{ marginBottom: '12px', fontSize: '14px' }}>
-            Are you sure you want to remove <strong>ALL {delayCount} delays</strong> and regenerate the schedule?
+            {t('schedule.clearDelaysModal.message')} <strong>{t('schedule.clearDelaysModal.allDelays', { count: delayCount })}</strong> {t('schedule.clearDelaysModal.andRegenerate')}
           </p>
           <div style={{ 
             background: '#fff7e6', 
@@ -381,12 +383,12 @@ const Schedule = () => {
             border: '1px solid #ffd591',
             fontSize: '13px'
           }}>
-            ⚠️ <strong>Warning:</strong> This action cannot be undone. All delays will be permanently removed.
+            ⚠️ <strong>{t('schedule.clearDelaysModal.warning')}</strong> {t('schedule.clearDelaysModal.warningMessage')}
           </div>
         </div>
       ),
-      okText: 'Yes, Clear All Delays',
-      cancelText: 'Cancel',
+      okText: t('schedule.clearDelaysModal.okText'),
+      cancelText: t('schedule.clearDelaysModal.cancel'),
       okButtonProps: {
         danger: true,
         style: {
@@ -410,8 +412,8 @@ const Schedule = () => {
         
         // Auto-regenerate schedule
         notification.info({
-          message: 'Clearing Delays',
-          description: 'Removing all delays and regenerating schedule...',
+          message: t('schedule.messages.clearingDelays'),
+          description: t('schedule.messages.clearingDelaysDesc'),
           duration: 2
         });
 
@@ -437,21 +439,21 @@ const Schedule = () => {
               setScheduleData(data.data);
               setGeneratedAt(data.data.generatedAt);
               notification.success({
-                message: 'All Delays Cleared',
-                description: `${delayCount} delays removed and schedule regenerated successfully`,
+                message: t('schedule.messages.allDelaysCleared'),
+                description: t('schedule.messages.allDelaysClearedDesc', { count: delayCount }),
                 duration: 3
               });
             } else {
               notification.error({
-                message: 'Error',
-                description: data.message || 'Failed to regenerate schedule',
+                message: t('schedule.messages.error'),
+                description: data.message || t('schedule.messages.regenerateError'),
               });
             }
           } catch (error) {
             console.error('Error regenerating schedule:', error);
             notification.error({
-              message: 'Network Error',
-              description: 'Failed to regenerate schedule. Please try again.',
+              message: t('schedule.messages.networkError'),
+              description: t('schedule.messages.regenerateRetry'),
             });
           } finally {
             setLoading(false);
@@ -502,23 +504,23 @@ const Schedule = () => {
       window.URL.revokeObjectURL(url);
 
       notification.success({
-        message: 'Download Started',
-        description: 'Schedule is being downloaded as Excel file',
+        message: t('schedule.messages.downloadStarted'),
+        description: t('schedule.messages.downloadStartedDesc'),
         duration: 2
       });
     } catch (error) {
       console.error('Error downloading schedule:', error);
       notification.error({
-        message: 'Download Failed',
-        description: 'Failed to download schedule. Please try again.',
+        message: t('schedule.messages.downloadFailed'),
+        description: t('schedule.messages.downloadFailedDesc'),
       });
     }
   };
 
   return (
     <DashboardLayout 
-      title="Schedule"
-      subtitle="Generate and manage your mine scheduling"
+      title={t('schedule.title')}
+      subtitle={t('schedule.subtitle')}
     >
       <div className="schedule-container">
         {/* Generation Info */}
@@ -526,7 +528,7 @@ const Schedule = () => {
           <div className="schedule-info" style={{ marginBottom: '16px', padding: '12px 16px', background: '#f9f9f9', borderRadius: '6px', border: '1px solid #e8e8e8' }}>
             <Space>
               <ClockCircleOutlined style={{ color: '#3cca70' }} />
-              <span style={{ fontWeight: 500 }}>Last Generated:</span>
+              <span style={{ fontWeight: 500 }}>{t('schedule.lastGenerated')}</span>
               <Tag color="green">
                 {new Date(generatedAt).toLocaleString('en-US', {
                   year: 'numeric',
@@ -545,19 +547,19 @@ const Schedule = () => {
         <div className="schedule-controls">
           <div className="controls-top">
             <div className="control-group">
-              <label className="control-label">Grid Hours:</label>
+              <label className="control-label">{t('schedule.gridHours')}</label>
               <Radio.Group value={gridHours} onChange={handleHoursChange} size="large">
-                <Radio.Button value={6}>6 Hours</Radio.Button>
-                <Radio.Button value={12}>12 Hours</Radio.Button>
-                <Radio.Button value={24}>24 Hours</Radio.Button>
-                <Radio.Button value={48}>48 Hours</Radio.Button>
+                <Radio.Button value={6}>{t('schedule.hours', { count: 6 })}</Radio.Button>
+                <Radio.Button value={12}>{t('schedule.hours', { count: 12 })}</Radio.Button>
+                <Radio.Button value={24}>{t('schedule.hours', { count: 24 })}</Radio.Button>
+                <Radio.Button value={48}>{t('schedule.hours', { count: 48 })}</Radio.Button>
               </Radio.Group>
             </div>
 
             {delayedSlots.length > 0 && (
               <div className="delay-count">
                 <span className="delay-badge">{delayedSlots.length}</span>
-                <span className="delay-text">Delays Applied</span>
+                <span className="delay-text">{t('schedule.delaysApplied')}</span>
               </div>
             )}
           </div>
@@ -572,7 +574,7 @@ const Schedule = () => {
                 loading={loading}
                 className="generate-btn"
               >
-                Generate Schedule
+                {t('schedule.generateSchedule')}
               </Button>
 
               {scheduleData && (
@@ -583,7 +585,7 @@ const Schedule = () => {
                   loading={loading}
                   className="regenerate-btn"
                 >
-                  Regenerate
+                  {t('schedule.regenerate')}
                 </Button>
               )}
 
@@ -594,7 +596,7 @@ const Schedule = () => {
                   onClick={handleDownloadExcel}
                   className="download-btn"
                 >
-                  Download Excel
+                  {t('schedule.downloadExcel')}
                 </Button>
               )}
 
@@ -605,7 +607,7 @@ const Schedule = () => {
                   onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
                   className="save-btn"
                 >
-                  Save Snapshot
+                  {t('schedule.saveSnapshot')}
                 </Button>
               )}
 
@@ -615,7 +617,7 @@ const Schedule = () => {
                 onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
                 className="load-btn"
               >
-                Load Snapshot
+                {t('schedule.loadSnapshot')}
               </Button>
 
               {scheduleData && delayedSlots.length > 0 && (
@@ -631,7 +633,7 @@ const Schedule = () => {
                     color: '#ffffff'
                   }}
                 >
-                  Clear All Delays ({delayedSlots.length})
+                  {t('schedule.clearAllDelays', { count: delayedSlots.length })}
                 </Button>
               )}
             </div>
@@ -651,7 +653,7 @@ const Schedule = () => {
         {/* Loading State */}
         {(loading || loadingLatest) && (
           <div className="loading-container">
-            <Spin size="large" tip={loading ? "Generating schedule..." : "Loading latest schedule..."} />
+            <Spin size="large" tip={loading ? t('schedule.generating') : t('schedule.loadingLatest')} />
           </div>
         )}
 
@@ -670,8 +672,8 @@ const Schedule = () => {
         {!loading && !loadingLatest && !scheduleData && (
           <div className="empty-state">
             <CalendarOutlined className="empty-icon" />
-            <h3>No Schedule Generated</h3>
-            <p>Click "Generate Schedule" to create your mine schedule</p>
+            <h3>{t('schedule.noScheduleTitle')}</h3>
+            <p>{t('schedule.noScheduleDesc')}</p>
           </div>
         )}
       </div>
