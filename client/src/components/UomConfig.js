@@ -36,15 +36,15 @@ const UomConfig = () => {
         setUoms(data.data.uoms);
       } else {
         notification.error({
-          message: t('uomConfig.error'),
-          description: data.message || t('uomConfig.fetchError'),
+          message: t('settings.uomConfig.error'),
+          description: data.message || t('settings.uomConfig.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching UOMs:', error);
       notification.error({
-        message: t('uomConfig.networkError'),
-        description: t('uomConfig.fetchError'),
+        message: t('settings.uomConfig.networkError'),
+        description: t('settings.uomConfig.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -85,14 +85,14 @@ const UomConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: t('uomConfig.success'),
-            description: t('uomConfig.updateSuccess'),
+            message: t('settings.uomConfig.success'),
+            description: t('settings.uomConfig.updateSuccess'),
           });
           fetchUoms();
         } else {
           notification.error({
-            message: t('uomConfig.error'),
-            description: data.message || t('uomConfig.updateError'),
+            message: t('settings.uomConfig.error'),
+            description: data.message || t('settings.uomConfig.updateError'),
           });
         }
       } else {
@@ -109,14 +109,14 @@ const UomConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: t('uomConfig.success'),
-            description: t('uomConfig.createSuccess'),
+            message: t('settings.uomConfig.success'),
+            description: t('settings.uomConfig.createSuccess'),
           });
           fetchUoms();
         } else {
           notification.error({
-            message: t('uomConfig.error'),
-            description: data.message || t('uomConfig.createError'),
+            message: t('settings.uomConfig.error'),
+            description: data.message || t('settings.uomConfig.createError'),
           });
         }
       }
@@ -148,21 +148,21 @@ const UomConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: t('uomConfig.success'),
-          description: t('uomConfig.deleteSuccess'),
+          message: t('settings.uomConfig.success'),
+          description: t('settings.uomConfig.deleteSuccess'),
         });
         fetchUoms();
       } else {
         notification.error({
-          message: t('uomConfig.error'),
-          description: data.message || t('uomConfig.deleteError'),
+          message: t('settings.uomConfig.error'),
+          description: data.message || t('settings.uomConfig.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting UOM:', error);
       notification.error({
-        message: t('uomConfig.networkError'),
-        description: t('uomConfig.deleteError'),
+        message: t('settings.uomConfig.networkError'),
+        description: t('settings.uomConfig.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -191,8 +191,8 @@ const UomConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: t('uomConfig.importSuccess'),
-          description: t('uomConfig.importDetails', {
+          message: t('settings.uomConfig.importSuccess'),
+          description: t('settings.uomConfig.importDetails', {
             success: data.data.success.length,
             skipped: data.data.skipped.length,
             failed: data.data.failed.length
@@ -202,15 +202,15 @@ const UomConfig = () => {
         fetchUoms();
       } else {
         notification.error({
-          message: t('uomConfig.importFailed'),
-          description: data.message || t('uomConfig.importError'),
+          message: t('settings.uomConfig.importFailed'),
+          description: data.message || t('settings.uomConfig.importError'),
         });
       }
     } catch (error) {
       console.error('Import error:', error);
       notification.error({
-        message: t('uomConfig.importError'),
-        description: t('uomConfig.importErrorOccurred'),
+        message: t('settings.uomConfig.importError'),
+        description: t('settings.uomConfig.importErrorOccurred'),
       });
     }
 
@@ -238,52 +238,52 @@ const UomConfig = () => {
         document.body.removeChild(a);
 
         notification.success({
-          message: t('uomConfig.exportSuccess'),
-          description: t('uomConfig.exportSuccessDesc'),
+          message: t('settings.uomConfig.exportSuccess'),
+          description: t('settings.uomConfig.exportSuccessDesc'),
         });
       } else {
         notification.error({
-          message: t('uomConfig.exportFailed'),
-          description: t('uomConfig.exportError'),
+          message: t('settings.uomConfig.exportFailed'),
+          description: t('settings.uomConfig.exportError'),
         });
       }
     } catch (error) {
       console.error('Export error:', error);
       notification.error({
-        message: t('uomConfig.exportError'),
-        description: t('uomConfig.exportErrorOccurred'),
+        message: t('settings.uomConfig.exportError'),
+        description: t('settings.uomConfig.exportErrorOccurred'),
       });
     }
   };
 
   const columns = useMemo(() => [
     {
-      title: t('uomConfig.columnName'),
+      title: t('settings.uomConfig.columnName'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: t('uomConfig.columnDescription'),
+      title: t('settings.uomConfig.columnDescription'),
       dataIndex: 'description',
       key: 'description',
       render: (text) => text || '-',
     },
     {
-      title: t('uomConfig.columnCreatedBy'),
+      title: t('settings.uomConfig.columnCreatedBy'),
       dataIndex: 'createdBy',
       key: 'createdBy',
       render: (createdBy) => createdBy?.name || '-',
     },
     {
-      title: t('uomConfig.columnCreated'),
+      title: t('settings.uomConfig.columnCreated'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
-      title: t('uomConfig.columnActions'),
+      title: t('settings.uomConfig.columnActions'),
       key: 'actions',
       align: 'center',
       width: 100,
@@ -307,7 +307,7 @@ const UomConfig = () => {
     <div>
       <div className="uom-actions">
         <button className="btn-primary" onClick={handleCreateUom}>
-          <PlusOutlined /> {t('uomConfig.newUom')}
+          <PlusOutlined /> {t('settings.uomConfig.newUom')}
         </button>
         <input
           type="file"
@@ -320,10 +320,10 @@ const UomConfig = () => {
           className="btn-secondary" 
           onClick={() => fileInputRef.current?.click()}
         >
-          <UploadOutlined /> {t('uomConfig.import')}
+          <UploadOutlined /> {t('settings.uomConfig.import')}
         </button>
         <button className="btn-secondary" onClick={handleExport}>
-          <DownloadOutlined /> {t('uomConfig.export')}
+          <DownloadOutlined /> {t('settings.uomConfig.export')}
         </button>
       </div>
 
@@ -342,49 +342,49 @@ const UomConfig = () => {
       </div>
 
       <Modal
-        title={editingUom ? t('uomConfig.editUom') : t('uomConfig.newUom')}
+        title={editingUom ? t('settings.uomConfig.editUom') : t('settings.uomConfig.newUom')}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => {
           setIsModalVisible(false);
           form.resetFields();
         }}
-        okText={editingUom ? t('uomConfig.save') : t('uomConfig.create')}
-        cancelText={t('uomConfig.cancel')}
+        okText={editingUom ? t('settings.uomConfig.save') : t('settings.uomConfig.create')}
+        cancelText={t('settings.uomConfig.cancel')}
         width={500}
         className="simple-modal"
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label={t('uomConfig.uomName')}
+            label={t('settings.uomConfig.uomName')}
             name="name"
-            rules={[{ required: true, message: t('uomConfig.required') }]}
+            rules={[{ required: true, message: t('settings.uomConfig.required') }]}
           >
-            <Input placeholder={t('uomConfig.uomNamePlaceholder')} />
+            <Input placeholder={t('settings.uomConfig.uomNamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label={t('uomConfig.description')}
+            label={t('settings.uomConfig.description')}
             name="description"
           >
             <TextArea 
               rows={3}
-              placeholder={t('uomConfig.descriptionPlaceholder')} 
+              placeholder={t('settings.uomConfig.descriptionPlaceholder')} 
             />
           </Form.Item>
         </Form>
       </Modal>
 
       <Modal
-        title={t('uomConfig.deleteUom')}
+        title={t('settings.uomConfig.deleteUom')}
         open={isDeleteModalVisible}
         onOk={handleDeleteUom}
         onCancel={() => {
           setIsDeleteModalVisible(false);
           setDeletingUom(null);
         }}
-        okText={t('uomConfig.delete')}
-        cancelText={t('uomConfig.cancel')}
+        okText={t('settings.uomConfig.delete')}
+        cancelText={t('settings.uomConfig.cancel')}
         width={400}
         className="delete-modal"
         okButtonProps={{ danger: true }}
@@ -393,10 +393,10 @@ const UomConfig = () => {
           <ExclamationCircleOutlined className="delete-icon" />
           <div>
             <p className="delete-message">
-              {t('uomConfig.deleteConfirm', { name: deletingUom?.name })}
+              {t('settings.uomConfig.deleteConfirm', { name: deletingUom?.name })}
             </p>
             <p className="delete-warning">
-              {t('uomConfig.deleteWarning')}
+              {t('settings.uomConfig.deleteWarning')}
             </p>
           </div>
         </div>
