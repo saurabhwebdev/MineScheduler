@@ -11,6 +11,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  position: relative;
+  z-index: 10;
 }
 
 .task-page .page-header h1 {
@@ -24,6 +26,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 
 .task-page .btn-primary {
@@ -40,11 +43,14 @@
   align-items: center;
   gap: 6px;
   transition: background-color 0.2s, border-color 0.2s;
+  position: relative;
+  z-index: 1;
 }
 
 .task-page .btn-primary:hover {
   background-color: #0a3d6e;
   border-color: #0a3d6e;
+  z-index: 2;
 }
 
 .task-page .btn-secondary {
@@ -61,12 +67,15 @@
   align-items: center;
   gap: 6px;
   transition: all 0.2s;
+  position: relative;
+  z-index: 1;
 }
 
 .task-page .btn-secondary:hover {
   background-color: #f0f5ff;
   border-color: #0a3d6e;
   color: #0a3d6e;
+  z-index: 2;
 }
 
 .task-page .btn-success {
@@ -83,11 +92,14 @@
   align-items: center;
   gap: 6px;
   transition: background-color 0.2s, border-color 0.2s;
+  position: relative;
+  z-index: 1;
 }
 
 .task-page .btn-success:hover {
   background-color: #34b35e;
   border-color: #34b35e;
+  z-index: 2;
 }
 
 /* Table Container */
