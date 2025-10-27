@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Table, Modal, Form, Input, notification } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -256,7 +256,7 @@ const UomConfig = () => {
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       title: t('uomConfig.columnName'),
       dataIndex: 'name',
@@ -301,7 +301,7 @@ const UomConfig = () => {
         </div>
       ),
     },
-  ];
+  ], [t]);
 
   return (
     <div>
