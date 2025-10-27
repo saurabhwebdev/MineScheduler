@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Space, Card, Statistic, Divider } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { 
   ToolOutlined, 
   CalendarOutlined,
@@ -30,6 +31,7 @@ import './Dashboard.css';
 const { RangePicker } = DatePicker;
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [dateRange, setDateRange] = useState(30); // days
@@ -142,26 +144,26 @@ const Dashboard = () => {
 
   if (loading && !metrics) {
     return (
-      <DashboardLayout title="Dashboard" subtitle="Business Overview & Analytics" page="dashboard">
+      <DashboardLayout title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} page="dashboard">
         <div className="dashboard-loading">
-          <Spin size="large" tip="Loading dashboard..." />
+          <Spin size="large" tip={t('dashboard.loading')} />
         </div>
       </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout title="Dashboard" subtitle="Business Overview & Analytics" page="dashboard">
+    <DashboardLayout title={t('dashboard.title')} subtitle={t('dashboard.subtitle')} page="dashboard">
       <div className="modern-dashboard">
         {/* Smart Alerts Banner */}
         {metrics && metrics.criticalAlerts && metrics.criticalAlerts.count > 0 && (
           <Alert
-            message={`⚠️ ${metrics.criticalAlerts.count} Critical Issue${metrics.criticalAlerts.count > 1 ? 's' : ''} Detected`}
+            message={`⚠️ ${metrics.criticalAlerts.count} ${t('dashboard.alerts.criticalIssue', { count: metrics.criticalAlerts.count })} ${t('dashboard.alerts.detected')}`}
             description={
               <Space direction="vertical" size={4}>
-                {metrics.criticalAlerts.overdue > 0 && <span>• {metrics.criticalAlerts.overdue} equipment overdue for maintenance</span>}
-                {metrics.criticalAlerts.outOfService > 0 && <span>• {metrics.criticalAlerts.outOfService} equipment out of service</span>}
-                {metrics.fleetAvailability && parseFloat(metrics.fleetAvailability.percentage) < 80 && <span>• Fleet availability below 80%</span>}
+                {metrics.criticalAlerts.overdue > 0 && <span>• {t('dashboard.alerts.overdueEquipment', { count: metrics.criticalAlerts.overdue })}</span>}
+                {metrics.criticalAlerts.outOfService > 0 && <span>• {t('dashboard.alerts.outOfService', { count: metrics.criticalAlerts.outOfService })}</span>}
+                {metrics.fleetAvailability && parseFloat(metrics.fleetAvailability.percentage) < 80 && <span>• {t('dashboard.alerts.fleetAvailabilityLow')}</span>}
               </Space>
             }
             type="error"
@@ -170,7 +172,7 @@ const Dashboard = () => {
             className="alert-banner"
             action={
               <Button size="small" danger onClick={handleShowCritical}>
-                View Details
+                {t('dashboard.alerts.viewDetails')}
               </Button>
             }
           />
@@ -180,8 +182,8 @@ const Dashboard = () => {
         <Card className="actions-card">
           <div className="actions-header">
             <div>
-              <h3>Quick Actions</h3>
-              <p>Common workflows and reports</p>
+              <h3>{t('dashboard.quickActions.title')}</h3>
+              <p>{t('dashboard.quickActions.subtitle')}</p>
             </div>
             <Space>
               <Button 
@@ -219,14 +221,14 @@ const Dashboard = () => {
               onClick={handleShowCritical}
               className="action-btn"
             >
-              Critical Items
+              {t('dashboard.quickActions.criticalItems')}
             </Button>
             <Button 
               icon={<CalendarOutlined />}
               onClick={() => navigate('/maintenance-logs')}
               className="action-btn"
             >
-              Maintenance
+              {t('dashboard.quickActions.maintenance')}
             </Button>
             <Button 
               type="primary"
@@ -234,14 +236,14 @@ const Dashboard = () => {
               onClick={() => navigate('/schedule')}
               className="action-btn"
             >
-              Generate Schedule
+              {t('dashboard.quickActions.generateSchedule')}
             </Button>
             <Button 
               icon={<PieChartOutlined />}
               onClick={() => navigate('/maintenance-logs')}
               className="action-btn"
             >
-              Cost Reports
+              {t('dashboard.quickActions.costReports')}
             </Button>
           </div>
         </Card>
@@ -261,12 +263,12 @@ const Dashboard = () => {
                     <span className="kpi-separator">/</span>
                     <span className="kpi-total">{metrics.fleetAvailability.total}</span>
                   </div>
-                  <div className="kpi-label">Fleet Availability</div>
+                  <div className="kpi-label">{t('dashboard.kpis.fleetAvailability')}</div>
                   <div className="kpi-percentage" style={{
                     color: parseFloat(metrics.fleetAvailability.percentage) >= 90 ? '#10b981' : 
                            parseFloat(metrics.fleetAvailability.percentage) >= 75 ? '#f59e0b' : '#ef4444'
                   }}>
-                    {metrics.fleetAvailability.percentage}% Available
+                    {metrics.fleetAvailability.percentage}% {t('dashboard.kpis.available')}
                   </div>
                 </div>
               </Card>
@@ -283,9 +285,9 @@ const Dashboard = () => {
                 </div>
                 <div className="kpi-content">
                   <div className="kpi-value-large">{metrics.criticalAlerts.count}</div>
-                  <div className="kpi-label">Critical Alerts</div>
+                  <div className="kpi-label">{t('dashboard.kpis.criticalAlerts')}</div>
                   <div className="kpi-sublabel">
-                    {metrics.criticalAlerts.overdue} overdue · {metrics.criticalAlerts.outOfService} offline
+                    {metrics.criticalAlerts.overdue} {t('dashboard.kpis.overdue')} · {metrics.criticalAlerts.outOfService} {t('dashboard.kpis.offline')}
                   </div>
                 </div>
               </Card>
@@ -301,10 +303,10 @@ const Dashboard = () => {
                   <div className="kpi-value-large">
                     ${(metrics.maintenanceCost.total / 1000).toFixed(1)}k
                   </div>
-                  <div className="kpi-label">Maintenance Cost ({dateRange}d)</div>
+                  <div className="kpi-label">{t('dashboard.kpis.maintenanceCost', { days: dateRange })}</div>
                   <div className="kpi-trend-row">
                     <span className="kpi-sublabel">
-                      Labor ${(metrics.maintenanceCost.laborCost / 1000).toFixed(1)}k · Parts ${(metrics.maintenanceCost.partsCost / 1000).toFixed(1)}k
+                      {t('dashboard.kpis.labor')} ${(metrics.maintenanceCost.laborCost / 1000).toFixed(1)}k · {t('dashboard.kpis.parts')} ${(metrics.maintenanceCost.partsCost / 1000).toFixed(1)}k
                     </span>
                     <span className={`kpi-trend ${metrics.maintenanceCost.trend > 0 ? 'negative' : 'positive'}`}>
                       {metrics.maintenanceCost.trend > 0 ? <RiseOutlined /> : <FallOutlined />}
@@ -323,7 +325,7 @@ const Dashboard = () => {
                   icon={<InfoCircleOutlined />}
                   className="card-info-button"
                   onClick={() => setQualityInfoVisible(true)}
-                  title="How is this calculated?"
+                  title={t('dashboard.kpis.howCalculated')}
                 />
                 <div className="kpi-icon-wrapper quality">
                   <LineChartOutlined />
@@ -333,7 +335,7 @@ const Dashboard = () => {
                     <span className="kpi-value-large">{metrics.scheduleEfficiency.quality}</span>
                     <span className="kpi-max">/100</span>
                   </div>
-                  <div className="kpi-label">Schedule Quality</div>
+                  <div className="kpi-label">{t('dashboard.kpis.scheduleQuality')}</div>
                   <Progress 
                     percent={metrics.scheduleEfficiency.quality} 
                     strokeColor={
@@ -356,7 +358,7 @@ const Dashboard = () => {
             <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
-                  title="Active Sites"
+                  title={t('dashboard.kpis.activeSites')}
                   value={metrics.activeOperations.activeSites}
                   suffix={`/${metrics.activeOperations.totalSites}`}
                   prefix={<ThunderboltOutlined />}
@@ -367,7 +369,7 @@ const Dashboard = () => {
             <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
-                  title="Total Tasks"
+                  title={t('dashboard.kpis.totalTasks')}
                   value={metrics.activeOperations.totalTasks}
                   prefix={<CheckCircleOutlined />}
                   valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#10b981' }}
@@ -377,7 +379,7 @@ const Dashboard = () => {
             <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
-                  title="Delays"
+                  title={t('dashboard.kpis.delays')}
                   value={metrics.activeOperations.delays}
                   prefix={<WarningOutlined />}
                   valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#ef4444' }}
@@ -387,7 +389,7 @@ const Dashboard = () => {
             <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card">
                 <Statistic
-                  title="Due Soon (7d)"
+                  title={t('dashboard.kpis.dueSoon')}
                   value={metrics.criticalAlerts.dueSoon}
                   prefix={<ClockCircleOutlined />}
                   valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#f59e0b' }}
@@ -404,8 +406,8 @@ const Dashboard = () => {
             <Col xs={24}>
               <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Fleet Performance Timeline (24 Hours)</h3>
-                  <p>Equipment status distribution and schedule utilization by hour</p>
+                  <h3>{t('dashboard.charts.fleetPerformance')}</h3>
+                  <p>{t('dashboard.charts.fleetPerformanceDesc')}</p>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <ComposedChart data={performance}>
@@ -438,7 +440,7 @@ const Dashboard = () => {
                       dataKey="operational" 
                       stroke="#10b981" 
                       strokeWidth={3}
-                      name="Operational"
+                      name={t('dashboard.charts.operational')}
                       dot={{ fill: '#10b981', r: 3 }}
                     />
                     <Line 
@@ -447,7 +449,7 @@ const Dashboard = () => {
                       dataKey="maintenance" 
                       stroke="#f59e0b" 
                       strokeWidth={2}
-                      name="In Maintenance"
+                      name={t('dashboard.charts.inMaintenance')}
                       dot={{ fill: '#f59e0b', r: 3 }}
                     />
                     <Line 
@@ -456,7 +458,7 @@ const Dashboard = () => {
                       dataKey="outOfService" 
                       stroke="#ef4444" 
                       strokeWidth={2}
-                      name="Out of Service"
+                      name={t('dashboard.charts.outOfService')}
                       dot={{ fill: '#ef4444', r: 3 }}
                     />
                     <Area
@@ -467,7 +469,7 @@ const Dashboard = () => {
                       fillOpacity={0.1}
                       stroke="#3b82f6"
                       strokeWidth={2}
-                      name="Utilization %"
+                      name={t('dashboard.charts.utilization')}
                     />
                   </ComposedChart>
                 </ResponsiveContainer>
@@ -480,8 +482,8 @@ const Dashboard = () => {
             <Col xs={24} lg={12}>
               <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Critical Equipment Attention</h3>
-                  <p>Equipment requiring immediate action by type</p>
+                  <h3>{t('dashboard.charts.criticalEquipment')}</h3>
+                  <p>{t('dashboard.charts.criticalEquipmentDesc')}</p>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart 
@@ -501,9 +503,9 @@ const Dashboard = () => {
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="overdue" stackId="a" fill="#ef4444" name="Overdue" radius={[0, 8, 8, 0]} />
-                    <Bar dataKey="dueSoon" stackId="a" fill="#f59e0b" name="Due Soon" radius={[0, 8, 8, 0]} />
-                    <Bar dataKey="outOfService" stackId="a" fill="#6b7280" name="Offline" radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="overdue" stackId="a" fill="#ef4444" name={t('dashboard.charts.overdue')} radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="dueSoon" stackId="a" fill="#f59e0b" name={t('dashboard.charts.dueSoon')} radius={[0, 8, 8, 0]} />
+                    <Bar dataKey="outOfService" stackId="a" fill="#6b7280" name={t('dashboard.charts.offline')} radius={[0, 8, 8, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
@@ -514,8 +516,8 @@ const Dashboard = () => {
             <Col xs={24} lg={12}>
               <Card className="chart-card">
                 <div className="chart-header">
-                  <h3>Delay Impact Analysis</h3>
-                  <p>Delays by category affecting schedule</p>
+                  <h3>{t('dashboard.charts.delayImpact')}</h3>
+                  <p>{t('dashboard.charts.delayImpactDesc')}</p>
                 </div>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={trends.delaysByCategory}>
@@ -531,7 +533,7 @@ const Dashboard = () => {
                     />
                     <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="count" fill="#ef4444" radius={[8, 8, 0, 0]} name="Delays" />
+                    <Bar dataKey="count" fill="#ef4444" radius={[8, 8, 0, 0]} name={t('dashboard.charts.delays')} />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
@@ -543,8 +545,8 @@ const Dashboard = () => {
             <Col xs={24} lg={12}>
               <Card className="chart-card fleet-health-card">
                 <div className="chart-header">
-                  <h3>Fleet Health Score</h3>
-                  <p>Operational status by type</p>
+                  <h3>{t('dashboard.charts.fleetHealth')}</h3>
+                  <p>{t('dashboard.charts.fleetHealthDesc')}</p>
                 </div>
                 <div className="health-list" style={{ minHeight: '300px' }}>
                   {getFleetHealthData(equipment).slice(0, 5).map((item, index) => (
@@ -576,11 +578,11 @@ const Dashboard = () => {
                   icon={<InfoCircleOutlined />}
                   className="chart-info-button"
                   onClick={() => setQualityInfoVisible(true)}
-                  title="How is this calculated?"
+                  title={t('dashboard.kpis.howCalculated')}
                 />
                 <div className="chart-header">
-                  <h3>Schedule Quality Breakdown</h3>
-                  <p>Components contributing to overall score</p>
+                  <h3>{t('dashboard.charts.qualityBreakdown')}</h3>
+                  <p>{t('dashboard.charts.qualityBreakdownDesc')}</p>
                 </div>
                 <div className="quality-breakdown" style={{ minHeight: '300px' }}>
                   <div className="quality-score-circle">
@@ -599,15 +601,15 @@ const Dashboard = () => {
                   </div>
                   <div className="quality-metrics">
                     <div className="quality-metric">
-                      <span className="metric-label">Utilization</span>
+                      <span className="metric-label">{t('dashboard.quality.utilization')}</span>
                       <span className="metric-value">{metrics.scheduleEfficiency.utilization.toFixed(1)}%</span>
                     </div>
                     <div className="quality-metric">
-                      <span className="metric-label">Conflicts</span>
+                      <span className="metric-label">{t('dashboard.quality.conflicts')}</span>
                       <span className="metric-value">{metrics.scheduleEfficiency.conflicts}</span>
                     </div>
                     <div className="quality-metric">
-                      <span className="metric-label">Completion</span>
+                      <span className="metric-label">{t('dashboard.quality.completion')}</span>
                       <span className="metric-value">{metrics.scheduleEfficiency.taskCompletion}%</span>
                     </div>
                   </div>
@@ -619,7 +621,7 @@ const Dashboard = () => {
 
         {/* Critical Equipment Modal */}
         <Modal
-          title="Critical Equipment Requiring Attention"
+          title={t('dashboard.modals.criticalEquipmentTitle')}
           open={criticalModalVisible}
           onCancel={() => setCriticalModalVisible(false)}
           footer={null}
@@ -632,24 +634,24 @@ const Dashboard = () => {
             pagination={{ pageSize: 10 }}
             columns={[
               {
-                title: 'Equipment ID',
+                title: t('dashboard.modals.equipmentId'),
                 dataIndex: 'equipmentId',
                 key: 'equipmentId',
                 width: 120,
                 render: (text) => <strong>{text}</strong>
               },
               {
-                title: 'Name',
+                title: t('dashboard.modals.name'),
                 dataIndex: 'name',
                 key: 'name',
               },
               {
-                title: 'Type',
+                title: t('dashboard.modals.type'),
                 dataIndex: 'type',
                 key: 'type',
               },
               {
-                title: 'Status',
+                title: t('dashboard.modals.status'),
                 dataIndex: 'status',
                 key: 'status',
                 render: (status) => {
@@ -662,7 +664,7 @@ const Dashboard = () => {
                 }
               },
               {
-                title: 'Issue',
+                title: t('dashboard.modals.issue'),
                 key: 'issue',
                 render: (_, record) => {
                   const now = new Date();
@@ -671,10 +673,10 @@ const Dashboard = () => {
                   
                   if (isOverdue) {
                     const daysOverdue = Math.floor((now - new Date(record.nextMaintenance)) / (1000 * 60 * 60 * 24));
-                    return <Tag color="error">Maintenance Overdue ({daysOverdue} days)</Tag>;
+                    return <Tag color="error">{t('dashboard.modals.maintenanceOverdue', { days: daysOverdue })}</Tag>;
                   }
                   if (isOutOfService) {
-                    return <Tag color="error">Out of Service</Tag>;
+                    return <Tag color="error">{t('dashboard.modals.outOfService')}</Tag>;
                   }
                   return '-';
                 }
@@ -688,14 +690,14 @@ const Dashboard = () => {
           title={
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <LineChartOutlined style={{ color: '#2563eb' }} />
-              <span>Schedule Quality Score Explained</span>
+              <span>{t('dashboard.qualityModal.title')}</span>
             </div>
           }
           open={qualityInfoVisible}
           onCancel={() => setQualityInfoVisible(false)}
           footer={[
             <Button key="close" type="primary" onClick={() => setQualityInfoVisible(false)}>
-              Got it!
+              {t('dashboard.qualityModal.gotIt')}
             </Button>
           ]}
           width={700}
@@ -704,11 +706,10 @@ const Dashboard = () => {
           <div style={{ fontSize: '14px', lineHeight: '1.8' }}>
             <div style={{ marginBottom: '20px' }}>
               <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '8px' }}>
-                What is Schedule Quality?
+                {t('dashboard.qualityModal.whatIs')}
               </p>
               <p style={{ color: '#6b7280', margin: 0 }}>
-                Schedule Quality is a composite score (0-100) that measures how well your schedule is optimized. 
-                Higher scores indicate efficient resource utilization, minimal conflicts, and optimal task completion.
+                {t('dashboard.qualityModal.whatIsDesc')}
               </p>
             </div>
 
@@ -716,43 +717,43 @@ const Dashboard = () => {
 
             <div style={{ marginBottom: '20px' }}>
               <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '12px' }}>
-                How is it Calculated?
+                {t('dashboard.qualityModal.howCalculated')}
               </p>
               <div style={{ background: '#f9fafb', padding: '16px', borderRadius: '8px', marginBottom: '12px' }}>
                 <div style={{ marginBottom: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Utilization (40%)</span>
+                    <span style={{ fontWeight: 600, color: '#374151' }}>{t('dashboard.qualityModal.utilizationLabel')}</span>
                     <span style={{ color: '#6b7280' }}>{metrics?.scheduleEfficiency.utilization.toFixed(1)}%</span>
                   </div>
                   <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
-                    Tasks scheduled vs. available capacity. Higher is better.
+                    {t('dashboard.qualityModal.utilizationDesc')}
                   </p>
                 </div>
 
                 <div style={{ marginBottom: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Task Completion (30%)</span>
+                    <span style={{ fontWeight: 600, color: '#374151' }}>{t('dashboard.qualityModal.completionLabel')}</span>
                     <span style={{ color: '#6b7280' }}>{metrics?.scheduleEfficiency.taskCompletion}%</span>
                   </div>
                   <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
-                    Completed tasks vs. planned tasks. Higher is better.
+                    {t('dashboard.qualityModal.completionDesc')}
                   </p>
                 </div>
 
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Conflicts (30% penalty)</span>
-                    <span style={{ color: '#6b7280' }}>{metrics?.scheduleEfficiency.conflicts} conflicts</span>
+                    <span style={{ fontWeight: 600, color: '#374151' }}>{t('dashboard.qualityModal.conflictsLabel')}</span>
+                    <span style={{ color: '#6b7280' }}>{t('dashboard.qualityModal.conflictsValue', { count: metrics?.scheduleEfficiency.conflicts })}</span>
                   </div>
                   <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
-                    Scheduling conflicts and constraint violations. Lower is better.
+                    {t('dashboard.qualityModal.conflictsDesc')}
                   </p>
                 </div>
               </div>
 
               <div style={{ padding: '12px', background: '#dbeafe', borderRadius: '8px', borderLeft: '4px solid #2563eb' }}>
                 <p style={{ margin: 0, fontSize: '13px', color: '#1e40af', fontWeight: 500 }}>
-                  <strong>Formula:</strong> Quality = (Utilization × 0.4) + (TaskCompletion × 0.3) - (Conflicts × 0.3)
+                  <strong>{t('dashboard.qualityModal.formula')}</strong> {t('dashboard.qualityModal.formulaText')}
                 </p>
               </div>
             </div>
@@ -761,26 +762,26 @@ const Dashboard = () => {
 
             <div style={{ marginBottom: '20px' }}>
               <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '12px' }}>
-                Score Ranges
+                {t('dashboard.qualityModal.scoreRanges')}
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '60px', padding: '4px 8px', background: '#d1fae5', color: '#059669', borderRadius: '4px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>
                     80-100
                   </div>
-                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Excellent - Highly optimized schedule</span>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>{t('dashboard.qualityModal.excellent')}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '60px', padding: '4px 8px', background: '#fef3c7', color: '#d97706', borderRadius: '4px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>
                     60-79
                   </div>
-                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Good - Room for improvement</span>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>{t('dashboard.qualityModal.good')}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '60px', padding: '4px 8px', background: '#fee2e2', color: '#dc2626', borderRadius: '4px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>
                     0-59
                   </div>
-                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Needs Attention - Optimize schedule</span>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>{t('dashboard.qualityModal.needsAttention')}</span>
                 </div>
               </div>
             </div>
@@ -789,38 +790,28 @@ const Dashboard = () => {
 
             <div>
               <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '12px' }}>
-                💡 How to Improve Your Score
+                {t('dashboard.qualityModal.howToImprove')}
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
-                  <span style={{ fontSize: '13px', color: '#374151' }}>
-                    <strong>Increase Utilization:</strong> Assign more tasks to available equipment during low-utilization hours
-                  </span>
+                  <span style={{ fontSize: '13px', color: '#374151' }} dangerouslySetInnerHTML={{ __html: t('dashboard.qualityModal.tip1') }} />
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
-                  <span style={{ fontSize: '13px', color: '#374151' }}>
-                    <strong>Reduce Conflicts:</strong> Review equipment availability, task dependencies, and site constraints
-                  </span>
+                  <span style={{ fontSize: '13px', color: '#374151' }} dangerouslySetInnerHTML={{ __html: t('dashboard.qualityModal.tip2') }} />
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
-                  <span style={{ fontSize: '13px', color: '#374151' }}>
-                    <strong>Maintain Equipment:</strong> Keep equipment operational to maximize scheduling flexibility
-                  </span>
+                  <span style={{ fontSize: '13px', color: '#374151' }} dangerouslySetInnerHTML={{ __html: t('dashboard.qualityModal.tip3') }} />
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
-                  <span style={{ fontSize: '13px', color: '#374151' }}>
-                    <strong>Balance Task Limits:</strong> Adjust task limits in Settings to match operational capacity
-                  </span>
+                  <span style={{ fontSize: '13px', color: '#374151' }} dangerouslySetInnerHTML={{ __html: t('dashboard.qualityModal.tip4') }} />
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <span style={{ color: '#10b981', fontSize: '16px' }}>✓</span>
-                  <span style={{ fontSize: '13px', color: '#374151' }}>
-                    <strong>Monitor Delays:</strong> Address recurring delays to improve task completion rates
-                  </span>
+                  <span style={{ fontSize: '13px', color: '#374151' }} dangerouslySetInnerHTML={{ __html: t('dashboard.qualityModal.tip5') }} />
                 </div>
               </div>
             </div>

@@ -814,5 +814,105 @@
       "downloadFailed": "Descarga Fallida",
       "downloadFailedDesc": "Error al descargar programación. Por favor, inténtelo de nuevo."
     }
+  },
+  "dashboard": {
+    "title": "Tablero",
+    "subtitle": "Resumen y Análisis del Negocio",
+    "loading": "Cargando tablero...",
+    "alerts": {
+      "criticalIssue": "Problema Crítico",
+      "criticalIssue_one": "Problema Crítico",
+      "criticalIssue_other": "Problemas Críticos",
+      "detected": "Detectado",
+      "overdueEquipment": "{{count}} equipos atrasados en mantenimiento",
+      "outOfService": "{{count}} equipos fuera de servicio",
+      "fleetAvailabilityLow": "Disponibilidad de flota por debajo del 80%",
+      "viewDetails": "Ver Detalles"
+    },
+    "quickActions": {
+      "title": "Acciones Rápidas",
+      "subtitle": "Flujos de trabajo e informes comunes",
+      "criticalItems": "Elementos Críticos",
+      "maintenance": "Mantenimiento",
+      "generateSchedule": "Generar Programación",
+      "costReports": "Informes de Costos"
+    },
+    "kpis": {
+      "fleetAvailability": "Disponibilidad de Flota",
+      "available": "Disponible",
+      "criticalAlerts": "Alertas Críticas",
+      "overdue": "atrasado",
+      "offline": "desconectado",
+      "maintenanceCost": "Costo de Mantenimiento ({{days}}d)",
+      "labor": "Mano de obra",
+      "parts": "Partes",
+      "scheduleQuality": "Calidad de Programación",
+      "howCalculated": "¿Cómo se calcula esto?",
+      "activeSites": "Sitios Activos",
+      "totalTasks": "Tareas Totales",
+      "delays": "Retrasos",
+      "dueSoon": "Vencimiento Próximo (7d)"
+    },
+    "charts": {
+      "fleetPerformance": "Línea de Tiempo de Rendimiento de Flota (24 Horas)",
+      "fleetPerformanceDesc": "Distribución del estado del equipo y utilización de programación por hora",
+      "operational": "Operacional",
+      "inMaintenance": "En Mantenimiento",
+      "outOfService": "Fuera de Servicio",
+      "utilization": "Utilización %",
+      "criticalEquipment": "Atención de Equipos Críticos",
+      "criticalEquipmentDesc": "Equipos que requieren acción inmediata por tipo",
+      "overdue": "Atrasado",
+      "dueSoon": "Vencimiento Próximo",
+      "offline": "Desconectado",
+      "delayImpact": "Análisis de Impacto de Retrasos",
+      "delayImpactDesc": "Retrasos por categoría que afectan la programación",
+      "delays": "Retrasos",
+      "fleetHealth": "Puntuación de Salud de Flota",
+      "fleetHealthDesc": "Estado operacional por tipo",
+      "qualityBreakdown": "Desglose de Calidad de Programación",
+      "qualityBreakdownDesc": "Componentes que contribuyen a la puntuación general"
+    },
+    "quality": {
+      "utilization": "Utilización",
+      "conflicts": "Conflictos",
+      "completion": "Finalización"
+    },
+    "modals": {
+      "criticalEquipmentTitle": "Equipos Críticos que Requieren Atención",
+      "equipmentId": "ID de Equipo",
+      "name": "Nombre",
+      "type": "Tipo",
+      "status": "Estado",
+      "issue": "Problema",
+      "maintenanceOverdue": "Mantenimiento Atrasado ({{days}} días)",
+      "outOfService": "Fuera de Servicio"
+    },
+    "qualityModal": {
+      "title": "Explicación de la Puntuación de Calidad de Programación",
+      "gotIt": "¡Entendido!",
+      "whatIs": "¿Qué es la Calidad de Programación?",
+      "whatIsDesc": "La Calidad de Programación es una puntuación compuesta (0-100) que mide qué tan bien está optimizada su programación. Puntuaciones más altas indican una utilización eficiente de recursos, conflictos mínimos y finalización óptima de tareas.",
+      "howCalculated": "¿Cómo se Calcula?",
+      "utilizationLabel": "Utilización (40%)",
+      "utilizationDesc": "Tareas programadas vs. capacidad disponible. Mayor es mejor.",
+      "completionLabel": "Finalización de Tareas (30%)",
+      "completionDesc": "Tareas completadas vs. tareas planificadas. Mayor es mejor.",
+      "conflictsLabel": "Conflictos (penalización del 30%)",
+      "conflictsValue": "{{count}} conflictos",
+      "conflictsDesc": "Conflictos de programación y violaciones de restricciones. Menor es mejor.",
+      "formula": "Fórmula:",
+      "formulaText": "Calidad = (Utilización × 0.4) + (FinalizaciónTareas × 0.3) - (Conflictos × 0.3)",
+      "scoreRanges": "Rangos de Puntuación",
+      "excellent": "Excelente - Programación altamente optimizada",
+      "good": "Bueno - Espacio para mejoras",
+      "needsAttention": "Necesita Atención - Optimizar programación",
+      "howToImprove": "💡 Cómo Mejorar su Puntuación",
+      "tip1": "<strong>Aumentar Utilización:</strong> Asignar más tareas a equipos disponibles durante horas de baja utilización",
+      "tip2": "<strong>Reducir Conflictos:</strong> Revisar disponibilidad de equipos, dependencias de tareas y restricciones del sitio",
+      "tip3": "<strong>Mantener Equipos:</strong> Mantener equipos operacionales para maximizar flexibilidad de programación",
+      "tip4": "<strong>Balancear Límites de Tareas:</strong> Ajustar límites de tareas en Configuración para coincidir con capacidad operacional",
+      "tip5": "<strong>Monitorear Retrasos:</strong> Abordar retrasos recurrentes para mejorar tasas de finalización de tareas"
+    }
   }
 }
