@@ -221,7 +221,7 @@
 .schedule-cell {
   position: relative;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: background-color 0.15s ease;
   height: 36px;
   width: 44px;
   min-width: 44px;
@@ -233,7 +233,10 @@
 }
 
 .schedule-cell:hover {
-  background: #f9fafb;
+  background: #f3f4f6;
+  outline: 1px solid #e5e7eb;
+  outline-offset: -1px;
+  z-index: 5;
 }
 
 .schedule-cell.has-task .task-label {
