@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import { 
@@ -17,14 +17,48 @@ import {
 import './Help.css';
 
 const Help = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [expandedSection, setExpandedSection] = useState(null);
+  const [helpContent, setHelpContent] = useState({ sections: [] });
+
+  useEffect(() => {
+    // Load help content based on current language
+    const loadHelpContent = async () => {
+      try {
+        const content = await import(`../locales/${i18n.language}/helpContent.json`);
+        setHelpContent(content.default || content);
+      } catch (error) {
+        // Fallback to English if translation not available
+        const content = await import(`../locales/en/helpContent.json`);
+        setHelpContent(content.default || content);
+      }
+    };
+    loadHelpContent();
+  }, [i18n.language]);
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  const userJourney = [
+  // Icon mapping for sections
+  const getIcon = (id) => {
+    const iconMap = {
+      'getting-started': <PlayCircleFilled />,
+      'setup': <SettingFilled />,
+      'tasks': <FileTextFilled />,
+      'sites': <EnvironmentFilled />,
+      'equipment': <ToolFilled />,
+      'delays': <ClockCircleFilled />,
+      'maintenance-logs': <ToolFilled />,
+      'scheduling': <CalendarFilled />,
+      'core-logic': <ThunderboltFilled />,
+      'tips': <BulbFilled />
+    };
+    return iconMap[id] || <FileTextFilled />;
+  };
+
+  // OLD CODE REMOVED - Now using dynamic helpContent loaded from JSON files
+  const userJourney_OLD_REMOVED = [
     {
       id: 'getting-started',
       icon: <PlayCircleFilled />,
@@ -399,7 +433,7 @@ const Help = () => {
 
         {/* Journey Steps */}
         <div className="help-journey">
-          {userJourney.map((section, index) => (
+          {helpContent.sections.map((section, index) => (
             <div 
               key={section.id} 
               className={`help-section ${expandedSection === section.id ? 'expanded' : ''}`}
@@ -410,7 +444,7 @@ const Help = () => {
               >
                 <div className="help-section-left">
                   <div className="help-section-number">{index + 1}</div>
-                  <div className="help-section-icon">{section.icon}</div>
+                  <div className="help-section-icon">{getIcon(section.id)}</div>
                   <div className="help-section-info">
                     <h2>{section.title}</h2>
                     <p>{section.description}</p>
@@ -423,13 +457,13 @@ const Help = () => {
 
               {expandedSection === section.id && (
                 <div className="help-section-content">
-                  {section.steps.map((step) => (
-                    <div key={step.number} className="help-step">
+                  {section.steps.map((step, stepIndex) => (
+                    <div key={stepIndex} className="help-step">
                       <div className="help-step-number">
                         <CheckCircleFilled />
                       </div>
                       <div className="help-step-content">
-                        <h3>{step.number}. {step.title}</h3>
+                        <h3>{stepIndex + 1}. {step.title}</h3>
                         <p>{step.content}</p>
                       </div>
                     </div>

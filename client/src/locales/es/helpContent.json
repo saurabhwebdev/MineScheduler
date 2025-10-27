@@ -1,0 +1,294 @@
+{
+  "sections": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "description": "Set up your system and understand the basics",
+      "steps": [
+        {
+          "title": "Login to the System",
+          "content": "Use your credentials to access MineScheduler. First-time users will be required to reset their password for security."
+        },
+        {
+          "title": "Understand the Dashboard",
+          "content": "The Home dashboard provides an overview of equipment status, maintenance schedules, and KPIs. Use this as your starting point each day."
+        },
+        {
+          "title": "Navigate the Sidebar",
+          "content": "Access all modules from the left sidebar: Schedule, Tasks, Delays, Sites, Equipment, and Settings. Hover over icons to see labels."
+        }
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "Initial Configuration",
+      "description": "Configure your system before creating schedules",
+      "steps": [
+        {
+          "title": "Configure Constants",
+          "content": "Go to Settings → Constants. Set mining parameters like WIDTH, HEIGHT, and DENSITY. These are used in task duration calculations."
+        },
+        {
+          "title": "Set Up Shifts",
+          "content": "Go to Settings → Shift Configuration. Define your work shifts (e.g., Day Shift 06:00-18:00). Configure shift changeover durations for automatic delays."
+        },
+        {
+          "title": "Define Equipment Types",
+          "content": "Go to Settings → Equipment Types. Create categories for your equipment (e.g., Drills, Loaders, Trucks). This helps in organizing your fleet."
+        },
+        {
+          "title": "Configure UOMs",
+          "content": "Go to Settings → UOM Configuration. Set up Units of Measure for tasks (meters/hour, tonnes/hour, etc.). This determines how task durations are calculated."
+        }
+      ]
+    },
+    {
+      "id": "tasks",
+      "title": "Creating Tasks",
+      "description": "Define the tasks that will be scheduled",
+      "steps": [
+        {
+          "title": "Add New Task",
+          "content": "Navigate to Tasks page. Click \"Add Task\" button. Each task represents an activity in your mining cycle (e.g., Drilling, Charging, Blasting)."
+        },
+        {
+          "title": "Configure Task Properties",
+          "content": "Set Task ID (unique code), Name, UOM type, Rate/Duration, Color, and Order. The Order determines the sequence in the mining cycle."
+        },
+        {
+          "title": "Set Task Limits",
+          "content": "Configure how many sites can perform this task simultaneously per hour. This prevents resource conflicts."
+        },
+        {
+          "title": "Import Tasks via Excel",
+          "content": "For bulk setup, download the template, fill in task details, and import. This is faster for multiple tasks."
+        }
+      ]
+    },
+    {
+      "id": "sites",
+      "title": "Managing Sites",
+      "description": "Set up mining sites and their parameters",
+      "steps": [
+        {
+          "title": "Add Site",
+          "content": "Go to Sites page. Click \"Add Site\". Enter Site ID (e.g., G701), name, location, and priority. Lower priority numbers are scheduled first."
+        },
+        {
+          "title": "Set Site Parameters",
+          "content": "Configure Total Plan Meters, Backfill Tonnes, Remote Tonnes, Width, and Height. These values are used to calculate task durations."
+        },
+        {
+          "title": "Set Current Task and Firings",
+          "content": "Specify which task the site is currently on and number of blast cycles (firings). The system will schedule tasks in sequence for each cycle."
+        },
+        {
+          "title": "Use Time to Complete Override",
+          "content": "If you know exactly how long the current task will take, enter it in \"Time to Complete (hrs)\". This overrides the calculated duration for the first task."
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "title": "Equipment Management",
+      "description": "Track and assign equipment to tasks",
+      "steps": [
+        {
+          "title": "Add Equipment",
+          "content": "Navigate to Equipment page. Add your fleet with Equipment ID, Name, Type, and Status. Track specifications, location, and serial numbers."
+        },
+        {
+          "title": "Assign Tasks to Equipment",
+          "content": "In the \"Tasks\" tab of equipment form, select which tasks this equipment can perform. This links equipment to the scheduling system."
+        },
+        {
+          "title": "Configure Maintenance",
+          "content": "Set Maintenance Interval (hours) and track Operating Hours. The system calculates when maintenance is due."
+        },
+        {
+          "title": "View Maintenance Opportunities",
+          "content": "The Maintenance Grid shows hourly availability of equipment. Blue cells indicate good times for maintenance when equipment is not in use."
+        }
+      ]
+    },
+    {
+      "id": "delays",
+      "title": "Delay Management",
+      "description": "Define and track operational delays",
+      "steps": [
+        {
+          "title": "Set Up Delay Codes",
+          "content": "Go to Delays page. Create delay codes with Category (e.g., Equipment, Operational) and Code (e.g., EQ-001). Add descriptions for clarity."
+        },
+        {
+          "title": "Import Standard Delays",
+          "content": "Download the delay template, define your standard delay codes, and import them. This creates a consistent delay tracking system."
+        },
+        {
+          "title": "Standard vs Custom Delays",
+          "content": "Standard delays have predefined durations. Custom delays are entered on-the-fly during scheduling."
+        }
+      ]
+    },
+    {
+      "id": "maintenance-logs",
+      "title": "Maintenance Logs",
+      "description": "Track and analyze equipment maintenance history",
+      "steps": [
+        {
+          "title": "Record Maintenance Events",
+          "content": "Go to Maintenance Logs page. Click \"New Log\" to record maintenance activities. Select equipment, maintenance type (scheduled/unscheduled/preventive/breakdown), date performed, and duration."
+        },
+        {
+          "title": "Track Costs",
+          "content": "Enter labor costs and parts costs for each maintenance event. This helps analyze total cost of ownership and identify expensive equipment."
+        },
+        {
+          "title": "Set Next Due Date",
+          "content": "When recording maintenance, set the next maintenance due date. This integrates with the equipment maintenance tracking system."
+        },
+        {
+          "title": "View Analytics",
+          "content": "Switch to Analytics tab to see maintenance trends, costs by equipment, breakdown frequency, and compliance metrics. Use filters to analyze specific equipment or time periods."
+        },
+        {
+          "title": "Import Maintenance History",
+          "content": "Click \"Import\" to bulk upload historical maintenance data via Excel. Download the template, fill in maintenance records, and import to build your maintenance history database."
+        },
+        {
+          "title": "Export Reports",
+          "content": "Click \"Export to Excel\" to download maintenance logs for reporting or analysis. Filtered results will be exported based on your current filter selections."
+        }
+      ]
+    },
+    {
+      "id": "scheduling",
+      "title": "Creating a Schedule",
+      "description": "Generate and manage your mine schedule",
+      "steps": [
+        {
+          "title": "Navigate to Schedule Page",
+          "content": "Click Schedule in the sidebar. Choose between 24-hour or 48-hour grid view using the toggle at the top."
+        },
+        {
+          "title": "Generate Schedule",
+          "content": "Click \"Generate Schedule\" button. The system calculates task allocations based on your sites, tasks, and configuration. This takes a few seconds."
+        },
+        {
+          "title": "Understand the Grid",
+          "content": "Each row is a site, each column is an hour. Color-coded cells show which task is scheduled. Priority sites appear first. Inactive sites are grayed out."
+        },
+        {
+          "title": "Add Delays",
+          "content": "Click any cell or hour header to mark delays. Select delay category, code, duration, and notes. Delays block task allocation for that period."
+        },
+        {
+          "title": "Regenerate with Delays",
+          "content": "After adding delays, click \"Generate Schedule\" again. The system will reschedule around the blocked hours."
+        },
+        {
+          "title": "Save as Snapshot",
+          "content": "Click \"Save Snapshot\" to preserve this schedule version. Give it a name and description. Access historical snapshots anytime."
+        },
+        {
+          "title": "Toggle Site Status",
+          "content": "Click site name in grid to toggle active/inactive. Inactive sites are skipped in scheduling but remain visible for reference."
+        }
+      ]
+    },
+    {
+      "id": "core-logic",
+      "title": "How the Core Logic Works",
+      "description": "Understanding the scheduling and maintenance algorithms",
+      "steps": [
+        {
+          "title": "Task Duration Calculation",
+          "content": "The system calculates task durations based on Unit of Measure (UOM) types: (1) Area-based: Duration = (Total Plan Meters ÷ Rate m/h) × 60. For example, 100m at 10m/h = 10 hours. (2) Tonnage-based: Duration = (Total Backfill Tonnes × 60) ÷ Rate t/h. If tonnes not provided, calculates from Width × Height × Length × Density. (3) BOGT (Bogger/Trolley): Duration = (Remote Tonnes ÷ Rate) × 60. (4) BFP (Backfill Prep): Uses fixed duration only if tonnes > 0, skips if no backfill. (5) Task (Fixed): Uses configured duration in minutes directly. All durations are rounded up to next whole hour."
+        },
+        {
+          "title": "Priority-Based Allocation",
+          "content": "Sites are sorted by Priority (lower number = higher priority) before scheduling. Active sites come first, then inactive. The scheduler processes sites in this order, allocating tasks sequentially. This ensures critical sites get scheduled first when resources are limited."
+        },
+        {
+          "title": "Task Cycling & Firings",
+          "content": "Firings represent blast cycles. For Firings = 1: System schedules tasks from current task to end of cycle (no wrap). For Firings > 1: System schedules complete mining cycle (drill → charge → blast → ventilate → etc.) and repeats it \"Firings\" times. Tasks follow the Order sequence defined in Tasks page."
+        },
+        {
+          "title": "Time to Complete Override",
+          "content": "When \"Time to Complete\" is set for a site, it overrides the calculated duration ONLY for the first occurrence of the current task. Subsequent tasks and cycles use normal duration calculations. This is useful when you know exact remaining time for an in-progress task."
+        },
+        {
+          "title": "Task Limits Enforcement",
+          "content": "Each task has a \"Limit\" defining max simultaneous sites per hour. For example, if Drill limit = 2, only 2 sites can drill in the same hour. The scheduler checks hourly allocation and skips hours where limit is reached, moving to the next available hour. This prevents equipment conflicts."
+        },
+        {
+          "title": "Delay Handling",
+          "content": "Delays block specific hours for specific sites. When generating schedule, the system builds a delay map and skips those hours during allocation. This forces tasks to be scheduled around delays. Shift changeover delays are automatically generated based on shift configuration."
+        },
+        {
+          "title": "Hour Allocation Algorithm",
+          "content": "For each site, the scheduler: (1) Starts at hour 0 or last filled hour. (2) Checks if hour is delayed - if yes, skip to next hour. (3) Checks if cell already filled - if yes, skip to next hour. (4) Checks task limit for that hour - if reached, skip to next hour. (5) If all checks pass, allocate task to that hour and increment counter. (6) Repeat until all hours for task are allocated or grid ends."
+        },
+        {
+          "title": "Maintenance Opportunity Grid Logic",
+          "content": "Equipment is assigned to specific tasks via \"Assigned Tasks\" field. The system: (1) Checks each hour to see which tasks are running (from schedule grid). (2) If ANY task assigned to an equipment is running, marks equipment as \"In Use\" (Green). (3) If equipment is operational AND not in use, marks hour as \"Maintenance Window\" (Blue). (4) Considers operating hours vs maintenance interval to show status: Good (< 80%), Due Soon (80-99%), Overdue (≥ 100%)."
+        },
+        {
+          "title": "Equipment Maintenance Calculation",
+          "content": "Maintenance status is calculated as: Percent Used = (Operating Hours ÷ Maintenance Interval) × 100. For example, equipment with 450 hours operated and 500-hour interval = 90% (Due Soon). Hours Until Maintenance = Maintenance Interval - Operating Hours. The system tracks this automatically and shows visual indicators (Green/Orange/Red)."
+        },
+        {
+          "title": "Shift Changeover Auto-Delay",
+          "content": "When shifts are configured with changeover duration (e.g., 30 minutes), the system automatically blocks the hour BEFORE each shift starts. For example: Day shift starts at 06:00 with 30-min changeover → Hour 5 (05:00-06:00) is automatically blocked for ALL active sites. This prevents task allocation during crew changes."
+        },
+        {
+          "title": "Schedule Grid Color Coding",
+          "content": "Each task has a unique color defined in Tasks page. The grid uses these colors to visualize the schedule. Empty cells = white (available), Colored cells = task assigned, Gray cells = inactive site, Delayed cells show with visual indicators. This provides instant visual understanding of the schedule."
+        },
+        {
+          "title": "Snapshot & History",
+          "content": "Snapshots save complete schedule state including: grid allocation, task durations, site priorities, delays, and all parameters. This allows: (1) Historical comparison - see how schedules evolved. (2) Rollback capability - restore previous versions. (3) Audit trail - track schedule changes over time. Snapshots are immutable once saved."
+        }
+      ]
+    },
+    {
+      "id": "tips",
+      "title": "Best Practices & Tips",
+      "description": "Optimize your scheduling workflow",
+      "steps": [
+        {
+          "title": "Set Priorities Correctly",
+          "content": "Lower priority numbers = higher importance. Use priorities to control which sites get scheduled first when resources are limited."
+        },
+        {
+          "title": "Use Task Orders",
+          "content": "Task order defines the mining cycle sequence. Ensure tasks are numbered correctly (e.g., 1=Drill, 2=Charge, 3=Blast, 4=Ventilate)."
+        },
+        {
+          "title": "Leverage Excel Import",
+          "content": "For initial setup or bulk updates, use Excel import. Download templates, fill offline, and import. This is much faster than manual entry."
+        },
+        {
+          "title": "Monitor Equipment Maintenance",
+          "content": "Check the Equipment Dashboard regularly. Schedule maintenance during \"blue\" hours in the Maintenance Grid when equipment is available."
+        },
+        {
+          "title": "Use Shift Changeover",
+          "content": "Configure shift changeover durations in Settings. The system automatically blocks those hours, preventing task allocation during crew changes."
+        },
+        {
+          "title": "Review Audit Logs",
+          "content": "Admins can check Audit page to see who made changes and when. This helps track schedule modifications and maintain accountability."
+        },
+        {
+          "title": "Save Snapshots Regularly",
+          "content": "Create snapshots before major changes. This lets you compare schedules and revert if needed. Name them clearly (e.g., \"Week 12 - Initial\")."
+        },
+        {
+          "title": "Understand UOM Types",
+          "content": "Area-based (m/h), Tonnage-based (t/h), BOGT (trolley), BFP (backfill prep), and Task (fixed time). Choose the right UOM for accurate duration calculations."
+        }
+      ]
+    }
+  ]
+}
