@@ -31,7 +31,7 @@
   padding: 0 16px;
   background-color: #062d54;
   color: #ffffff;
-  border: none;
+  border: 1px solid #062d54;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
@@ -39,11 +39,12 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .task-page .btn-primary:hover {
   background-color: #0a3d6e;
+  border-color: #0a3d6e;
 }
 
 .task-page .btn-secondary {
@@ -73,7 +74,7 @@
   padding: 0 16px;
   background-color: #3cca70;
   color: #ffffff;
-  border: none;
+  border: 1px solid #3cca70;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
@@ -81,11 +82,12 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .task-page .btn-success:hover {
   background-color: #34b35e;
+  border-color: #34b35e;
 }
 
 /* Table Container */
