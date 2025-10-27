@@ -159,6 +159,7 @@
 .hour-header-clickable:hover {
   background: #3b82f6 !important;
   color: #ffffff !important;
+  border-radius: 0 !important;
 }
 
 /* Sortable Site Column */
