@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Table, Modal, Form, Input, Select, InputNumber, notification, ColorPicker, Upload, Alert, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UpOutlined, DownOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import config from '../config/config';
 import { generateTaskColor } from '../utils/colorGenerator';
@@ -22,6 +23,7 @@ const getUomNumerator = (uom) => {
 };
 
 const Tasks = () => {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState([]);
   const [uoms, setUoms] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -75,15 +77,15 @@ const Tasks = () => {
         setTasks(data.data.tasks);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch tasks',
+          message: t('tasks.messages.error'),
+          description: data.message || t('tasks.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch tasks',
+        message: t('tasks.messages.networkError'),
+        description: t('tasks.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -186,14 +188,14 @@ const Tasks = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Task updated successfully',
+            message: t('tasks.messages.success'),
+            description: t('tasks.messages.updateSuccess'),
           });
           fetchTasks();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update task',
+            message: t('tasks.messages.error'),
+            description: data.message || t('tasks.messages.updateError'),
           });
         }
       } else {
@@ -209,14 +211,14 @@ const Tasks = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Task created successfully',
+            message: t('tasks.messages.success'),
+            description: t('tasks.messages.createSuccess'),
           });
           fetchTasks();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create task',
+            message: t('tasks.messages.error'),
+            description: data.message || t('tasks.messages.createError'),
           });
         }
       }
@@ -248,21 +250,21 @@ const Tasks = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Task deleted successfully',
+          message: t('tasks.messages.success'),
+          description: t('tasks.messages.deleteSuccess'),
         });
         fetchTasks();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete task',
+          message: t('tasks.messages.error'),
+          description: data.message || t('tasks.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting task:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete task',
+        message: t('tasks.messages.networkError'),
+        description: t('tasks.messages.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -294,20 +296,20 @@ const Tasks = () => {
       if (response.ok && data.status === 'success') {
         setTasks(data.data.tasks);
         notification.success({
-          message: 'Success',
-          description: `Task moved ${moveDirection} successfully`,
+          message: t('tasks.messages.success'),
+          description: t('tasks.messages.moveSuccess', { direction: moveDirection }),
         });
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to move task',
+          message: t('tasks.messages.error'),
+          description: data.message || t('tasks.messages.moveError'),
         });
       }
     } catch (error) {
       console.error('Error moving task:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to move task',
+        message: t('tasks.messages.networkError'),
+        description: t('tasks.messages.moveError'),
       });
     } finally {
       setIsMoveModalVisible(false);
@@ -360,8 +362,8 @@ const Tasks = () => {
     XLSX.writeFile(wb, 'Task_Import_Template.xlsx');
     
     notification.success({
-      message: 'Template Downloaded',
-      description: 'Excel template has been downloaded successfully',
+      message: t('tasks.messages.templateDownloaded'),
+      description: t('tasks.messages.templateDownloadedDesc'),
     });
   };
 
@@ -379,8 +381,8 @@ const Tasks = () => {
   const handleImportSubmit = async () => {
     if (!importFile) {
       notification.error({
-        message: 'No File Selected',
-        description: 'Please select an Excel file to import',
+        message: t('tasks.messages.noFileSelected'),
+        description: t('tasks.messages.selectFileError'),
       });
       return;
     }
@@ -404,21 +406,21 @@ const Tasks = () => {
       if (response.ok && data.status === 'success') {
         setImportResults(data.data);
         notification.success({
-          message: 'Import Completed',
+          message: t('tasks.messages.importCompleted'),
           description: data.message,
         });
         fetchTasks();
       } else {
         notification.error({
-          message: 'Import Failed',
-          description: data.message || 'Failed to import Excel file',
+          message: t('tasks.messages.importFailed'),
+          description: data.message || t('tasks.messages.importError'),
         });
       }
     } catch (error) {
       console.error('Import error:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to import Excel file',
+        message: t('tasks.messages.networkError'),
+        description: t('tasks.messages.importError'),
       });
     } finally {
       setImporting(false);
