@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Form, Input, InputNumber, Select, DatePicker, notification, Upload, Alert, Tag, Card, Row, Col, Statistic, Tabs } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined, DollarOutlined, ToolOutlined, CalendarOutlined, WarningOutlined, BarChartOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
@@ -13,6 +14,7 @@ const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
 const MaintenanceLogs = () => {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [equipment, setEquipment] = useState([]);
   const [stats, setStats] = useState(null);
@@ -78,15 +80,15 @@ const MaintenanceLogs = () => {
         setLogs(data.data.logs);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch maintenance logs',
+          message: t('maintenanceLogs.messages.error'),
+          description: data.message || t('maintenanceLogs.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching maintenance logs:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch maintenance logs',
+        message: t('maintenanceLogs.messages.networkError'),
+        description: t('maintenanceLogs.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -186,15 +188,15 @@ const MaintenanceLogs = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Maintenance log updated successfully',
+            message: t('maintenanceLogs.messages.success'),
+            description: t('maintenanceLogs.messages.updateSuccess'),
           });
           fetchLogs();
           fetchStats();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update maintenance log',
+            message: t('maintenanceLogs.messages.error'),
+            description: data.message || t('maintenanceLogs.messages.updateError'),
           });
         }
       } else {
@@ -211,15 +213,15 @@ const MaintenanceLogs = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Maintenance log created successfully',
+            message: t('maintenanceLogs.messages.success'),
+            description: t('maintenanceLogs.messages.createSuccess'),
           });
           fetchLogs();
           fetchStats();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create maintenance log',
+            message: t('maintenanceLogs.messages.error'),
+            description: data.message || t('maintenanceLogs.messages.createError'),
           });
         }
       }
@@ -251,22 +253,22 @@ const MaintenanceLogs = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Maintenance log deleted successfully',
+          message: t('maintenanceLogs.messages.success'),
+          description: t('maintenanceLogs.messages.deleteSuccess'),
         });
         fetchLogs();
         fetchStats();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete maintenance log',
+          message: t('maintenanceLogs.messages.error'),
+          description: data.message || t('maintenanceLogs.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting maintenance log:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete maintenance log',
+        message: t('maintenanceLogs.messages.networkError'),
+        description: t('maintenanceLogs.messages.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -317,15 +319,15 @@ const MaintenanceLogs = () => {
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Maintenance Logs');
         XLSX.writeFile(workbook, 'maintenance_logs_export.xlsx');
         notification.success({
-          message: 'Success',
-          description: 'Maintenance logs exported successfully',
+          message: t('maintenanceLogs.messages.success'),
+          description: t('maintenanceLogs.messages.exportSuccess'),
         });
       }
     } catch (error) {
       console.error('Error exporting maintenance logs:', error);
       notification.error({
-        message: 'Error',
-        description: 'Failed to export maintenance logs',
+        message: t('maintenanceLogs.messages.error'),
+        description: t('maintenanceLogs.messages.exportError'),
       });
     }
   };
@@ -333,8 +335,8 @@ const MaintenanceLogs = () => {
   const handleImport = async () => {
     if (!importFile) {
       notification.error({
-        message: 'Error',
-        description: 'Please select a file to import',
+        message: t('maintenanceLogs.messages.error'),
+        description: t('maintenanceLogs.messages.selectFileError'),
       });
       return;
     }
@@ -362,15 +364,15 @@ const MaintenanceLogs = () => {
         if (response.ok && result.status === 'success') {
           setImportResults(result.data);
           notification.success({
-            message: 'Import Complete',
-            description: `Imported ${result.data.imported} maintenance logs successfully`,
+            message: t('maintenanceLogs.messages.importComplete'),
+            description: t('maintenanceLogs.messages.importSuccess', { count: result.data.imported }),
           });
           fetchLogs();
           fetchStats();
         } else {
           notification.error({
-            message: 'Error',
-            description: result.message || 'Failed to import maintenance logs',
+            message: t('maintenanceLogs.messages.error'),
+            description: result.message || t('maintenanceLogs.messages.importError'),
           });
         }
       };
@@ -378,8 +380,8 @@ const MaintenanceLogs = () => {
     } catch (error) {
       console.error('Error importing maintenance logs:', error);
       notification.error({
-        message: 'Error',
-        description: 'Failed to import maintenance logs',
+        message: t('maintenanceLogs.messages.error'),
+        description: t('maintenanceLogs.messages.importError'),
       });
     } finally {
       setImporting(false);
@@ -404,7 +406,7 @@ const MaintenanceLogs = () => {
 
   const columns = [
     {
-      title: 'DATE',
+      title: t('maintenanceLogs.columns.date'),
       dataIndex: 'performedDate',
       key: 'performedDate',
       render: (date) => moment(date).format('MMM D, YYYY'),
@@ -412,7 +414,7 @@ const MaintenanceLogs = () => {
       width: 120,
     },
     {
-      title: 'EQUIPMENT',
+      title: t('maintenanceLogs.columns.equipment'),
       dataIndex: ['equipment', 'equipmentId'],
       key: 'equipment',
       render: (_, record) => (
@@ -424,7 +426,7 @@ const MaintenanceLogs = () => {
       width: 150,
     },
     {
-      title: 'TYPE',
+      title: t('maintenanceLogs.columns.type'),
       dataIndex: 'maintenanceType',
       key: 'maintenanceType',
       render: (type) => {
@@ -439,34 +441,34 @@ const MaintenanceLogs = () => {
       width: 130,
     },
     {
-      title: 'DESCRIPTION',
+      title: t('maintenanceLogs.columns.description'),
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
     },
     {
-      title: 'PERFORMED BY',
+      title: t('maintenanceLogs.columns.performedBy'),
       dataIndex: 'performedBy',
       key: 'performedBy',
       render: (by) => by || '-',
       width: 140,
     },
     {
-      title: 'LABOR',
+      title: t('maintenanceLogs.columns.labor'),
       dataIndex: 'laborCost',
       key: 'laborCost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
       width: 90,
     },
     {
-      title: 'PARTS',
+      title: t('maintenanceLogs.columns.parts'),
       dataIndex: 'partsCost',
       key: 'partsCost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
       width: 90,
     },
     {
-      title: 'TOTAL',
+      title: t('maintenanceLogs.columns.total'),
       dataIndex: 'cost',
       key: 'cost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
@@ -474,27 +476,27 @@ const MaintenanceLogs = () => {
       width: 90,
     },
     {
-      title: 'DURATION',
+      title: t('maintenanceLogs.columns.duration'),
       dataIndex: 'duration',
       key: 'duration',
       render: (duration) => duration ? `${duration}h` : '-',
       width: 90,
     },
     {
-      title: 'NEXT DUE',
+      title: t('maintenanceLogs.columns.nextDue'),
       dataIndex: 'nextDue',
       key: 'nextDue',
       render: (date) => date ? moment(date).format('MMM D, YYYY') : '-',
       width: 120,
     },
     {
-      title: 'ACTIONS',
+      title: t('maintenanceLogs.columns.actions'),
       key: 'actions',
       align: 'center',
       width: 120,
       render: (_, record) => (
         <div className="action-buttons">
-          <button className="icon-btn" onClick={() => showDetailModal(record)} title="View Details">
+          <button className="icon-btn" onClick={() => showDetailModal(record)} title={t('maintenanceLogs.tooltips.viewDetails')}>
             <EyeOutlined />
           </button>
           <button className="icon-btn" onClick={() => handleEditLog(record)}>
@@ -513,8 +515,8 @@ const MaintenanceLogs = () => {
 
   return (
     <DashboardLayout
-      title="Maintenance Logs"
-      subtitle="Track and manage equipment maintenance records"
+      title={t('maintenanceLogs.title')}
+      subtitle={t('maintenanceLogs.subtitle')}
       page="maintenance-logs"
     >
       <div className="maintenance-logs-page">
@@ -527,7 +529,7 @@ const MaintenanceLogs = () => {
               key: 'logs',
               label: (
                 <span>
-                  <UnorderedListOutlined /> Maintenance Logs
+                  <UnorderedListOutlined /> {t('maintenanceLogs.tabs.logs')}
                 </span>
               ),
               children: (
@@ -538,7 +540,7 @@ const MaintenanceLogs = () => {
             <Col xs={24} sm={12} lg={6}>
               <Card className="stat-card">
                 <Statistic
-                  title="Total Logs"
+                  title={t('maintenanceLogs.stats.totalLogs')}
                   value={stats.totalLogs}
                   prefix={<ToolOutlined />}
                   valueStyle={{ color: '#3f8600' }}
@@ -548,7 +550,7 @@ const MaintenanceLogs = () => {
             <Col xs={24} sm={12} lg={6}>
               <Card className="stat-card">
                 <Statistic
-                  title="This Month"
+                  title={t('maintenanceLogs.stats.thisMonth')}
                   value={stats.currentMonth?.cost || 0}
                   prefix={<DollarOutlined />}
                   precision={2}
@@ -560,7 +562,7 @@ const MaintenanceLogs = () => {
             <Col xs={24} sm={12} lg={6}>
               <Card className="stat-card">
                 <Statistic
-                  title="Upcoming (7 days)"
+                  title={t('maintenanceLogs.stats.upcoming')}
                   value={stats.upcoming || 0}
                   prefix={<CalendarOutlined />}
                   valueStyle={{ color: '#faad14' }}
@@ -570,7 +572,7 @@ const MaintenanceLogs = () => {
             <Col xs={24} sm={12} lg={6}>
               <Card className="stat-card">
                 <Statistic
-                  title="Overdue"
+                  title={t('maintenanceLogs.stats.overdue')}
                   value={stats.overdue || 0}
                   prefix={<WarningOutlined />}
                   valueStyle={{ color: '#cf1322' }}
@@ -585,7 +587,7 @@ const MaintenanceLogs = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={6}>
               <Select
-                placeholder="Filter by Equipment"
+                placeholder={t('maintenanceLogs.filters.equipment')}
                 style={{ width: '100%' }}
                 allowClear
                 showSearch
@@ -604,16 +606,16 @@ const MaintenanceLogs = () => {
             </Col>
             <Col xs={24} sm={12} md={6}>
               <Select
-                placeholder="Filter by Type"
+                placeholder={t('maintenanceLogs.filters.type')}
                 style={{ width: '100%' }}
                 allowClear
                 value={filters.type}
                 onChange={(value) => handleFilterChange('type', value)}
               >
-                <Option value="scheduled">Scheduled</Option>
-                <Option value="unscheduled">Unscheduled</Option>
-                <Option value="emergency">Emergency</Option>
-                <Option value="inspection">Inspection</Option>
+                <Option value="scheduled">{t('maintenanceLogs.types.scheduled')}</Option>
+                <Option value="unscheduled">{t('maintenanceLogs.types.unscheduled')}</Option>
+                <Option value="emergency">{t('maintenanceLogs.types.emergency')}</Option>
+                <Option value="inspection">{t('maintenanceLogs.types.inspection')}</Option>
               </Select>
             </Col>
             <Col xs={24} sm={12} md={8}>
@@ -625,7 +627,7 @@ const MaintenanceLogs = () => {
             </Col>
             <Col xs={24} sm={12} md={4}>
               <button className="btn-secondary" style={{ width: '100%' }} onClick={clearFilters}>
-                Clear Filters
+                {t('maintenanceLogs.clearFilters')}
               </button>
             </Col>
           </Row>
@@ -635,16 +637,16 @@ const MaintenanceLogs = () => {
         <div className="page-header">
           <div className="header-actions">
             <button className="btn-secondary" onClick={handleDownloadTemplate}>
-              <DownloadOutlined /> Template
+              <DownloadOutlined /> {t('maintenanceLogs.template')}
             </button>
             <button className="btn-secondary" onClick={() => setIsImportModalVisible(true)}>
-              <UploadOutlined /> Import
+              <UploadOutlined /> {t('maintenanceLogs.import')}
             </button>
             <button className="btn-secondary" onClick={handleExport}>
-              <DownloadOutlined /> Export
+              <DownloadOutlined /> {t('maintenanceLogs.export')}
             </button>
             <button className="btn-primary" onClick={handleCreateLog}>
-              <PlusOutlined /> New Log
+              <PlusOutlined /> {t('maintenanceLogs.newLog')}
             </button>
           </div>
         </div>
@@ -667,25 +669,25 @@ const MaintenanceLogs = () => {
 
         {/* Create/Edit Modal */}
         <Modal
-          title={editingLog ? 'Edit Maintenance Log' : 'New Maintenance Log'}
+          title={editingLog ? t('maintenanceLogs.editLog') : t('maintenanceLogs.newLog')}
           open={isModalVisible}
           onOk={handleModalOk}
           onCancel={() => {
             setIsModalVisible(false);
             form.resetFields();
           }}
-          okText={editingLog ? 'Save' : 'Create'}
-          cancelText="Cancel"
+          okText={editingLog ? t('maintenanceLogs.save') : t('maintenanceLogs.create')}
+          cancelText={t('maintenanceLogs.cancel')}
           width={700}
           className="simple-modal"
         >
           <Form form={form} layout="vertical">
             <Form.Item
-              label="Equipment"
+              label={t('maintenanceLogs.form.equipment')}
               name="equipment"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('maintenanceLogs.form.required') }]}
             >
-              <Select placeholder="Select equipment" showSearch allowClear>
+              <Select placeholder={t('maintenanceLogs.form.selectEquipment')} showSearch allowClear>
                 {equipment.map(eq => (
                   <Option key={eq._id} value={eq._id}>
                     {eq.equipmentId} - {eq.name}
@@ -695,79 +697,79 @@ const MaintenanceLogs = () => {
             </Form.Item>
 
             <Form.Item
-              label="Maintenance Type"
+              label={t('maintenanceLogs.form.maintenanceType')}
               name="maintenanceType"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('maintenanceLogs.form.required') }]}
             >
               <Select>
-                <Option value="scheduled">Scheduled</Option>
-                <Option value="unscheduled">Unscheduled</Option>
-                <Option value="emergency">Emergency</Option>
-                <Option value="inspection">Inspection</Option>
+                <Option value="scheduled">{t('maintenanceLogs.types.scheduled')}</Option>
+                <Option value="unscheduled">{t('maintenanceLogs.types.unscheduled')}</Option>
+                <Option value="emergency">{t('maintenanceLogs.types.emergency')}</Option>
+                <Option value="inspection">{t('maintenanceLogs.types.inspection')}</Option>
               </Select>
             </Form.Item>
 
             <Form.Item
-              label="Description"
+              label={t('maintenanceLogs.form.description')}
               name="description"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('maintenanceLogs.form.required') }]}
             >
-              <TextArea rows={3} placeholder="Describe the maintenance performed..." />
+              <TextArea rows={3} placeholder={t('maintenanceLogs.form.descriptionPlaceholder')} />
             </Form.Item>
 
             <div style={{ display: 'flex', gap: '16px' }}>
               <Form.Item
-                label="Performed Date"
+                label={t('maintenanceLogs.form.performedDate')}
                 name="performedDate"
-                rules={[{ required: true, message: 'Required' }]}
+                rules={[{ required: true, message: t('maintenanceLogs.form.required') }]}
                 style={{ flex: 1 }}
               >
                 <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
               </Form.Item>
 
-              <Form.Item label="Next Due Date" name="nextDue" style={{ flex: 1 }}>
+              <Form.Item label={t('maintenanceLogs.form.nextDue')} name="nextDue" style={{ flex: 1 }}>
                 <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
               </Form.Item>
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
-              <Form.Item label="Labor Cost ($)" name="laborCost" style={{ flex: 1 }}>
-                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter labor cost" />
+              <Form.Item label={t('maintenanceLogs.form.laborCost')} name="laborCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder={t('maintenanceLogs.form.laborCostPlaceholder')} />
               </Form.Item>
 
-              <Form.Item label="Parts Cost ($)" name="partsCost" style={{ flex: 1 }}>
-                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter parts cost" />
+              <Form.Item label={t('maintenanceLogs.form.partsCost')} name="partsCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder={t('maintenanceLogs.form.partsCostPlaceholder')} />
               </Form.Item>
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
-              <Form.Item label="Duration (hours)" name="duration" style={{ flex: 1 }}>
+              <Form.Item label={t('maintenanceLogs.form.duration')} name="duration" style={{ flex: 1 }}>
                 <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
               <div style={{ flex: 1 }} />
             </div>
 
-            <Form.Item label="Performed By" name="performedBy">
-              <Input placeholder="Enter technician/company name" />
+            <Form.Item label={t('maintenanceLogs.form.performedBy')} name="performedBy">
+              <Input placeholder={t('maintenanceLogs.form.performedByPlaceholder')} />
             </Form.Item>
 
-            <Form.Item label="Additional Notes" name="notes">
-              <TextArea rows={2} placeholder="Any additional notes..." />
+            <Form.Item label={t('maintenanceLogs.form.additionalNotes')} name="notes">
+              <TextArea rows={2} placeholder={t('maintenanceLogs.form.additionalNotesPlaceholder')} />
             </Form.Item>
           </Form>
         </Modal>
 
         {/* Delete Modal */}
         <Modal
-          title="Delete Maintenance Log"
+          title={t('maintenanceLogs.deleteLog')}
           open={isDeleteModalVisible}
           onOk={handleDeleteLog}
           onCancel={() => {
             setIsDeleteModalVisible(false);
             setDeletingLog(null);
           }}
-          okText="Delete"
-          cancelText="Cancel"
+          okText={t('maintenanceLogs.delete')}
+          cancelText={t('maintenanceLogs.cancel')}
           width={400}
           className="delete-modal"
           okButtonProps={{ danger: true }}
@@ -776,10 +778,10 @@ const MaintenanceLogs = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to delete this maintenance log for <strong>{deletingLog?.equipment?.equipmentId}</strong>?
+                {t('maintenanceLogs.deleteModal.message')} <strong>{deletingLog?.equipment?.equipmentId}</strong>?
               </p>
               <p className="delete-warning">
-                This action cannot be undone.
+                {t('maintenanceLogs.deleteModal.warning')}
               </p>
             </div>
           </div>
@@ -787,7 +789,7 @@ const MaintenanceLogs = () => {
 
         {/* Detail Modal */}
         <Modal
-          title="Maintenance Log Details"
+          title={t('maintenanceLogs.logDetails')}
           open={isDetailModalVisible}
           onCancel={() => {
             setIsDetailModalVisible(false);
@@ -800,22 +802,22 @@ const MaintenanceLogs = () => {
           {selectedLog && (
             <div className="maintenance-details">
               <div className="detail-section">
-                <h4>Equipment Information</h4>
+                <h4>{t('maintenanceLogs.details.equipmentInformation')}</h4>
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Equipment ID:</label>
+                    <label>{t('maintenanceLogs.details.equipmentId')}:</label>
                     <span>{selectedLog.equipment?.equipmentId}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Name:</label>
+                    <label>{t('maintenanceLogs.details.name')}:</label>
                     <span>{selectedLog.equipment?.name}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Type:</label>
+                    <label>{t('maintenanceLogs.details.type')}:</label>
                     <Tag color="blue">{selectedLog.equipment?.type}</Tag>
                   </div>
                   <div className="detail-item">
-                    <label>Status:</label>
+                    <label>{t('maintenanceLogs.details.status')}:</label>
                     <Tag color={selectedLog.equipment?.status === 'operational' ? 'green' : 'orange'}>
                       {selectedLog.equipment?.status}
                     </Tag>
@@ -824,10 +826,10 @@ const MaintenanceLogs = () => {
               </div>
 
               <div className="detail-section">
-                <h4>Maintenance Details</h4>
+                <h4>{t('maintenanceLogs.details.maintenanceDetails')}</h4>
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Type:</label>
+                    <label>{t('maintenanceLogs.details.type')}:</label>
                     <Tag color={
                       selectedLog.maintenanceType === 'scheduled' ? 'blue' :
                       selectedLog.maintenanceType === 'emergency' ? 'red' :
@@ -837,44 +839,44 @@ const MaintenanceLogs = () => {
                     </Tag>
                   </div>
                   <div className="detail-item">
-                    <label>Performed Date:</label>
+                    <label>{t('maintenanceLogs.details.performedDate')}:</label>
                     <span>{moment(selectedLog.performedDate).format('MMM D, YYYY')}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Next Due:</label>
+                    <label>{t('maintenanceLogs.details.nextDue')}:</label>
                     <span>{selectedLog.nextDue ? moment(selectedLog.nextDue).format('MMM D, YYYY') : '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Performed By:</label>
+                    <label>{t('maintenanceLogs.details.performedBy')}:</label>
                     <span>{selectedLog.performedBy || '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Labor Cost:</label>
+                    <label>{t('maintenanceLogs.details.laborCost')}:</label>
                     <span>{selectedLog.laborCost ? `$${selectedLog.laborCost.toFixed(2)}` : '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Parts Cost:</label>
+                    <label>{t('maintenanceLogs.details.partsCost')}:</label>
                     <span>{selectedLog.partsCost ? `$${selectedLog.partsCost.toFixed(2)}` : '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Total Cost:</label>
+                    <label>{t('maintenanceLogs.details.totalCost')}:</label>
                     <span>{selectedLog.cost ? `$${selectedLog.cost.toFixed(2)}` : '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Duration:</label>
+                    <label>{t('maintenanceLogs.details.duration')}:</label>
                     <span>{selectedLog.duration ? `${selectedLog.duration}h` : '-'}</span>
                   </div>
                 </div>
               </div>
 
               <div className="detail-section">
-                <h4>Description</h4>
+                <h4>{t('maintenanceLogs.details.description')}</h4>
                 <p>{selectedLog.description}</p>
               </div>
 
               {selectedLog.notes && (
                 <div className="detail-section">
-                  <h4>Notes</h4>
+                  <h4>{t('maintenanceLogs.details.notes')}</h4>
                   <p>{selectedLog.notes}</p>
                 </div>
               )}
@@ -884,7 +886,7 @@ const MaintenanceLogs = () => {
 
         {/* Import Modal */}
         <Modal
-          title="Import Maintenance Logs"
+          title={t('maintenanceLogs.importModal.title')}
           open={isImportModalVisible}
           onOk={handleImport}
           onCancel={() => {
@@ -892,15 +894,15 @@ const MaintenanceLogs = () => {
             setImportFile(null);
             setImportResults(null);
           }}
-          okText="Import"
-          cancelText="Cancel"
+          okText={t('maintenanceLogs.import')}
+          cancelText={t('maintenanceLogs.cancel')}
           confirmLoading={importing}
           width={500}
           className="simple-modal"
         >
           <Alert
-            message="Import Instructions"
-            description="Download the template, fill it with your maintenance log data, and upload it here."
+            message={t('maintenanceLogs.importModal.instructions')}
+            description={t('maintenanceLogs.importModal.description')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -916,13 +918,13 @@ const MaintenanceLogs = () => {
             accept=".xlsx,.xls"
           >
             <button className="btn-secondary" style={{ marginBottom: 16 }}>
-              <UploadOutlined /> Select Excel File
+              <UploadOutlined /> {t('maintenanceLogs.importModal.selectFile')}
             </button>
           </Upload>
 
           {importResults && (
             <Alert
-              message={`Import Results: ${importResults.imported} succeeded, ${importResults.failed} failed`}
+              message={t('maintenanceLogs.importModal.results', { succeeded: importResults.imported, failed: importResults.failed })}
               type={importResults.failed > 0 ? 'warning' : 'success'}
               showIcon
               description={
@@ -946,7 +948,7 @@ const MaintenanceLogs = () => {
               key: 'analytics',
               label: (
                 <span>
-                  <BarChartOutlined /> Analytics Dashboard
+                  <BarChartOutlined /> {t('maintenanceLogs.analyticsDashboard')}
                 </span>
               ),
               children: (

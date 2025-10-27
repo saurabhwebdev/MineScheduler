@@ -1089,5 +1089,165 @@
       "importSuccess": "Imported {{count}} equipment successfully",
       "importError": "Failed to import equipment"
     }
+  },
+  "maintenanceLogs": {
+    "title": "Maintenance Logs",
+    "subtitle": "Track and manage equipment maintenance records",
+    "template": "Template",
+    "import": "Import",
+    "export": "Export",
+    "newLog": "New Log",
+    "editLog": "Edit Maintenance Log",
+    "deleteLog": "Delete Maintenance Log",
+    "logDetails": "Maintenance Log Details",
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "clearFilters": "Clear Filters",
+    "analyticsDashboard": "Analytics Dashboard",
+    "columns": {
+      "date": "DATE",
+      "equipment": "EQUIPMENT",
+      "type": "TYPE",
+      "description": "DESCRIPTION",
+      "performedBy": "PERFORMED BY",
+      "labor": "LABOR",
+      "parts": "PARTS",
+      "total": "TOTAL",
+      "duration": "DURATION",
+      "nextDue": "NEXT DUE",
+      "actions": "ACTIONS"
+    },
+    "types": {
+      "scheduled": "Scheduled",
+      "unscheduled": "Unscheduled",
+      "emergency": "Emergency",
+      "inspection": "Inspection"
+    },
+    "tabs": {
+      "logs": "Maintenance Logs"
+    },
+    "stats": {
+      "totalLogs": "Total Logs",
+      "thisMonth": "This Month Cost",
+      "upcoming": "Upcoming",
+      "overdue": "Overdue"
+    },
+    "filters": {
+      "equipment": "Filter by Equipment",
+      "type": "Filter by Type",
+      "dateRange": "Filter by Date Range",
+      "performedBy": "Filter by Performed By"
+    },
+    "tooltips": {
+      "viewDetails": "View Details"
+    },
+    "form": {
+      "equipment": "Equipment",
+      "maintenanceType": "Maintenance Type",
+      "description": "Description",
+      "performedDate": "Performed Date",
+      "nextDue": "Next Due Date",
+      "laborCost": "Labor Cost ($)",
+      "partsCost": "Parts Cost ($)",
+      "duration": "Duration (hours)",
+      "performedBy": "Performed By",
+      "additionalNotes": "Additional Notes",
+      "required": "Required",
+      "selectEquipment": "Select equipment",
+      "descriptionPlaceholder": "Describe the maintenance performed...",
+      "laborCostPlaceholder": "Enter labor cost",
+      "partsCostPlaceholder": "Enter parts cost",
+      "performedByPlaceholder": "Enter technician/company name",
+      "additionalNotesPlaceholder": "Any additional notes..."
+    },
+    "deleteModal": {
+      "message": "Are you sure you want to delete this maintenance log for",
+      "warning": "This action cannot be undone."
+    },
+    "importModal": {
+      "title": "Import Maintenance Logs",
+      "instructions": "Import Instructions",
+      "description": "Download the template, fill it with your maintenance log data, and upload it here.",
+      "selectFile": "Select Excel File",
+      "results": "Import Results: {{succeeded}} succeeded, {{failed}} failed"
+    },
+    "details": {
+      "equipmentInformation": "Equipment Information",
+      "equipmentId": "Equipment ID",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "maintenanceDetails": "Maintenance Details",
+      "performedDate": "Performed Date",
+      "nextDue": "Next Due",
+      "performedBy": "Performed By",
+      "laborCost": "Labor Cost",
+      "partsCost": "Parts Cost",
+      "totalCost": "Total Cost",
+      "duration": "Duration",
+      "description": "Description",
+      "notes": "Notes"
+    },
+    "messages": {
+      "success": "Success",
+      "error": "Error",
+      "networkError": "Network Error",
+      "fetchError": "Failed to fetch maintenance logs",
+      "updateSuccess": "Maintenance log updated successfully",
+      "updateError": "Failed to update maintenance log",
+      "createSuccess": "Maintenance log created successfully",
+      "createError": "Failed to create maintenance log",
+      "deleteSuccess": "Maintenance log deleted successfully",
+      "deleteError": "Failed to delete maintenance log",
+      "exportSuccess": "Maintenance logs exported successfully",
+      "exportError": "Failed to export maintenance logs",
+      "selectFileError": "Please select a file to import",
+      "importComplete": "Import Complete",
+      "importSuccess": "Imported {{count}} maintenance logs successfully",
+      "importError": "Failed to import maintenance logs"
+    },
+    "analytics": {
+      "title": "Analytics Dashboard",
+      "clickForDetails": "Click for detailed explanation and tips",
+      "howCalculated": "How is this calculated?",
+      "clickInfoButton": "Click the info button for detailed explanation",
+      "gotIt": "Got it!",
+      "explained": "Explained",
+      "whatIs": "What is",
+      "howIsItCalculated": "How is it Calculated?",
+      "formula": "Formula",
+      "howToImprove": "How to Improve This Metric",
+      "kpi": {
+        "totalCost": "Total Cost",
+        "totalCostTooltip": "Sum of all maintenance costs",
+        "totalEvents": "Total Events",
+        "totalEventsTooltip": "Total number of maintenance events",
+        "avgCost": "Avg Cost per Event",
+        "avgCostTooltip": "Average maintenance cost per event",
+        "avgDuration": "Avg Repair Time",
+        "avgDurationTooltip": "Average time to complete maintenance"
+      },
+      "charts": {
+        "costByType": "Cost by Equipment Type",
+        "costByTypeDesc": "Total maintenance cost breakdown",
+        "monthlyTrend": "Monthly Cost Trend",
+        "monthlyTrendDesc": "Cost progression over time",
+        "totalCost": "Total Cost",
+        "typeDistribution": "Maintenance Type Distribution",
+        "typeDistributionDesc": "Breakdown by maintenance category",
+        "laborVsParts": "Labor vs Parts Cost",
+        "laborVsPartsDesc": "Cost breakdown analysis",
+        "topEquipment": "Top 10 Most Expensive Equipment",
+        "topEquipmentDesc": "Highest maintenance costs by equipment",
+        "mtbf": "MTBF by Equipment Type",
+        "mtbfDesc": "Mean Time Between Failures (hours)",
+        "mttr": "MTTR by Equipment Type",
+        "mttrDesc": "Mean Time To Repair (hours)",
+        "overdue": "Overdue Maintenance by Equipment Type",
+        "overdueDesc": "Equipment requiring immediate attention"
+      }
+    }
   }
 }

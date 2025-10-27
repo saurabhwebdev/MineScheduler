@@ -1089,5 +1089,165 @@
       "importSuccess": "{{count}} equipos importados exitosamente",
       "importError": "Error al importar equipos"
     }
+  },
+  "maintenanceLogs": {
+    "title": "Registros de Mantenimiento",
+    "subtitle": "Seguimiento y gestión de registros de mantenimiento de equipos",
+    "template": "Plantilla",
+    "import": "Importar",
+    "export": "Exportar",
+    "newLog": "Nuevo Registro",
+    "editLog": "Editar Registro de Mantenimiento",
+    "deleteLog": "Eliminar Registro de Mantenimiento",
+    "logDetails": "Detalles del Registro de Mantenimiento",
+    "save": "Guardar",
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "clearFilters": "Borrar Filtros",
+    "analyticsDashboard": "Panel de Análisis",
+    "columns": {
+      "date": "FECHA",
+      "equipment": "EQUIPO",
+      "type": "TIPO",
+      "description": "DESCRIPCIÓN",
+      "performedBy": "REALIZADO POR",
+      "labor": "MANO DE OBRA",
+      "parts": "PARTES",
+      "total": "TOTAL",
+      "duration": "DURACIÓN",
+      "nextDue": "PRÓXIMO VENCIMIENTO",
+      "actions": "ACCIONES"
+    },
+    "types": {
+      "scheduled": "Programado",
+      "unscheduled": "No Programado",
+      "emergency": "Emergencia",
+      "inspection": "Inspección"
+    },
+    "tabs": {
+      "logs": "Registros de Mantenimiento"
+    },
+    "stats": {
+      "totalLogs": "Total de Registros",
+      "thisMonth": "Costo del Mes Actual",
+      "upcoming": "Próximos",
+      "overdue": "Atrasados"
+    },
+    "filters": {
+      "equipment": "Filtrar por Equipo",
+      "type": "Filtrar por Tipo",
+      "dateRange": "Filtrar por Rango de Fechas",
+      "performedBy": "Filtrar por Realizado Por"
+    },
+    "tooltips": {
+      "viewDetails": "Ver Detalles"
+    },
+    "form": {
+      "equipment": "Equipo",
+      "maintenanceType": "Tipo de Mantenimiento",
+      "description": "Descripción",
+      "performedDate": "Fecha Realizada",
+      "nextDue": "Próxima Fecha de Vencimiento",
+      "laborCost": "Costo de Mano de Obra ($)",
+      "partsCost": "Costo de Partes ($)",
+      "duration": "Duración (horas)",
+      "performedBy": "Realizado Por",
+      "additionalNotes": "Notas Adicionales",
+      "required": "Requerido",
+      "selectEquipment": "Seleccione equipo",
+      "descriptionPlaceholder": "Describa el mantenimiento realizado...",
+      "laborCostPlaceholder": "Ingrese costo de mano de obra",
+      "partsCostPlaceholder": "Ingrese costo de partes",
+      "performedByPlaceholder": "Ingrese nombre de técnico/compañía",
+      "additionalNotesPlaceholder": "Cualquier nota adicional..."
+    },
+    "deleteModal": {
+      "message": "¿Está seguro de que desea eliminar este registro de mantenimiento para",
+      "warning": "Esta acción no se puede deshacer."
+    },
+    "importModal": {
+      "title": "Importar Registros de Mantenimiento",
+      "instructions": "Instrucciones de Importación",
+      "description": "Descargue la plantilla, llénela con los datos de sus registros de mantenimiento y cárguela aquí.",
+      "selectFile": "Seleccionar Archivo Excel",
+      "results": "Resultados de Importación: {{succeeded}} exitosos, {{failed}} fallidos"
+    },
+    "details": {
+      "equipmentInformation": "Información del Equipo",
+      "equipmentId": "ID de Equipo",
+      "name": "Nombre",
+      "type": "Tipo",
+      "status": "Estado",
+      "maintenanceDetails": "Detalles del Mantenimiento",
+      "performedDate": "Fecha Realizada",
+      "nextDue": "Próximo Vencimiento",
+      "performedBy": "Realizado Por",
+      "laborCost": "Costo de Mano de Obra",
+      "partsCost": "Costo de Partes",
+      "totalCost": "Costo Total",
+      "duration": "Duración",
+      "description": "Descripción",
+      "notes": "Notas"
+    },
+    "messages": {
+      "success": "Éxito",
+      "error": "Error",
+      "networkError": "Error de Red",
+      "fetchError": "Error al cargar registros de mantenimiento",
+      "updateSuccess": "Registro de mantenimiento actualizado exitosamente",
+      "updateError": "Error al actualizar registro de mantenimiento",
+      "createSuccess": "Registro de mantenimiento creado exitosamente",
+      "createError": "Error al crear registro de mantenimiento",
+      "deleteSuccess": "Registro de mantenimiento eliminado exitosamente",
+      "deleteError": "Error al eliminar registro de mantenimiento",
+      "exportSuccess": "Registros de mantenimiento exportados exitosamente",
+      "exportError": "Error al exportar registros de mantenimiento",
+      "selectFileError": "Por favor seleccione un archivo para importar",
+      "importComplete": "Importación Completa",
+      "importSuccess": "{{count}} registros de mantenimiento importados exitosamente",
+      "importError": "Error al importar registros de mantenimiento"
+    },
+    "analytics": {
+      "title": "Panel de Análisis",
+      "clickForDetails": "Haga clic para obtener una explicación detallada y consejos",
+      "howCalculated": "¿Cómo se calcula esto?",
+      "clickInfoButton": "Haga clic en el botón de información para obtener una explicación detallada",
+      "gotIt": "¡Entendido!",
+      "explained": "Explicado",
+      "whatIs": "¿Qué es",
+      "howIsItCalculated": "¿Cómo se Calcula?",
+      "formula": "Fórmula",
+      "howToImprove": "Cómo Mejorar Esta Métrica",
+      "kpi": {
+        "totalCost": "Costo Total",
+        "totalCostTooltip": "Suma de todos los costos de mantenimiento",
+        "totalEvents": "Eventos Totales",
+        "totalEventsTooltip": "Número total de eventos de mantenimiento",
+        "avgCost": "Costo Promedio por Evento",
+        "avgCostTooltip": "Costo promedio de mantenimiento por evento",
+        "avgDuration": "Tiempo Promedio de Reparación",
+        "avgDurationTooltip": "Tiempo promedio para completar el mantenimiento"
+      },
+      "charts": {
+        "costByType": "Costo por Tipo de Equipo",
+        "costByTypeDesc": "Desglose del costo total de mantenimiento",
+        "monthlyTrend": "Tendencia de Costos Mensuales",
+        "monthlyTrendDesc": "Progreso de costos a lo largo del tiempo",
+        "totalCost": "Costo Total",
+        "typeDistribution": "Distribución de Tipos de Mantenimiento",
+        "typeDistributionDesc": "Desglose por categoría de mantenimiento",
+        "laborVsParts": "Costo de Mano de Obra vs Partes",
+        "laborVsPartsDesc": "Análisis de desglose de costos",
+        "topEquipment": "Top 10 de Equipos Más Costosos",
+        "topEquipmentDesc": "Mayores costos de mantenimiento por equipo",
+        "mtbf": "MTBF por Tipo de Equipo",
+        "mtbfDesc": "Tiempo Medio Entre Fallos (horas)",
+        "mttr": "MTTR por Tipo de Equipo",
+        "mttrDesc": "Tiempo Medio de Reparación (horas)",
+        "overdue": "Mantenimiento Atrasado por Tipo de Equipo",
+        "overdueDesc": "Equipos que requieren atención inmediata"
+      }
+    }
   }
 }
