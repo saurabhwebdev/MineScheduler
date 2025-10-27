@@ -138,5 +138,31 @@
       "title": "Need More Help?",
       "description": "If you have questions not covered in this guide, please contact your system administrator or IT support team."
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure your application preferences",
+    "tabs": {
+      "uom": "UOM Configuration",
+      "shifts": "Shift Management",
+      "equipmentTypes": "Equipment Types",
+      "constants": "Mining Constants"
+    },
+    "uom": {
+      "title": "Unit of Measurement (UOM)",
+      "description": "Manage units of measurement used in task configuration"
+    },
+    "shifts": {
+      "title": "Shift Management",
+      "description": "Configure work shifts and shift change durations for scheduling"
+    },
+    "equipmentTypes": {
+      "title": "Equipment Types",
+      "description": "Manage equipment type categories used in equipment management"
+    },
+    "constants": {
+      "title": "Mining Constants",
+      "description": "Manage calculation constants used in scheduling algorithms (WIDTH, HEIGHT, DENSITY)"
+    }
   }
 }

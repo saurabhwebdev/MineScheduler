@@ -138,5 +138,31 @@
       "title": "¿Necesita Más Ayuda?",
       "description": "Si tiene preguntas que no están cubiertas en esta guía, comunique se con su administrador del sistema o equipo de soporte de TI."
     }
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Configure las preferencias de su aplicación",
+    "tabs": {
+      "uom": "Configuración de UDM",
+      "shifts": "Gestión de Turnos",
+      "equipmentTypes": "Tipos de Equipo",
+      "constants": "Constantes de Minería"
+    },
+    "uom": {
+      "title": "Unidad de Medida (UDM)",
+      "description": "Administre las unidades de medida utilizadas en la configuración de tareas"
+    },
+    "shifts": {
+      "title": "Gestión de Turnos",
+      "description": "Configure turnos de trabajo y duraciones de cambio de turno para la programación"
+    },
+    "equipmentTypes": {
+      "title": "Tipos de Equipo",
+      "description": "Administre categorías de tipos de equipo utilizadas en la gestión de equipos"
+    },
+    "constants": {
+      "title": "Constantes de Minería",
+      "description": "Administre constantes de cálculo utilizadas en algoritmos de programación (ANCHO, ALTURA, DENSIDAD)"
+    }
   }
 }
