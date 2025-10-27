@@ -1,0 +1,46 @@
+.language-switcher {
+  display: flex;
+  align-items: center;
+}
+
+.language-select {
+  min-width: 130px;
+}
+
+.language-select .ant-select-selector {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  background: white;
+}
+
+.language-select:hover .ant-select-selector {
+  border-color: #062d54;
+}
+
+.language-select.ant-select-focused .ant-select-selector {
+  border-color: #062d54;
+  box-shadow: 0 0 0 2px rgba(6, 45, 84, 0.1);
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-flag {
+  font-size: 18px;
+}
+
+.language-name {
+  font-size: 14px;
+}
+
+.language-dropdown .ant-select-item-option-selected {
+  background-color: #f0f5ff;
+  font-weight: 500;
+}
+
+.language-dropdown .ant-select-item-option:hover {
+  background-color: #f5f5f5;
+}

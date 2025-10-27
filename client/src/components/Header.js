@@ -4,6 +4,7 @@ import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
+import LanguageSwitcher from './LanguageSwitcher';
 import './Header.css';
 
 const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
@@ -52,6 +53,10 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
         </div>
 
         <div className="header-right">
+          <div className="header-desktop-only">
+            <LanguageSwitcher />
+          </div>
+
           <div className="header-notification header-desktop-only">
             <Badge count={0} showZero={false}>
               <BellOutlined className="notification-icon" />

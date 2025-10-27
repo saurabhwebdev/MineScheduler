@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { notification } from 'antd';
+import './i18n'; // Initialize i18n
 import './App.css';
 import Login from './pages/Login';
 import Register from './pages/Register';

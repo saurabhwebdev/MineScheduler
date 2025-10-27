@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Descriptions, message } from 'antd';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import moment from 'moment';
 import DashboardLayout from '../components/DashboardLayout';
@@ -7,6 +8,7 @@ import config from '../config/config';
 import './Audit.css';
 
 const Audit = () => {
+  const { t } = useTranslation();
   const [auditLogs, setAuditLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -55,7 +57,7 @@ const Audit = () => {
       }
     } catch (error) {
       console.error('Error fetching audit logs:', error);
-      message.error('Failed to fetch audit logs');
+      message.error(t('audit.messages.fetchError'));
     } finally {
       setLoading(false);
     }
@@ -82,28 +84,28 @@ const Audit = () => {
     if (selectedAudit.action === 'CREATE') {
       return (
         <div className="audit-changes">
-          <h4>New Values:</h4>
+          <h4>{t('audit.modal.changes.newValues')}</h4>
           <pre>{JSON.stringify(selectedAudit.newValues, null, 2)}</pre>
         </div>
       );
     } else if (selectedAudit.action === 'DELETE') {
       return (
         <div className="audit-changes">
-          <h4>Deleted Values:</h4>
+          <h4>{t('audit.modal.changes.deletedValues')}</h4>
           <pre>{JSON.stringify(selectedAudit.oldValues, null, 2)}</pre>
         </div>
       );
     } else if (selectedAudit.action === 'UPDATE') {
       return (
         <div className="audit-changes">
-          <h4>Changes Made:</h4>
+          <h4>{t('audit.modal.changes.changesMade')}</h4>
           {Object.keys(selectedAudit.changes || {}).length > 0 ? (
             <table className="changes-table">
               <thead>
                 <tr>
-                  <th>Field</th>
-                  <th>Old Value</th>
-                  <th>New Value</th>
+                  <th>{t('audit.modal.changes.field')}</th>
+                  <th>{t('audit.modal.changes.oldValue')}</th>
+                  <th>{t('audit.modal.changes.newValue')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,7 +119,7 @@ const Audit = () => {
               </tbody>
             </table>
           ) : (
-            <p>No changes detected</p>
+            <p>{t('audit.modal.changes.noChanges')}</p>
           )}
         </div>
       );
@@ -128,50 +130,50 @@ const Audit = () => {
 
   const columns = [
     {
-      title: 'TIMESTAMP',
+      title: t('audit.columns.timestamp'),
       dataIndex: 'timestamp',
       key: 'timestamp',
       render: (timestamp) => moment(timestamp).format('YYYY-MM-DD HH:mm:ss'),
       sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
     },
     {
-      title: 'USER',
+      title: t('audit.columns.user'),
       dataIndex: 'userName',
       key: 'userName',
       render: (name) => name
     },
     {
-      title: 'ACTION',
+      title: t('audit.columns.action'),
       dataIndex: 'action',
       key: 'action',
       render: (action) => (
         <span className={`action-badge ${action.toLowerCase()}`}>{action}</span>
       ),
       filters: [
-        { text: 'Create', value: 'CREATE' },
-        { text: 'Update', value: 'UPDATE' },
-        { text: 'Delete', value: 'DELETE' },
+        { text: t('audit.actions.create'), value: 'CREATE' },
+        { text: t('audit.actions.update'), value: 'UPDATE' },
+        { text: t('audit.actions.delete'), value: 'DELETE' },
       ],
       onFilter: (value, record) => record.action === value,
     },
     {
-      title: 'MODULE',
+      title: t('audit.columns.module'),
       dataIndex: 'module',
       key: 'module',
       filters: [
-        { text: 'UOM', value: 'UOM' },
-        { text: 'Task', value: 'TASK' },
-        { text: 'User', value: 'USER' },
+        { text: t('audit.modules.uom'), value: 'UOM' },
+        { text: t('audit.modules.task'), value: 'TASK' },
+        { text: t('audit.modules.user'), value: 'USER' },
       ],
       onFilter: (value, record) => record.module === value,
     },
     {
-      title: 'RESOURCE',
+      title: t('audit.columns.resource'),
       dataIndex: 'resourceName',
       key: 'resourceName',
     },
     {
-      title: 'IP ADDRESS',
+      title: t('audit.columns.ipAddress'),
       dataIndex: 'ipAddress',
       key: 'ipAddress',
     }
@@ -179,8 +181,8 @@ const Audit = () => {
 
   return (
     <DashboardLayout 
-      title="Audit Log"
-      subtitle="Track all system activities and changes"
+      title={t('audit.title')}
+      subtitle={t('audit.subtitle')}
       page="audit"
     >
       <div className="audit-page">
@@ -203,7 +205,7 @@ const Audit = () => {
         </div>
 
         <Modal
-          title="Audit Log Details"
+          title={t('audit.modal.title')}
           open={isModalVisible}
           onCancel={handleModalClose}
           footer={null}
@@ -213,33 +215,33 @@ const Audit = () => {
           {selectedAudit && (
             <div className="audit-detail-content">
               <Descriptions column={1} bordered size="small">
-                <Descriptions.Item label="Timestamp">
+                <Descriptions.Item label={t('audit.modal.labels.timestamp')}>
                   {moment(selectedAudit.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                 </Descriptions.Item>
-                <Descriptions.Item label="User">
+                <Descriptions.Item label={t('audit.modal.labels.user')}>
                   {selectedAudit.userName} ({selectedAudit.userEmail})
                 </Descriptions.Item>
-                <Descriptions.Item label="Action">
+                <Descriptions.Item label={t('audit.modal.labels.action')}>
                   <span className={`action-badge ${selectedAudit.action.toLowerCase()}`}>
                     {selectedAudit.action}
                   </span>
                 </Descriptions.Item>
-                <Descriptions.Item label="Module">
+                <Descriptions.Item label={t('audit.modal.labels.module')}>
                   {selectedAudit.module}
                 </Descriptions.Item>
-                <Descriptions.Item label="Resource Type">
+                <Descriptions.Item label={t('audit.modal.labels.resourceType')}>
                   {selectedAudit.resourceType}
                 </Descriptions.Item>
-                <Descriptions.Item label="Resource Name">
+                <Descriptions.Item label={t('audit.modal.labels.resourceName')}>
                   {selectedAudit.resourceName}
                 </Descriptions.Item>
-                <Descriptions.Item label="Resource ID">
+                <Descriptions.Item label={t('audit.modal.labels.resourceId')}>
                   {selectedAudit.resourceId}
                 </Descriptions.Item>
-                <Descriptions.Item label="IP Address">
+                <Descriptions.Item label={t('audit.modal.labels.ipAddress')}>
                   {selectedAudit.ipAddress || 'N/A'}
                 </Descriptions.Item>
-                <Descriptions.Item label="User Agent">
+                <Descriptions.Item label={t('audit.modal.labels.userAgent')}>
                   <div style={{ wordBreak: 'break-all' }}>
                     {selectedAudit.userAgent || 'N/A'}
                   </div>

@@ -1,0 +1,61 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "audit": {
+    "title": "Registro de Auditoría",
+    "subtitle": "Seguimiento de todas las actividades y cambios del sistema",
+    "columns": {
+      "timestamp": "FECHA Y HORA",
+      "user": "USUARIO",
+      "action": "ACCIÓN",
+      "module": "MÓDULO",
+      "resource": "RECURSO",
+      "ipAddress": "DIRECCIÓN IP"
+    },
+    "actions": {
+      "create": "Crear",
+      "update": "Actualizar",
+      "delete": "Eliminar"
+    },
+    "modules": {
+      "uom": "UDM",
+      "task": "Tarea",
+      "user": "Usuario"
+    },
+    "modal": {
+      "title": "Detalles del Registro de Auditoría",
+      "labels": {
+        "timestamp": "Fecha y Hora",
+        "user": "Usuario",
+        "action": "Acción",
+        "module": "Módulo",
+        "resourceType": "Tipo de Recurso",
+        "resourceName": "Nombre del Recurso",
+        "resourceId": "ID del Recurso",
+        "ipAddress": "Dirección IP",
+        "userAgent": "Agente de Usuario"
+      },
+      "changes": {
+        "newValues": "Valores Nuevos:",
+        "deletedValues": "Valores Eliminados:",
+        "changesMade": "Cambios Realizados:",
+        "field": "Campo",
+        "oldValue": "Valor Anterior",
+        "newValue": "Valor Nuevo",
+        "noChanges": "No se detectaron cambios"
+      }
+    },
+    "messages": {
+      "fetchError": "Error al cargar los registros de auditoría"
+    }
+  }
+}

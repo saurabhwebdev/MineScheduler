@@ -1,0 +1,61 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "audit": {
+    "title": "Audit Log",
+    "subtitle": "Track all system activities and changes",
+    "columns": {
+      "timestamp": "TIMESTAMP",
+      "user": "USER",
+      "action": "ACTION",
+      "module": "MODULE",
+      "resource": "RESOURCE",
+      "ipAddress": "IP ADDRESS"
+    },
+    "actions": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "modules": {
+      "uom": "UOM",
+      "task": "Task",
+      "user": "User"
+    },
+    "modal": {
+      "title": "Audit Log Details",
+      "labels": {
+        "timestamp": "Timestamp",
+        "user": "User",
+        "action": "Action",
+        "module": "Module",
+        "resourceType": "Resource Type",
+        "resourceName": "Resource Name",
+        "resourceId": "Resource ID",
+        "ipAddress": "IP Address",
+        "userAgent": "User Agent"
+      },
+      "changes": {
+        "newValues": "New Values:",
+        "deletedValues": "Deleted Values:",
+        "changesMade": "Changes Made:",
+        "field": "Field",
+        "oldValue": "Old Value",
+        "newValue": "New Value",
+        "noChanges": "No changes detected"
+      }
+    },
+    "messages": {
+      "fetchError": "Failed to fetch audit logs"
+    }
+  }
+}
