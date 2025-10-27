@@ -243,12 +243,15 @@ exports.getDashboardTrends = async (req, res) => {
       const delayMap = {};
       
       delays.forEach(delay => {
-        delayMap[delay.delayCode] = delay.delayCategory;
+        // Map both delayCode and code field to category
+        if (delay.delayCode) delayMap[delay.delayCode] = delay.delayCategory;
+        if (delay.code) delayMap[delay.code] = delay.delayCategory;
       });
 
       const categoryCount = {};
       latestSchedule.allDelays.forEach(delay => {
-        const category = delayMap[delay.delayCode] || 'Unknown';
+        // Try to get category using delayCode or code field
+        const category = delayMap[delay.delayCode] || delayMap[delay.code] || delay.category || 'Uncategorized';
         categoryCount[category] = (categoryCount[category] || 0) + 1;
       });
 
