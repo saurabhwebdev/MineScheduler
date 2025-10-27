@@ -2,204 +2,204 @@
   "sections": [
     {
       "id": "getting-started",
-      "title": "Getting Started",
-      "description": "Set up your system and understand the basics",
+      "title": "Comenzando",
+      "description": "Configure su sistema y comprenda los conceptos básicos",
       "steps": [
         {
-          "title": "Login to the System",
-          "content": "Use your credentials to access MineScheduler. First-time users will be required to reset their password for security."
+          "title": "Iniciar Sesión en el Sistema",
+          "content": "Use sus credenciales para acceder a MineScheduler. Los usuarios nuevos deberán restablecer su contraseña por seguridad."
         },
         {
-          "title": "Understand the Dashboard",
-          "content": "The Home dashboard provides an overview of equipment status, maintenance schedules, and KPIs. Use this as your starting point each day."
+          "title": "Comprender el Panel de Control",
+          "content": "El panel de inicio proporciona una visión general del estado del equipo, cronogramas de mantenimiento y KPIs. Utilícelo como punto de partida cada día."
         },
         {
-          "title": "Navigate the Sidebar",
-          "content": "Access all modules from the left sidebar: Schedule, Tasks, Delays, Sites, Equipment, and Settings. Hover over icons to see labels."
+          "title": "Navegar por la Barra Lateral",
+          "content": "Acceda a todos los módulos desde la barra lateral izquierda: Horario, Tareas, Retrasos, Sitios, Equipo y Configuración. Pase el cursor sobre los iconos para ver las etiquetas."
         }
       ]
     },
     {
       "id": "setup",
-      "title": "Initial Configuration",
-      "description": "Configure your system before creating schedules",
+      "title": "Configuración Inicial",
+      "description": "Configure su sistema antes de crear horarios",
       "steps": [
         {
-          "title": "Configure Constants",
-          "content": "Go to Settings → Constants. Set mining parameters like WIDTH, HEIGHT, and DENSITY. These are used in task duration calculations."
+          "title": "Configurar Constantes",
+          "content": "Vaya a Configuración → Constantes. Establezca parámetros de minería como ANCHO, ALTURA y DENSIDAD. Estos se utilizan en los cálculos de duración de tareas."
         },
         {
-          "title": "Set Up Shifts",
-          "content": "Go to Settings → Shift Configuration. Define your work shifts (e.g., Day Shift 06:00-18:00). Configure shift changeover durations for automatic delays."
+          "title": "Configurar Turnos",
+          "content": "Vaya a Configuración → Configuración de Turnos. Defina sus turnos de trabajo (por ejemplo, Turno Diurno 06:00-18:00). Configure las duraciones de cambio de turno para retrasos automáticos."
         },
         {
-          "title": "Define Equipment Types",
-          "content": "Go to Settings → Equipment Types. Create categories for your equipment (e.g., Drills, Loaders, Trucks). This helps in organizing your fleet."
+          "title": "Definir Tipos de Equipo",
+          "content": "Vaya a Configuración → Tipos de Equipo. Cree categorías para su equipo (por ejemplo, Perforadoras, Cargadores, Camiones). Esto ayuda a organizar su flota."
         },
         {
-          "title": "Configure UOMs",
-          "content": "Go to Settings → UOM Configuration. Set up Units of Measure for tasks (meters/hour, tonnes/hour, etc.). This determines how task durations are calculated."
+          "title": "Configurar Unidades de Medida",
+          "content": "Vaya a Configuración → Configuración de UDM. Configure las Unidades de Medida para tareas (metros/hora, toneladas/hora, etc.). Esto determina cómo se calculan las duraciones de las tareas."
         }
       ]
     },
     {
       "id": "tasks",
-      "title": "Creating Tasks",
-      "description": "Define the tasks that will be scheduled",
+      "title": "Crear Tareas",
+      "description": "Defina las tareas que se programarán",
       "steps": [
         {
-          "title": "Add New Task",
-          "content": "Navigate to Tasks page. Click \"Add Task\" button. Each task represents an activity in your mining cycle (e.g., Drilling, Charging, Blasting)."
+          "title": "Agregar Nueva Tarea",
+          "content": "Navegue a la página de Tareas. Haga clic en el botón \"Agregar Tarea\". Cada tarea representa una actividad en su ciclo de minería (por ejemplo, Perforación, Carga, Voladura)."
         },
         {
-          "title": "Configure Task Properties",
-          "content": "Set Task ID (unique code), Name, UOM type, Rate/Duration, Color, and Order. The Order determines the sequence in the mining cycle."
+          "title": "Configurar Propiedades de Tarea",
+          "content": "Establezca ID de Tarea (código único), Nombre, tipo de UDM, Tasa/Duración, Color y Orden. El Orden determina la secuencia en el ciclo de minería."
         },
         {
-          "title": "Set Task Limits",
-          "content": "Configure how many sites can perform this task simultaneously per hour. This prevents resource conflicts."
+          "title": "Establecer Límites de Tarea",
+          "content": "Configure cuántos sitios pueden realizar esta tarea simultáneamente por hora. Esto previene conflictos de recursos."
         },
         {
-          "title": "Import Tasks via Excel",
-          "content": "For bulk setup, download the template, fill in task details, and import. This is faster for multiple tasks."
+          "title": "Importar Tareas vía Excel",
+          "content": "Para configuración masiva, descargue la plantilla, complete los detalles de la tarea e importe. Esto es más rápido para múltiples tareas."
         }
       ]
     },
     {
       "id": "sites",
-      "title": "Managing Sites",
-      "description": "Set up mining sites and their parameters",
+      "title": "Administrar Sitios",
+      "description": "Configure sitios de minería y sus parámetros",
       "steps": [
         {
-          "title": "Add Site",
-          "content": "Go to Sites page. Click \"Add Site\". Enter Site ID (e.g., G701), name, location, and priority. Lower priority numbers are scheduled first."
+          "title": "Agregar Sitio",
+          "content": "Vaya a la página de Sitios. Haga clic en \"Agregar Sitio\". Ingrese ID de Sitio (por ejemplo, G701), nombre, ubicación y prioridad. Los números de prioridad más bajos se programan primero."
         },
         {
-          "title": "Set Site Parameters",
-          "content": "Configure Total Plan Meters, Backfill Tonnes, Remote Tonnes, Width, and Height. These values are used to calculate task durations."
+          "title": "Establecer Parámetros del Sitio",
+          "content": "Configure Metros Totales del Plan, Toneladas de Relleno, Toneladas Remotas, Ancho y Altura. Estos valores se utilizan para calcular las duraciones de las tareas."
         },
         {
-          "title": "Set Current Task and Firings",
-          "content": "Specify which task the site is currently on and number of blast cycles (firings). The system will schedule tasks in sequence for each cycle."
+          "title": "Establecer Tarea Actual y Voladuras",
+          "content": "Especifique en qué tarea se encuentra actualmente el sitio y el número de ciclos de voladura (voladuras). El sistema programará las tareas en secuencia para cada ciclo."
         },
         {
-          "title": "Use Time to Complete Override",
-          "content": "If you know exactly how long the current task will take, enter it in \"Time to Complete (hrs)\". This overrides the calculated duration for the first task."
+          "title": "Usar Anulación de Tiempo para Completar",
+          "content": "Si sabe exactamente cuánto tiempo tomará la tarea actual, ingréselo en \"Tiempo para Completar (hrs)\". Esto anula la duración calculada para la primera tarea."
         }
       ]
     },
     {
       "id": "equipment",
-      "title": "Equipment Management",
-      "description": "Track and assign equipment to tasks",
+      "title": "Gestión de Equipo",
+      "description": "Rastree y asigne equipo a tareas",
       "steps": [
         {
-          "title": "Add Equipment",
-          "content": "Navigate to Equipment page. Add your fleet with Equipment ID, Name, Type, and Status. Track specifications, location, and serial numbers."
+          "title": "Agregar Equipo",
+          "content": "Navegue a la página de Equipo. Agregue su flota con ID de Equipo, Nombre, Tipo y Estado. Rastree especificaciones, ubicación y números de serie."
         },
         {
-          "title": "Assign Tasks to Equipment",
-          "content": "In the \"Tasks\" tab of equipment form, select which tasks this equipment can perform. This links equipment to the scheduling system."
+          "title": "Asignar Tareas al Equipo",
+          "content": "En la pestaña \"Tareas\" del formulario de equipo, seleccione qué tareas puede realizar este equipo. Esto vincula el equipo al sistema de programación."
         },
         {
-          "title": "Configure Maintenance",
-          "content": "Set Maintenance Interval (hours) and track Operating Hours. The system calculates when maintenance is due."
+          "title": "Configurar Mantenimiento",
+          "content": "Establezca el Intervalo de Mantenimiento (horas) y rastree las Horas de Operación. El sistema calcula cuándo se debe realizar el mantenimiento."
         },
         {
-          "title": "View Maintenance Opportunities",
-          "content": "The Maintenance Grid shows hourly availability of equipment. Blue cells indicate good times for maintenance when equipment is not in use."
+          "title": "Ver Oportunidades de Mantenimiento",
+          "content": "La Cuadrícula de Mantenimiento muestra la disponibilidad horaria del equipo. Las celdas azules indican buenos momentos para mantenimiento cuando el equipo no está en uso."
         }
       ]
     },
     {
       "id": "delays",
-      "title": "Delay Management",
-      "description": "Define and track operational delays",
+      "title": "Gestión de Retrasos",
+      "description": "Defina y rastree retrasos operacionales",
       "steps": [
         {
-          "title": "Set Up Delay Codes",
-          "content": "Go to Delays page. Create delay codes with Category (e.g., Equipment, Operational) and Code (e.g., EQ-001). Add descriptions for clarity."
+          "title": "Configurar Códigos de Retraso",
+          "content": "Vaya a la página de Retrasos. Cree códigos de retraso con Categoría (por ejemplo, Equipo, Operacional) y Código (por ejemplo, EQ-001). Agregue descripciones para mayor claridad."
         },
         {
-          "title": "Import Standard Delays",
-          "content": "Download the delay template, define your standard delay codes, and import them. This creates a consistent delay tracking system."
+          "title": "Importar Retrasos Estándar",
+          "content": "Descargue la plantilla de retrasos, defina sus códigos de retraso estándar e impórtelos. Esto crea un sistema consistente de seguimiento de retrasos."
         },
         {
-          "title": "Standard vs Custom Delays",
-          "content": "Standard delays have predefined durations. Custom delays are entered on-the-fly during scheduling."
+          "title": "Retrasos Estándar vs Personalizados",
+          "content": "Los retrasos estándar tienen duraciones predefinidas. Los retrasos personalizados se ingresan sobre la marcha durante la programación."
         }
       ]
     },
     {
       "id": "maintenance-logs",
-      "title": "Maintenance Logs",
-      "description": "Track and analyze equipment maintenance history",
+      "title": "Registros de Mantenimiento",
+      "description": "Rastree y analice el historial de mantenimiento del equipo",
       "steps": [
         {
-          "title": "Record Maintenance Events",
-          "content": "Go to Maintenance Logs page. Click \"New Log\" to record maintenance activities. Select equipment, maintenance type (scheduled/unscheduled/preventive/breakdown), date performed, and duration."
+          "title": "Registrar Eventos de Mantenimiento",
+          "content": "Vaya a la página de Registros de Mantenimiento. Haga clic en \"Nuevo Registro\" para registrar actividades de mantenimiento. Seleccione equipo, tipo de mantenimiento (programado/no programado/preventivo/avería), fecha realizada y duración."
         },
         {
-          "title": "Track Costs",
-          "content": "Enter labor costs and parts costs for each maintenance event. This helps analyze total cost of ownership and identify expensive equipment."
+          "title": "Rastrear Costos",
+          "content": "Ingrese los costos de mano de obra y costos de piezas para cada evento de mantenimiento. Esto ayuda a analizar el costo total de propiedad e identificar equipo costoso."
         },
         {
-          "title": "Set Next Due Date",
-          "content": "When recording maintenance, set the next maintenance due date. This integrates with the equipment maintenance tracking system."
+          "title": "Establecer Fecha de Vencimiento",
+          "content": "Al registrar mantenimiento, establezca la próxima fecha de vencimiento de mantenimiento. Esto se integra con el sistema de seguimiento de mantenimiento de equipos."
         },
         {
-          "title": "View Analytics",
-          "content": "Switch to Analytics tab to see maintenance trends, costs by equipment, breakdown frequency, and compliance metrics. Use filters to analyze specific equipment or time periods."
+          "title": "Ver Análisis",
+          "content": "Cambie a la pestaña de Análisis para ver tendencias de mantenimiento, costos por equipo, frecuencia de averías y métricas de cumplimiento. Use filtros para analizar equipos o períodos de tiempo específicos."
         },
         {
-          "title": "Import Maintenance History",
-          "content": "Click \"Import\" to bulk upload historical maintenance data via Excel. Download the template, fill in maintenance records, and import to build your maintenance history database."
+          "title": "Importar Historial de Mantenimiento",
+          "content": "Haga clic en \"Importar\" para cargar masivamente datos históricos de mantenimiento a través de Excel. Descargue la plantilla, complete los registros de mantenimiento e importe para construir su base de datos de historial de mantenimiento."
         },
         {
-          "title": "Export Reports",
-          "content": "Click \"Export to Excel\" to download maintenance logs for reporting or analysis. Filtered results will be exported based on your current filter selections."
+          "title": "Exportar Informes",
+          "content": "Haga clic en \"Exportar a Excel\" para descargar registros de mantenimiento para informes o análisis. Los resultados filtrados se exportarán según sus selecciones de filtro actuales."
         }
       ]
     },
     {
       "id": "scheduling",
-      "title": "Creating a Schedule",
-      "description": "Generate and manage your mine schedule",
+      "title": "Crear un Horario",
+      "description": "Genere y administre su horario de mina",
       "steps": [
         {
-          "title": "Navigate to Schedule Page",
-          "content": "Click Schedule in the sidebar. Choose between 24-hour or 48-hour grid view using the toggle at the top."
+          "title": "Navegar a la Página de Horario",
+          "content": "Haga clic en Horario en la barra lateral. Elija entre vista de cuadrícula de 24 horas o 48 horas usando el interruptor en la parte superior."
         },
         {
-          "title": "Generate Schedule",
-          "content": "Click \"Generate Schedule\" button. The system calculates task allocations based on your sites, tasks, and configuration. This takes a few seconds."
+          "title": "Generar Horario",
+          "content": "Haga clic en el botón \"Generar Horario\". El sistema calcula las asignaciones de tareas según sus sitios, tareas y configuración. Esto toma unos segundos."
         },
         {
-          "title": "Understand the Grid",
-          "content": "Each row is a site, each column is an hour. Color-coded cells show which task is scheduled. Priority sites appear first. Inactive sites are grayed out."
+          "title": "Comprender la Cuadrícula",
+          "content": "Cada fila es un sitio, cada columna es una hora. Las celdas codificadas por colores muestran qué tarea está programada. Los sitios prioritarios aparecen primero. Los sitios inactivos están atenuados."
         },
         {
-          "title": "Add Delays",
-          "content": "Click any cell or hour header to mark delays. Select delay category, code, duration, and notes. Delays block task allocation for that period."
+          "title": "Agregar Retrasos",
+          "content": "Haga clic en cualquier celda o encabezado de hora para marcar retrasos. Seleccione categoría de retraso, código, duración y notas. Los retrasos bloquean la asignación de tareas para ese período."
         },
         {
-          "title": "Regenerate with Delays",
-          "content": "After adding delays, click \"Generate Schedule\" again. The system will reschedule around the blocked hours."
+          "title": "Regenerar con Retrasos",
+          "content": "Después de agregar retrasos, haga clic en \"Generar Horario\" nuevamente. El sistema reprogramará alrededor de las horas bloqueadas."
         },
         {
-          "title": "Save as Snapshot",
-          "content": "Click \"Save Snapshot\" to preserve this schedule version. Give it a name and description. Access historical snapshots anytime."
+          "title": "Guardar como Instantánea",
+          "content": "Haga clic en \"Guardar Instantánea\" para preservar esta versión del horario. Déle un nombre y descripción. Acceda a instantáneas históricas en cualquier momento."
         },
         {
-          "title": "Toggle Site Status",
-          "content": "Click site name in grid to toggle active/inactive. Inactive sites are skipped in scheduling but remain visible for reference."
+          "title": "Alternar Estado del Sitio",
+          "content": "Haga clic en el nombre del sitio en la cuadrícula para alternar activo/inactivo. Los sitios inactivos se omiten en la programación pero permanecen visibles para referencia."
         }
       ]
     },
     {
       "id": "core-logic",
-      "title": "How the Core Logic Works",
-      "description": "Understanding the scheduling and maintenance algorithms",
+      "title": "Cómo Funciona la Lógica Principal",
+      "description": "Comprender los algoritmos de programación y mantenimiento",
       "steps": [
         {
           "title": "Task Duration Calculation",
