@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Spin, Tag, Space, Modal } from 'antd';
-import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, notification, Radio, Spin, Tag, Space, Modal, Collapse } from 'antd';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
@@ -16,6 +16,7 @@ const Schedule = () => {
   const [loading, setLoading] = useState(false);
   const [generatedAt, setGeneratedAt] = useState(null);
   const [loadingLatest, setLoadingLatest] = useState(true);
+  const [controlsCollapsed, setControlsCollapsed] = useState(true);
 
   // Fetch latest schedule on mount
   useEffect(() => {
@@ -544,110 +545,129 @@ const Schedule = () => {
         )}
 
         {/* Controls */}
-        <div className="schedule-controls">
-          <div className="controls-top">
-            <div className="control-group">
-              <label className="control-label">{t('schedule.gridHours')}</label>
-              <Radio.Group value={gridHours} onChange={handleHoursChange} size="large">
-                <Radio.Button value={6}>{t('schedule.hours', { count: 6 })}</Radio.Button>
-                <Radio.Button value={12}>{t('schedule.hours', { count: 12 })}</Radio.Button>
-                <Radio.Button value={24}>{t('schedule.hours', { count: 24 })}</Radio.Button>
-                <Radio.Button value={48}>{t('schedule.hours', { count: 48 })}</Radio.Button>
-              </Radio.Group>
-            </div>
-
-            {delayedSlots.length > 0 && (
-              <div className="delay-count">
-                <span className="delay-badge">{delayedSlots.length}</span>
-                <span className="delay-text">{t('schedule.delaysApplied')}</span>
+        <Collapse 
+          className="schedule-controls-collapse"
+          activeKey={controlsCollapsed ? [] : ['controls']}
+          onChange={() => setControlsCollapsed(!controlsCollapsed)}
+          expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+          items={[{
+            key: 'controls',
+            label: (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px', fontWeight: 600 }}>
+                <span>{t('schedule.controls', 'Schedule Controls')}</span>
+                {delayedSlots.length > 0 && (
+                  <Tag color="warning">{delayedSlots.length} {t('schedule.delaysApplied')}</Tag>
+                )}
               </div>
-            )}
-          </div>
+            ),
+            children: (
+              <div className="schedule-controls">
+                <div className="controls-top">
+                  <div className="control-group">
+                    <label className="control-label">{t('schedule.gridHours')}</label>
+                    <Radio.Group value={gridHours} onChange={handleHoursChange} size="large">
+                      <Radio.Button value={6}>{t('schedule.hours', { count: 6 })}</Radio.Button>
+                      <Radio.Button value={12}>{t('schedule.hours', { count: 12 })}</Radio.Button>
+                      <Radio.Button value={24}>{t('schedule.hours', { count: 24 })}</Radio.Button>
+                      <Radio.Button value={48}>{t('schedule.hours', { count: 48 })}</Radio.Button>
+                    </Radio.Group>
+                  </div>
 
-          <div className="controls-bottom">
-            <div className="action-buttons">
-              <Button
-                type="primary"
-                size="large"
-                icon={<CalendarOutlined />}
-                onClick={generateSchedule}
-                loading={loading}
-                className="generate-btn"
-              >
-                {t('schedule.generateSchedule')}
-              </Button>
+                  {delayedSlots.length > 0 && (
+                    <div className="delay-count">
+                      <span className="delay-badge">{delayedSlots.length}</span>
+                      <span className="delay-text">{t('schedule.delaysApplied')}</span>
+                    </div>
+                  )}
+                </div>
 
-              {scheduleData && (
-                <Button
-                  size="large"
-                  icon={<ReloadOutlined />}
-                  onClick={generateSchedule}
-                  loading={loading}
-                  className="regenerate-btn"
-                >
-                  {t('schedule.regenerate')}
-                </Button>
-              )}
+                <div className="controls-bottom">
+                  <div className="action-buttons">
+                    <Button
+                      type="primary"
+                      size="large"
+                      icon={<CalendarOutlined />}
+                      onClick={generateSchedule}
+                      loading={loading}
+                      className="generate-btn"
+                    >
+                      {t('schedule.generateSchedule')}
+                    </Button>
 
-              {scheduleData && (
-                <Button
-                  size="large"
-                  icon={<DownloadOutlined />}
-                  onClick={handleDownloadExcel}
-                  className="download-btn"
-                >
-                  {t('schedule.downloadExcel')}
-                </Button>
-              )}
+                    {scheduleData && (
+                      <Button
+                        size="large"
+                        icon={<ReloadOutlined />}
+                        onClick={generateSchedule}
+                        loading={loading}
+                        className="regenerate-btn"
+                      >
+                        {t('schedule.regenerate')}
+                      </Button>
+                    )}
 
-              {scheduleData && (
-                <Button
-                  size="large"
-                  icon={<SaveOutlined />}
-                  onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
-                  className="save-btn"
-                >
-                  {t('schedule.saveSnapshot')}
-                </Button>
-              )}
+                    {scheduleData && (
+                      <Button
+                        size="large"
+                        icon={<DownloadOutlined />}
+                        onClick={handleDownloadExcel}
+                        className="download-btn"
+                      >
+                        {t('schedule.downloadExcel')}
+                      </Button>
+                    )}
 
-              <Button
-                size="large"
-                icon={<FolderOpenOutlined />}
-                onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
-                className="load-btn"
-              >
-                {t('schedule.loadSnapshot')}
-              </Button>
+                    {scheduleData && (
+                      <Button
+                        size="large"
+                        icon={<SaveOutlined />}
+                        onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
+                        className="save-btn"
+                      >
+                        {t('schedule.saveSnapshot')}
+                      </Button>
+                    )}
 
-              {scheduleData && delayedSlots.length > 0 && (
-                <Button
-                  size="large"
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={handleClearAllDelays}
-                  className="clear-delays-btn"
-                  style={{
-                    background: '#ff4d4f',
-                    borderColor: '#ff4d4f',
-                    color: '#ffffff'
-                  }}
-                >
-                  {t('schedule.clearAllDelays', { count: delayedSlots.length })}
-                </Button>
-              )}
-            </div>
-          </div>
+                    <Button
+                      size="large"
+                      icon={<FolderOpenOutlined />}
+                      onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
+                      className="load-btn"
+                    >
+                      {t('schedule.loadSnapshot')}
+                    </Button>
 
-          {/* Hidden SnapshotManager for modal functionality */}
-          <div style={{ display: 'none' }}>
-            <SnapshotManager
-              scheduleData={scheduleData}
-              delayedSlots={delayedSlots}
-              gridHours={gridHours}
-              onLoadSnapshot={handleLoadSnapshot}
-            />
-          </div>
+                    {scheduleData && delayedSlots.length > 0 && (
+                      <Button
+                        size="large"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={handleClearAllDelays}
+                        className="clear-delays-btn"
+                        style={{
+                          background: '#ff4d4f',
+                          borderColor: '#ff4d4f',
+                          color: '#ffffff'
+                        }}
+                      >
+                        {t('schedule.clearAllDelays', { count: delayedSlots.length })}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          }]}
+        />
+
+        {/* Hidden SnapshotManager for modal functionality */}
+        <div style={{ display: 'none' }}>
+          <SnapshotManager
+            scheduleData={scheduleData}
+            delayedSlots={delayedSlots}
+            gridHours={gridHours}
+            onLoadSnapshot={handleLoadSnapshot}
+          />
         </div>
 
         {/* Loading State */}

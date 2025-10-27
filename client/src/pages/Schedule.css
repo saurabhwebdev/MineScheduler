@@ -4,13 +4,38 @@
 }
 
 /* Controls Section */
+.schedule-controls-collapse {
+  margin-bottom: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.schedule-controls-collapse .ant-collapse-header {
+  padding: 14px 20px !important;
+  background: #fafafa;
+  border-radius: 8px !important;
+  font-size: 15px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.schedule-controls-collapse .ant-collapse-content {
+  border-top: 1px solid #f0f0f0;
+}
+
+.schedule-controls-collapse .ant-collapse-content-box {
+  padding: 0 !important;
+}
+
 .schedule-controls {
   background: #ffffff;
   padding: 20px 24px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 0;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
 }
 
 .controls-top {
