@@ -99,8 +99,8 @@
 /* Column Widths */
 .priority-col,
 .priority-cell {
-  width: 50px;
-  min-width: 50px;
+  width: 40px;
+  min-width: 40px;
 }
 
 .priority-cell {
@@ -114,9 +114,9 @@
 
 .site-col,
 .site-cell {
-  width: 180px;
-  min-width: 180px;
-  max-width: 180px;
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
 }
 
 .site-cell {
