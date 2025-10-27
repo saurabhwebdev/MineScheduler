@@ -15,8 +15,8 @@
 }
 
 .dashboard-content {
-  margin-top: 70px;
-  padding: 30px 40px;
+  margin-top: 60px;
+  padding: 16px 40px;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
