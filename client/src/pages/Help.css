@@ -131,8 +131,8 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: #f0f9ff;
-  border: 1px solid #91d5ff;
+  background: #3cca70;
+  border: 1px solid #3cca70;
   border-radius: 4px;
   color: #062d54;
   font-size: 0.875rem;
@@ -143,10 +143,10 @@
 }
 
 .help-video-btn:hover {
-  background: #e6f7ff;
-  border-color: #40a9ff;
+  background: #34b35e;
+  border-color: #34b35e;
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(60, 202, 112, 0.3);
 }
 
 .help-video-btn .anticon {
