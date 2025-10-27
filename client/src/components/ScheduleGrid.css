@@ -79,10 +79,12 @@
   letter-spacing: 0.5px;
   border-bottom: 1px solid #d1d5db;
   position: relative;
+  border-radius: 0 !important;
 }
 
 .schedule-grid .shift-row .shift-cell {
   font-weight: 500;
+  border-radius: 0 !important;
 }
 
 /* Current Hour Highlighting - Flat & Minimal */
