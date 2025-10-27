@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Table, Modal, Form, Input, notification } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import config from '../config/config';
 
 const { TextArea } = Input;
 
 const UomConfig = () => {
+  const { t } = useTranslation();
   const [uoms, setUoms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,15 +36,15 @@ const UomConfig = () => {
         setUoms(data.data.uoms);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch UOMs',
+          message: t('uomConfig.error'),
+          description: data.message || t('uomConfig.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching UOMs:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch UOMs',
+        message: t('uomConfig.networkError'),
+        description: t('uomConfig.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -83,14 +85,14 @@ const UomConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'UOM updated successfully',
+            message: t('uomConfig.success'),
+            description: t('uomConfig.updateSuccess'),
           });
           fetchUoms();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update UOM',
+            message: t('uomConfig.error'),
+            description: data.message || t('uomConfig.updateError'),
           });
         }
       } else {
@@ -107,14 +109,14 @@ const UomConfig = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'UOM created successfully',
+            message: t('uomConfig.success'),
+            description: t('uomConfig.createSuccess'),
           });
           fetchUoms();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create UOM',
+            message: t('uomConfig.error'),
+            description: data.message || t('uomConfig.createError'),
           });
         }
       }
@@ -146,21 +148,21 @@ const UomConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'UOM deleted successfully',
+          message: t('uomConfig.success'),
+          description: t('uomConfig.deleteSuccess'),
         });
         fetchUoms();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete UOM',
+          message: t('uomConfig.error'),
+          description: data.message || t('uomConfig.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting UOM:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete UOM',
+        message: t('uomConfig.networkError'),
+        description: t('uomConfig.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -189,22 +191,26 @@ const UomConfig = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Import Successful',
-          description: `${data.data.success.length} UOMs imported successfully. ${data.data.skipped.length} skipped. ${data.data.failed.length} failed.`,
+          message: t('uomConfig.importSuccess'),
+          description: t('uomConfig.importDetails', {
+            success: data.data.success.length,
+            skipped: data.data.skipped.length,
+            failed: data.data.failed.length
+          }),
           duration: 5,
         });
         fetchUoms();
       } else {
         notification.error({
-          message: 'Import Failed',
-          description: data.message || 'Failed to import UOMs',
+          message: t('uomConfig.importFailed'),
+          description: data.message || t('uomConfig.importError'),
         });
       }
     } catch (error) {
       console.error('Import error:', error);
       notification.error({
-        message: 'Import Error',
-        description: 'An error occurred during import',
+        message: t('uomConfig.importError'),
+        description: t('uomConfig.importErrorOccurred'),
       });
     }
 
@@ -232,52 +238,52 @@ const UomConfig = () => {
         document.body.removeChild(a);
 
         notification.success({
-          message: 'Export Successful',
-          description: 'UOMs exported successfully',
+          message: t('uomConfig.exportSuccess'),
+          description: t('uomConfig.exportSuccessDesc'),
         });
       } else {
         notification.error({
-          message: 'Export Failed',
-          description: 'Failed to export UOMs',
+          message: t('uomConfig.exportFailed'),
+          description: t('uomConfig.exportError'),
         });
       }
     } catch (error) {
       console.error('Export error:', error);
       notification.error({
-        message: 'Export Error',
-        description: 'An error occurred during export',
+        message: t('uomConfig.exportError'),
+        description: t('uomConfig.exportErrorOccurred'),
       });
     }
   };
 
   const columns = [
     {
-      title: 'UOM NAME',
+      title: t('uomConfig.columnName'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'DESCRIPTION',
+      title: t('uomConfig.columnDescription'),
       dataIndex: 'description',
       key: 'description',
       render: (text) => text || '-',
     },
     {
-      title: 'CREATED BY',
+      title: t('uomConfig.columnCreatedBy'),
       dataIndex: 'createdBy',
       key: 'createdBy',
       render: (createdBy) => createdBy?.name || '-',
     },
     {
-      title: 'CREATED',
+      title: t('uomConfig.columnCreated'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
-      title: 'ACTIONS',
+      title: t('uomConfig.columnActions'),
       key: 'actions',
       align: 'center',
       width: 100,
@@ -301,7 +307,7 @@ const UomConfig = () => {
     <div>
       <div className="uom-actions">
         <button className="btn-primary" onClick={handleCreateUom}>
-          <PlusOutlined /> New UOM
+          <PlusOutlined /> {t('uomConfig.newUom')}
         </button>
         <input
           type="file"
@@ -314,10 +320,10 @@ const UomConfig = () => {
           className="btn-secondary" 
           onClick={() => fileInputRef.current?.click()}
         >
-          <UploadOutlined /> Import
+          <UploadOutlined /> {t('uomConfig.import')}
         </button>
         <button className="btn-secondary" onClick={handleExport}>
-          <DownloadOutlined /> Export
+          <DownloadOutlined /> {t('uomConfig.export')}
         </button>
       </div>
 
@@ -336,49 +342,49 @@ const UomConfig = () => {
       </div>
 
       <Modal
-        title={editingUom ? 'Edit UOM' : 'New UOM'}
+        title={editingUom ? t('uomConfig.editUom') : t('uomConfig.newUom')}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => {
           setIsModalVisible(false);
           form.resetFields();
         }}
-        okText={editingUom ? 'Save' : 'Create'}
-        cancelText="Cancel"
+        okText={editingUom ? t('uomConfig.save') : t('uomConfig.create')}
+        cancelText={t('uomConfig.cancel')}
         width={500}
         className="simple-modal"
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="UOM Name"
+            label={t('uomConfig.uomName')}
             name="name"
-            rules={[{ required: true, message: 'Required' }]}
+            rules={[{ required: true, message: t('uomConfig.required') }]}
           >
-            <Input placeholder="Enter UOM name (e.g., Ton, Area, Task)" />
+            <Input placeholder={t('uomConfig.uomNamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label={t('uomConfig.description')}
             name="description"
           >
             <TextArea 
               rows={3}
-              placeholder="Enter description (optional)" 
+              placeholder={t('uomConfig.descriptionPlaceholder')} 
             />
           </Form.Item>
         </Form>
       </Modal>
 
       <Modal
-        title="Delete UOM"
+        title={t('uomConfig.deleteUom')}
         open={isDeleteModalVisible}
         onOk={handleDeleteUom}
         onCancel={() => {
           setIsDeleteModalVisible(false);
           setDeletingUom(null);
         }}
-        okText="Delete"
-        cancelText="Cancel"
+        okText={t('uomConfig.delete')}
+        cancelText={t('uomConfig.cancel')}
         width={400}
         className="delete-modal"
         okButtonProps={{ danger: true }}
@@ -387,10 +393,10 @@ const UomConfig = () => {
           <ExclamationCircleOutlined className="delete-icon" />
           <div>
             <p className="delete-message">
-              Are you sure you want to delete <strong>{deletingUom?.name}</strong>?
+              {t('uomConfig.deleteConfirm', { name: deletingUom?.name })}
             </p>
             <p className="delete-warning">
-              This action cannot be undone. Tasks using this UOM may be affected.
+              {t('uomConfig.deleteWarning')}
             </p>
           </div>
         </div>
