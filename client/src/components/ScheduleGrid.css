@@ -95,6 +95,11 @@
   border: 2px solid #2563eb !important;
 }
 
+/* Row Hover Effect - Subtle */
+.schedule-grid tbody tr:hover td {
+  background: #f9fafb;
+}
+
 
 
 
