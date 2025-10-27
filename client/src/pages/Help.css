@@ -120,6 +120,39 @@
   margin: 0;
 }
 
+.help-section-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.help-video-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f0f9ff;
+  border: 1px solid #91d5ff;
+  border-radius: 4px;
+  color: #062d54;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.help-video-btn:hover {
+  background: #e6f7ff;
+  border-color: #40a9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(24, 144, 255, 0.15);
+}
+
+.help-video-btn .anticon {
+  font-size: 1rem;
+}
+
 .help-section-toggle {
   color: #8c8c8c;
   font-size: 1rem;
@@ -258,6 +291,57 @@
   margin: 0;
 }
 
+/* Video Modal */
+.help-video-modal .ant-modal-content {
+  border-radius: 8px;
+}
+
+.help-video-modal .ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px;
+}
+
+.help-video-modal .ant-modal-body {
+  padding: 0;
+}
+
+.help-video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+.help-video-placeholder {
+  text-align: center;
+  padding: 40px;
+  color: #ffffff;
+}
+
+.help-video-placeholder h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 16px 0 8px 0;
+}
+
+.help-video-placeholder p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9375rem;
+  color: #d9d9d9;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+.help-video-placeholder strong {
+  color: #ffffff;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .help-intro-card {
@@ -298,5 +382,22 @@
 
   .help-reference-grid {
     grid-template-columns: 1fr;
+  }
+
+  .help-section-right {
+    gap: 0.5rem;
+  }
+
+  .help-video-btn {
+    padding: 4px 8px;
+    font-size: 0.8125rem;
+  }
+
+  .help-video-btn span {
+    display: none;
+  }
+
+  .help-video-modal {
+    max-width: 95% !important;
   }
 }

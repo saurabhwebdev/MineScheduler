@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Modal } from 'antd';
 import DashboardLayout from '../components/DashboardLayout';
 import { 
   CheckCircleFilled, 
@@ -12,7 +13,8 @@ import {
   SettingFilled,
   PlayCircleFilled,
   BulbFilled,
-  ThunderboltFilled
+  ThunderboltFilled,
+  VideoCameraOutlined
 } from '@ant-design/icons';
 import './Help.css';
 
@@ -20,6 +22,8 @@ const Help = () => {
   const { t, i18n } = useTranslation();
   const [expandedSection, setExpandedSection] = useState(null);
   const [helpContent, setHelpContent] = useState({ sections: [] });
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+  const [selectedVideoSection, setSelectedVideoSection] = useState(null);
 
   useEffect(() => {
     // Load help content based on current language
@@ -38,6 +42,12 @@ const Help = () => {
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
+  };
+
+  const handleVideoClick = (e, sectionTitle) => {
+    e.stopPropagation();
+    setSelectedVideoSection(sectionTitle);
+    setVideoModalVisible(true);
   };
 
   // Icon mapping for sections
@@ -450,8 +460,18 @@ const Help = () => {
                     <p>{section.description}</p>
                   </div>
                 </div>
-                <div className="help-section-toggle">
-                  <RightOutlined className={expandedSection === section.id ? 'rotated' : ''} />
+                <div className="help-section-right">
+                  <button 
+                    className="help-video-btn"
+                    onClick={(e) => handleVideoClick(e, section.title)}
+                    title="Watch video tutorial"
+                  >
+                    <VideoCameraOutlined />
+                    <span>Video</span>
+                  </button>
+                  <div className="help-section-toggle">
+                    <RightOutlined className={expandedSection === section.id ? 'rotated' : ''} />
+                  </div>
                 </div>
               </div>
 
@@ -505,6 +525,33 @@ const Help = () => {
           <p>{t('help.support.description')}</p>
         </div>
       </div>
+
+      {/* Video Modal */}
+      <Modal
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <VideoCameraOutlined style={{ fontSize: '20px', color: '#062d54' }} />
+            <span>{selectedVideoSection} - Video Tutorial</span>
+          </div>
+        }
+        open={videoModalVisible}
+        onCancel={() => setVideoModalVisible(false)}
+        footer={null}
+        width={900}
+        centered
+        className="help-video-modal"
+      >
+        <div className="help-video-container">
+          <div className="help-video-placeholder">
+            <VideoCameraOutlined style={{ fontSize: '64px', color: '#8c8c8c' }} />
+            <h3>Video Tutorial Coming Soon</h3>
+            <p>We're preparing detailed video tutorials for each section.</p>
+            <p style={{ fontSize: '13px', color: '#8c8c8c', marginTop: '16px' }}>
+              Video for: <strong>{selectedVideoSection}</strong>
+            </p>
+          </div>
+        </div>
+      </Modal>
     </DashboardLayout>
   );
 };
