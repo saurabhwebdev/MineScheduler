@@ -1,7 +1,7 @@
 .schedule-grid-wrapper {
   background: #ffffff;
   border-radius: 0;
-  padding: 16px;
+  padding: 8px;
   border: 1px solid #e5e7eb;
   position: relative;
   overflow: hidden;
@@ -36,7 +36,7 @@
   width: 100%;
   border-collapse: collapse;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   table-layout: fixed;
   min-width: 100%;
   font-feature-settings: 'tnum';
@@ -48,7 +48,7 @@
 .schedule-grid th,
 .schedule-grid td {
   border: 1px solid #e5e7eb;
-  padding: 6px;
+  padding: 4px;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
@@ -60,8 +60,8 @@
   background: #fafafa;
   color: #6b7280;
   font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.3px;
+  font-size: 10px;
+  letter-spacing: 0.2px;
   position: sticky;
   top: 0;
   z-index: 15;
@@ -72,11 +72,11 @@
 /* Shift Row Styling - Minimal with subtle color indicators */
 .schedule-grid .shift-row th {
   background: #fafafa;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 500;
-  padding: 6px;
+  padding: 3px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   border-bottom: 1px solid #d1d5db;
   position: relative;
   border-radius: 0 !important;
@@ -106,14 +106,14 @@
 /* Column Widths */
 .priority-col,
 .priority-cell {
-  width: 40px;
-  min-width: 40px;
+  width: 30px;
+  min-width: 30px;
 }
 
 .priority-cell {
   font-weight: 400;
   color: #9ca3af;
-  font-size: 11px;
+  font-size: 10px;
   font-variant-numeric: tabular-nums;
   background: #fafafa;
   border-right: 2px solid #e5e7eb;
@@ -121,28 +121,28 @@
 
 .site-col,
 .site-cell {
-  width: 140px;
-  min-width: 140px;
-  max-width: 140px;
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
 }
 
 .site-cell {
   font-weight: 400;
   background: #fafafa;
   text-align: left;
-  padding-left: 8px !important;
-  padding-right: 6px !important;
+  padding-left: 6px !important;
+  padding-right: 4px !important;
   white-space: normal;
   word-wrap: break-word;
-  line-height: 1.3;
-  font-size: 11px;
+  line-height: 1.2;
+  font-size: 10px;
   border-right: 2px solid #e5e7eb;
 }
 
 .hour-col {
-  width: 44px;
-  min-width: 44px;
-  font-size: 11px;
+  width: 38px;
+  min-width: 38px;
+  font-size: 10px;
   font-weight: 400;
   color: #6b7280;
   transition: background-color 0.15s ease;
@@ -195,7 +195,7 @@
   font-weight: 500;
   text-decoration: none;
   display: inline-block;
-  padding: 4px 8px;
+  padding: 2px 4px;
   transition: color 0.15s ease;
 }
 
@@ -223,11 +223,11 @@
   position: relative;
   cursor: pointer;
   transition: background-color 0.15s ease;
-  height: 36px;
-  width: 44px;
-  min-width: 44px;
-  max-width: 44px;
-  padding: 4px;
+  height: 30px;
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
+  padding: 3px;
   background: #ffffff;
   text-align: center;
   vertical-align: middle;
@@ -244,8 +244,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  font-size: 11px;
+  padding: 2px;
+  font-size: 10px;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.85);
   width: 100%;
@@ -276,27 +276,27 @@
 }
 
 .delay-icon {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #ffffff;
   font-family: 'Inter', sans-serif;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .shift-change-icon {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1;
   color: #ffffff;
   font-family: 'Inter', sans-serif;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .shift-change-label {
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   line-height: 1;
   color: #ffffff;
 }
@@ -310,17 +310,17 @@
 /* Multiple Delay Badge */
 .multiple-delay-badge {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 1px;
+  right: 1px;
   background: rgba(0, 0, 0, 0.8);
   color: #ffffff;
   border-radius: 0;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
   border: 1px solid #ffffff;
   z-index: 10;
