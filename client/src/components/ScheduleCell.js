@@ -116,9 +116,9 @@ const ScheduleCell = ({
     }
 
     if (taskId && taskColor) {
-      // Desaturate task colors for a more minimal, professional look
+      // Slightly desaturate task colors for a more minimal, professional look
       return {
-        backgroundColor: `${taskColor}30`, // 30 = ~19% opacity for pastel effect
+        backgroundColor: `${taskColor}50`, // 50 = ~31% opacity for better visibility
         borderLeft: `4px solid ${taskColor}`
       };
     }

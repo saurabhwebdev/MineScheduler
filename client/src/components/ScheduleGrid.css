@@ -1,6 +1,6 @@
 .schedule-grid-wrapper {
   background: #ffffff;
-  border-radius: 4px;
+  border-radius: 0;
   padding: 20px;
   border: 1px solid #e5e7eb;
   position: relative;
@@ -25,7 +25,7 @@
 
 .schedule-grid-scroll::-webkit-scrollbar-thumb {
   background: #d1d5db;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .schedule-grid-scroll::-webkit-scrollbar-thumb:hover {
