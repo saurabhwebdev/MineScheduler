@@ -11,6 +11,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  overflow: visible;
 }
 
 .task-page .page-header h1 {
@@ -24,6 +25,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  padding: 2px 0;
 }
 
 .task-page .btn-primary {
