@@ -217,18 +217,10 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
               <th className="site-col shift-cell">Shift</th>
               {Array.from({ length: gridHours }, (_, i) => {
                 const shift = getShiftForHour(i);
-                // Desaturate and lighten shift colors for minimal look
-                const desaturatedColor = shift.color ? 
-                  `${shift.color}20` : '#f3f4f6'; // 20 = 12% opacity
                 return (
                   <th 
                     key={i} 
                     className="hour-col shift-cell"
-                    style={{ 
-                      backgroundColor: desaturatedColor,
-                      color: '#6b7280',
-                      borderLeft: `3px solid ${shift.color || '#9ca3af'}`
-                    }}
                     title={`${shift.name} - ${shift.code}`}
                   >
                     {shift.code}
@@ -253,7 +245,6 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                   className={`hour-col hour-header-clickable ${isCurrentHour(i) ? 'current-hour' : ''}`}
                   onClick={() => handleHourHeaderClick(i)}
                   title="Click to add delay for all active sites"
-                  style={{ cursor: 'pointer' }}
                 >
                   {i + 1}
                 </th>
