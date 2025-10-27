@@ -202,91 +202,91 @@
       "description": "Comprender los algoritmos de programación y mantenimiento",
       "steps": [
         {
-          "title": "Task Duration Calculation",
-          "content": "The system calculates task durations based on Unit of Measure (UOM) types: (1) Area-based: Duration = (Total Plan Meters ÷ Rate m/h) × 60. For example, 100m at 10m/h = 10 hours. (2) Tonnage-based: Duration = (Total Backfill Tonnes × 60) ÷ Rate t/h. If tonnes not provided, calculates from Width × Height × Length × Density. (3) BOGT (Bogger/Trolley): Duration = (Remote Tonnes ÷ Rate) × 60. (4) BFP (Backfill Prep): Uses fixed duration only if tonnes > 0, skips if no backfill. (5) Task (Fixed): Uses configured duration in minutes directly. All durations are rounded up to next whole hour."
+          "title": "Cálculo de Duración de Tareas",
+          "content": "El sistema calcula las duraciones de tareas basándose en tipos de Unidad de Medida (UDM): (1) Basado en área: Duración = (Metros Totales del Plan ÷ Tasa m/h) × 60. Por ejemplo, 100m a 10m/h = 10 horas. (2) Basado en tonelaje: Duración = (Toneladas Totales de Relleno × 60) ÷ Tasa t/h. Si no se proporcionan toneladas, calcula desde Ancho × Altura × Longitud × Densidad. (3) BOGT (Trolley): Duración = (Toneladas Remotas ÷ Tasa) × 60. (4) BFP (Preparación de Relleno): Usa duración fija solo si toneladas > 0, omite si no hay relleno. (5) Tarea (Fija): Usa duración configurada en minutos directamente. Todas las duraciones se redondean hacia arriba a la siguiente hora completa."
         },
         {
-          "title": "Priority-Based Allocation",
-          "content": "Sites are sorted by Priority (lower number = higher priority) before scheduling. Active sites come first, then inactive. The scheduler processes sites in this order, allocating tasks sequentially. This ensures critical sites get scheduled first when resources are limited."
+          "title": "Asignación Basada en Prioridad",
+          "content": "Los sitios se ordenan por Prioridad (número menor = mayor prioridad) antes de programar. Los sitios activos vienen primero, luego los inactivos. El programador procesa los sitios en este orden, asignando tareas secuencialmente. Esto asegura que los sitios críticos se programen primero cuando los recursos son limitados."
         },
         {
-          "title": "Task Cycling & Firings",
-          "content": "Firings represent blast cycles. For Firings = 1: System schedules tasks from current task to end of cycle (no wrap). For Firings > 1: System schedules complete mining cycle (drill → charge → blast → ventilate → etc.) and repeats it \"Firings\" times. Tasks follow the Order sequence defined in Tasks page."
+          "title": "Ciclado de Tareas y Voladuras",
+          "content": "Las voladuras representan ciclos de voladura. Para Voladuras = 1: El sistema programa tareas desde la tarea actual hasta el final del ciclo (sin envolver). Para Voladuras > 1: El sistema programa el ciclo de minería completo (perforar → cargar → volar → ventilar → etc.) y lo repite \"Voladuras\" veces. Las tareas siguen la secuencia de Orden definida en la página de Tareas."
         },
         {
-          "title": "Time to Complete Override",
-          "content": "When \"Time to Complete\" is set for a site, it overrides the calculated duration ONLY for the first occurrence of the current task. Subsequent tasks and cycles use normal duration calculations. This is useful when you know exact remaining time for an in-progress task."
+          "title": "Anulación de Tiempo para Completar",
+          "content": "Cuando se establece \"Tiempo para Completar\" para un sitio, anula la duración calculada SOLO para la primera ocurrencia de la tarea actual. Las tareas y ciclos subsiguientes usan cálculos de duración normales. Esto es útil cuando conoce el tiempo restante exacto para una tarea en progreso."
         },
         {
-          "title": "Task Limits Enforcement",
-          "content": "Each task has a \"Limit\" defining max simultaneous sites per hour. For example, if Drill limit = 2, only 2 sites can drill in the same hour. The scheduler checks hourly allocation and skips hours where limit is reached, moving to the next available hour. This prevents equipment conflicts."
+          "title": "Aplicación de Límites de Tarea",
+          "content": "Cada tarea tiene un \"Límite\" que define el máximo de sitios simultáneos por hora. Por ejemplo, si el límite de Perforación = 2, solo 2 sitios pueden perforar en la misma hora. El programador verifica la asignación horaria y omite horas donde se alcanza el límite, moviéndose a la siguiente hora disponible. Esto previene conflictos de equipos."
         },
         {
-          "title": "Delay Handling",
-          "content": "Delays block specific hours for specific sites. When generating schedule, the system builds a delay map and skips those hours during allocation. This forces tasks to be scheduled around delays. Shift changeover delays are automatically generated based on shift configuration."
+          "title": "Manejo de Retrasos",
+          "content": "Los retrasos bloquean horas específicas para sitios específicos. Al generar el horario, el sistema construye un mapa de retrasos y omite esas horas durante la asignación. Esto fuerza que las tareas se programen alrededor de los retrasos. Los retrasos de cambio de turno se generan automáticamente según la configuración de turnos."
         },
         {
-          "title": "Hour Allocation Algorithm",
-          "content": "For each site, the scheduler: (1) Starts at hour 0 or last filled hour. (2) Checks if hour is delayed - if yes, skip to next hour. (3) Checks if cell already filled - if yes, skip to next hour. (4) Checks task limit for that hour - if reached, skip to next hour. (5) If all checks pass, allocate task to that hour and increment counter. (6) Repeat until all hours for task are allocated or grid ends."
+          "title": "Algoritmo de Asignación Horaria",
+          "content": "Para cada sitio, el programador: (1) Comienza en la hora 0 o la última hora llena. (2) Verifica si la hora está retrasada - si sí, salta a la siguiente hora. (3) Verifica si la celda ya está llena - si sí, salta a la siguiente hora. (4) Verifica el límite de tarea para esa hora - si se alcanzó, salta a la siguiente hora. (5) Si todas las verificaciones pasan, asigna la tarea a esa hora e incrementa el contador. (6) Repite hasta que todas las horas para la tarea estén asignadas o termine la cuadrícula."
         },
         {
-          "title": "Maintenance Opportunity Grid Logic",
-          "content": "Equipment is assigned to specific tasks via \"Assigned Tasks\" field. The system: (1) Checks each hour to see which tasks are running (from schedule grid). (2) If ANY task assigned to an equipment is running, marks equipment as \"In Use\" (Green). (3) If equipment is operational AND not in use, marks hour as \"Maintenance Window\" (Blue). (4) Considers operating hours vs maintenance interval to show status: Good (< 80%), Due Soon (80-99%), Overdue (≥ 100%)."
+          "title": "Lógica de Cuadrícula de Oportunidades de Mantenimiento",
+          "content": "El equipo se asigna a tareas específicas a través del campo \"Tareas Asignadas\". El sistema: (1) Verifica cada hora para ver qué tareas están ejecutándose (desde la cuadrícula de horario). (2) Si CUALQUIER tarea asignada a un equipo está ejecutándose, marca el equipo como \"En Uso\" (Verde). (3) Si el equipo está operacional Y no está en uso, marca la hora como \"Ventana de Mantenimiento\" (Azul). (4) Considera las horas de operación vs intervalo de mantenimiento para mostrar estado: Bueno (< 80%), Próximo (80-99%), Vencido (≥ 100%)."
         },
         {
-          "title": "Equipment Maintenance Calculation",
-          "content": "Maintenance status is calculated as: Percent Used = (Operating Hours ÷ Maintenance Interval) × 100. For example, equipment with 450 hours operated and 500-hour interval = 90% (Due Soon). Hours Until Maintenance = Maintenance Interval - Operating Hours. The system tracks this automatically and shows visual indicators (Green/Orange/Red)."
+          "title": "Cálculo de Mantenimiento de Equipo",
+          "content": "El estado de mantenimiento se calcula como: Porcentaje Usado = (Horas de Operación ÷ Intervalo de Mantenimiento) × 100. Por ejemplo, equipo con 450 horas operadas e intervalo de 500 horas = 90% (Próximo). Horas Hasta Mantenimiento = Intervalo de Mantenimiento - Horas de Operación. El sistema rastrea esto automáticamente y muestra indicadores visuales (Verde/Naranja/Rojo)."
         },
         {
-          "title": "Shift Changeover Auto-Delay",
-          "content": "When shifts are configured with changeover duration (e.g., 30 minutes), the system automatically blocks the hour BEFORE each shift starts. For example: Day shift starts at 06:00 with 30-min changeover → Hour 5 (05:00-06:00) is automatically blocked for ALL active sites. This prevents task allocation during crew changes."
+          "title": "Auto-Retraso de Cambio de Turno",
+          "content": "Cuando los turnos se configuran con duración de cambio (por ejemplo, 30 minutos), el sistema bloquea automáticamente la hora ANTES de que comience cada turno. Por ejemplo: El turno diurno comienza a las 06:00 con cambio de 30 min → Hora 5 (05:00-06:00) se bloquea automáticamente para TODOS los sitios activos. Esto previene la asignación de tareas durante cambios de personal."
         },
         {
-          "title": "Schedule Grid Color Coding",
-          "content": "Each task has a unique color defined in Tasks page. The grid uses these colors to visualize the schedule. Empty cells = white (available), Colored cells = task assigned, Gray cells = inactive site, Delayed cells show with visual indicators. This provides instant visual understanding of the schedule."
+          "title": "Codificación de Color de Cuadrícula de Horario",
+          "content": "Cada tarea tiene un color único definido en la página de Tareas. La cuadrícula usa estos colores para visualizar el horario. Celdas vacías = blanco (disponible), Celdas coloreadas = tarea asignada, Celdas grises = sitio inactivo, Celdas retrasadas muestran indicadores visuales. Esto proporciona comprensión visual instantánea del horario."
         },
         {
-          "title": "Snapshot & History",
-          "content": "Snapshots save complete schedule state including: grid allocation, task durations, site priorities, delays, and all parameters. This allows: (1) Historical comparison - see how schedules evolved. (2) Rollback capability - restore previous versions. (3) Audit trail - track schedule changes over time. Snapshots are immutable once saved."
+          "title": "Instantánea e Historial",
+          "content": "Las instantáneas guardan el estado completo del horario incluyendo: asignación de cuadrícula, duraciones de tareas, prioridades de sitios, retrasos y todos los parámetros. Esto permite: (1) Comparación histórica - ver cómo evolucionaron los horarios. (2) Capacidad de reversión - restaurar versiones anteriores. (3) Pista de auditoría - rastrear cambios de horario a lo largo del tiempo. Las instantáneas son inmutables una vez guardadas."
         }
       ]
     },
     {
       "id": "tips",
-      "title": "Best Practices & Tips",
-      "description": "Optimize your scheduling workflow",
+      "title": "Mejores Prácticas y Consejos",
+      "description": "Optimice su flujo de trabajo de programación",
       "steps": [
         {
-          "title": "Set Priorities Correctly",
-          "content": "Lower priority numbers = higher importance. Use priorities to control which sites get scheduled first when resources are limited."
+          "title": "Establecer Prioridades Correctamente",
+          "content": "Números de prioridad menores = mayor importancia. Use prioridades para controlar qué sitios se programan primero cuando los recursos son limitados."
         },
         {
-          "title": "Use Task Orders",
-          "content": "Task order defines the mining cycle sequence. Ensure tasks are numbered correctly (e.g., 1=Drill, 2=Charge, 3=Blast, 4=Ventilate)."
+          "title": "Usar Órdenes de Tarea",
+          "content": "El orden de tareas define la secuencia del ciclo de minería. Asegúrese de que las tareas estén numeradas correctamente (por ejemplo, 1=Perforar, 2=Cargar, 3=Volar, 4=Ventilar)."
         },
         {
-          "title": "Leverage Excel Import",
-          "content": "For initial setup or bulk updates, use Excel import. Download templates, fill offline, and import. This is much faster than manual entry."
+          "title": "Aprovechar Importación Excel",
+          "content": "Para configuración inicial o actualizaciones masivas, use importación Excel. Descargue plantillas, complete fuera de línea e importe. Esto es mucho más rápido que la entrada manual."
         },
         {
-          "title": "Monitor Equipment Maintenance",
-          "content": "Check the Equipment Dashboard regularly. Schedule maintenance during \"blue\" hours in the Maintenance Grid when equipment is available."
+          "title": "Monitorear Mantenimiento de Equipo",
+          "content": "Revise el Panel de Equipo regularmente. Programe mantenimiento durante las horas \"azules\" en la Cuadrícula de Mantenimiento cuando el equipo esté disponible."
         },
         {
-          "title": "Use Shift Changeover",
-          "content": "Configure shift changeover durations in Settings. The system automatically blocks those hours, preventing task allocation during crew changes."
+          "title": "Usar Cambio de Turno",
+          "content": "Configure duraciones de cambio de turno en Configuración. El sistema bloquea automáticamente esas horas, previniendo la asignación de tareas durante cambios de personal."
         },
         {
-          "title": "Review Audit Logs",
-          "content": "Admins can check Audit page to see who made changes and when. This helps track schedule modifications and maintain accountability."
+          "title": "Revisar Registros de Auditoría",
+          "content": "Los administradores pueden verificar la página de Auditoría para ver quién hizo cambios y cuándo. Esto ayuda a rastrear modificaciones de horario y mantener responsabilidad."
         },
         {
-          "title": "Save Snapshots Regularly",
-          "content": "Create snapshots before major changes. This lets you compare schedules and revert if needed. Name them clearly (e.g., \"Week 12 - Initial\")."
+          "title": "Guardar Instantáneas Regularmente",
+          "content": "Cree instantáneas antes de cambios importantes. Esto le permite comparar horarios y revertir si es necesario. Nombre claramente (por ejemplo, \"Semana 12 - Inicial\")."
         },
         {
-          "title": "Understand UOM Types",
-          "content": "Area-based (m/h), Tonnage-based (t/h), BOGT (trolley), BFP (backfill prep), and Task (fixed time). Choose the right UOM for accurate duration calculations."
+          "title": "Comprender Tipos de UDM",
+          "content": "Basado en área (m/h), Basado en tonelaje (t/h), BOGT (trolley), BFP (preparación de relleno) y Tarea (tiempo fijo). Elija la UDM correcta para cálculos precisos de duración."
         }
       ]
     }
