@@ -561,7 +561,7 @@ const Schedule = () => {
             ),
             children: (
               <div className="schedule-controls">
-                <div className="controls-top">
+                <div className="controls-single-row">
                   <div className="control-group">
                     <label className="control-label">{t('schedule.gridHours')}</label>
                     <Radio.Group value={gridHours} onChange={handleHoursChange} size="large">
@@ -578,9 +578,7 @@ const Schedule = () => {
                       <span className="delay-text">{t('schedule.delaysApplied')}</span>
                     </div>
                   )}
-                </div>
 
-                <div className="controls-bottom">
                   <div className="action-buttons">
                     <Button
                       type="primary"

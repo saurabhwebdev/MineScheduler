@@ -38,25 +38,19 @@
   box-shadow: none;
 }
 
-.controls-top {
+.controls-single-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.controls-bottom {
-  display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .action-buttons {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
 }
 
 .control-group {
