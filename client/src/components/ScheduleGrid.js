@@ -217,10 +217,13 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
               <th className="site-col shift-cell">Shift</th>
               {Array.from({ length: gridHours }, (_, i) => {
                 const shift = getShiftForHour(i);
+                // Subtle shift color indication
+                const shiftBg = shift.color ? `${shift.color}15` : '#fafafa';
                 return (
                   <th 
                     key={i} 
                     className="hour-col shift-cell"
+                    style={{ backgroundColor: shiftBg }}
                     title={`${shift.name} - ${shift.code}`}
                   >
                     {shift.code}
