@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Form, Input, Select, notification } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import config from '../config/config';
 import './UserManagement.css';
@@ -8,6 +9,7 @@ import './UserManagement.css';
 const { Option } = Select;
 
 const UserManagement = () => {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -35,15 +37,15 @@ const UserManagement = () => {
         setUsers(data.data.users);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch users',
+          message: t('common.error'),
+          description: data.message || t('users.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching users:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch users',
+        message: t('common.error'),
+        description: t('users.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -81,14 +83,14 @@ const UserManagement = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'User role updated successfully',
+            message: t('common.success'),
+            description: t('users.messages.updateSuccess'),
           });
           fetchUsers();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update role',
+            message: t('common.error'),
+            description: data.message || t('users.messages.updateError'),
           });
         }
       } else {
@@ -105,14 +107,14 @@ const UserManagement = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'User created successfully',
+            message: t('common.success'),
+            description: t('users.messages.createSuccess'),
           });
           fetchUsers();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create user',
+            message: t('common.error'),
+            description: data.message || t('users.messages.createError'),
           });
         }
       }
@@ -130,8 +132,8 @@ const UserManagement = () => {
     
     if (user.role === 'admin' && adminCount === 1) {
       notification.warning({
-        message: 'Cannot Delete',
-        description: 'You cannot delete the last admin user. There must be at least one admin.',
+        message: t('users.messages.cannotDeleteTitle'),
+        description: t('users.messages.cannotDeleteLastAdmin'),
       });
       return;
     }
@@ -155,21 +157,21 @@ const UserManagement = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'User deleted successfully',
+          message: t('common.success'),
+          description: t('users.messages.deleteSuccess'),
         });
         fetchUsers();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete user',
+          message: t('common.error'),
+          description: data.message || t('users.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting user:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete user',
+        message: t('common.error'),
+        description: t('users.messages.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -179,40 +181,40 @@ const UserManagement = () => {
 
   const columns = [
     {
-      title: 'NAME',
+      title: t('users.columns.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'EMAIL',
+      title: t('users.columns.email'),
       dataIndex: 'email',
       key: 'email',
     },
     {
-      title: 'ROLE',
+      title: t('users.columns.role'),
       dataIndex: 'role',
       key: 'role',
       render: (role) => (
         <span className={`role-badge ${role}`}>
-          {role === 'admin' ? 'Admin' : 'User'}
+          {role === 'admin' ? t('users.roles.admin') : t('users.roles.user')}
         </span>
       ),
       filters: [
-        { text: 'Admin', value: 'admin' },
-        { text: 'User', value: 'user' },
+        { text: t('users.roles.admin'), value: 'admin' },
+        { text: t('users.roles.user'), value: 'user' },
       ],
       onFilter: (value, record) => record.role === value,
     },
     {
-      title: 'CREATED',
+      title: t('users.columns.created'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
-      title: 'ACTIONS',
+      title: t('users.columns.actions'),
       key: 'actions',
       align: 'center',
       width: 100,
@@ -229,7 +231,7 @@ const UserManagement = () => {
               className={`icon-btn delete ${isLastAdmin ? 'disabled' : ''}`}
               onClick={() => showDeleteConfirm(record)}
               disabled={isLastAdmin}
-              title={isLastAdmin ? 'Cannot delete the last admin' : 'Delete user'}
+              title={isLastAdmin ? t('users.tooltips.cannotDeleteLastAdmin') : t('users.tooltips.deleteUser')}
             >
               <DeleteOutlined />
             </button>
@@ -241,14 +243,14 @@ const UserManagement = () => {
 
   return (
     <DashboardLayout
-      title="User Management"
-      subtitle="Manage system users and permissions"
+      title={t('users.title')}
+      subtitle={t('users.subtitle')}
       page="users"
     >
       <div className="user-page">
         <div className="page-header">
           <button className="btn-primary" onClick={handleCreateUser}>
-            <PlusOutlined /> New User
+            <PlusOutlined /> {t('users.newUser')}
           </button>
         </div>
 
@@ -267,15 +269,15 @@ const UserManagement = () => {
         </div>
 
         <Modal
-          title={editingUser ? 'Edit User Role' : 'New User'}
+          title={editingUser ? t('users.modal.editTitle') : t('users.modal.createTitle')}
           open={isModalVisible}
           onOk={handleModalOk}
           onCancel={() => {
             setIsModalVisible(false);
             form.resetFields();
           }}
-          okText={editingUser ? 'Save' : 'Create'}
-          cancelText="Cancel"
+          okText={editingUser ? t('users.modal.save') : t('users.modal.create')}
+          cancelText={t('common.cancel')}
           width={440}
           className="simple-modal"
         >
@@ -283,61 +285,61 @@ const UserManagement = () => {
             {!editingUser && (
               <>
                 <Form.Item
-                  label="Name"
+                  label={t('users.modal.labels.name')}
                   name="name"
-                  rules={[{ required: true, message: 'Required' }]}
+                  rules={[{ required: true, message: t('users.modal.validation.required') }]}
                 >
-                  <Input placeholder="Enter name" />
+                  <Input placeholder={t('users.modal.placeholders.name')} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Email"
+                  label={t('users.modal.labels.email')}
                   name="email"
                   rules={[
-                    { required: true, message: 'Required' },
-                    { type: 'email', message: 'Invalid email' },
+                    { required: true, message: t('users.modal.validation.required') },
+                    { type: 'email', message: t('users.modal.validation.invalidEmail') },
                   ]}
                 >
-                  <Input placeholder="Enter email" />
+                  <Input placeholder={t('users.modal.placeholders.email')} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Password"
+                  label={t('users.modal.labels.password')}
                   name="password"
                   rules={[
-                    { required: true, message: 'Required' },
-                    { min: 6, message: 'Min 6 characters' },
+                    { required: true, message: t('users.modal.validation.required') },
+                    { min: 6, message: t('users.modal.validation.minPassword') },
                   ]}
                 >
-                  <Input.Password placeholder="Enter password" />
+                  <Input.Password placeholder={t('users.modal.placeholders.password')} />
                 </Form.Item>
               </>
             )}
 
             <Form.Item
-              label="Role"
+              label={t('users.modal.labels.role')}
               name="role"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('users.modal.validation.required') }]}
               initialValue="user"
             >
-              <Select placeholder="Select role">
-                <Option value="user">User</Option>
-                <Option value="admin">Admin</Option>
+              <Select placeholder={t('users.modal.placeholders.role')}>
+                <Option value="user">{t('users.roles.user')}</Option>
+                <Option value="admin">{t('users.roles.admin')}</Option>
               </Select>
             </Form.Item>
           </Form>
         </Modal>
 
         <Modal
-          title="Delete User"
+          title={t('users.deleteModal.title')}
           open={isDeleteModalVisible}
           onOk={handleDeleteUser}
           onCancel={() => {
             setIsDeleteModalVisible(false);
             setDeletingUser(null);
           }}
-          okText="Delete"
-          cancelText="Cancel"
+          okText={t('users.deleteModal.delete')}
+          cancelText={t('common.cancel')}
           width={400}
           className="delete-modal"
           okButtonProps={{ danger: true }}
@@ -346,10 +348,10 @@ const UserManagement = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to delete <strong>{deletingUser?.name}</strong>?
+                {t('users.deleteModal.message')} <strong>{deletingUser?.name}</strong>?
               </p>
               <p className="delete-warning">
-                This action cannot be undone.
+                {t('users.deleteModal.warning')}
               </p>
             </div>
           </div>

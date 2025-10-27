@@ -10,6 +10,66 @@
     "error": "Error",
     "success": "Success"
   },
+  "users": {
+    "title": "User Management",
+    "subtitle": "Manage system users and permissions",
+    "newUser": "New User",
+    "columns": {
+      "name": "NAME",
+      "email": "EMAIL",
+      "role": "ROLE",
+      "created": "CREATED",
+      "actions": "ACTIONS"
+    },
+    "roles": {
+      "admin": "Admin",
+      "user": "User"
+    },
+    "modal": {
+      "editTitle": "Edit User Role",
+      "createTitle": "New User",
+      "save": "Save",
+      "create": "Create",
+      "labels": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "role": "Role"
+      },
+      "placeholders": {
+        "name": "Enter name",
+        "email": "Enter email",
+        "password": "Enter password",
+        "role": "Select role"
+      },
+      "validation": {
+        "required": "Required",
+        "invalidEmail": "Invalid email",
+        "minPassword": "Min 6 characters"
+      }
+    },
+    "deleteModal": {
+      "title": "Delete User",
+      "message": "Are you sure you want to delete",
+      "warning": "This action cannot be undone.",
+      "delete": "Delete"
+    },
+    "tooltips": {
+      "cannotDeleteLastAdmin": "Cannot delete the last admin",
+      "deleteUser": "Delete user"
+    },
+    "messages": {
+      "fetchError": "Failed to fetch users",
+      "updateSuccess": "User role updated successfully",
+      "updateError": "Failed to update role",
+      "createSuccess": "User created successfully",
+      "createError": "Failed to create user",
+      "deleteSuccess": "User deleted successfully",
+      "deleteError": "Failed to delete user",
+      "cannotDeleteLastAdmin": "You cannot delete the last admin user. There must be at least one admin.",
+      "cannotDeleteTitle": "Cannot Delete"
+    }
+  },
   "audit": {
     "title": "Audit Log",
     "subtitle": "Track all system activities and changes",

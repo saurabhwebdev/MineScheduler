@@ -10,6 +10,66 @@
     "error": "Error",
     "success": "Éxito"
   },
+  "users": {
+    "title": "Gestión de Usuarios",
+    "subtitle": "Gestionar usuarios del sistema y permisos",
+    "newUser": "Nuevo Usuario",
+    "columns": {
+      "name": "NOMBRE",
+      "email": "CORREO ELECTRÓNICO",
+      "role": "ROL",
+      "created": "CREADO",
+      "actions": "ACCIONES"
+    },
+    "roles": {
+      "admin": "Administrador",
+      "user": "Usuario"
+    },
+    "modal": {
+      "editTitle": "Editar Rol de Usuario",
+      "createTitle": "Nuevo Usuario",
+      "save": "Guardar",
+      "create": "Crear",
+      "labels": {
+        "name": "Nombre",
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "role": "Rol"
+      },
+      "placeholders": {
+        "name": "Ingrese nombre",
+        "email": "Ingrese correo electrónico",
+        "password": "Ingrese contraseña",
+        "role": "Seleccione rol"
+      },
+      "validation": {
+        "required": "Requerido",
+        "invalidEmail": "Correo electrónico inválido",
+        "minPassword": "Mínimo 6 caracteres"
+      }
+    },
+    "deleteModal": {
+      "title": "Eliminar Usuario",
+      "message": "¿Está seguro de que desea eliminar a",
+      "warning": "Esta acción no se puede deshacer.",
+      "delete": "Eliminar"
+    },
+    "tooltips": {
+      "cannotDeleteLastAdmin": "No se puede eliminar al último administrador",
+      "deleteUser": "Eliminar usuario"
+    },
+    "messages": {
+      "fetchError": "Error al cargar usuarios",
+      "updateSuccess": "Rol de usuario actualizado exitosamente",
+      "updateError": "Error al actualizar rol",
+      "createSuccess": "Usuario creado exitosamente",
+      "createError": "Error al crear usuario",
+      "deleteSuccess": "Usuario eliminado exitosamente",
+      "deleteError": "Error al eliminar usuario",
+      "cannotDeleteLastAdmin": "No puede eliminar al último usuario administrador. Debe haber al menos un administrador.",
+      "cannotDeleteTitle": "No se Puede Eliminar"
+    }
+  },
   "audit": {
     "title": "Registro de Auditoría",
     "subtitle": "Seguimiento de todas las actividades y cambios del sistema",
