@@ -1,7 +1,7 @@
 .schedule-grid-wrapper {
   background: #ffffff;
   border-radius: 0;
-  padding: 20px;
+  padding: 16px;
   border: 1px solid #e5e7eb;
   position: relative;
   overflow: hidden;
@@ -48,7 +48,7 @@
 .schedule-grid th,
 .schedule-grid td {
   border: 1px solid #e5e7eb;
-  padding: 8px;
+  padding: 6px;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
@@ -74,7 +74,7 @@
   background: #fafafa;
   font-size: 10px;
   font-weight: 500;
-  padding: 8px;
+  padding: 6px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 1px solid #d1d5db;
@@ -135,8 +135,8 @@
 }
 
 .hour-col {
-  width: 48px;
-  min-width: 48px;
+  width: 44px;
+  min-width: 44px;
   font-size: 11px;
   font-weight: 400;
   color: #6b7280;
@@ -217,10 +217,10 @@
   position: relative;
   cursor: pointer;
   transition: border-color 0.15s ease;
-  height: 40px;
-  width: 48px;
-  min-width: 48px;
-  max-width: 48px;
+  height: 36px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
   padding: 4px;
   background: #ffffff;
   text-align: center;
