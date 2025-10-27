@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Spin, Tag, Space, Modal, Collapse } from 'antd';
+import { Button, notification, Radio, Spin, Tag, Space, Modal, Collapse, Tooltip } from 'antd';
 import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
@@ -524,14 +524,12 @@ const Schedule = () => {
       subtitle={t('schedule.subtitle')}
     >
       <div className="schedule-container">
-        {/* Generation Info */}
+        {/* Generation Info - Minimal */}
         {generatedAt && scheduleData && (
-          <div className="schedule-info" style={{ marginBottom: '16px', padding: '12px 16px', background: '#f9f9f9', borderRadius: '6px', border: '1px solid #e8e8e8' }}>
-            <Space>
-              <ClockCircleOutlined style={{ color: '#3cca70' }} />
-              <span style={{ fontWeight: 500 }}>{t('schedule.lastGenerated')}</span>
-              <Tag color="green">
-                {new Date(generatedAt).toLocaleString('en-US', {
+          <Tooltip 
+            title={
+              <span>
+                {t('schedule.lastGenerated')} {new Date(generatedAt).toLocaleString('en-US', {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
@@ -539,9 +537,15 @@ const Schedule = () => {
                   minute: '2-digit',
                   second: '2-digit'
                 })}
-              </Tag>
-            </Space>
-          </div>
+              </span>
+            }
+            placement="right"
+          >
+            <div className="schedule-info-minimal" style={{ marginBottom: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: '#f0f9f4', borderRadius: '6px', border: '1px solid #d4f0dd', cursor: 'pointer', fontSize: '13px' }}>
+              <ClockCircleOutlined style={{ color: '#3cca70', fontSize: '14px' }} />
+              <span style={{ fontWeight: 500, color: '#3cca70' }}>{t('schedule.lastGenerated')}</span>
+            </div>
+          </Tooltip>
         )}
 
         {/* Controls */}
