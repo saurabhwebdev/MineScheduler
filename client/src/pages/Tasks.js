@@ -50,21 +50,7 @@ const Tasks = () => {
     fetchUoms();
   }, []);
 
-  // Calculate output when form values change
-  useEffect(() => {
-    form.getFieldsValue();
-    const type = form.getFieldValue('taskType');
-    const rate = form.getFieldValue('rate');
-    const duration = form.getFieldValue('taskDuration');
-    
-    if (type === 'activity' && rate && duration) {
-      const hours = duration / 60;
-      const output = (hours * rate).toFixed(2);
-      setCalculatedOutput(output);
-    } else {
-      setCalculatedOutput(0);
-    }
-  }, [form]);
+  // Calculate output - handled by handleFormValuesChange callback instead
 
   const calculateOutput = (type, rate, duration) => {
     if (type === 'activity' && rate && duration) {
