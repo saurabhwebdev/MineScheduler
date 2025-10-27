@@ -226,8 +226,7 @@
 }
 
 .schedule-cell:hover {
-  border: 2px solid #3b82f6 !important;
-  z-index: 10;
+  background: #f9fafb;
 }
 
 .schedule-cell.has-task .task-label {
