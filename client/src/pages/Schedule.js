@@ -524,30 +524,6 @@ const Schedule = () => {
       subtitle={t('schedule.subtitle')}
     >
       <div className="schedule-container">
-        {/* Generation Info - Minimal */}
-        {generatedAt && scheduleData && (
-          <Tooltip 
-            title={
-              <span>
-                {t('schedule.lastGenerated')} {new Date(generatedAt).toLocaleString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })}
-              </span>
-            }
-            placement="right"
-          >
-            <div className="schedule-info-minimal" style={{ marginBottom: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px', background: '#f0f9f4', borderRadius: '6px', border: '1px solid #d4f0dd', cursor: 'pointer', fontSize: '13px' }}>
-              <ClockCircleOutlined style={{ color: '#3cca70', fontSize: '14px' }} />
-              <span style={{ fontWeight: 500, color: '#3cca70' }}>{t('schedule.lastGenerated')}</span>
-            </div>
-          </Tooltip>
-        )}
-
         {/* Controls */}
         <Collapse 
           className="schedule-controls-collapse"
@@ -561,6 +537,25 @@ const Schedule = () => {
                 <span>{t('schedule.controls', 'Schedule Controls')}</span>
                 {delayedSlots.length > 0 && (
                   <Tag color="warning">{delayedSlots.length} {t('schedule.delaysApplied')}</Tag>
+                )}
+                {generatedAt && scheduleData && (
+                  <Tooltip 
+                    title={
+                      <span>
+                        {t('schedule.lastGenerated')} {new Date(generatedAt).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit'
+                        })}
+                      </span>
+                    }
+                    placement="right"
+                  >
+                    <ClockCircleOutlined style={{ color: '#3cca70', fontSize: '16px', cursor: 'pointer', marginLeft: '4px' }} />
+                  </Tooltip>
                 )}
               </div>
             ),
