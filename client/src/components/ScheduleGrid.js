@@ -217,11 +217,18 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
               <th className="site-col shift-cell">Shift</th>
               {Array.from({ length: gridHours }, (_, i) => {
                 const shift = getShiftForHour(i);
+                // Desaturate and lighten shift colors for minimal look
+                const desaturatedColor = shift.color ? 
+                  `${shift.color}20` : '#f3f4f6'; // 20 = 12% opacity
                 return (
                   <th 
                     key={i} 
                     className="hour-col shift-cell"
-                    style={{ backgroundColor: shift.color, color: '#ffffff' }}
+                    style={{ 
+                      backgroundColor: desaturatedColor,
+                      color: '#6b7280',
+                      borderLeft: `3px solid ${shift.color || '#9ca3af'}`
+                    }}
                     title={`${shift.name} - ${shift.code}`}
                   >
                     {shift.code}

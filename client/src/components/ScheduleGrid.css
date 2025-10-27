@@ -34,8 +34,7 @@
 
 .schedule-grid {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 1px;
+  border-collapse: collapse;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   table-layout: fixed;
@@ -48,42 +47,42 @@
 
 .schedule-grid th,
 .schedule-grid td {
-  border: 1px solid #f3f4f6;
+  border: 1px solid #e5e7eb;
   padding: 8px;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
-  transition: background-color 0.15s ease;
+  transition: border-color 0.15s ease;
   background: #ffffff;
 }
 
 .schedule-grid th {
-  background: #f9fafb;
+  background: #fafafa;
   color: #6b7280;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   position: sticky;
   top: 0;
   z-index: 15;
   text-transform: uppercase;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 1px solid #d1d5db;
 }
 
-/* Shift Row Styling - Flat Minimal */
+/* Shift Row Styling - Minimal with subtle color indicators */
 .schedule-grid .shift-row th {
-  background: #f9fafb;
+  background: #fafafa;
   font-size: 10px;
-  font-weight: 600;
-  padding: 10px 8px;
+  font-weight: 500;
+  padding: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  border-bottom: 2px solid #e5e7eb;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #d1d5db;
+  position: relative;
 }
 
 .schedule-grid .shift-row .shift-cell {
-  font-weight: 600;
-  opacity: 0.9;
+  font-weight: 500;
 }
 
 /* Current Hour Highlighting - Flat & Minimal */
@@ -96,7 +95,7 @@
 
 
 .schedule-grid tbody tr:hover td {
-  background: #f9fafb;
+  border-color: #3b82f6;
 }
 
 
@@ -108,11 +107,12 @@
 }
 
 .priority-cell {
-  font-weight: 500;
+  font-weight: 400;
   color: #9ca3af;
-  font-size: 12px;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
-  background: #fafbfc;
+  background: #fafafa;
+  border-right: 2px solid #e5e7eb;
 }
 
 .site-col,
@@ -123,8 +123,8 @@
 }
 
 .site-cell {
-  font-weight: 500;
-  background: #ffffff;
+  font-weight: 400;
+  background: #fafafa;
   text-align: left;
   padding-left: 12px !important;
   padding-right: 8px !important;
@@ -132,17 +132,18 @@
   word-wrap: break-word;
   line-height: 1.4;
   font-size: 12px;
+  border-right: 2px solid #e5e7eb;
 }
 
 .hour-col {
   width: 48px;
   min-width: 48px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   color: #6b7280;
   transition: background-color 0.15s ease;
   font-variant-numeric: tabular-nums;
-  background: #f9fafb;
+  background: #fafafa;
 }
 
 /* Clickable Hour Header Styling */
@@ -216,7 +217,7 @@
 .schedule-cell {
   position: relative;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: border-color 0.15s ease;
   height: 40px;
   width: 48px;
   min-width: 48px;
@@ -228,7 +229,7 @@
 }
 
 .schedule-cell:hover {
-  opacity: 0.8;
+  border: 2px solid #3b82f6 !important;
   z-index: 10;
 }
 
@@ -268,22 +269,27 @@
 }
 
 .delay-icon {
-  font-size: 16px;
+  font-size: 13px;
+  font-weight: 600;
   color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .shift-change-icon {
-  font-size: 16px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1;
   color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .shift-change-label {
-  font-size: 9px;
-  font-weight: 600;
+  font-size: 8px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   line-height: 1;
   color: #ffffff;
 }

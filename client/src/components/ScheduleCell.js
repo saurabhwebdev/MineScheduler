@@ -116,8 +116,10 @@ const ScheduleCell = ({
     }
 
     if (taskId && taskColor) {
+      // Desaturate task colors for a more minimal, professional look
       return {
-        backgroundColor: taskColor
+        backgroundColor: `${taskColor}30`, // 30 = ~19% opacity for pastel effect
+        borderLeft: `4px solid ${taskColor}`
       };
     }
 
@@ -167,16 +169,16 @@ const ScheduleCell = ({
             <div className="delay-overlay">
               {hasMultipleDelays ? (
                 <>
-                  <span className="delay-icon">⚠</span>
+                  <span className="delay-icon">D</span>
                   <span className="multiple-delay-badge">{allDelays.length}</span>
                 </>
               ) : delayInfo && delayInfo.isAutomatic && delayInfo.code === 'SHIFT_CHANGE' ? (
                 <>
-                  <span className="delay-icon shift-change-icon">↻</span>
+                  <span className="delay-icon shift-change-icon">SC</span>
                   <span className="shift-change-label">{delayInfo.shiftCode || 'SHIFT'}</span>
                 </>
               ) : (
-                <span className="delay-icon">⚠</span>
+                <span className="delay-icon">D</span>
               )}
             </div>
           )}
