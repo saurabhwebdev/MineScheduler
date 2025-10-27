@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import { 
   CheckCircleFilled, 
@@ -16,6 +17,7 @@ import {
 import './Help.css';
 
 const Help = () => {
+  const { t } = useTranslation();
   const [expandedSection, setExpandedSection] = useState(null);
 
   const toggleSection = (section) => {
@@ -382,16 +384,16 @@ const Help = () => {
 
   return (
     <DashboardLayout 
-      title="Help & User Guide"
-      subtitle="Learn how to use MineScheduler effectively"
+      title={t('help.title')}
+      subtitle={t('help.subtitle')}
     >
       <div className="help-page">
         {/* Introduction Card */}
         <div className="help-intro-card">
           <div className="help-intro-icon">📖</div>
           <div className="help-intro-content">
-            <h1>Welcome to MineScheduler</h1>
-            <p>This guide will walk you through the complete user journey from setup to creating your first schedule. Follow the steps in order for the best experience.</p>
+            <h1>{t('help.intro.title')}</h1>
+            <p>{t('help.intro.description')}</p>
           </div>
         </div>
 
@@ -440,33 +442,33 @@ const Help = () => {
 
         {/* Quick Reference Card */}
         <div className="help-reference-card">
-          <h3>Quick Reference</h3>
+          <h3>{t('help.quickRef.title')}</h3>
           <div className="help-reference-grid">
             <div className="help-reference-item">
-              <strong>Priority:</strong> Lower number = Higher priority
+              <strong>Priority:</strong> {t('help.quickRef.priority')}
             </div>
             <div className="help-reference-item">
-              <strong>Firings:</strong> Number of blast cycles to schedule
+              <strong>Firings:</strong> {t('help.quickRef.firings')}
             </div>
             <div className="help-reference-item">
-              <strong>Task Limits:</strong> Max sites per hour for a task
+              <strong>Task Limits:</strong> {t('help.quickRef.taskLimits')}
             </div>
             <div className="help-reference-item">
-              <strong>UOM:</strong> Unit of Measure for duration calculation
+              <strong>UOM:</strong> {t('help.quickRef.uom')}
             </div>
             <div className="help-reference-item">
-              <strong>Snapshot:</strong> Saved version of a schedule
+              <strong>Snapshot:</strong> {t('help.quickRef.snapshot')}
             </div>
             <div className="help-reference-item">
-              <strong>Active/Inactive:</strong> Control if site is scheduled
+              <strong>Active/Inactive:</strong> {t('help.quickRef.activeInactive')}
             </div>
           </div>
         </div>
 
         {/* Support Card */}
         <div className="help-support-card">
-          <h3>Need More Help?</h3>
-          <p>If you have questions not covered in this guide, please contact your system administrator or IT support team.</p>
+          <h3>{t('help.support.title')}</h3>
+          <p>{t('help.support.description')}</p>
         </div>
       </div>
     </DashboardLayout>

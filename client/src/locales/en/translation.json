@@ -117,5 +117,26 @@
     "messages": {
       "fetchError": "Failed to fetch audit logs"
     }
+  },
+  "help": {
+    "title": "Help & User Guide",
+    "subtitle": "Learn how to use MineScheduler effectively",
+    "intro": {
+      "title": "Welcome to MineScheduler",
+      "description": "This guide will walk you through the complete user journey from setup to creating your first schedule. Follow the steps in order for the best experience."
+    },
+    "quickRef": {
+      "title": "Quick Reference",
+      "priority": "Lower number = Higher priority",
+      "firings": "Number of blast cycles to schedule",
+      "taskLimits": "Max sites per hour for a task",
+      "uom": "Unit of Measure for duration calculation",
+      "snapshot": "Saved version of a schedule",
+      "activeInactive": "Control if site is scheduled"
+    },
+    "support": {
+      "title": "Need More Help?",
+      "description": "If you have questions not covered in this guide, please contact your system administrator or IT support team."
+    }
   }
 }

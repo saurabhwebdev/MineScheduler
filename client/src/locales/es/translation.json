@@ -117,5 +117,26 @@
     "messages": {
       "fetchError": "Error al cargar los registros de auditoría"
     }
+  },
+  "help": {
+    "title": "Ayuda y Guía del Usuario",
+    "subtitle": "Aprenda a usar MineScheduler de manera efectiva",
+    "intro": {
+      "title": "Bienvenido a MineScheduler",
+      "description": "Esta guía le guiará a través del recorrido completo del usuario desde la configuración hasta la creación de su primer horario. Siga los pasos en orden para obtener la mejor experiencia."
+    },
+    "quickRef": {
+      "title": "Referencia Rápida",
+      "priority": "Número menor = Mayor prioridad",
+      "firings": "Número de ciclos de voladura a programar",
+      "taskLimits": "Máximo de sitios por hora para una tarea",
+      "uom": "Unidad de Medida para cálculo de duración",
+      "snapshot": "Versión guardada de un horario",
+      "activeInactive": "Controlar si el sitio está programado"
+    },
+    "support": {
+      "title": "¿Necesita Más Ayuda?",
+      "description": "Si tiene preguntas que no están cubiertas en esta guía, comunique se con su administrador del sistema o equipo de soporte de TI."
+    }
   }
 }
