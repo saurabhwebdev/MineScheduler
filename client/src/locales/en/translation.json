@@ -508,5 +508,116 @@
       "importError": "Failed to import sites",
       "selectFileError": "Please select a file to import"
     }
+  },
+  "delays": {
+    "title": "Delay Management",
+    "subtitle": "Manage delay categories and codes",
+    "downloadTemplate": "Download Template",
+    "importExcel": "Import Excel",
+    "newDelay": "New Delay",
+    "editDelay": "Edit Delay",
+    "deleteDelay": "Delete Delay",
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close",
+    "edit": "Edit",
+    "importing": "Importing...",
+    "import": "Import",
+    "columns": {
+      "delayCategory": "DELAY CATEGORY",
+      "delayCode": "DELAY CODE",
+      "description": "DESCRIPTION",
+      "color": "COLOR",
+      "status": "STATUS",
+      "created": "CREATED",
+      "actions": "ACTIONS"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "filters": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "form": {
+      "delayCategory": "Delay Category",
+      "delayCode": "Delay Code",
+      "delayColor": "Delay Color",
+      "description": "Description",
+      "status": "Status",
+      "required": "Required",
+      "delayCategoryPlaceholder": "e.g., Equipment, Safety, Weather",
+      "delayCodePlaceholder": "e.g., EQ-001, SF-001",
+      "descriptionPlaceholder": "Enter detailed description",
+      "colorTooltip": "Visual color for this delay category",
+      "recommended": "Recommended",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "deleteModal": {
+      "title": "Delete Delay",
+      "message": "Are you sure you want to delete",
+      "warning": "This action cannot be undone."
+    },
+    "importModal": {
+      "title": "Import Delays from Excel",
+      "formatInstructions": "Excel Format Instructions",
+      "requiredColumns": "Required columns in your Excel file:",
+      "column": "Column",
+      "required": "Required",
+      "example": "Example",
+      "yes": "Yes",
+      "no": "No",
+      "tip": "Tip:",
+      "tipDescription": "Download the template below to get started with the correct format.",
+      "selectFile": "Select Excel File",
+      "importResults": "Import Results",
+      "successful": "Successful:",
+      "successfulDesc": "delays created",
+      "skipped": "Skipped:",
+      "skippedDesc": "delays (already exist or invalid)",
+      "failed": "Failed:",
+      "failedDesc": "delays (errors)",
+      "skippedItems": "Skipped Items:",
+      "failedItems": "Failed Items:",
+      "andMore": "... and {{count}} more"
+    },
+    "detailModal": {
+      "title": "Delay Details",
+      "delayCategory": "Delay Category",
+      "delayCode": "Delay Code",
+      "color": "Color",
+      "description": "Description",
+      "status": "Status",
+      "createdBy": "Created By",
+      "createdAt": "Created At",
+      "lastUpdated": "Last Updated",
+      "na": "N/A"
+    },
+    "pagination": {
+      "total": "{{start}}-{{end}} of {{total}} items"
+    },
+    "messages": {
+      "error": "Error",
+      "success": "Success",
+      "networkError": "Network Error",
+      "fetchError": "Failed to fetch delays",
+      "updateSuccess": "Delay updated successfully",
+      "updateError": "Failed to update delay",
+      "createSuccess": "Delay created successfully",
+      "createError": "Failed to create delay",
+      "deleteSuccess": "Delay deleted successfully",
+      "deleteError": "Failed to delete delay",
+      "templateDownloaded": "Template Downloaded",
+      "templateDownloadedDesc": "Excel template has been downloaded successfully",
+      "noFileSelected": "No File Selected",
+      "selectFileError": "Please select an Excel file to import",
+      "importCompleted": "Import Completed",
+      "importFailed": "Import Failed",
+      "importError": "Failed to import Excel file"
+    }
   }
 }

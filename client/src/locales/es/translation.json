@@ -508,5 +508,116 @@
       "importError": "Error al importar sitios",
       "selectFileError": "Por favor seleccione un archivo para importar"
     }
+  },
+  "delays": {
+    "title": "Gestión de Retrasos",
+    "subtitle": "Administrar categorías y códigos de retrasos",
+    "downloadTemplate": "Descargar Plantilla",
+    "importExcel": "Importar Excel",
+    "newDelay": "Nuevo Retraso",
+    "editDelay": "Editar Retraso",
+    "deleteDelay": "Eliminar Retraso",
+    "save": "Guardar",
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "edit": "Editar",
+    "importing": "Importando...",
+    "import": "Importar",
+    "columns": {
+      "delayCategory": "CATEGORÍA DE RETRASO",
+      "delayCode": "CÓDIGO DE RETRASO",
+      "description": "DESCRIPCIÓN",
+      "color": "COLOR",
+      "status": "ESTADO",
+      "created": "CREADO",
+      "actions": "ACCIONES"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "filters": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "form": {
+      "delayCategory": "Categoría de Retraso",
+      "delayCode": "Código de Retraso",
+      "delayColor": "Color de Retraso",
+      "description": "Descripción",
+      "status": "Estado",
+      "required": "Requerido",
+      "delayCategoryPlaceholder": "ej., Equipo, Seguridad, Clima",
+      "delayCodePlaceholder": "ej., EQ-001, SF-001",
+      "descriptionPlaceholder": "Ingrese descripción detallada",
+      "colorTooltip": "Color visual para esta categoría de retraso",
+      "recommended": "Recomendados",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "deleteModal": {
+      "title": "Eliminar Retraso",
+      "message": "¿Está seguro de que desea eliminar",
+      "warning": "Esta acción no se puede deshacer."
+    },
+    "importModal": {
+      "title": "Importar Retrasos desde Excel",
+      "formatInstructions": "Instrucciones de Formato de Excel",
+      "requiredColumns": "Columnas requeridas en su archivo Excel:",
+      "column": "Columna",
+      "required": "Requerido",
+      "example": "Ejemplo",
+      "yes": "Sí",
+      "no": "No",
+      "tip": "Consejo:",
+      "tipDescription": "Descargue la plantilla a continuación para comenzar con el formato correcto.",
+      "selectFile": "Seleccionar Archivo Excel",
+      "importResults": "Resultados de Importación",
+      "successful": "Exitosos:",
+      "successfulDesc": "retrasos creados",
+      "skipped": "Omitidos:",
+      "skippedDesc": "retrasos (ya existen o inválidos)",
+      "failed": "Fallidos:",
+      "failedDesc": "retrasos (errores)",
+      "skippedItems": "Elementos Omitidos:",
+      "failedItems": "Elementos Fallidos:",
+      "andMore": "... y {{count}} más"
+    },
+    "detailModal": {
+      "title": "Detalles del Retraso",
+      "delayCategory": "Categoría de Retraso",
+      "delayCode": "Código de Retraso",
+      "color": "Color",
+      "description": "Descripción",
+      "status": "Estado",
+      "createdBy": "Creado Por",
+      "createdAt": "Creado El",
+      "lastUpdated": "Última Actualización",
+      "na": "N/D"
+    },
+    "pagination": {
+      "total": "{{start}}-{{end}} de {{total}} elementos"
+    },
+    "messages": {
+      "error": "Error",
+      "success": "Éxito",
+      "networkError": "Error de Red",
+      "fetchError": "Error al cargar retrasos",
+      "updateSuccess": "Retraso actualizado exitosamente",
+      "updateError": "Error al actualizar retraso",
+      "createSuccess": "Retraso creado exitosamente",
+      "createError": "Error al crear retraso",
+      "deleteSuccess": "Retraso eliminado exitosamente",
+      "deleteError": "Error al eliminar retraso",
+      "templateDownloaded": "Plantilla Descargada",
+      "templateDownloadedDesc": "La plantilla de Excel se ha descargado exitosamente",
+      "noFileSelected": "Ningún Archivo Seleccionado",
+      "selectFileError": "Por favor seleccione un archivo Excel para importar",
+      "importCompleted": "Importación Completada",
+      "importFailed": "Importación Fallida",
+      "importError": "Error al importar archivo Excel"
+    }
   }
 }

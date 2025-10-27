@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Table, Modal, Form, Input, Switch, notification, Upload, Alert, Descriptions, Tag, ColorPicker } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import config from '../config/config';
 import './Delays.css';
@@ -10,6 +11,7 @@ import './Delays.css';
 const { TextArea } = Input;
 
 const Delays = () => {
+  const { t } = useTranslation();
   const [delays, setDelays] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -47,15 +49,15 @@ const Delays = () => {
         setDelays(data.data.delays);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch delays',
+          message: t('delays.messages.error'),
+          description: data.message || t('delays.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching delays:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch delays',
+        message: t('delays.messages.networkError'),
+        description: t('delays.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -107,14 +109,14 @@ const Delays = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Delay updated successfully',
+            message: t('delays.messages.success'),
+            description: t('delays.messages.updateSuccess'),
           });
           fetchDelays();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update delay',
+            message: t('delays.messages.error'),
+            description: data.message || t('delays.messages.updateError'),
           });
         }
       } else {
@@ -131,14 +133,14 @@ const Delays = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Delay created successfully',
+            message: t('delays.messages.success'),
+            description: t('delays.messages.createSuccess'),
           });
           fetchDelays();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create delay',
+            message: t('delays.messages.error'),
+            description: data.message || t('delays.messages.createError'),
           });
         }
       }
@@ -170,21 +172,21 @@ const Delays = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Delay deleted successfully',
+          message: t('delays.messages.success'),
+          description: t('delays.messages.deleteSuccess'),
         });
         fetchDelays();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete delay',
+          message: t('delays.messages.error'),
+          description: data.message || t('delays.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting delay:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete delay',
+        message: t('delays.messages.networkError'),
+        description: t('delays.messages.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -238,8 +240,8 @@ const Delays = () => {
     XLSX.writeFile(wb, 'Delay_Import_Template.xlsx');
     
     notification.success({
-      message: 'Template Downloaded',
-      description: 'Excel template has been downloaded successfully',
+      message: t('delays.messages.templateDownloaded'),
+      description: t('delays.messages.templateDownloadedDesc'),
     });
   };
 
@@ -278,8 +280,8 @@ const Delays = () => {
   const handleImportSubmit = async () => {
     if (!importFile) {
       notification.error({
-        message: 'No File Selected',
-        description: 'Please select an Excel file to import',
+        message: t('delays.messages.noFileSelected'),
+        description: t('delays.messages.selectFileError'),
       });
       return;
     }
@@ -303,47 +305,47 @@ const Delays = () => {
       if (response.ok && data.status === 'success') {
         setImportResults(data.data);
         notification.success({
-          message: 'Import Completed',
+          message: t('delays.messages.importCompleted'),
           description: data.message,
         });
         fetchDelays();
       } else {
         notification.error({
-          message: 'Import Failed',
-          description: data.message || 'Failed to import Excel file',
+          message: t('delays.messages.importFailed'),
+          description: data.message || t('delays.messages.importError'),
         });
       }
     } catch (error) {
       console.error('Import error:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to import Excel file',
+        message: t('delays.messages.networkError'),
+        description: t('delays.messages.importError'),
       });
     } finally {
       setImporting(false);
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      title: 'DELAY CATEGORY',
+      title: t('delays.columns.delayCategory'),
       dataIndex: 'delayCategory',
       key: 'delayCategory',
       sorter: (a, b) => a.delayCategory.localeCompare(b.delayCategory),
     },
     {
-      title: 'DELAY CODE',
+      title: t('delays.columns.delayCode'),
       dataIndex: 'delayCode',
       key: 'delayCode',
       sorter: (a, b) => a.delayCode.localeCompare(b.delayCode),
     },
     {
-      title: 'DESCRIPTION',
+      title: t('delays.columns.description'),
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'COLOR',
+      title: t('delays.columns.color'),
       dataIndex: 'color',
       key: 'color',
       render: (color) => (
@@ -362,29 +364,29 @@ const Delays = () => {
       ),
     },
     {
-      title: 'STATUS',
+      title: t('delays.columns.status'),
       dataIndex: 'isActive',
       key: 'isActive',
       render: (isActive) => (
         <span className={`status-badge ${isActive ? 'active' : 'inactive'}`}>
-          {isActive ? 'Active' : 'Inactive'}
+          {isActive ? t('delays.status.active') : t('delays.status.inactive')}
         </span>
       ),
       filters: [
-        { text: 'Active', value: true },
-        { text: 'Inactive', value: false },
+        { text: t('delays.filters.active'), value: true },
+        { text: t('delays.filters.inactive'), value: false },
       ],
       onFilter: (value, record) => record.isActive === value,
     },
     {
-      title: 'CREATED',
+      title: t('delays.columns.created'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
-      title: 'ACTIONS',
+      title: t('delays.columns.actions'),
       key: 'actions',
       align: 'center',
       render: (_, record) => (
@@ -401,25 +403,25 @@ const Delays = () => {
         </div>
       ),
     },
-  ];
+  ], [t]);
 
   return (
     <DashboardLayout
-      title="Delay Management"
-      subtitle="Manage delay categories and codes"
+      title={t('delays.title')}
+      subtitle={t('delays.subtitle')}
       page="delays"
     >
       <div className="delay-page">
         <div className="page-header">
           <div className="header-actions">
             <button className="btn-secondary" onClick={handleDownloadTemplate}>
-              <DownloadOutlined /> Download Template
+              <DownloadOutlined /> {t('delays.downloadTemplate')}
             </button>
             <button className="btn-secondary" onClick={handleImportExcel}>
-              <UploadOutlined /> Import Excel
+              <UploadOutlined /> {t('delays.importExcel')}
             </button>
             <button className="btn-primary" onClick={handleCreateDelay}>
-              <PlusOutlined /> New Delay
+              <PlusOutlined /> {t('delays.newDelay')}
             </button>
           </div>
         </div>
@@ -435,7 +437,7 @@ const Delays = () => {
               pageSize: pagination.pageSize,
               showSizeChanger: true,
               pageSizeOptions: ['10', '15', '25', '50', '100'],
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+              showTotal: (total, range) => t('delays.pagination.total', { start: range[0], end: range[1], total }),
               simple: false,
             }}
             onChange={handleTableChange}
@@ -447,46 +449,46 @@ const Delays = () => {
         </div>
 
         <Modal
-          title={editingDelay ? 'Edit Delay' : 'New Delay'}
+          title={editingDelay ? t('delays.editDelay') : t('delays.newDelay')}
           open={isModalVisible}
           onOk={handleModalOk}
           onCancel={() => {
             setIsModalVisible(false);
             form.resetFields();
           }}
-          okText={editingDelay ? 'Save' : 'Create'}
-          cancelText="Cancel"
+          okText={editingDelay ? t('delays.save') : t('delays.create')}
+          cancelText={t('delays.cancel')}
           width={480}
           className="simple-modal"
         >
           <Form form={form} layout="vertical">
             <Form.Item
-              label="Delay Category"
+              label={t('delays.form.delayCategory')}
               name="delayCategory"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('delays.form.required') }]}
             >
-              <Input placeholder="e.g., Equipment, Safety, Weather" />
+              <Input placeholder={t('delays.form.delayCategoryPlaceholder')} />
             </Form.Item>
 
             <Form.Item
-              label="Delay Code"
+              label={t('delays.form.delayCode')}
               name="delayCode"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('delays.form.required') }]}
             >
-              <Input placeholder="e.g., EQ-001, SF-001" />
+              <Input placeholder={t('delays.form.delayCodePlaceholder')} />
             </Form.Item>
 
             <Form.Item
-              label="Delay Color"
+              label={t('delays.form.delayColor')}
               name="color"
-              tooltip="Visual color for this delay category"
+              tooltip={t('delays.form.colorTooltip')}
             >
               <ColorPicker 
                 showText
                 format="hex"
                 presets={[
                   {
-                    label: 'Recommended',
+                    label: t('delays.form.recommended'),
                     colors: [
                       '#ff4d4f',
                       '#faad14',
@@ -503,12 +505,12 @@ const Delays = () => {
             </Form.Item>
 
             <Form.Item
-              label="Description"
+              label={t('delays.form.description')}
               name="description"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('delays.form.required') }]}
             >
               <TextArea 
-                placeholder="Enter detailed description" 
+                placeholder={t('delays.form.descriptionPlaceholder')} 
                 rows={4}
                 maxLength={500}
                 showCount
@@ -516,28 +518,28 @@ const Delays = () => {
             </Form.Item>
 
             <Form.Item
-              label="Status"
+              label={t('delays.form.status')}
               name="isActive"
               valuePropName="checked"
             >
               <Switch 
-                checkedChildren="Active" 
-                unCheckedChildren="Inactive"
+                checkedChildren={t('delays.form.active')} 
+                unCheckedChildren={t('delays.form.inactive')}
               />
             </Form.Item>
           </Form>
         </Modal>
 
         <Modal
-          title="Delete Delay"
+          title={t('delays.deleteModal.title')}
           open={isDeleteModalVisible}
           onOk={handleDeleteDelay}
           onCancel={() => {
             setIsDeleteModalVisible(false);
             setDeletingDelay(null);
           }}
-          okText="Delete"
-          cancelText="Cancel"
+          okText={t('delays.delete')}
+          cancelText={t('delays.cancel')}
           width={400}
           className="delete-modal"
           okButtonProps={{ danger: true }}
@@ -546,17 +548,17 @@ const Delays = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to delete <strong>{deletingDelay?.delayCode}</strong>?
+                {t('delays.deleteModal.message')} <strong>{deletingDelay?.delayCode}</strong>?
               </p>
               <p className="delete-warning">
-                This action cannot be undone.
+                {t('delays.deleteModal.warning')}
               </p>
             </div>
           </div>
         </Modal>
 
         <Modal
-          title="Import Delays from Excel"
+          title={t('delays.importModal.title')}
           open={isImportModalVisible}
           onOk={handleImportSubmit}
           onCancel={() => {
@@ -564,56 +566,56 @@ const Delays = () => {
             setImportFile(null);
             setImportResults(null);
           }}
-          okText={importing ? 'Importing...' : 'Import'}
-          cancelText="Close"
+          okText={importing ? t('delays.importing') : t('delays.import')}
+          cancelText={t('delays.close')}
           width={600}
           className="simple-modal"
           confirmLoading={importing}
         >
           <div style={{ marginBottom: '16px' }}>
             <Alert
-              message="Excel Format Instructions"
+              message={t('delays.importModal.formatInstructions')}
               description={
                 <div>
-                  <p style={{ marginBottom: '12px', fontWeight: 500 }}>Required columns in your Excel file:</p>
+                  <p style={{ marginBottom: '12px', fontWeight: 500 }}>{t('delays.importModal.requiredColumns')}</p>
                   <table style={{ width: '100%', fontSize: '12px', marginBottom: '12px', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ backgroundColor: '#fafafa' }}>
-                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>Column</th>
-                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>Required</th>
-                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>Example</th>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>{t('delays.importModal.column')}</th>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>{t('delays.importModal.required')}</th>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #d9d9d9' }}>{t('delays.importModal.example')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>delayCategory</strong></td>
-                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">Yes</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">{t('delays.importModal.yes')}</Tag></td>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>Equipment, Safety, Weather</td>
                       </tr>
                       <tr>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>delayCode</strong></td>
-                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">Yes</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">{t('delays.importModal.yes')}</Tag></td>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>EQ-001, SF-001, WT-001</td>
                       </tr>
                       <tr>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>description</strong></td>
-                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">Yes</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="red">{t('delays.importModal.yes')}</Tag></td>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>Equipment breakdown delay</td>
                       </tr>
                       <tr>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><strong>color</strong></td>
-                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="blue">No</Tag></td>
+                        <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}><Tag color="blue">{t('delays.importModal.no')}</Tag></td>
                         <td style={{ padding: '6px', borderBottom: '1px solid #f0f0f0' }}>#ff4d4f, #faad14, #1890ff</td>
                       </tr>
                       <tr>
                         <td style={{ padding: '6px' }}><strong>isActive</strong></td>
-                        <td style={{ padding: '6px' }}><Tag color="blue">No</Tag></td>
+                        <td style={{ padding: '6px' }}><Tag color="blue">{t('delays.importModal.no')}</Tag></td>
                         <td style={{ padding: '6px' }}>Active, Inactive, Yes, No, 1, 0</td>
                       </tr>
                     </tbody>
                   </table>
                   <p style={{ marginBottom: 0, fontSize: '12px', color: '#666' }}>
-                    💡 <strong>Tip:</strong> Download the template below to get started with the correct format.
+                    💡 <strong>{t('delays.importModal.tip')}</strong> {t('delays.importModal.tipDescription')}
                   </p>
                 </div>
               }
@@ -630,23 +632,23 @@ const Delays = () => {
             fileList={importFile ? [importFile] : []}
           >
             <button className="btn-secondary" style={{ width: '100%', marginBottom: '12px' }}>
-              <UploadOutlined /> Select Excel File
+              <UploadOutlined /> {t('delays.importModal.selectFile')}
             </button>
           </Upload>
 
           {importResults && (
             <div style={{ marginTop: '16px' }}>
               <Alert
-                message="Import Results"
+                message={t('delays.importModal.importResults')}
                 description={
                   <div>
-                    <p><strong>Successful:</strong> {importResults.success.length} delays created</p>
-                    <p><strong>Skipped:</strong> {importResults.skipped.length} delays (already exist or invalid)</p>
-                    <p><strong>Failed:</strong> {importResults.failed.length} delays (errors)</p>
+                    <p><strong>{t('delays.importModal.successful')}</strong> {importResults.success.length} {t('delays.importModal.successfulDesc')}</p>
+                    <p><strong>{t('delays.importModal.skipped')}</strong> {importResults.skipped.length} {t('delays.importModal.skippedDesc')}</p>
+                    <p><strong>{t('delays.importModal.failed')}</strong> {importResults.failed.length} {t('delays.importModal.failedDesc')}</p>
                     
                     {importResults.skipped.length > 0 && (
                       <div style={{ marginTop: '12px' }}>
-                        <strong>Skipped Items:</strong>
+                        <strong>{t('delays.importModal.skippedItems')}</strong>
                         <ul style={{ marginLeft: '20px', fontSize: '12px' }}>
                           {importResults.skipped.slice(0, 5).map((item, index) => (
                             <li key={index}>
@@ -654,7 +656,7 @@ const Delays = () => {
                             </li>
                           ))}
                           {importResults.skipped.length > 5 && (
-                            <li>... and {importResults.skipped.length - 5} more</li>
+                            <li>{t('delays.importModal.andMore', { count: importResults.skipped.length - 5 })}</li>
                           )}
                         </ul>
                       </div>
@@ -662,7 +664,7 @@ const Delays = () => {
 
                     {importResults.failed.length > 0 && (
                       <div style={{ marginTop: '12px' }}>
-                        <strong>Failed Items:</strong>
+                        <strong>{t('delays.importModal.failedItems')}</strong>
                         <ul style={{ marginLeft: '20px', fontSize: '12px' }}>
                           {importResults.failed.slice(0, 5).map((item, index) => (
                             <li key={index}>
@@ -670,7 +672,7 @@ const Delays = () => {
                             </li>
                           ))}
                           {importResults.failed.length > 5 && (
-                            <li>... and {importResults.failed.length - 5} more</li>
+                            <li>{t('delays.importModal.andMore', { count: importResults.failed.length - 5 })}</li>
                           )}
                         </ul>
                       </div>
@@ -685,12 +687,12 @@ const Delays = () => {
         </Modal>
 
         <Modal
-          title="Delay Details"
+          title={t('delays.detailModal.title')}
           open={isDetailModalVisible}
           onCancel={handleDetailModalClose}
           footer={[
             <button key="close" className="btn-secondary" onClick={handleDetailModalClose}>
-              Close
+              {t('delays.close')}
             </button>,
             <button 
               key="edit" 
@@ -700,7 +702,7 @@ const Delays = () => {
                 handleEditDelay(selectedDelay);
               }}
             >
-              <EditOutlined /> Edit
+              <EditOutlined /> {t('delays.edit')}
             </button>
           ]}
           width={600}
@@ -708,13 +710,13 @@ const Delays = () => {
         >
           {selectedDelay && (
             <Descriptions bordered column={1} size="small">
-              <Descriptions.Item label="Delay Category">
+              <Descriptions.Item label={t('delays.detailModal.delayCategory')}>
                 <strong>{selectedDelay.delayCategory}</strong>
               </Descriptions.Item>
-              <Descriptions.Item label="Delay Code">
+              <Descriptions.Item label={t('delays.detailModal.delayCode')}>
                 <strong style={{ color: '#062d54' }}>{selectedDelay.delayCode}</strong>
               </Descriptions.Item>
-              <Descriptions.Item label="Color">
+              <Descriptions.Item label={t('delays.detailModal.color')}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <div 
                     style={{ 
@@ -728,24 +730,24 @@ const Delays = () => {
                   <span style={{ fontWeight: 500 }}>{selectedDelay.color || '#ff4d4f'}</span>
                 </div>
               </Descriptions.Item>
-              <Descriptions.Item label="Description">
+              <Descriptions.Item label={t('delays.detailModal.description')}>
                 {selectedDelay.description}
               </Descriptions.Item>
-              <Descriptions.Item label="Status">
+              <Descriptions.Item label={t('delays.detailModal.status')}>
                 <Tag color={selectedDelay.isActive ? 'green' : 'red'}>
-                  {selectedDelay.isActive ? 'Active' : 'Inactive'}
+                  {selectedDelay.isActive ? t('delays.status.active') : t('delays.status.inactive')}
                 </Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="Created By">
-                {selectedDelay.createdBy?.name || 'N/A'}
+              <Descriptions.Item label={t('delays.detailModal.createdBy')}>
+                {selectedDelay.createdBy?.name || t('delays.detailModal.na')}
                 {selectedDelay.createdBy?.email && (
                   <span style={{ color: '#8c8c8c', marginLeft: '8px' }}>({selectedDelay.createdBy.email})</span>
                 )}
               </Descriptions.Item>
-              <Descriptions.Item label="Created At">
+              <Descriptions.Item label={t('delays.detailModal.createdAt')}>
                 {moment(selectedDelay.createdAt).format('MMMM D, YYYY [at] h:mm A')}
               </Descriptions.Item>
-              <Descriptions.Item label="Last Updated">
+              <Descriptions.Item label={t('delays.detailModal.lastUpdated')}>
                 {moment(selectedDelay.updatedAt).format('MMMM D, YYYY [at] h:mm A')}
               </Descriptions.Item>
             </Descriptions>
