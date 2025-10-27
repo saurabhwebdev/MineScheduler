@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Form, Input, InputNumber, Select, notification, Tabs, Upload, Alert, Tag, DatePicker, Badge } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined, DownloadOutlined, EyeOutlined, ToolOutlined, HistoryOutlined, AppstoreOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
@@ -12,6 +13,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const Equipment = () => {
+  const { t } = useTranslation();
   const [equipment, setEquipment] = useState([]);
   const [sites, setSites] = useState([]);
   const [tasks, setTasks] = useState([]);
@@ -55,15 +57,15 @@ const Equipment = () => {
         setEquipment(data.data.equipment);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch equipment',
+          message: t('equipment.messages.error'),
+          description: data.message || t('equipment.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching equipment:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch equipment',
+        message: t('equipment.messages.networkError'),
+        description: t('equipment.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -187,14 +189,14 @@ const Equipment = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Equipment updated successfully',
+            message: t('equipment.messages.success'),
+            description: t('equipment.messages.updateSuccess'),
           });
           fetchEquipment();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to update equipment',
+            message: t('equipment.messages.error'),
+            description: data.message || t('equipment.messages.updateError'),
           });
         }
       } else {
@@ -211,14 +213,14 @@ const Equipment = () => {
 
         if (response.ok && data.status === 'success') {
           notification.success({
-            message: 'Success',
-            description: 'Equipment created successfully',
+            message: t('equipment.messages.success'),
+            description: t('equipment.messages.createSuccess'),
           });
           fetchEquipment();
         } else {
           notification.error({
-            message: 'Error',
-            description: data.message || 'Failed to create equipment',
+            message: t('equipment.messages.error'),
+            description: data.message || t('equipment.messages.createError'),
           });
         }
       }
@@ -250,21 +252,21 @@ const Equipment = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Equipment deleted successfully',
+          message: t('equipment.messages.success'),
+          description: t('equipment.messages.deleteSuccess'),
         });
         fetchEquipment();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete equipment',
+          message: t('equipment.messages.error'),
+          description: data.message || t('equipment.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting equipment:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete equipment',
+        message: t('equipment.messages.networkError'),
+        description: t('equipment.messages.deleteError'),
       });
     } finally {
       setIsDeleteModalVisible(false);
@@ -310,16 +312,16 @@ const Equipment = () => {
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Maintenance logged successfully',
+          message: t('equipment.messages.success'),
+          description: t('equipment.messages.maintenanceSuccess'),
         });
         fetchEquipment();
         setIsMaintenanceModalVisible(false);
         maintenanceForm.resetFields();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to log maintenance',
+          message: t('equipment.messages.error'),
+          description: data.message || t('equipment.messages.maintenanceError'),
         });
       }
     } catch (error) {
@@ -343,15 +345,15 @@ const Equipment = () => {
         setIsHistoryModalVisible(true);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch maintenance history',
+          message: t('equipment.messages.error'),
+          description: data.message || t('equipment.messages.historyError'),
         });
       }
     } catch (error) {
       console.error('Error fetching maintenance history:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch maintenance history',
+        message: t('equipment.messages.networkError'),
+        description: t('equipment.messages.historyError'),
       });
     }
   };
@@ -403,15 +405,15 @@ const Equipment = () => {
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Equipment');
         XLSX.writeFile(workbook, 'equipment_export.xlsx');
         notification.success({
-          message: 'Success',
-          description: 'Equipment exported successfully',
+          message: t('equipment.messages.success'),
+          description: t('equipment.messages.exportSuccess'),
         });
       }
     } catch (error) {
       console.error('Error exporting equipment:', error);
       notification.error({
-        message: 'Error',
-        description: 'Failed to export equipment',
+        message: t('equipment.messages.error'),
+        description: t('equipment.messages.exportError'),
       });
     }
   };
@@ -419,8 +421,8 @@ const Equipment = () => {
   const handleImport = async () => {
     if (!importFile) {
       notification.error({
-        message: 'Error',
-        description: 'Please select a file to import',
+        message: t('equipment.messages.error'),
+        description: t('equipment.messages.selectFileError'),
       });
       return;
     }
@@ -455,14 +457,14 @@ const Equipment = () => {
         if (response.ok && result.status === 'success') {
           setImportResults(result.data);
           notification.success({
-            message: 'Import Complete',
-            description: `Imported ${result.data.imported} equipment successfully`,
+            message: t('equipment.messages.importComplete'),
+            description: t('equipment.messages.importSuccess', { count: result.data.imported }),
           });
           fetchEquipment();
         } else {
           notification.error({
-            message: 'Error',
-            description: result.message || 'Failed to import equipment',
+            message: t('equipment.messages.error'),
+            description: result.message || t('equipment.messages.importError'),
           });
         }
       };
@@ -470,8 +472,8 @@ const Equipment = () => {
     } catch (error) {
       console.error('Error importing equipment:', error);
       notification.error({
-        message: 'Error',
-        description: 'Failed to import equipment',
+        message: t('equipment.messages.error'),
+        description: t('equipment.messages.importError'),
       });
     } finally {
       setImporting(false);
@@ -486,28 +488,28 @@ const Equipment = () => {
     const daysUntil = Math.ceil((nextMaintenance - now) / (1000 * 60 * 60 * 24));
     
     if (daysUntil < 0) {
-      return <Badge count="Overdue" style={{ backgroundColor: '#ff4d4f' }} />;
+      return <Badge count={t('equipment.badges.overdue')} style={{ backgroundColor: '#ff4d4f' }} />;
     } else if (daysUntil <= 7) {
-      return <Badge count="Due Soon" style={{ backgroundColor: '#faad14' }} />;
+      return <Badge count={t('equipment.badges.dueSoon')} style={{ backgroundColor: '#faad14' }} />;
     }
     return null;
   };
 
   const columns = [
     {
-      title: 'ID',
+      title: t('equipment.columns.id'),
       dataIndex: 'equipmentId',
       key: 'equipmentId',
       sorter: (a, b) => a.equipmentId.localeCompare(b.equipmentId),
     },
     {
-      title: 'NAME',
+      title: t('equipment.columns.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'TYPE',
+      title: t('equipment.columns.type'),
       dataIndex: 'type',
       key: 'type',
       filters: equipmentTypes.map(type => ({ text: type.name, value: type.name })),
@@ -517,31 +519,31 @@ const Equipment = () => {
       ),
     },
     {
-      title: 'STATUS',
+      title: t('equipment.columns.status'),
       dataIndex: 'status',
       key: 'status',
       filters: [
-        { text: 'Operational', value: 'operational' },
-        { text: 'Maintenance', value: 'maintenance' },
-        { text: 'Out of Service', value: 'out-of-service' },
+        { text: t('equipment.status.operational'), value: 'operational' },
+        { text: t('equipment.status.maintenance'), value: 'maintenance' },
+        { text: t('equipment.status.outOfService'), value: 'out-of-service' },
       ],
       onFilter: (value, record) => record.status === value,
       render: (status) => (
         <span className={`status-badge ${status}`}>
-          {status === 'operational' ? 'Operational' : 
-           status === 'maintenance' ? 'Maintenance' : 
-           'Out of Service'}
+          {status === 'operational' ? t('equipment.status.operational') : 
+           status === 'maintenance' ? t('equipment.status.maintenance') : 
+           t('equipment.status.outOfService')}
         </span>
       ),
     },
     {
-      title: 'LOCATION',
+      title: t('equipment.columns.location'),
       dataIndex: 'location',
       key: 'location',
       render: (location) => location || '-',
     },
     {
-      title: 'TASKS',
+      title: t('equipment.columns.tasks'),
       dataIndex: 'assignedTasks',
       key: 'assignedTasks',
       render: (tasks) => tasks && tasks.length > 0 ? (
@@ -554,15 +556,15 @@ const Equipment = () => {
       ) : '-',
     },
     {
-      title: 'MAINTENANCE',
+      title: t('equipment.columns.maintenance'),
       key: 'maintenance',
       render: (_, record) => (
         <div>
           {record.lastMaintenance ? (
             <div style={{ fontSize: 12 }}>
-              <div>Last: {moment(record.lastMaintenance).format('MMM D, YYYY')}</div>
+              <div>{t('equipment.labels.last')}: {moment(record.lastMaintenance).format('MMM D, YYYY')}</div>
               {record.nextMaintenance && (
-                <div>Next: {moment(record.nextMaintenance).format('MMM D, YYYY')}</div>
+                <div>{t('equipment.labels.next')}: {moment(record.nextMaintenance).format('MMM D, YYYY')}</div>
               )}
               {getMaintenanceBadge(record)}
             </div>
@@ -571,18 +573,18 @@ const Equipment = () => {
       ),
     },
     {
-      title: 'ACTIONS',
+      title: t('equipment.columns.actions'),
       key: 'actions',
       align: 'center',
       render: (_, record) => (
         <div className="action-buttons">
-          <button className="icon-btn" onClick={() => showDetailModal(record)} title="View Details">
+          <button className="icon-btn" onClick={() => showDetailModal(record)} title={t('equipment.tooltips.viewDetails')}>
             <EyeOutlined />
           </button>
-          <button className="icon-btn" onClick={() => showMaintenanceModal(record)} title="Log Maintenance">
+          <button className="icon-btn" onClick={() => showMaintenanceModal(record)} title={t('equipment.tooltips.logMaintenance')}>
             <ToolOutlined />
           </button>
-          <button className="icon-btn" onClick={() => showMaintenanceHistory(record)} title="View History">
+          <button className="icon-btn" onClick={() => showMaintenanceHistory(record)} title={t('equipment.tooltips.viewHistory')}>
             <HistoryOutlined />
           </button>
           <button className="icon-btn" onClick={() => handleEditEquipment(record)}>
@@ -601,13 +603,13 @@ const Equipment = () => {
 
   const historyColumns = [
     {
-      title: 'DATE',
+      title: t('equipment.historyColumns.date'),
       dataIndex: 'performedDate',
       key: 'performedDate',
       render: (date) => moment(date).format('MMM D, YYYY'),
     },
     {
-      title: 'TYPE',
+      title: t('equipment.historyColumns.type'),
       dataIndex: 'maintenanceType',
       key: 'maintenanceType',
       render: (type) => (
@@ -621,39 +623,39 @@ const Equipment = () => {
       ),
     },
     {
-      title: 'DESCRIPTION',
+      title: t('equipment.historyColumns.description'),
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'PERFORMED BY',
+      title: t('equipment.historyColumns.performedBy'),
       dataIndex: 'performedBy',
       key: 'performedBy',
       render: (by) => by || '-',
     },
     {
-      title: 'LABOR',
+      title: t('equipment.historyColumns.labor'),
       dataIndex: 'laborCost',
       key: 'laborCost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
       width: 100,
     },
     {
-      title: 'PARTS',
+      title: t('equipment.historyColumns.parts'),
       dataIndex: 'partsCost',
       key: 'partsCost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
       width: 100,
     },
     {
-      title: 'TOTAL',
+      title: t('equipment.historyColumns.total'),
       dataIndex: 'cost',
       key: 'cost',
       render: (cost) => cost ? `$${cost.toFixed(2)}` : '-',
       width: 100,
     },
     {
-      title: 'DURATION',
+      title: t('equipment.historyColumns.duration'),
       dataIndex: 'duration',
       key: 'duration',
       render: (duration) => duration ? `${duration}h` : '-',
@@ -662,24 +664,24 @@ const Equipment = () => {
 
   return (
     <DashboardLayout
-      title="Equipment Management"
-      subtitle="Manage mining equipment and track maintenance"
+      title={t('equipment.title')}
+      subtitle={t('equipment.subtitle')}
       page="equipment"
     >
       <div className="equipment-page">
         <div className="page-header">
           <div className="header-actions">
             <button className="btn-secondary" onClick={handleDownloadTemplate}>
-              <DownloadOutlined /> Template
+              <DownloadOutlined /> {t('equipment.template')}
             </button>
             <button className="btn-secondary" onClick={() => setIsImportModalVisible(true)}>
-              <UploadOutlined /> Import
+              <UploadOutlined /> {t('equipment.import')}
             </button>
             <button className="btn-secondary" onClick={handleExport}>
-              <DownloadOutlined /> Export
+              <DownloadOutlined /> {t('equipment.export')}
             </button>
             <button className="btn-primary" onClick={handleCreateEquipment}>
-              <PlusOutlined /> New Equipment
+              <PlusOutlined /> {t('equipment.newEquipment')}
             </button>
           </div>
         </div>
@@ -693,7 +695,7 @@ const Equipment = () => {
               key: 'list',
               label: (
                 <span>
-                  <UnorderedListOutlined /> Equipment List
+                  <UnorderedListOutlined /> {t('equipment.tabs.equipmentList')}
                 </span>
               ),
               children: (
@@ -716,14 +718,14 @@ const Equipment = () => {
               key: 'schedule',
               label: (
                 <span>
-                  <AppstoreOutlined /> Usage Schedule
+                  <AppstoreOutlined /> {t('equipment.tabs.usageSchedule')}
                 </span>
               ),
               children: (
                 <div style={{ padding: '16px 0', maxWidth: '100%' }}>
                   <Alert
-                    message="Equipment Usage Schedule"
-                    description="View hourly equipment usage based on current schedule. Green indicates equipment in use, blue shows available for maintenance."
+                    message={t('equipment.usageSchedule.title')}
+                    description={t('equipment.usageSchedule.description')}
                     type="info"
                     showIcon
                     style={{ marginBottom: 16 }}
@@ -737,45 +739,45 @@ const Equipment = () => {
 
         {/* Create/Edit Modal */}
         <Modal
-          title={editingEquipment ? 'Edit Equipment' : 'New Equipment'}
+          title={editingEquipment ? t('equipment.editEquipment') : t('equipment.newEquipment')}
           open={isModalVisible}
           onOk={handleModalOk}
           onCancel={() => {
             setIsModalVisible(false);
             form.resetFields();
           }}
-          okText={editingEquipment ? 'Save' : 'Create'}
-          cancelText="Cancel"
+          okText={editingEquipment ? t('equipment.save') : t('equipment.create')}
+          cancelText={t('equipment.cancel')}
           width={700}
           className="simple-modal"
         >
           <Form form={form} layout="vertical">
             <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab="Basic Info" key="1">
+              <Tabs.TabPane tab={t('equipment.formTabs.basicInfo')} key="1">
                 <Form.Item
-                  label="Equipment ID"
+                  label={t('equipment.form.equipmentId')}
                   name="equipmentId"
-                  rules={[{ required: true, message: 'Required' }]}
+                  rules={[{ required: true, message: t('equipment.form.required') }]}
                 >
-                  <Input placeholder="e.g., EQ-001" disabled={editingEquipment} />
+                  <Input placeholder={t('equipment.form.equipmentIdPlaceholder')} disabled={editingEquipment} />
                 </Form.Item>
 
                 <Form.Item
-                  label="Name"
+                  label={t('equipment.form.name')}
                   name="name"
-                  rules={[{ required: true, message: 'Required' }]}
+                  rules={[{ required: true, message: t('equipment.form.required') }]}
                 >
-                  <Input placeholder="Enter equipment name" />
+                  <Input placeholder={t('equipment.form.namePlaceholder')} />
                 </Form.Item>
 
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <Form.Item
-                    label="Type"
+                    label={t('equipment.form.type')}
                     name="type"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: t('equipment.form.required') }]}
                     style={{ flex: 1 }}
                   >
-                    <Select placeholder="Select equipment type" showSearch>
+                    <Select placeholder={t('equipment.form.selectType')} showSearch>
                       {equipmentTypes.map(type => (
                         <Option key={type._id} value={type.name}>
                           {type.name}
@@ -785,24 +787,24 @@ const Equipment = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Status"
+                    label={t('equipment.form.status')}
                     name="status"
-                    rules={[{ required: true, message: 'Required' }]}
+                    rules={[{ required: true, message: t('equipment.form.required') }]}
                     style={{ flex: 1 }}
                   >
                     <Select>
-                      <Option value="operational">Operational</Option>
-                      <Option value="maintenance">Maintenance</Option>
-                      <Option value="out-of-service">Out of Service</Option>
+                      <Option value="operational">{t('equipment.status.operational')}</Option>
+                      <Option value="maintenance">{t('equipment.status.maintenance')}</Option>
+                      <Option value="out-of-service">{t('equipment.status.outOfService')}</Option>
                     </Select>
                   </Form.Item>
                 </div>
 
                 <Form.Item
-                  label="Location"
+                  label={t('equipment.form.location')}
                   name="location"
                 >
-                  <Select placeholder="Select location" allowClear showSearch>
+                  <Select placeholder={t('equipment.form.selectLocation')} allowClear showSearch>
                     {sites.map(site => (
                       <Option key={site._id} value={site.location || site.siteName}>
                         {site.siteId} - {site.siteName}
@@ -812,60 +814,60 @@ const Equipment = () => {
                 </Form.Item>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab="Specifications" key="2">
-                <Form.Item label="Manufacturer" name="manufacturer">
-                  <Input placeholder="e.g., Caterpillar" />
+              <Tabs.TabPane tab={t('equipment.formTabs.specifications')} key="2">
+                <Form.Item label={t('equipment.form.manufacturer')} name="manufacturer">
+                  <Input placeholder={t('equipment.form.manufacturerPlaceholder')} />
                 </Form.Item>
 
                 <div style={{ display: 'flex', gap: '16px' }}>
-                  <Form.Item label="Model" name="model" style={{ flex: 1 }}>
-                    <Input placeholder="e.g., 320D" />
+                  <Form.Item label={t('equipment.form.model')} name="model" style={{ flex: 1 }}>
+                    <Input placeholder={t('equipment.form.modelPlaceholder')} />
                   </Form.Item>
 
-                  <Form.Item label="Year" name="year" style={{ flex: 1 }}>
+                  <Form.Item label={t('equipment.form.year')} name="year" style={{ flex: 1 }}>
                     <InputNumber min={1900} max={2100} style={{ width: '100%' }} />
                   </Form.Item>
                 </div>
 
                 <div style={{ display: 'flex', gap: '16px' }}>
-                  <Form.Item label="Capacity" name="capacity" style={{ flex: 1 }}>
-                    <Input placeholder="e.g., 20 ton" />
+                  <Form.Item label={t('equipment.form.capacity')} name="capacity" style={{ flex: 1 }}>
+                    <Input placeholder={t('equipment.form.capacityPlaceholder')} />
                   </Form.Item>
 
-                  <Form.Item label="Serial Number" name="serialNumber" style={{ flex: 1 }}>
-                    <Input placeholder="Enter serial number" />
-                  </Form.Item>
-                </div>
-              </Tabs.TabPane>
-
-              <Tabs.TabPane tab="Maintenance" key="3">
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <Form.Item label="Last Maintenance" name="lastMaintenance" style={{ flex: 1 }}>
-                    <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
-                  </Form.Item>
-
-                  <Form.Item label="Next Maintenance" name="nextMaintenance" style={{ flex: 1 }}>
-                    <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
-                  </Form.Item>
-                </div>
-
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <Form.Item label="Maintenance Interval (hours)" name="maintenanceInterval" style={{ flex: 1 }}>
-                    <InputNumber min={0} style={{ width: '100%' }} />
-                  </Form.Item>
-
-                  <Form.Item label="Operating Hours" name="operatingHours" style={{ flex: 1 }}>
-                    <InputNumber min={0} style={{ width: '100%' }} />
+                  <Form.Item label={t('equipment.form.serialNumber')} name="serialNumber" style={{ flex: 1 }}>
+                    <Input placeholder={t('equipment.form.serialNumberPlaceholder')} />
                   </Form.Item>
                 </div>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab="Tasks" key="4">
+              <Tabs.TabPane tab={t('equipment.formTabs.maintenance')} key="3">
+                <div style={{ display: 'flex', gap: '16px' }}>
+                  <Form.Item label={t('equipment.form.lastMaintenance')} name="lastMaintenance" style={{ flex: 1 }}>
+                    <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+                  </Form.Item>
+
+                  <Form.Item label={t('equipment.form.nextMaintenance')} name="nextMaintenance" style={{ flex: 1 }}>
+                    <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+                  </Form.Item>
+                </div>
+
+                <div style={{ display: 'flex', gap: '16px' }}>
+                  <Form.Item label={t('equipment.form.maintenanceInterval')} name="maintenanceInterval" style={{ flex: 1 }}>
+                    <InputNumber min={0} style={{ width: '100%' }} />
+                  </Form.Item>
+
+                  <Form.Item label={t('equipment.form.operatingHours')} name="operatingHours" style={{ flex: 1 }}>
+                    <InputNumber min={0} style={{ width: '100%' }} />
+                  </Form.Item>
+                </div>
+              </Tabs.TabPane>
+
+              <Tabs.TabPane tab={t('equipment.formTabs.tasks')} key="4">
                 <Form.Item
-                  label="Assigned Tasks"
+                  label={t('equipment.form.assignedTasks')}
                   name="assignedTasks"
                 >
-                  <Select mode="multiple" placeholder="Select tasks" allowClear>
+                  <Select mode="multiple" placeholder={t('equipment.form.selectTasks')} allowClear>
                     {tasks.map(task => (
                       <Option key={task._id} value={task.taskId}>
                         {task.taskId} - {task.taskName}
@@ -875,9 +877,9 @@ const Equipment = () => {
                 </Form.Item>
               </Tabs.TabPane>
 
-              <Tabs.TabPane tab="Notes" key="5">
-                <Form.Item label="Notes" name="notes">
-                  <TextArea rows={6} placeholder="Additional notes..." />
+              <Tabs.TabPane tab={t('equipment.formTabs.notes')} key="5">
+                <Form.Item label={t('equipment.form.notes')} name="notes">
+                  <TextArea rows={6} placeholder={t('equipment.form.notesPlaceholder')} />
                 </Form.Item>
               </Tabs.TabPane>
             </Tabs>
@@ -886,15 +888,15 @@ const Equipment = () => {
 
         {/* Delete Modal */}
         <Modal
-          title="Delete Equipment"
+          title={t('equipment.deleteEquipment')}
           open={isDeleteModalVisible}
           onOk={handleDeleteEquipment}
           onCancel={() => {
             setIsDeleteModalVisible(false);
             setDeletingEquipment(null);
           }}
-          okText="Delete"
-          cancelText="Cancel"
+          okText={t('equipment.delete')}
+          cancelText={t('equipment.cancel')}
           width={400}
           className="delete-modal"
           okButtonProps={{ danger: true }}
@@ -903,10 +905,10 @@ const Equipment = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to delete <strong>{deletingEquipment?.equipmentId}</strong>?
+                {t('equipment.deleteModal.message')} <strong>{deletingEquipment?.equipmentId}</strong>?
               </p>
               <p className="delete-warning">
-                This action cannot be undone. All maintenance history will also be deleted.
+                {t('equipment.deleteModal.warning')}
               </p>
             </div>
           </div>
@@ -914,85 +916,85 @@ const Equipment = () => {
 
         {/* Maintenance Log Modal */}
         <Modal
-          title="Log Maintenance"
+          title={t('equipment.logMaintenance')}
           open={isMaintenanceModalVisible}
           onOk={handleMaintenanceSubmit}
           onCancel={() => {
             setIsMaintenanceModalVisible(false);
             maintenanceForm.resetFields();
           }}
-          okText="Log Maintenance"
-          cancelText="Cancel"
+          okText={t('equipment.logMaintenance')}
+          cancelText={t('equipment.cancel')}
           width={600}
           className="simple-modal"
         >
           <Form form={maintenanceForm} layout="vertical">
             <Form.Item
-              label="Maintenance Type"
+              label={t('equipment.maintenanceForm.type')}
               name="maintenanceType"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('equipment.form.required') }]}
             >
               <Select>
-                <Option value="scheduled">Scheduled</Option>
-                <Option value="unscheduled">Unscheduled</Option>
-                <Option value="emergency">Emergency</Option>
-                <Option value="inspection">Inspection</Option>
+                <Option value="scheduled">{t('equipment.maintenanceTypes.scheduled')}</Option>
+                <Option value="unscheduled">{t('equipment.maintenanceTypes.unscheduled')}</Option>
+                <Option value="emergency">{t('equipment.maintenanceTypes.emergency')}</Option>
+                <Option value="inspection">{t('equipment.maintenanceTypes.inspection')}</Option>
               </Select>
             </Form.Item>
 
             <Form.Item
-              label="Description"
+              label={t('equipment.maintenanceForm.description')}
               name="description"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('equipment.form.required') }]}
             >
-              <TextArea rows={3} placeholder="Describe the maintenance performed..." />
+              <TextArea rows={3} placeholder={t('equipment.maintenanceForm.descriptionPlaceholder')} />
             </Form.Item>
 
             <div style={{ display: 'flex', gap: '16px' }}>
               <Form.Item
-                label="Performed Date"
+                label={t('equipment.maintenanceForm.performedDate')}
                 name="performedDate"
-                rules={[{ required: true, message: 'Required' }]}
+                rules={[{ required: true, message: t('equipment.form.required') }]}
                 style={{ flex: 1 }}
               >
                 <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
               </Form.Item>
 
-              <Form.Item label="Next Due Date" name="nextDue" style={{ flex: 1 }}>
+              <Form.Item label={t('equipment.maintenanceForm.nextDue')} name="nextDue" style={{ flex: 1 }}>
                 <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
               </Form.Item>
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
-              <Form.Item label="Labor Cost ($)" name="laborCost" style={{ flex: 1 }}>
-                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter labor cost" />
+              <Form.Item label={t('equipment.maintenanceForm.laborCost')} name="laborCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder={t('equipment.maintenanceForm.laborCostPlaceholder')} />
               </Form.Item>
 
-              <Form.Item label="Parts Cost ($)" name="partsCost" style={{ flex: 1 }}>
-                <InputNumber min={0} style={{ width: '100%' }} placeholder="Enter parts cost" />
+              <Form.Item label={t('equipment.maintenanceForm.partsCost')} name="partsCost" style={{ flex: 1 }}>
+                <InputNumber min={0} style={{ width: '100%' }} placeholder={t('equipment.maintenanceForm.partsCostPlaceholder')} />
               </Form.Item>
             </div>
 
             <div style={{ display: 'flex', gap: '16px' }}>
-              <Form.Item label="Duration (hours)" name="duration" style={{ flex: 1 }}>
+              <Form.Item label={t('equipment.maintenanceForm.duration')} name="duration" style={{ flex: 1 }}>
                 <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
               <div style={{ flex: 1 }} />
             </div>
 
-            <Form.Item label="Performed By" name="performedBy">
-              <Input placeholder="Enter technician/company name" />
+            <Form.Item label={t('equipment.maintenanceForm.performedBy')} name="performedBy">
+              <Input placeholder={t('equipment.maintenanceForm.performedByPlaceholder')} />
             </Form.Item>
 
-            <Form.Item label="Additional Notes" name="notes">
-              <TextArea rows={2} placeholder="Any additional notes..." />
+            <Form.Item label={t('equipment.maintenanceForm.additionalNotes')} name="notes">
+              <TextArea rows={2} placeholder={t('equipment.maintenanceForm.additionalNotesPlaceholder')} />
             </Form.Item>
           </Form>
         </Modal>
 
         {/* Maintenance History Modal */}
         <Modal
-          title={`Maintenance History - ${selectedEquipment?.equipmentId}`}
+          title={`${t('equipment.maintenanceHistory')} - ${selectedEquipment?.equipmentId}`}
           open={isHistoryModalVisible}
           onCancel={() => {
             setIsHistoryModalVisible(false);
@@ -1013,7 +1015,7 @@ const Equipment = () => {
 
         {/* Import Modal */}
         <Modal
-          title="Import Equipment"
+          title={t('equipment.importEquipment')}
           open={isImportModalVisible}
           onOk={handleImport}
           onCancel={() => {
@@ -1021,15 +1023,15 @@ const Equipment = () => {
             setImportFile(null);
             setImportResults(null);
           }}
-          okText="Import"
-          cancelText="Cancel"
+          okText={t('equipment.import')}
+          cancelText={t('equipment.cancel')}
           confirmLoading={importing}
           width={500}
           className="simple-modal"
         >
           <Alert
-            message="Import Instructions"
-            description="Download the template, fill it with your equipment data, and upload it here."
+            message={t('equipment.importModal.title')}
+            description={t('equipment.importModal.description')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -1045,13 +1047,13 @@ const Equipment = () => {
             accept=".xlsx,.xls"
           >
             <button className="btn-secondary" style={{ marginBottom: 16 }}>
-              <UploadOutlined /> Select Excel File
+              <UploadOutlined /> {t('equipment.importModal.selectFile')}
             </button>
           </Upload>
 
           {importResults && (
             <Alert
-              message={`Import Results: ${importResults.imported} succeeded, ${importResults.failed} failed`}
+              message={t('equipment.importModal.results', { imported: importResults.imported, failed: importResults.failed })}
               type={importResults.failed > 0 ? 'warning' : 'success'}
               showIcon
               description={
@@ -1071,7 +1073,7 @@ const Equipment = () => {
 
         {/* Detail Modal */}
         <Modal
-          title="Equipment Details"
+          title={t('equipment.equipmentDetails')}
           open={isDetailModalVisible}
           onCancel={() => {
             setIsDetailModalVisible(false);
@@ -1084,30 +1086,30 @@ const Equipment = () => {
           {selectedEquipment && (
             <div className="equipment-details">
               <div className="detail-section">
-                <h4>Basic Information</h4>
+                <h4>{t('equipment.detailModal.basicInfo')}</h4>
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Equipment ID:</label>
+                    <label>{t('equipment.detailModal.equipmentId')}:</label>
                     <span>{selectedEquipment.equipmentId}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Name:</label>
+                    <label>{t('equipment.detailModal.name')}:</label>
                     <span>{selectedEquipment.name}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Type:</label>
+                    <label>{t('equipment.detailModal.type')}:</label>
                     <Tag color="blue">{selectedEquipment.type}</Tag>
                   </div>
                   <div className="detail-item">
-                    <label>Status:</label>
+                    <label>{t('equipment.detailModal.status')}:</label>
                     <span className={`status-badge ${selectedEquipment.status}`}>
-                      {selectedEquipment.status === 'operational' ? 'Operational' : 
-                       selectedEquipment.status === 'maintenance' ? 'Maintenance' : 
-                       'Out of Service'}
+                      {selectedEquipment.status === 'operational' ? t('equipment.status.operational') : 
+                       selectedEquipment.status === 'maintenance' ? t('equipment.status.maintenance') : 
+                       t('equipment.status.outOfService')}
                     </span>
                   </div>
                   <div className="detail-item">
-                    <label>Location:</label>
+                    <label>{t('equipment.detailModal.location')}:</label>
                     <span>{selectedEquipment.location || '-'}</span>
                   </div>
                 </div>
@@ -1115,26 +1117,26 @@ const Equipment = () => {
 
               {(selectedEquipment.manufacturer || selectedEquipment.model) && (
                 <div className="detail-section">
-                  <h4>Specifications</h4>
+                  <h4>{t('equipment.detailModal.specifications')}</h4>
                   <div className="detail-grid">
                     <div className="detail-item">
-                      <label>Manufacturer:</label>
+                      <label>{t('equipment.detailModal.manufacturer')}:</label>
                       <span>{selectedEquipment.manufacturer || '-'}</span>
                     </div>
                     <div className="detail-item">
-                      <label>Model:</label>
+                      <label>{t('equipment.detailModal.model')}:</label>
                       <span>{selectedEquipment.model || '-'}</span>
                     </div>
                     <div className="detail-item">
-                      <label>Year:</label>
+                      <label>{t('equipment.detailModal.year')}:</label>
                       <span>{selectedEquipment.year || '-'}</span>
                     </div>
                     <div className="detail-item">
-                      <label>Capacity:</label>
+                      <label>{t('equipment.detailModal.capacity')}:</label>
                       <span>{selectedEquipment.capacity || '-'}</span>
                     </div>
                     <div className="detail-item">
-                      <label>Serial Number:</label>
+                      <label>{t('equipment.detailModal.serialNumber')}:</label>
                       <span>{selectedEquipment.serialNumber || '-'}</span>
                     </div>
                   </div>
@@ -1142,30 +1144,30 @@ const Equipment = () => {
               )}
 
               <div className="detail-section">
-                <h4>Maintenance Information</h4>
+                <h4>{t('equipment.detailModal.maintenanceInfo')}</h4>
                 <div className="detail-grid">
                   <div className="detail-item">
-                    <label>Last Maintenance:</label>
+                    <label>{t('equipment.detailModal.lastMaintenance')}:</label>
                     <span>{selectedEquipment.lastMaintenance ? moment(selectedEquipment.lastMaintenance).format('MMM D, YYYY') : '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Next Maintenance:</label>
+                    <label>{t('equipment.detailModal.nextMaintenance')}:</label>
                     <span>{selectedEquipment.nextMaintenance ? moment(selectedEquipment.nextMaintenance).format('MMM D, YYYY') : '-'}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Maintenance Interval:</label>
-                    <span>{selectedEquipment.maintenanceInterval} hours</span>
+                    <label>{t('equipment.detailModal.maintenanceInterval')}:</label>
+                    <span>{selectedEquipment.maintenanceInterval} {t('equipment.detailModal.hours')}</span>
                   </div>
                   <div className="detail-item">
-                    <label>Operating Hours:</label>
-                    <span>{selectedEquipment.operatingHours} hours</span>
+                    <label>{t('equipment.detailModal.operatingHours')}:</label>
+                    <span>{selectedEquipment.operatingHours} {t('equipment.detailModal.hours')}</span>
                   </div>
                 </div>
               </div>
 
               {selectedEquipment.assignedTasks && selectedEquipment.assignedTasks.length > 0 && (
                 <div className="detail-section">
-                  <h4>Assigned Tasks</h4>
+                  <h4>{t('equipment.detailModal.assignedTasks')}</h4>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {selectedEquipment.assignedTasks.map((task, idx) => (
                       <Tag key={idx} color="green">{task}</Tag>
@@ -1176,7 +1178,7 @@ const Equipment = () => {
 
               {selectedEquipment.notes && (
                 <div className="detail-section">
-                  <h4>Notes</h4>
+                  <h4>{t('equipment.detailModal.notes')}</h4>
                   <p>{selectedEquipment.notes}</p>
                 </div>
               )}

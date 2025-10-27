@@ -914,5 +914,180 @@
       "tip4": "<strong>Balancear Límites de Tareas:</strong> Ajustar límites de tareas en Configuración para coincidir con capacidad operacional",
       "tip5": "<strong>Monitorear Retrasos:</strong> Abordar retrasos recurrentes para mejorar tasas de finalización de tareas"
     }
+  },
+  "equipment": {
+    "title": "Gestión de Equipos",
+    "subtitle": "Administrar equipos mineros y seguimiento de mantenimiento",
+    "template": "Plantilla",
+    "import": "Importar",
+    "export": "Exportar",
+    "newEquipment": "Nuevo Equipo",
+    "editEquipment": "Editar Equipo",
+    "deleteEquipment": "Eliminar Equipo",
+    "logMaintenance": "Registrar Mantenimiento",
+    "maintenanceHistory": "Historial de Mantenimiento",
+    "importEquipment": "Importar Equipos",
+    "equipmentDetails": "Detalles del Equipo",
+    "save": "Guardar",
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "columns": {
+      "id": "ID",
+      "name": "NOMBRE",
+      "type": "TIPO",
+      "status": "ESTADO",
+      "location": "UBICACIÓN",
+      "tasks": "TAREAS",
+      "maintenance": "MANTENIMIENTO",
+      "actions": "ACCIONES"
+    },
+    "status": {
+      "operational": "Operacional",
+      "maintenance": "Mantenimiento",
+      "outOfService": "Fuera de Servicio"
+    },
+    "badges": {
+      "overdue": "Atrasado",
+      "dueSoon": "Vencimiento Próximo"
+    },
+    "labels": {
+      "last": "Último",
+      "next": "Próximo"
+    },
+    "tooltips": {
+      "viewDetails": "Ver Detalles",
+      "logMaintenance": "Registrar Mantenimiento",
+      "viewHistory": "Ver Historial"
+    },
+    "historyColumns": {
+      "date": "FECHA",
+      "type": "TIPO",
+      "description": "DESCRIPCIÓN",
+      "performedBy": "REALIZADO POR",
+      "labor": "MANO DE OBRA",
+      "parts": "PARTES",
+      "total": "TOTAL",
+      "duration": "DURACIÓN"
+    },
+    "tabs": {
+      "equipmentList": "Lista de Equipos",
+      "usageSchedule": "Programación de Uso"
+    },
+    "usageSchedule": {
+      "title": "Programación de Uso de Equipos",
+      "description": "Ver uso de equipos por hora según la programación actual. Verde indica equipo en uso, azul muestra disponible para mantenimiento."
+    },
+    "formTabs": {
+      "basicInfo": "Información Básica",
+      "specifications": "Especificaciones",
+      "maintenance": "Mantenimiento",
+      "tasks": "Tareas",
+      "notes": "Notas"
+    },
+    "form": {
+      "equipmentId": "ID de Equipo",
+      "name": "Nombre",
+      "type": "Tipo",
+      "status": "Estado",
+      "location": "Ubicación",
+      "manufacturer": "Fabricante",
+      "model": "Modelo",
+      "year": "Año",
+      "capacity": "Capacidad",
+      "serialNumber": "Número de Serie",
+      "lastMaintenance": "Último Mantenimiento",
+      "nextMaintenance": "Próximo Mantenimiento",
+      "maintenanceInterval": "Intervalo de Mantenimiento (horas)",
+      "operatingHours": "Horas de Operación",
+      "assignedTasks": "Tareas Asignadas",
+      "notes": "Notas",
+      "required": "Requerido",
+      "equipmentIdPlaceholder": "ej., EQ-001",
+      "namePlaceholder": "Ingrese nombre del equipo",
+      "selectType": "Seleccione tipo de equipo",
+      "selectLocation": "Seleccione ubicación",
+      "manufacturerPlaceholder": "ej., Caterpillar",
+      "modelPlaceholder": "ej., 320D",
+      "capacityPlaceholder": "ej., 20 toneladas",
+      "serialNumberPlaceholder": "Ingrese número de serie",
+      "selectTasks": "Seleccione tareas",
+      "notesPlaceholder": "Notas adicionales..."
+    },
+    "deleteModal": {
+      "message": "¿Está seguro de que desea eliminar",
+      "warning": "Esta acción no se puede deshacer. Todo el historial de mantenimiento también se eliminará."
+    },
+    "maintenanceForm": {
+      "type": "Tipo de Mantenimiento",
+      "description": "Descripción",
+      "performedDate": "Fecha Realizada",
+      "nextDue": "Próxima Fecha de Vencimiento",
+      "laborCost": "Costo de Mano de Obra ($)",
+      "partsCost": "Costo de Partes ($)",
+      "duration": "Duración (horas)",
+      "performedBy": "Realizado Por",
+      "additionalNotes": "Notas Adicionales",
+      "descriptionPlaceholder": "Describa el mantenimiento realizado...",
+      "laborCostPlaceholder": "Ingrese costo de mano de obra",
+      "partsCostPlaceholder": "Ingrese costo de partes",
+      "performedByPlaceholder": "Ingrese nombre de técnico/compañía",
+      "additionalNotesPlaceholder": "Cualquier nota adicional..."
+    },
+    "maintenanceTypes": {
+      "scheduled": "Programado",
+      "unscheduled": "No Programado",
+      "emergency": "Emergencia",
+      "inspection": "Inspección"
+    },
+    "importModal": {
+      "title": "Instrucciones de Importación",
+      "description": "Descargue la plantilla, llénela con los datos de su equipo y cárguela aquí.",
+      "selectFile": "Seleccionar Archivo Excel",
+      "results": "Resultados de Importación: {{imported}} exitosos, {{failed}} fallidos"
+    },
+    "detailModal": {
+      "basicInfo": "Información Básica",
+      "equipmentId": "ID de Equipo",
+      "name": "Nombre",
+      "type": "Tipo",
+      "status": "Estado",
+      "location": "Ubicación",
+      "specifications": "Especificaciones",
+      "manufacturer": "Fabricante",
+      "model": "Modelo",
+      "year": "Año",
+      "capacity": "Capacidad",
+      "serialNumber": "Número de Serie",
+      "maintenanceInfo": "Información de Mantenimiento",
+      "lastMaintenance": "Último Mantenimiento",
+      "nextMaintenance": "Próximo Mantenimiento",
+      "maintenanceInterval": "Intervalo de Mantenimiento",
+      "operatingHours": "Horas de Operación",
+      "hours": "horas",
+      "assignedTasks": "Tareas Asignadas",
+      "notes": "Notas"
+    },
+    "messages": {
+      "success": "Éxito",
+      "error": "Error",
+      "networkError": "Error de Red",
+      "fetchError": "Error al cargar equipos",
+      "updateSuccess": "Equipo actualizado exitosamente",
+      "updateError": "Error al actualizar equipo",
+      "createSuccess": "Equipo creado exitosamente",
+      "createError": "Error al crear equipo",
+      "deleteSuccess": "Equipo eliminado exitosamente",
+      "deleteError": "Error al eliminar equipo",
+      "maintenanceSuccess": "Mantenimiento registrado exitosamente",
+      "maintenanceError": "Error al registrar mantenimiento",
+      "historyError": "Error al cargar historial de mantenimiento",
+      "exportSuccess": "Equipos exportados exitosamente",
+      "exportError": "Error al exportar equipos",
+      "selectFileError": "Por favor seleccione un archivo para importar",
+      "importComplete": "Importación Completa",
+      "importSuccess": "{{count}} equipos importados exitosamente",
+      "importError": "Error al importar equipos"
+    }
   }
 }

@@ -914,5 +914,180 @@
       "tip4": "<strong>Balance Task Limits:</strong> Adjust task limits in Settings to match operational capacity",
       "tip5": "<strong>Monitor Delays:</strong> Address recurring delays to improve task completion rates"
     }
+  },
+  "equipment": {
+    "title": "Equipment Management",
+    "subtitle": "Manage mining equipment and track maintenance",
+    "template": "Template",
+    "import": "Import",
+    "export": "Export",
+    "newEquipment": "New Equipment",
+    "editEquipment": "Edit Equipment",
+    "deleteEquipment": "Delete Equipment",
+    "logMaintenance": "Log Maintenance",
+    "maintenanceHistory": "Maintenance History",
+    "importEquipment": "Import Equipment",
+    "equipmentDetails": "Equipment Details",
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "columns": {
+      "id": "ID",
+      "name": "NAME",
+      "type": "TYPE",
+      "status": "STATUS",
+      "location": "LOCATION",
+      "tasks": "TASKS",
+      "maintenance": "MAINTENANCE",
+      "actions": "ACTIONS"
+    },
+    "status": {
+      "operational": "Operational",
+      "maintenance": "Maintenance",
+      "outOfService": "Out of Service"
+    },
+    "badges": {
+      "overdue": "Overdue",
+      "dueSoon": "Due Soon"
+    },
+    "labels": {
+      "last": "Last",
+      "next": "Next"
+    },
+    "tooltips": {
+      "viewDetails": "View Details",
+      "logMaintenance": "Log Maintenance",
+      "viewHistory": "View History"
+    },
+    "historyColumns": {
+      "date": "DATE",
+      "type": "TYPE",
+      "description": "DESCRIPTION",
+      "performedBy": "PERFORMED BY",
+      "labor": "LABOR",
+      "parts": "PARTS",
+      "total": "TOTAL",
+      "duration": "DURATION"
+    },
+    "tabs": {
+      "equipmentList": "Equipment List",
+      "usageSchedule": "Usage Schedule"
+    },
+    "usageSchedule": {
+      "title": "Equipment Usage Schedule",
+      "description": "View hourly equipment usage based on current schedule. Green indicates equipment in use, blue shows available for maintenance."
+    },
+    "formTabs": {
+      "basicInfo": "Basic Info",
+      "specifications": "Specifications",
+      "maintenance": "Maintenance",
+      "tasks": "Tasks",
+      "notes": "Notes"
+    },
+    "form": {
+      "equipmentId": "Equipment ID",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "location": "Location",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "year": "Year",
+      "capacity": "Capacity",
+      "serialNumber": "Serial Number",
+      "lastMaintenance": "Last Maintenance",
+      "nextMaintenance": "Next Maintenance",
+      "maintenanceInterval": "Maintenance Interval (hours)",
+      "operatingHours": "Operating Hours",
+      "assignedTasks": "Assigned Tasks",
+      "notes": "Notes",
+      "required": "Required",
+      "equipmentIdPlaceholder": "e.g., EQ-001",
+      "namePlaceholder": "Enter equipment name",
+      "selectType": "Select equipment type",
+      "selectLocation": "Select location",
+      "manufacturerPlaceholder": "e.g., Caterpillar",
+      "modelPlaceholder": "e.g., 320D",
+      "capacityPlaceholder": "e.g., 20 ton",
+      "serialNumberPlaceholder": "Enter serial number",
+      "selectTasks": "Select tasks",
+      "notesPlaceholder": "Additional notes..."
+    },
+    "deleteModal": {
+      "message": "Are you sure you want to delete",
+      "warning": "This action cannot be undone. All maintenance history will also be deleted."
+    },
+    "maintenanceForm": {
+      "type": "Maintenance Type",
+      "description": "Description",
+      "performedDate": "Performed Date",
+      "nextDue": "Next Due Date",
+      "laborCost": "Labor Cost ($)",
+      "partsCost": "Parts Cost ($)",
+      "duration": "Duration (hours)",
+      "performedBy": "Performed By",
+      "additionalNotes": "Additional Notes",
+      "descriptionPlaceholder": "Describe the maintenance performed...",
+      "laborCostPlaceholder": "Enter labor cost",
+      "partsCostPlaceholder": "Enter parts cost",
+      "performedByPlaceholder": "Enter technician/company name",
+      "additionalNotesPlaceholder": "Any additional notes..."
+    },
+    "maintenanceTypes": {
+      "scheduled": "Scheduled",
+      "unscheduled": "Unscheduled",
+      "emergency": "Emergency",
+      "inspection": "Inspection"
+    },
+    "importModal": {
+      "title": "Import Instructions",
+      "description": "Download the template, fill it with your equipment data, and upload it here.",
+      "selectFile": "Select Excel File",
+      "results": "Import Results: {{imported}} succeeded, {{failed}} failed"
+    },
+    "detailModal": {
+      "basicInfo": "Basic Information",
+      "equipmentId": "Equipment ID",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "location": "Location",
+      "specifications": "Specifications",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "year": "Year",
+      "capacity": "Capacity",
+      "serialNumber": "Serial Number",
+      "maintenanceInfo": "Maintenance Information",
+      "lastMaintenance": "Last Maintenance",
+      "nextMaintenance": "Next Maintenance",
+      "maintenanceInterval": "Maintenance Interval",
+      "operatingHours": "Operating Hours",
+      "hours": "hours",
+      "assignedTasks": "Assigned Tasks",
+      "notes": "Notes"
+    },
+    "messages": {
+      "success": "Success",
+      "error": "Error",
+      "networkError": "Network Error",
+      "fetchError": "Failed to fetch equipment",
+      "updateSuccess": "Equipment updated successfully",
+      "updateError": "Failed to update equipment",
+      "createSuccess": "Equipment created successfully",
+      "createError": "Failed to create equipment",
+      "deleteSuccess": "Equipment deleted successfully",
+      "deleteError": "Failed to delete equipment",
+      "maintenanceSuccess": "Maintenance logged successfully",
+      "maintenanceError": "Failed to log maintenance",
+      "historyError": "Failed to fetch maintenance history",
+      "exportSuccess": "Equipment exported successfully",
+      "exportError": "Failed to export equipment",
+      "selectFileError": "Please select a file to import",
+      "importComplete": "Import Complete",
+      "importSuccess": "Imported {{count}} equipment successfully",
+      "importError": "Failed to import equipment"
+    }
   }
 }
