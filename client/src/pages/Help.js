@@ -182,6 +182,44 @@ const Help = () => {
       ]
     },
     {
+      id: 'maintenance-logs',
+      icon: <ToolFilled />,
+      title: 'Maintenance Logs',
+      description: 'Track and analyze equipment maintenance history',
+      steps: [
+        {
+          number: 1,
+          title: 'Record Maintenance Events',
+          content: 'Go to Maintenance Logs page. Click "New Log" to record maintenance activities. Select equipment, maintenance type (scheduled/unscheduled/preventive/breakdown), date performed, and duration.'
+        },
+        {
+          number: 2,
+          title: 'Track Costs',
+          content: 'Enter labor costs and parts costs for each maintenance event. This helps analyze total cost of ownership and identify expensive equipment.'
+        },
+        {
+          number: 3,
+          title: 'Set Next Due Date',
+          content: 'When recording maintenance, set the next maintenance due date. This integrates with the equipment maintenance tracking system.'
+        },
+        {
+          number: 4,
+          title: 'View Analytics',
+          content: 'Switch to Analytics tab to see maintenance trends, costs by equipment, breakdown frequency, and compliance metrics. Use filters to analyze specific equipment or time periods.'
+        },
+        {
+          number: 5,
+          title: 'Import Maintenance History',
+          content: 'Click "Import" to bulk upload historical maintenance data via Excel. Download the template, fill in maintenance records, and import to build your maintenance history database.'
+        },
+        {
+          number: 6,
+          title: 'Export Reports',
+          content: 'Click "Export to Excel" to download maintenance logs for reporting or analysis. Filtered results will be exported based on your current filter selections.'
+        }
+      ]
+    },
+    {
       id: 'scheduling',
       icon: <CalendarFilled />,
       title: 'Creating a Schedule',
