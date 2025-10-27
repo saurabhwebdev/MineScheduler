@@ -19,6 +19,7 @@ const ShiftConfig = () => {
 
   useEffect(() => {
     fetchShifts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchShifts = async () => {
@@ -322,6 +323,7 @@ const ShiftConfig = () => {
         </div>
       ),
     },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [t]);
 
   return (

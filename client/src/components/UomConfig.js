@@ -19,6 +19,7 @@ const UomConfig = () => {
 
   useEffect(() => {
     fetchUoms();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchUoms = async () => {
@@ -301,6 +302,7 @@ const UomConfig = () => {
         </div>
       ),
     },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [t]);
 
   return (

@@ -63,6 +63,7 @@ const EquipmentTypeConfig = () => {
 
   useEffect(() => {
     fetchEquipmentTypes();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchEquipmentTypes = async () => {
@@ -396,6 +397,7 @@ const EquipmentTypeConfig = () => {
         </div>
       ),
     },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [t, isAdmin]);
 
   return (

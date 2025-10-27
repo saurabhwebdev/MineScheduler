@@ -24,6 +24,7 @@ const ConstantsConfig = () => {
 
   useEffect(() => {
     fetchConstants();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchConstants = async () => {
@@ -390,6 +391,7 @@ const ConstantsConfig = () => {
         </div>
       ),
     },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   ], [t, isAdmin]);
 
   return (
