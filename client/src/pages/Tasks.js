@@ -427,9 +427,9 @@ const Tasks = () => {
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
-      title: 'SEQ',
+      title: t('tasks.columns.seq'),
       key: 'seq',
       align: 'center',
       width: 60,
@@ -437,7 +437,7 @@ const Tasks = () => {
       render: (_, record) => record.order + 1,
     },
     {
-      title: 'COLOR',
+      title: t('tasks.columns.color'),
       key: 'color',
       align: 'center',
       width: 70,
@@ -455,42 +455,42 @@ const Tasks = () => {
       ),
     },
     {
-      title: 'TASK ID',
+      title: t('tasks.columns.taskId'),
       dataIndex: 'taskId',
       key: 'taskId',
       width: 100,
       fixed: 'left',
     },
     {
-      title: 'TASK NAME',
+      title: t('tasks.columns.taskName'),
       dataIndex: 'taskName',
       key: 'taskName',
       width: 180,
     },
     {
-      title: 'TYPE',
+      title: t('tasks.columns.type'),
       dataIndex: 'taskType',
       key: 'taskType',
       width: 90,
       render: (type) => (
         <Tag color={type === 'activity' ? 'blue' : 'default'}>
-          {type === 'activity' ? 'Activity' : 'Task'}
+          {type === 'activity' ? t('tasks.types.activity') : t('tasks.types.task')}
         </Tag>
       ),
       filters: [
-        { text: 'Activity', value: 'activity' },
-        { text: 'Task', value: 'task' },
+        { text: t('tasks.filters.activity'), value: 'activity' },
+        { text: t('tasks.filters.task'), value: 'task' },
       ],
       onFilter: (value, record) => record.taskType === value,
     },
     {
-      title: 'UOM',
+      title: t('tasks.columns.uom'),
       dataIndex: 'uom',
       key: 'uom',
       width: 70,
     },
     {
-      title: 'RATE',
+      title: t('tasks.columns.rate'),
       dataIndex: 'rate',
       key: 'rate',
       width: 80,
@@ -498,14 +498,14 @@ const Tasks = () => {
         record.taskType === 'activity' ? `${rate}/hr` : '-'
     },
     {
-      title: 'DURATION',
+      title: t('tasks.columns.duration'),
       dataIndex: 'taskDuration',
       key: 'taskDuration',
       width: 90,
       render: (duration) => `${duration} min`
     },
     {
-      title: 'OUTPUT',
+      title: t('tasks.columns.output'),
       dataIndex: 'calculatedOutput',
       key: 'calculatedOutput',
       width: 100,
@@ -519,7 +519,7 @@ const Tasks = () => {
       }
     },
     {
-      title: 'LIMITS',
+      title: t('tasks.columns.limits'),
       dataIndex: 'limits',
       key: 'limits',
       width: 70,
@@ -527,7 +527,7 @@ const Tasks = () => {
       render: (limits) => limits || 1
     },
     {
-      title: 'ORDER',
+      title: t('tasks.columns.order'),
       key: 'order',
       align: 'center',
       width: 80,
@@ -538,7 +538,7 @@ const Tasks = () => {
             className="icon-btn"
             onClick={() => showMoveConfirm(record, 'up')}
             disabled={index === 0}
-            title="Move up"
+            title={t('tasks.moveUp')}
           >
             <UpOutlined />
           </button>
@@ -546,7 +546,7 @@ const Tasks = () => {
             className="icon-btn"
             onClick={() => showMoveConfirm(record, 'down')}
             disabled={index === tasks.length - 1}
-            title="Move down"
+            title={t('tasks.moveDown')}
           >
             <DownOutlined />
           </button>
@@ -554,7 +554,7 @@ const Tasks = () => {
       ),
     },
     {
-      title: 'ACTIONS',
+      title: t('tasks.columns.actions'),
       key: 'actions',
       align: 'center',
       width: 80,
@@ -573,25 +573,25 @@ const Tasks = () => {
         </div>
       ),
     },
-  ];
+  ], [t, tasks.length]);
 
   return (
     <DashboardLayout
-      title="Tasks"
-      subtitle="Manage mining tasks and activities"
+      title={t('tasks.title')}
+      subtitle={t('tasks.subtitle')}
       page="tasks"
     >
       <div className="task-page">
         <div className="page-header">
           <div className="header-actions">
             <button className="btn-secondary" onClick={handleDownloadTemplate}>
-              <DownloadOutlined /> Download Template
+              <DownloadOutlined /> {t('tasks.downloadTemplate')}
             </button>
             <button className="btn-secondary" onClick={handleImportExcel}>
-              <UploadOutlined /> Import Excel
+              <UploadOutlined /> {t('tasks.importExcel')}
             </button>
             <button className="btn-primary" onClick={handleCreateTask}>
-              <PlusOutlined /> New Task
+              <PlusOutlined /> {t('tasks.newTask')}
             </button>
           </div>
         </div>
@@ -607,7 +607,7 @@ const Tasks = () => {
               pageSize: 10,
               showSizeChanger: true,
               pageSizeOptions: ['10', '15', '25', '50', '100'],
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+              showTotal: (total, range) => t('tasks.pagination.total', { start: range[0], end: range[1], total }),
             }}
             scroll={{ x: 1100 }}
           />
@@ -615,7 +615,7 @@ const Tasks = () => {
 
         {/* Create/Edit Modal */}
         <Modal
-          title={editingTask ? 'Edit Task' : 'New Task'}
+          title={editingTask ? t('tasks.editTask') : t('tasks.newTask')}
           open={isModalVisible}
           onOk={handleModalOk}
           onCancel={() => {
@@ -624,8 +624,8 @@ const Tasks = () => {
             setTaskType('task');
             setCalculatedOutput(0);
           }}
-          okText={editingTask ? 'Save' : 'Create'}
-          cancelText="Cancel"
+          okText={editingTask ? t('tasks.save') : t('tasks.create')}
+          cancelText={t('tasks.cancel')}
           width={650}
           className="simple-modal"
         >
@@ -635,37 +635,37 @@ const Tasks = () => {
             onValuesChange={handleFormValuesChange}
           >
             <Form.Item
-              label="Task ID"
+              label={t('tasks.form.taskId')}
               name="taskId"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('tasks.form.required') }]}
             >
-              <Input placeholder="Enter task ID (e.g., DR001)" />
+              <Input placeholder={t('tasks.form.taskIdPlaceholder')} />
             </Form.Item>
 
             <Form.Item
-              label="Task Name"
+              label={t('tasks.form.taskName')}
               name="taskName"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('tasks.form.required') }]}
             >
-              <Input placeholder="Enter task name" />
+              <Input placeholder={t('tasks.form.taskNamePlaceholder')} />
             </Form.Item>
 
             <Form.Item
-              label="Task Type"
+              label={t('tasks.form.taskType')}
               name="taskType"
-              rules={[{ required: true, message: 'Required' }]}
-              tooltip="Task: Simple time-based | Activity: Quantifiable with rate"
+              rules={[{ required: true, message: t('tasks.form.required') }]}
+              tooltip={t('tasks.form.taskTypeTooltip')}
             >
               <Select onChange={handleTaskTypeChange}>
-                <Option value="task">Simple Task (Time-based only)</Option>
-                <Option value="activity">Activity (Quantifiable with UOM & Rate)</Option>
+                <Option value="task">{t('tasks.form.simpleTask')}</Option>
+                <Option value="activity">{t('tasks.form.activityTask')}</Option>
               </Select>
             </Form.Item>
 
             {taskType === 'activity' && (
               <Alert
-                message="Activity Mode"
-                description="For activities, you can specify a rate (e.g., 30 m/hour for drilling). The system will automatically calculate the output based on duration."
+                message={t('tasks.form.activityModeTitle')}
+                description={t('tasks.form.activityModeDesc')}
                 type="info"
                 showIcon
                 style={{ marginBottom: '16px' }}
@@ -673,19 +673,19 @@ const Tasks = () => {
             )}
 
             <Form.Item
-              label="UOM (Unit of Measurement)"
+              label={t('tasks.form.uom')}
               name="uom"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('tasks.form.required') }]}
             >
               <Select 
-                placeholder="Select UOM" 
+                placeholder={t('tasks.form.selectUom')}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
                 }
               >
-                <Option value="NA">NA (Not Applicable)</Option>
+                <Option value="NA">{t('tasks.form.naNotApplicable')}</Option>
                 {uoms.map(uom => (
                   <Option key={uom._id} value={uom.name}>{uom.name}</Option>
                 ))}
@@ -694,33 +694,33 @@ const Tasks = () => {
 
             {taskType === 'activity' && (
               <Form.Item
-                label="Rate (per hour)"
+                label={t('tasks.form.rate')}
                 name="rate"
                 rules={[
-                  { required: true, message: 'Rate is required for activities' },
-                  { type: 'number', min: 0, message: 'Must be positive' }
+                  { required: true, message: t('tasks.form.rateRequiredForActivities') },
+                  { type: 'number', min: 0, message: t('tasks.form.mustBePositive') }
                 ]}
-                tooltip="Example: For drilling, enter 30 if the rate is 30 meters per hour"
+                tooltip={t('tasks.form.rateTooltip')}
               >
                 <InputNumber 
                   style={{ width: '100%' }}
                   min={0}
-                  placeholder="e.g., 30 (meters per hour)"
+                  placeholder={t('tasks.form.ratePlaceholder')}
                   step={0.1}
                 />
               </Form.Item>
             )}
 
             <Form.Item
-              label="Task Duration (Minutes)"
+              label={t('tasks.form.taskDuration')}
               name="taskDuration"
               rules={[
-                { required: true, message: 'Required' },
-                { type: 'number', min: 0, message: 'Must be a positive number' }
+                { required: true, message: t('tasks.form.required') },
+                { type: 'number', min: 0, message: t('tasks.form.mustBePositiveNumber') }
               ]}
             >
               <InputNumber 
-                placeholder="Enter duration in minutes" 
+                placeholder={t('tasks.form.durationPlaceholder')}
                 style={{ width: '100%' }}
                 min={0}
               />
@@ -728,13 +728,13 @@ const Tasks = () => {
 
             {taskType === 'activity' && calculatedOutput > 0 && (
               <Alert
-                message="Calculated Output"
+                message={t('tasks.form.calculatedOutputTitle')}
                 description={
                   <div>
-                    <strong>Total Output: {calculatedOutput} {getUomNumerator(form.getFieldValue('uom')) || 'units'}</strong>
+                    <strong>{t('tasks.form.totalOutput', { output: calculatedOutput, unit: getUomNumerator(form.getFieldValue('uom')) || 'units' })}</strong>
                     <br />
                     <small>
-                      Calculation: ({form.getFieldValue('taskDuration')} minutes ÷ 60 hours) × {form.getFieldValue('rate')} {form.getFieldValue('uom')}/hr = {calculatedOutput} {getUomNumerator(form.getFieldValue('uom'))}
+                      {t('tasks.form.calculation', { duration: form.getFieldValue('taskDuration'), rate: form.getFieldValue('rate'), rateUnit: form.getFieldValue('uom'), output: calculatedOutput, unit: getUomNumerator(form.getFieldValue('uom')) })}
                     </small>
                   </div>
                 }
@@ -745,9 +745,9 @@ const Tasks = () => {
             )}
 
             <Form.Item
-              label="Task Color"
+              label={t('tasks.form.taskColor')}
               name="color"
-              rules={[{ required: true, message: 'Required' }]}
+              rules={[{ required: true, message: t('tasks.form.required') }]}
               getValueFromEvent={(color) => {
                 return typeof color === 'string' ? color : color?.toHexString();
               }}
@@ -757,7 +757,7 @@ const Tasks = () => {
                 format="hex"
                 presets={[
                   {
-                    label: 'Recommended',
+                    label: t('tasks.form.recommended'),
                     colors: [
                       '#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6',
                       '#1abc9c', '#e67e22', '#34495e', '#16a085', '#27ae60',
@@ -769,22 +769,22 @@ const Tasks = () => {
             </Form.Item>
 
             <Form.Item
-              label="Formula"
+              label={t('tasks.form.formula')}
               name="formula"
             >
               <TextArea 
                 rows={2}
-                placeholder="Enter formula (optional)" 
+                placeholder={t('tasks.form.formulaPlaceholder')}
               />
             </Form.Item>
 
             <Form.Item
-              label="Limits/Equipments"
+              label={t('tasks.form.limits')}
               name="limits"
-              rules={[{ required: true, message: 'Required' }]}
-              tooltip="Select number of equipment/resources (1-10)"
+              rules={[{ required: true, message: t('tasks.form.required') }]}
+              tooltip={t('tasks.form.limitsTooltip')}
             >
-              <Select placeholder="Select number of equipment/resources">
+              <Select placeholder={t('tasks.form.limitsPlaceholder')}>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                   <Option key={num} value={num}>{num}</Option>
                 ))}
@@ -795,15 +795,15 @@ const Tasks = () => {
 
         {/* Delete Modal */}
         <Modal
-          title="Delete Task"
+          title={t('tasks.deleteModal.title')}
           open={isDeleteModalVisible}
           onOk={handleDeleteTask}
           onCancel={() => {
             setIsDeleteModalVisible(false);
             setDeletingTask(null);
           }}
-          okText="Delete"
-          cancelText="Cancel"
+          okText={t('tasks.delete')}
+          cancelText={t('tasks.cancel')}
           width={400}
           className="delete-modal"
           okButtonProps={{ danger: true }}
@@ -812,10 +812,10 @@ const Tasks = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to delete <strong>{deletingTask?.taskName}</strong>?
+                {t('tasks.deleteModal.message')} <strong>{deletingTask?.taskName}</strong>?
               </p>
               <p className="delete-warning">
-                This action cannot be undone.
+                {t('tasks.deleteModal.warning')}
               </p>
             </div>
           </div>
@@ -823,7 +823,7 @@ const Tasks = () => {
 
         {/* Move Modal */}
         <Modal
-          title="Move Task"
+          title={t('tasks.moveModal.title')}
           open={isMoveModalVisible}
           onOk={handleMoveTask}
           onCancel={() => {
@@ -831,8 +831,8 @@ const Tasks = () => {
             setMovingTask(null);
             setMoveDirection(null);
           }}
-          okText="Yes, Move"
-          cancelText="Cancel"
+          okText={t('tasks.yesMove')}
+          cancelText={t('tasks.cancel')}
           width={450}
           className="delete-modal"
         >
@@ -840,16 +840,16 @@ const Tasks = () => {
             <ExclamationCircleOutlined className="delete-icon" />
             <div>
               <p className="delete-message">
-                Are you sure you want to move <strong>{movingTask?.taskName}</strong>?
+                {t('tasks.moveModal.message')} <strong>{movingTask?.taskName}</strong>?
               </p>
               <div className="move-details">
                 <div className="position-info">
-                  <span className="position-label">Current Position:</span>
+                  <span className="position-label">{t('tasks.moveModal.currentPosition')}</span>
                   <span className="position-value">#{movingTask?.order + 1}</span>
                 </div>
                 <div className="arrow-icon">→</div>
                 <div className="position-info">
-                  <span className="position-label">New Position:</span>
+                  <span className="position-label">{t('tasks.moveModal.newPosition')}</span>
                   <span className="position-value">
                     #{moveDirection === 'up' ? movingTask?.order : movingTask?.order + 2}
                   </span>
@@ -861,7 +861,7 @@ const Tasks = () => {
 
         {/* Import Modal */}
         <Modal
-          title="Import Tasks from Excel"
+          title={t('tasks.importModal.title')}
           open={isImportModalVisible}
           onOk={handleImportSubmit}
           onCancel={() => {
@@ -869,29 +869,29 @@ const Tasks = () => {
             setImportFile(null);
             setImportResults(null);
           }}
-          okText={importing ? 'Importing...' : 'Import'}
-          cancelText="Close"
+          okText={importing ? t('tasks.importing') : t('tasks.import')}
+          cancelText={t('tasks.close')}
           width={600}
           className="simple-modal"
           confirmLoading={importing}
         >
           <div style={{ marginBottom: '16px' }}>
             <Alert
-              message="Excel Format Instructions"
+              message={t('tasks.importModal.formatInstructions')}
               description={
                 <div>
-                  <p style={{ marginBottom: '8px' }}>The Excel file should contain the following columns:</p>
+                  <p style={{ marginBottom: '8px' }}>{t('tasks.importModal.columnsDesc')}</p>
                   <ul style={{ marginLeft: '20px', marginBottom: '8px' }}>
-                    <li><strong>taskId</strong> - Unique task identifier (required)</li>
-                    <li><strong>taskName</strong> - Name of the task (required)</li>
-                    <li><strong>taskType</strong> - "task" or "activity" (required)</li>
-                    <li><strong>uom</strong> - Unit of measurement</li>
-                    <li><strong>rate</strong> - Rate per hour (required for activities)</li>
-                    <li><strong>taskDuration</strong> - Duration in minutes (required)</li>
-                    <li><strong>formula</strong> - Formula (optional)</li>
-                    <li><strong>limits</strong> - Limits/Equipments (optional)</li>
+                    <li>{t('tasks.importModal.taskIdCol')}</li>
+                    <li>{t('tasks.importModal.taskNameCol')}</li>
+                    <li>{t('tasks.importModal.taskTypeCol')}</li>
+                    <li>{t('tasks.importModal.uomCol')}</li>
+                    <li>{t('tasks.importModal.rateCol')}</li>
+                    <li>{t('tasks.importModal.taskDurationCol')}</li>
+                    <li>{t('tasks.importModal.formulaCol')}</li>
+                    <li>{t('tasks.importModal.limitsCol')}</li>
                   </ul>
-                  <p style={{ marginBottom: 0 }}>Download the template below to see the format.</p>
+                  <p style={{ marginBottom: 0 }}>{t('tasks.importModal.downloadTemplate')}</p>
                 </div>
               }
               type="info"
@@ -907,23 +907,23 @@ const Tasks = () => {
             fileList={importFile ? [importFile] : []}
           >
             <button className="btn-secondary" style={{ width: '100%', marginBottom: '12px' }}>
-              <UploadOutlined /> Select Excel File
+              <UploadOutlined /> {t('tasks.importModal.selectFile')}
             </button>
           </Upload>
 
           {importResults && (
             <div style={{ marginTop: '16px' }}>
               <Alert
-                message="Import Results"
+                message={t('tasks.importModal.importResults')}
                 description={
                   <div>
-                    <p><strong>Successful:</strong> {importResults.success.length} tasks created</p>
-                    <p><strong>Skipped:</strong> {importResults.skipped.length} tasks (already exist or invalid)</p>
-                    <p><strong>Failed:</strong> {importResults.failed.length} tasks (errors)</p>
+                    <p><strong>{t('tasks.importModal.successful')}</strong> {importResults.success.length} {t('tasks.importModal.successfulDesc')}</p>
+                    <p><strong>{t('tasks.importModal.skipped')}</strong> {importResults.skipped.length} {t('tasks.importModal.skippedDesc')}</p>
+                    <p><strong>{t('tasks.importModal.failed')}</strong> {importResults.failed.length} {t('tasks.importModal.failedDesc')}</p>
                     
                     {importResults.skipped.length > 0 && (
                       <div style={{ marginTop: '12px' }}>
-                        <strong>Skipped Items:</strong>
+                        <strong>{t('tasks.importModal.skippedItems')}</strong>
                         <ul style={{ marginLeft: '20px', fontSize: '12px' }}>
                           {importResults.skipped.slice(0, 5).map((item, index) => (
                             <li key={index}>
@@ -931,7 +931,7 @@ const Tasks = () => {
                             </li>
                           ))}
                           {importResults.skipped.length > 5 && (
-                            <li>... and {importResults.skipped.length - 5} more</li>
+                            <li>{t('tasks.importModal.andMore', { count: importResults.skipped.length - 5 })}</li>
                           )}
                         </ul>
                       </div>
@@ -939,7 +939,7 @@ const Tasks = () => {
 
                     {importResults.failed.length > 0 && (
                       <div style={{ marginTop: '12px' }}>
-                        <strong>Failed Items:</strong>
+                        <strong>{t('tasks.importModal.failedItems')}</strong>
                         <ul style={{ marginLeft: '20px', fontSize: '12px' }}>
                           {importResults.failed.slice(0, 5).map((item, index) => (
                             <li key={index}>
@@ -947,7 +947,7 @@ const Tasks = () => {
                             </li>
                           ))}
                           {importResults.failed.length > 5 && (
-                            <li>... and {importResults.failed.length - 5} more</li>
+                            <li>{t('tasks.importModal.andMore', { count: importResults.failed.length - 5 })}</li>
                           )}
                         </ul>
                       </div>

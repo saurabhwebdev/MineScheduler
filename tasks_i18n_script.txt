@@ -1,0 +1,9 @@
+This file contains the i18n update instructions for Tasks.js modals that need to be applied:
+
+1. Modal title: 'Edit Task' / 'New Task' → editingTask ? t('tasks.editTask') : t('tasks.newTask')
+2. okText: 'Save' / 'Create' → editingTask ? t('tasks.save') : t('tasks.create')
+3. cancelText: 'Cancel' → t('tasks.cancel')
+4. Form labels and placeholders: All to use t('tasks.form.*')
+5. Delete modal: t('tasks.deleteModal.*')
+6. Move modal: t('tasks.moveModal.*')
+7. Import modal: t('tasks.importModal.*')
