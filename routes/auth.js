@@ -83,7 +83,7 @@ router.post('/login', [
 
   try {
     // Check if user exists
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+password').populate('customRole', 'name permissions');
     if (!user) {
       return res.status(401).json({ 
         status: 'error',
@@ -112,6 +112,7 @@ router.post('/login', [
           name: user.name,
           email: user.email,
           role: user.role,
+          customRole: user.customRole,
           mustResetPassword: user.mustResetPassword
         }
       }

@@ -29,8 +29,10 @@ exports.protect = async (req, res, next) => {
       });
     }
 
-    // Get user from token
-    req.user = await User.findById(decoded.id).select('-password');
+    // Get user from token and populate customRole
+    req.user = await User.findById(decoded.id)
+      .select('-password')
+      .populate('customRole', 'name permissions');
     
     if (!req.user) {
       return res.status(404).json({

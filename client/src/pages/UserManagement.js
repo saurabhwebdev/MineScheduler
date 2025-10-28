@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Form, Input, Select, notification } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Table, Modal, Form, Input, Select, notification, Button } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, SafetyOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
+import RoleManagement from '../components/RoleManagement';
 import config from '../config/config';
 import './UserManagement.css';
 
@@ -17,9 +18,12 @@ const UserManagement = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [deletingUser, setDeletingUser] = useState(null);
   const [form] = Form.useForm();
+  const [roleManagementVisible, setRoleManagementVisible] = useState(false);
+  const [customRoles, setCustomRoles] = useState([]);
 
   useEffect(() => {
     fetchUsers();
+    fetchCustomRoles();
   }, []);
 
   const fetchUsers = async () => {
@@ -52,6 +56,24 @@ const UserManagement = () => {
     }
   };
 
+  const fetchCustomRoles = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/roles`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.status === 'success') {
+        setCustomRoles(data.data.roles);
+      }
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+    }
+  };
+
   const handleCreateUser = () => {
     setEditingUser(null);
     form.resetFields();
@@ -60,7 +82,9 @@ const UserManagement = () => {
 
   const handleEditRole = (user) => {
     setEditingUser(user);
-    form.setFieldsValue({ role: user.role });
+    // Set the role value - use customRole name if exists, otherwise use system role
+    const roleValue = user.customRole ? user.customRole.name : user.role;
+    form.setFieldsValue({ role: roleValue });
     setIsModalVisible(true);
   };
 
@@ -195,11 +219,17 @@ const UserManagement = () => {
       title: t('users.columns.role'),
       dataIndex: 'role',
       key: 'role',
-      render: (role) => (
-        <span className={`role-badge ${role}`}>
-          {role === 'admin' ? t('users.roles.admin') : t('users.roles.user')}
-        </span>
-      ),
+      render: (role, record) => {
+        // If user has customRole, display that instead
+        const displayRole = record.customRole ? record.customRole.name : role;
+        const roleClass = record.customRole ? 'custom' : role;
+        
+        return (
+          <span className={`role-badge ${roleClass}`}>
+            {record.customRole ? displayRole : (role === 'admin' ? t('users.roles.admin') : t('users.roles.user'))}
+          </span>
+        );
+      },
       filters: [
         { text: t('users.roles.admin'), value: 'admin' },
         { text: t('users.roles.user'), value: 'user' },
@@ -249,9 +279,18 @@ const UserManagement = () => {
     >
       <div className="user-page">
         <div className="page-header">
-          <button className="btn-primary" onClick={handleCreateUser}>
-            <PlusOutlined /> {t('users.newUser')}
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button className="btn-primary" onClick={handleCreateUser}>
+              <PlusOutlined /> {t('users.newUser')}
+            </button>
+            <Button
+              icon={<SafetyOutlined />}
+              onClick={() => setRoleManagementVisible(true)}
+              style={{ height: '36px' }}
+            >
+              Manage Roles
+            </Button>
+          </div>
         </div>
 
         <div className="table-container">
@@ -323,8 +362,17 @@ const UserManagement = () => {
               initialValue="user"
             >
               <Select placeholder={t('users.modal.placeholders.role')}>
-                <Option value="user">{t('users.roles.user')}</Option>
-                <Option value="admin">{t('users.roles.admin')}</Option>
+                <Select.OptGroup label="System Roles">
+                  <Option value="user">{t('users.roles.user')}</Option>
+                  <Option value="admin">{t('users.roles.admin')}</Option>
+                </Select.OptGroup>
+                {customRoles.length > 0 && (
+                  <Select.OptGroup label="Custom Roles">
+                    {customRoles.map(role => (
+                      <Option key={role._id} value={role.name}>{role.name}</Option>
+                    ))}
+                  </Select.OptGroup>
+                )}
               </Select>
             </Form.Item>
           </Form>
@@ -356,6 +404,14 @@ const UserManagement = () => {
             </div>
           </div>
         </Modal>
+
+        <RoleManagement 
+          visible={roleManagementVisible} 
+          onClose={() => {
+            setRoleManagementVisible(false);
+            fetchCustomRoles(); // Refresh roles after closing
+          }} 
+        />
       </div>
     </DashboardLayout>
   );

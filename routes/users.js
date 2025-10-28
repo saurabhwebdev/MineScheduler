@@ -9,7 +9,9 @@ const { logAudit, getClientIp, getUserAgent } = require('../utils/auditLogger');
 // @access  Private/Admin
 router.get('/', protect, authorize('admin'), async (req, res) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find()
+      .select('-password')
+      .populate('customRole', 'name permissions');
     
     res.json({
       status: 'success',
@@ -32,7 +34,9 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
 // @access  Private
 router.get('/:id', protect, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(req.params.id)
+      .select('-password')
+      .populate('customRole', 'name permissions');
     
     if (!user) {
       return res.status(404).json({ 
@@ -190,10 +194,10 @@ router.put('/:id/role', protect, authorize('admin'), async (req, res) => {
   try {
     const { role } = req.body;
 
-    if (!role || !['user', 'admin'].includes(role)) {
+    if (!role) {
       return res.status(400).json({ 
         status: 'error',
-        message: 'Invalid role. Must be user or admin' 
+        message: 'Role is required' 
       });
     }
 
@@ -206,11 +210,35 @@ router.put('/:id/role', protect, authorize('admin'), async (req, res) => {
       });
     }
 
+    const updateData = {};
+    
+    // Check if it's a system role (user/admin) or custom role
+    if (['user', 'admin'].includes(role)) {
+      // System role - update role field, clear customRole
+      updateData.role = role;
+      updateData.customRole = null;
+    } else {
+      // Custom role - find the role and update customRole reference
+      const Role = require('../models/Role');
+      const customRole = await Role.findOne({ name: role });
+      
+      if (!customRole) {
+        return res.status(400).json({ 
+          status: 'error',
+          message: 'Invalid custom role' 
+        });
+      }
+      
+      // Set customRole reference and keep role as 'user' for backward compatibility
+      updateData.customRole = customRole._id;
+      updateData.role = 'user';
+    }
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { role },
+      updateData,
       { new: true, runValidators: true }
-    ).select('-password');
+    ).select('-password').populate('customRole', 'name permissions');
 
     // Log audit for role change
     await logAudit({

@@ -211,8 +211,8 @@ const Profile = () => {
             </div>
           </div>
           <div className="profile-header-right">
-            <span className={`role-badge ${currentUser?.role}`}>
-              {currentUser?.role === 'admin' ? 'Admin' : 'User'}
+            <span className={`role-badge ${currentUser?.customRole ? 'custom' : currentUser?.role}`}>
+              {currentUser?.customRole ? currentUser.customRole.name : (currentUser?.role === 'admin' ? 'Admin' : 'User')}
             </span>
           </div>
         </div>

@@ -25,7 +25,9 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
         <div className="dropdown-details">
           <div className="dropdown-name">{user?.name || 'User'}</div>
           <div className="dropdown-email">{user?.email || ''}</div>
-          <div className="dropdown-role">{user?.role === 'admin' ? 'Administrator' : 'User'}</div>
+          <div className="dropdown-role">
+            {user?.customRole ? user.customRole.name : (user?.role === 'admin' ? 'Administrator' : 'User')}
+          </div>
         </div>
       </div>
       <div className="dropdown-divider"></div>

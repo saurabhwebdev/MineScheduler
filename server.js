@@ -54,6 +54,7 @@ app.use(passport.initialize());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/auth', require('./routes/oauth')); // OAuth routes
 app.use('/api/users', require('./routes/users'));
+app.use('/api/roles', require('./routes/roles'));
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/uoms', require('./routes/uoms'));
 app.use('/api/delays', require('./routes/delays'));

@@ -92,6 +92,11 @@
   color: #237804;
 }
 
+.role-badge.custom {
+  background-color: #fff7e6;
+  color: #d46b08;
+}
+
 /* Action Buttons */
 .action-buttons {
   display: flex;

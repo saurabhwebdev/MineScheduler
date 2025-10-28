@@ -47,12 +47,24 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
     { key: 'audit', icon: <AuditOutlined />, label: 'Audit', path: '/audit', adminOnly: true },
   ];
 
-  // Filter menu items based on user role
+  // Filter menu items based on user role and permissions
   const visibleMenuItems = menuItems.filter(item => {
-    if (item.adminOnly) {
-      return user?.role === 'admin';
+    // Admin users see everything
+    if (user?.role === 'admin') {
+      return true;
     }
-    return true;
+    
+    // Regular users without custom role see non-admin items
+    if (!user?.customRole) {
+      return !item.adminOnly;
+    }
+    
+    // Users with custom role - check permissions
+    if (user?.customRole && user.customRole.permissions) {
+      return user.customRole.permissions.includes(item.path);
+    }
+    
+    return false;
   });
 
   const isActive = (path) => location.pathname === path;
