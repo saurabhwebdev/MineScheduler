@@ -695,15 +695,19 @@ const Schedule = () => {
                     {scheduleData && gridHours === 48 && (
                       <Tooltip title={t('schedule.fullscreenTooltip', 'View schedule in fullscreen mode (no scroll)')}>
                         <Button
-                          size="large"
                           icon={<FullscreenOutlined />}
                           onClick={handleFullscreenToggle}
                           style={{
                             background: '#13c2c2',
                             borderColor: '#13c2c2',
                             color: '#ffffff',
-                            width: '46px',
-                            padding: '0'
+                            minWidth: '36px',
+                            width: '36px',
+                            height: '36px',
+                            padding: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                           }}
                         />
                       </Tooltip>
