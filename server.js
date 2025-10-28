@@ -14,12 +14,10 @@ connectDB();
 
 // Seed default data on startup
 const { seedDefaultConstants } = require('./controllers/constantsController');
-const seedUoms = require('./utils/seedUoms');
 
 // Initialize default data after DB connection
 setTimeout(async () => {
   try {
-    await seedUoms();
     await seedDefaultConstants(null); // null userId for system-seeded constants
     console.log('Default data initialization complete');
   } catch (error) {
