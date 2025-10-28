@@ -134,9 +134,18 @@
   padding-right: 4px !important;
   white-space: normal;
   word-wrap: break-word;
+  overflow: hidden;
   line-height: 1.2;
   font-size: 10px;
   border-right: 2px solid #e5e7eb;
+}
+
+/* Wider site column for 48-hour grid */
+.schedule-grid[data-grid-hours="48"] .site-col,
+.schedule-grid[data-grid-hours="48"] .site-cell {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
 }
 
 .hour-col {

@@ -209,7 +209,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   return (
     <div className="schedule-grid-wrapper">
       <div className="schedule-grid-scroll">
-        <table className="schedule-grid">
+        <table className="schedule-grid" data-grid-hours={gridHours}>
           <thead>
             {/* Shift Row */}
             <tr className="shift-row">
