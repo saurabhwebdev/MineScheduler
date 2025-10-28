@@ -701,11 +701,11 @@ const Schedule = () => {
                           style={{
                             background: '#13c2c2',
                             borderColor: '#13c2c2',
-                            color: '#ffffff'
+                            color: '#ffffff',
+                            width: '46px',
+                            padding: '0'
                           }}
-                        >
-                          {t('schedule.fullscreen', 'Fullscreen')}
-                        </Button>
+                        />
                       </Tooltip>
                     )}
 
