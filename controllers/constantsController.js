@@ -2,7 +2,7 @@ const Constant = require('../models/Constant');
 const { logAudit, getClientIp, getUserAgent } = require('../utils/auditLogger');
 
 // Seed default constants if none exist
-const seedDefaultConstants = async (userId) => {
+exports.seedDefaultConstants = async (userId) => {
   try {
     const count = await Constant.countDocuments();
     if (count === 0) {
@@ -52,9 +52,6 @@ const seedDefaultConstants = async (userId) => {
 // @access  Private
 exports.getConstants = async (req, res) => {
   try {
-    // Seed defaults if none exist
-    await seedDefaultConstants(req.user.id);
-
     const constants = await Constant.find()
       .populate('createdBy', 'name email')
       .populate('updatedBy', 'name email')

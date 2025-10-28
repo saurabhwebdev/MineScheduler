@@ -12,6 +12,21 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
+// Seed default data on startup
+const { seedDefaultConstants } = require('./controllers/constantsController');
+const seedUoms = require('./utils/seedUoms');
+
+// Initialize default data after DB connection
+setTimeout(async () => {
+  try {
+    await seedUoms();
+    await seedDefaultConstants(null); // null userId for system-seeded constants
+    console.log('Default data initialization complete');
+  } catch (error) {
+    console.error('Error seeding default data:', error);
+  }
+}, 1000);
+
 // Middleware
 const allowedOrigins = [
   'http://localhost:3000',
