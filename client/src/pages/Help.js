@@ -44,10 +44,19 @@ const Help = () => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  const handleVideoClick = (e, sectionTitle) => {
+  const handleVideoClick = (e, sectionTitle, sectionId) => {
     e.stopPropagation();
-    setSelectedVideoSection(sectionTitle);
+    setSelectedVideoSection({ title: sectionTitle, id: sectionId });
     setVideoModalVisible(true);
+  };
+
+  // Video mapping for each section
+  const getVideoUrl = (sectionId) => {
+    const videoMap = {
+      'getting-started': '/videos/help-tutorials/Login.mp4',
+      // Add more video mappings here as needed
+    };
+    return videoMap[sectionId] || null;
   };
 
   // Icon mapping for sections
@@ -463,7 +472,7 @@ const Help = () => {
                 <div className="help-section-right">
                   <button 
                     className="help-video-btn"
-                    onClick={(e) => handleVideoClick(e, section.title)}
+                    onClick={(e) => handleVideoClick(e, section.title, section.id)}
                     title="Watch video tutorial"
                   >
                     <VideoCameraOutlined />
@@ -531,7 +540,7 @@ const Help = () => {
         title={
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <VideoCameraOutlined style={{ fontSize: '20px', color: '#062d54' }} />
-            <span>{selectedVideoSection} - Video Tutorial</span>
+            <span>{selectedVideoSection?.title} - Video Tutorial</span>
           </div>
         }
         open={videoModalVisible}
@@ -542,14 +551,25 @@ const Help = () => {
         className="help-video-modal"
       >
         <div className="help-video-container">
-          <div className="help-video-placeholder">
-            <VideoCameraOutlined style={{ fontSize: '64px', color: '#8c8c8c' }} />
-            <h3>Video Tutorial Coming Soon</h3>
-            <p>We're preparing detailed video tutorials for each section.</p>
-            <p style={{ fontSize: '13px', color: '#8c8c8c', marginTop: '16px' }}>
-              Video for: <strong>{selectedVideoSection}</strong>
-            </p>
-          </div>
+          {selectedVideoSection && getVideoUrl(selectedVideoSection.id) ? (
+            <video 
+              controls 
+              style={{ width: '100%', maxHeight: '500px' }}
+              key={selectedVideoSection.id}
+            >
+              <source src={getVideoUrl(selectedVideoSection.id)} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <div className="help-video-placeholder">
+              <VideoCameraOutlined style={{ fontSize: '64px', color: '#8c8c8c' }} />
+              <h3>Video Tutorial Coming Soon</h3>
+              <p>We're preparing detailed video tutorials for each section.</p>
+              <p style={{ fontSize: '13px', color: '#8c8c8c', marginTop: '16px' }}>
+                Video for: <strong>{selectedVideoSection?.title}</strong>
+              </p>
+            </div>
+          )}
         </div>
       </Modal>
     </DashboardLayout>
