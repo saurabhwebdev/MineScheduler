@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, AlertTriangle } from 'lucide-react';
+import config from '../config/config';
 import '../styles/PasswordResetModal.css';
 
 const PasswordResetModal = ({ onSuccess }) => {
@@ -32,7 +33,7 @@ const PasswordResetModal = ({ onSuccess }) => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/users/reset-password', {
+      const response = await fetch(`${config.apiUrl}/users/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
