@@ -75,15 +75,53 @@ export const usersHelp = {
       ]
     },
     {
+      title: 'Role Management (Admin Only)',
+      content: 'Administrators can create and manage custom roles to define granular permissions for users. This provides flexibility in access control beyond the default Admin and User roles.'
+    },
+    {
+      title: 'Creating Roles',
+      items: [
+        {
+          subtitle: 'Role Name',
+          description: 'Unique identifier for the role (e.g., "Supervisor", "Viewer", "Data Entry").'
+        },
+        {
+          subtitle: 'Description',
+          description: 'Optional description explaining the purpose and scope of the role.'
+        },
+        {
+          subtitle: 'Permissions',
+          description: 'Define specific permissions for: Tasks, Delays, Equipment, Sites, Charts, Reports, Users, Settings, Audit Logs. Each module can have Read, Create, Update, and Delete permissions.'
+        }
+      ]
+    },
+    {
+      title: 'Managing Roles',
+      items: [
+        {
+          subtitle: 'Edit Role',
+          description: 'Update role name, description, and permissions. Changes affect all users assigned to this role immediately.'
+        },
+        {
+          subtitle: 'Delete Role',
+          description: 'Remove custom roles from the system. Cannot delete default roles (Admin, User). Users with deleted roles may need to be reassigned.'
+        },
+        {
+          subtitle: 'View Roles',
+          description: 'Browse all roles and their permissions. See which users are assigned to each role.'
+        }
+      ]
+    },
+    {
       title: 'Security & Permissions',
       items: [
         {
           subtitle: 'Access Control',
-          description: 'Users can only modify their own profile. Administrators can manage all user accounts.'
+          description: 'Users can only modify their own profile. Administrators can manage all user accounts and roles.'
         },
         {
           subtitle: 'Audit Trail',
-          description: 'All user-related actions are logged including: User creation and deletion, Role changes, Profile updates, Login activities.'
+          description: 'All user-related actions are logged including: User creation and deletion, Role changes and assignments, Profile updates, Login activities.'
         },
         {
           subtitle: 'Data Privacy',

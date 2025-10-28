@@ -22,6 +22,9 @@ export const availableRoutes = [
 export const hasRoutePermission = (user, routePath) => {
   if (!user) return false;
 
+  // Profile page is accessible to all authenticated users
+  if (routePath === '/profile') return true;
+
   // Admin users have access to everything
   if (user.role === 'admin') return true;
 
