@@ -12,6 +12,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   const [selectedSite, setSelectedSite] = useState(null);
   const [globalDelayModalVisible, setGlobalDelayModalVisible] = useState(false);
   const [selectedHourForGlobalDelay, setSelectedHourForGlobalDelay] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
@@ -25,6 +26,54 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     const interval = setInterval(updateCurrentHour, 60000); // Update every minute
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle fullscreen changes and apply scaling
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFS = !!document.fullscreenElement;
+      setIsFullscreen(isFS);
+      
+      if (isFS) {
+        // Wait for fullscreen transition, then calculate scale
+        setTimeout(() => {
+          const table = document.querySelector('.schedule-grid');
+          const wrapper = document.querySelector('.schedule-grid-wrapper');
+          
+          if (table && wrapper) {
+            const tableWidth = table.offsetWidth;
+            const tableHeight = table.offsetHeight;
+            const viewportWidth = window.innerWidth - 32; // padding
+            const viewportHeight = window.innerHeight - 32; // padding
+            
+            // Calculate scale to fit both width and height
+            const scaleX = viewportWidth / tableWidth;
+            const scaleY = viewportHeight / tableHeight;
+            const scale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
+            
+            table.style.transform = `scale(${scale})`;
+          }
+        }, 100);
+      } else {
+        // Reset scale when exiting fullscreen
+        const table = document.querySelector('.schedule-grid');
+        if (table) {
+          table.style.transform = '';
+        }
+      }
+    };
+    
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+    
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
   }, []);
 
   // Calculate shift for a given hour based on shifts from backend
