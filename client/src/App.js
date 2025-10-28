@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { notification } from 'antd';
+import { hasRoutePermission, getFirstPermittedRoute } from './utils/routePermissions';
 import './i18n'; // Initialize i18n
 import './App.css';
 import Login from './pages/Login';
@@ -21,9 +22,31 @@ import PasswordResetModal from './components/PasswordResetModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
+  
   if (loading) return null;
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  // Check if user has permission to access this route
+  const currentPath = location.pathname;
+  const hasPermission = hasRoutePermission(user, currentPath);
+  
+  if (!hasPermission) {
+    notification.warning({
+      message: 'Access Denied',
+      description: 'You do not have permission to access this page',
+      duration: 3,
+    });
+    // Redirect to first permitted route
+    const firstRoute = getFirstPermittedRoute(user);
+    return <Navigate to={firstRoute} replace />;
+  }
+  
+  return children;
 };
 
 const AdminRoute = ({ children }) => {
@@ -38,8 +61,11 @@ const AdminRoute = ({ children }) => {
     notification.error({
       message: 'Access Denied',
       description: 'You do not have permission to access this page',
+      duration: 3,
     });
-    return <Navigate to="/dashboard" replace />;
+    // Redirect to first permitted route instead of hardcoded dashboard
+    const firstRoute = getFirstPermittedRoute(user);
+    return <Navigate to={firstRoute} replace />;
   }
   
   return children;

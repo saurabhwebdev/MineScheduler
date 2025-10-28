@@ -4,6 +4,7 @@ import { Form, Input, Button, Typography, notification, Divider } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { getFirstPermittedRoute } from '../utils/routePermissions';
 import config from '../config/config';
 import './Auth.css';
 
@@ -49,7 +50,10 @@ const Login = () => {
         const { token, user } = data.data;
         login(user, token);
         notification.success({ message: 'Login successful!', description: 'Welcome back to Mine Scheduler' });
-        navigate('/dashboard');
+        
+        // Redirect to first permitted route based on user's permissions
+        const firstRoute = getFirstPermittedRoute(user);
+        navigate(firstRoute);
       } else {
         notification.error({ message: 'Login Failed', description: data.message || 'Invalid credentials' });
       }
