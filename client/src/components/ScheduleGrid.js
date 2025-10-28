@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
+import { FullscreenExitOutlined } from '@ant-design/icons';
 import ScheduleCell from './ScheduleCell';
 import DelayModal from './DelayModal';
 import './ScheduleGrid.css';
@@ -206,8 +207,33 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     setSelectedHourForGlobalDelay(null);
   };
 
+  const handleExitFullscreen = async () => {
+    try {
+      if (document.exitFullscreen) {
+        await document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        await document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        await document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        await document.msExitFullscreen();
+      }
+    } catch (error) {
+      console.error('Error exiting fullscreen:', error);
+    }
+  };
+
   return (
     <div className="schedule-grid-wrapper">
+      {/* Exit Fullscreen Button (only visible in fullscreen mode) */}
+      <Button
+        className="fullscreen-exit-btn"
+        icon={<FullscreenExitOutlined />}
+        onClick={handleExitFullscreen}
+        size="large"
+      >
+        Exit Fullscreen (ESC)
+      </Button>
       <div className="schedule-grid-scroll">
         <table className="schedule-grid" data-grid-hours={gridHours}>
           <thead>

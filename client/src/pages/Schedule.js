@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, notification, Radio, Spin, Tag, Space, Modal, Collapse, Tooltip } from 'antd';
-import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined, DownOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
@@ -17,6 +17,7 @@ const Schedule = () => {
   const [generatedAt, setGeneratedAt] = useState(null);
   const [loadingLatest, setLoadingLatest] = useState(true);
   const [controlsCollapsed, setControlsCollapsed] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Fetch latest schedule on mount
   useEffect(() => {
@@ -43,6 +44,25 @@ const Schedule = () => {
       console.error('Error saving delayed slots:', error);
     }
   }, [delayedSlots]);
+
+  // Listen for fullscreen changes (ESC key, etc.)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+    
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, []);
 
   const fetchLatestSchedule = async () => {
     setLoadingLatest(true);
@@ -470,6 +490,44 @@ const Schedule = () => {
     setGridHours(loadedGridHours);
   };
 
+  const handleFullscreenToggle = async () => {
+    const gridWrapper = document.querySelector('.schedule-grid-wrapper');
+    
+    if (!gridWrapper) return;
+    
+    try {
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        if (gridWrapper.requestFullscreen) {
+          await gridWrapper.requestFullscreen();
+        } else if (gridWrapper.webkitRequestFullscreen) {
+          await gridWrapper.webkitRequestFullscreen();
+        } else if (gridWrapper.mozRequestFullScreen) {
+          await gridWrapper.mozRequestFullScreen();
+        } else if (gridWrapper.msRequestFullscreen) {
+          await gridWrapper.msRequestFullscreen();
+        }
+      } else {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          await document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          await document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          await document.msExitFullscreen();
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling fullscreen:', error);
+      notification.error({
+        message: t('schedule.messages.fullscreenError'),
+        description: t('schedule.messages.fullscreenErrorDesc'),
+      });
+    }
+  };
+
   const handleDownloadExcel = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -633,6 +691,23 @@ const Schedule = () => {
                     >
                       {t('schedule.loadSnapshot')}
                     </Button>
+
+                    {scheduleData && gridHours === 48 && (
+                      <Tooltip title={t('schedule.fullscreenTooltip', 'View schedule in fullscreen mode (no scroll)')}>
+                        <Button
+                          size="large"
+                          icon={<FullscreenOutlined />}
+                          onClick={handleFullscreenToggle}
+                          style={{
+                            background: '#13c2c2',
+                            borderColor: '#13c2c2',
+                            color: '#ffffff'
+                          }}
+                        >
+                          {t('schedule.fullscreen', 'Fullscreen')}
+                        </Button>
+                      </Tooltip>
+                    )}
 
                     {scheduleData && delayedSlots.length > 0 && (
                       <Button

@@ -7,6 +7,130 @@
   overflow: hidden;
 }
 
+/* Fullscreen Mode */
+.schedule-grid-wrapper:fullscreen {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.schedule-grid-wrapper:fullscreen .schedule-grid-scroll {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-grid-wrapper:fullscreen .schedule-grid {
+  transform-origin: center center;
+  /* Auto-scale to fit screen - will be calculated based on content */
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Webkit fullscreen support */
+.schedule-grid-wrapper:-webkit-full-screen {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.schedule-grid-wrapper:-webkit-full-screen .schedule-grid-scroll {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-grid-wrapper:-webkit-full-screen .schedule-grid {
+  transform-origin: center center;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Mozilla fullscreen support */
+.schedule-grid-wrapper:-moz-full-screen {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.schedule-grid-wrapper:-moz-full-screen .schedule-grid-scroll {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-grid-wrapper:-moz-full-screen .schedule-grid {
+  transform-origin: center center;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* MS fullscreen support */
+.schedule-grid-wrapper:-ms-fullscreen {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.schedule-grid-wrapper:-ms-fullscreen .schedule-grid-scroll {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-grid-wrapper:-ms-fullscreen .schedule-grid {
+  transform-origin: center center;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Exit fullscreen button overlay */
+.fullscreen-exit-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.8) !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  height: auto;
+  display: none;
+}
+
+.schedule-grid-wrapper:fullscreen .fullscreen-exit-btn,
+.schedule-grid-wrapper:-webkit-full-screen .fullscreen-exit-btn,
+.schedule-grid-wrapper:-moz-full-screen .fullscreen-exit-btn,
+.schedule-grid-wrapper:-ms-fullscreen .fullscreen-exit-btn {
+  display: inline-flex;
+}
+
 .schedule-grid-scroll {
   overflow-x: auto;
   overflow-y: visible;
