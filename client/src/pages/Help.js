@@ -54,6 +54,7 @@ const Help = () => {
   const getVideoUrl = (sectionId) => {
     const videoMap = {
       'getting-started': '/videos/help-tutorials/Login.mp4',
+      'setup': '/videos/help-tutorials/InitialConfiguration.mp4',
       // Add more video mappings here as needed
     };
     return videoMap[sectionId] || null;
