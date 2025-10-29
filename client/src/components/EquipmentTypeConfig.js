@@ -495,7 +495,7 @@ const EquipmentTypeConfig = () => {
             className="btn-danger" 
             onClick={handleBulkDelete} 
             disabled={!isAdmin}
-            style={{ background: '#ff4d4f', color: 'white', opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
+            style={{ opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
           >
             <DeleteOutlined /> {t('settings.equipmentTypeConfig.deleteSelected', `Delete Selected (${selectedRowKeys.length}`)}
           </button>
