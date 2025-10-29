@@ -569,8 +569,9 @@ const Schedule = () => {
       };
     }
 
-    const { grid, siteActive } = scheduleData;
+    const { grid, siteActive, taskDurations } = scheduleData;
     const allSites = Object.keys(grid);
+    const currentGridHours = scheduleData.gridHours || gridHours;
     
     // Filter only active sites
     const activeSiteIds = allSites.filter(siteId => siteActive[siteId]);
@@ -586,36 +587,67 @@ const Schedule = () => {
     let totalOre = 0;
     let totalWorkHours = 0;
 
-    // Calculate metrics for active sites
+    // Track which sites have scheduled work in the current grid
+    const sitesWithWork = new Set();
+
+    // Calculate metrics for active sites based on what's actually scheduled
     activeSiteIds.forEach(siteId => {
-      // Calculate work hours from the grid
+      const site = siteMap[siteId];
+      if (!site) return;
+
+      // Count scheduled hours and calculate total site time to complete
       const siteRow = grid[siteId];
+      let siteScheduledHours = 0;
+      let siteTotalHours = site.timeToComplete || 0;
+
       if (siteRow) {
         // The grid structure is grid[siteId][hour] = taskId (string)
         // Count non-empty cells (scheduled hours)
         if (Array.isArray(siteRow)) {
-          // Array format: each element is a taskId string
           siteRow.forEach(taskId => {
             if (taskId && taskId !== '' && taskId !== 'DELAY') {
-              totalWorkHours += 1; // Each cell is 1 hour
+              siteScheduledHours += 1;
+              totalWorkHours += 1;
+              sitesWithWork.add(siteId);
             }
           });
         } else {
-          // Object format: each value is a taskId string
           Object.values(siteRow).forEach(taskId => {
             if (taskId && taskId !== '' && taskId !== 'DELAY') {
-              totalWorkHours += 1; // Each cell is 1 hour
+              siteScheduledHours += 1;
+              totalWorkHours += 1;
+              sitesWithWork.add(siteId);
             }
           });
         }
       }
 
-      // Get site details from the sites array
-      const site = siteMap[siteId];
-      if (site) {
-        totalMeters += site.totalPlanMeters || 0;
-        totalBackfill += site.totalBackfillTonnes || 0;
-        totalOre += site.remoteTonnes || 0;
+      // Calculate the proportion of work scheduled vs total work
+      // If timeToComplete is 0, estimate from taskDurations if available
+      if (siteTotalHours === 0 && taskDurations) {
+        // Sum all task durations for this site
+        Object.keys(taskDurations).forEach(key => {
+          if (key.startsWith(siteId + ':')) {
+            const duration = taskDurations[key];
+            siteTotalHours += (duration && duration.hours) || 0;
+          }
+        });
+      }
+
+      // Calculate proportional KPIs based on scheduled hours vs total hours
+      // If we have scheduled work for this site
+      if (siteScheduledHours > 0) {
+        let proportion = 1; // Default to 100% if we can't calculate
+        
+        if (siteTotalHours > 0) {
+          // Calculate what percentage of the site's work is in this grid
+          proportion = Math.min(siteScheduledHours / siteTotalHours, 1);
+        }
+
+        // Apply proportion to site totals
+        totalMeters += (site.totalPlanMeters || 0) * proportion;
+        totalBackfill += (site.totalBackfillTonnes || 0) * proportion;
+        totalOre += (site.remoteTonnes || 0) * proportion;
       }
     });
 
@@ -626,7 +658,7 @@ const Schedule = () => {
       activeSites: activeSiteIds.length,
       workHours: totalWorkHours
     };
-  }, [scheduleData, sites]);
+  }, [scheduleData, sites, gridHours]);
 
   const handleDownloadExcel = async () => {
     try {
@@ -725,9 +757,9 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Meters Drilled</strong><br />
-                          Sum of planned meters from all active sites<br />
+                          Planned meters scheduled in this {gridHours}h grid<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Σ(totalPlanMeters) for {scheduleKPIs.activeSites} active sites
+                            Calculation: Σ(totalPlanMeters × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
                           </div>
                         </div>
                       }
@@ -742,9 +774,9 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Backfill Tonnes</strong><br />
-                          Sum of backfill material from all active sites<br />
+                          Backfill material scheduled in this {gridHours}h grid<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Σ(totalBackfillTonnes) for {scheduleKPIs.activeSites} active sites
+                            Calculation: Σ(totalBackfillTonnes × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
                           </div>
                         </div>
                       }
@@ -759,9 +791,9 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Ore Tonnes</strong><br />
-                          Sum of remote ore material from all active sites<br />
+                          Ore material scheduled in this {gridHours}h grid<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Σ(remoteTonnes) for {scheduleKPIs.activeSites} active sites
+                            Calculation: Σ(remoteTonnes × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
                           </div>
                         </div>
                       }
