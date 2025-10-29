@@ -280,6 +280,10 @@ const RoleManagement = ({ visible, onClose }) => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={handleCreateRole}
+          style={{
+            backgroundColor: '#3cca70',
+            borderColor: '#3cca70'
+          }}
         >
           Create New Role
         </Button>
@@ -308,6 +312,12 @@ const RoleManagement = ({ visible, onClose }) => {
         okText={editingRole ? 'Update' : 'Create'}
         cancelText="Cancel"
         width={600}
+        okButtonProps={{
+          style: {
+            backgroundColor: '#3cca70',
+            borderColor: '#3cca70'
+          }
+        }}
       >
         <Form form={form} layout="vertical">
           <Form.Item
