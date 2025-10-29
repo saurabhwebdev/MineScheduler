@@ -591,16 +591,19 @@ const Schedule = () => {
       // Calculate work hours from the grid
       const siteRow = grid[siteId];
       if (siteRow) {
+        // The grid structure is grid[siteId][hour] = taskId (string)
         // Count non-empty cells (scheduled hours)
         if (Array.isArray(siteRow)) {
-          siteRow.forEach(cell => {
-            if (cell && cell.taskId && cell.taskId !== 'DELAY') {
+          // Array format: each element is a taskId string
+          siteRow.forEach(taskId => {
+            if (taskId && taskId !== '' && taskId !== 'DELAY') {
               totalWorkHours += 1; // Each cell is 1 hour
             }
           });
         } else {
-          Object.values(siteRow).forEach(cell => {
-            if (cell && cell.taskId && cell.taskId !== 'DELAY') {
+          // Object format: each value is a taskId string
+          Object.values(siteRow).forEach(taskId => {
+            if (taskId && taskId !== '' && taskId !== 'DELAY') {
               totalWorkHours += 1; // Each cell is 1 hour
             }
           });
@@ -688,54 +691,52 @@ const Schedule = () => {
           items={[{
             key: 'controls',
             label: (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px', fontWeight: 600, flexWrap: 'wrap' }}>
-                <span>{t('schedule.controls', 'Schedule Controls')}</span>
-                {delayedSlots.length > 0 && (
-                  <Tag color="warning">{delayedSlots.length} {t('schedule.delaysApplied')}</Tag>
-                )}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', fontSize: '15px', fontWeight: 600, flexWrap: 'wrap', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span>{t('schedule.controls', 'Schedule Controls')}</span>
+                  {delayedSlots.length > 0 && (
+                    <Tag color="warning">{delayedSlots.length} {t('schedule.delaysApplied')}</Tag>
+                  )}
+                  {generatedAt && scheduleData && (
+                    <Tooltip 
+                      title={
+                        <span>
+                          {t('schedule.lastGenerated')} {new Date(generatedAt).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                          })}
+                        </span>
+                      }
+                      placement="right"
+                    >
+                      <ClockCircleOutlined style={{ color: '#3cca70', fontSize: '16px', cursor: 'pointer', marginLeft: '4px' }} />
+                    </Tooltip>
+                  )}
+                </div>
                 
-                {/* Phase 1 KPIs */}
+                {/* Phase 1 KPIs - Right Side */}
                 {generatedAt && scheduleData && (
-                  <>
-                    <div style={{ height: '20px', width: '1px', background: '#d9d9d9' }}></div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                        📏 {scheduleKPIs.totalMeters} {t('schedule.kpis.meters')}
-                      </Tag>
-                      <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                        🏗️ {scheduleKPIs.totalBackfill} {t('schedule.kpis.tonnes')}
-                      </Tag>
-                      <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                        ⛏️ {scheduleKPIs.totalOre} {t('schedule.kpis.tonnes')}
-                      </Tag>
-                      <Tag color="green" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                        📍 {scheduleKPIs.activeSites} {t('schedule.kpis.sites')}
-                      </Tag>
-                      <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                        ⏱️ {scheduleKPIs.workHours} {t('schedule.kpis.hours')}
-                      </Tag>
-                    </div>
-                  </>
-                )}
-                
-                {generatedAt && scheduleData && (
-                  <Tooltip 
-                    title={
-                      <span>
-                        {t('schedule.lastGenerated')} {new Date(generatedAt).toLocaleString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit'
-                        })}
-                      </span>
-                    }
-                    placement="right"
-                  >
-                    <ClockCircleOutlined style={{ color: '#3cca70', fontSize: '16px', cursor: 'pointer', marginLeft: '4px' }} />
-                  </Tooltip>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                      📏 {scheduleKPIs.totalMeters} {t('schedule.kpis.meters')}
+                    </Tag>
+                    <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                      🏗️ {scheduleKPIs.totalBackfill} {t('schedule.kpis.tonnes')}
+                    </Tag>
+                    <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                      ⛏️ {scheduleKPIs.totalOre} {t('schedule.kpis.tonnes')}
+                    </Tag>
+                    <Tag color="green" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                      📍 {scheduleKPIs.activeSites} {t('schedule.kpis.sites')}
+                    </Tag>
+                    <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                      ⏱️ {scheduleKPIs.workHours} {t('schedule.kpis.hours')}
+                    </Tag>
+                  </div>
                 )}
               </div>
             ),
