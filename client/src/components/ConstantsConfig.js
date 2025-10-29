@@ -486,7 +486,7 @@ const ConstantsConfig = () => {
         </button>
         {selectedRowKeys.length > 0 && (
           <button 
-            className="btn-danger" 
+            className="btn-secondary" 
             onClick={handleBulkDelete} 
             disabled={!isAdmin}
             style={{ opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}

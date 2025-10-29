@@ -383,7 +383,7 @@ const UomConfig = () => {
           <PlusOutlined /> {t('settings.uomConfig.newUom')}
         </button>
         {selectedRowKeys.length > 0 && (
-          <button className="btn-danger" onClick={handleBulkDelete}>
+          <button className="btn-secondary" onClick={handleBulkDelete}>
             <DeleteOutlined /> {t('settings.uomConfig.deleteSelected', `Delete Selected (${selectedRowKeys.length}`)}
           </button>
         )}
