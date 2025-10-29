@@ -721,21 +721,90 @@ const Schedule = () => {
                 {/* Phase 1 KPIs - Right Side */}
                 {generatedAt && scheduleData && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                      📏 {scheduleKPIs.totalMeters} {t('schedule.kpis.meters')}
-                    </Tag>
-                    <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                      🏗️ {scheduleKPIs.totalBackfill} {t('schedule.kpis.tonnes')}
-                    </Tag>
-                    <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                      ⛏️ {scheduleKPIs.totalOre} {t('schedule.kpis.tonnes')}
-                    </Tag>
-                    <Tag color="green" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                      📍 {scheduleKPIs.activeSites} {t('schedule.kpis.sites')}
-                    </Tag>
-                    <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
-                      ⏱️ {scheduleKPIs.workHours} {t('schedule.kpis.hours')}
-                    </Tag>
+                    <Tooltip 
+                      title={
+                        <div>
+                          <strong>Total Meters Drilled</strong><br />
+                          Sum of planned meters from all active sites<br />
+                          <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
+                            Calculation: Σ(totalPlanMeters) for {scheduleKPIs.activeSites} active sites
+                          </div>
+                        </div>
+                      }
+                      placement="bottom"
+                    >
+                      <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '2px 8px', border: '1px solid #91caff', cursor: 'pointer' }}>
+                        📏 {scheduleKPIs.totalMeters} {t('schedule.kpis.meters')}
+                      </Tag>
+                    </Tooltip>
+                    
+                    <Tooltip 
+                      title={
+                        <div>
+                          <strong>Total Backfill Tonnes</strong><br />
+                          Sum of backfill material from all active sites<br />
+                          <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
+                            Calculation: Σ(totalBackfillTonnes) for {scheduleKPIs.activeSites} active sites
+                          </div>
+                        </div>
+                      }
+                      placement="bottom"
+                    >
+                      <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '2px 8px', border: '1px solid #ffbb96', cursor: 'pointer' }}>
+                        🏗️ {scheduleKPIs.totalBackfill} {t('schedule.kpis.tonnes')}
+                      </Tag>
+                    </Tooltip>
+                    
+                    <Tooltip 
+                      title={
+                        <div>
+                          <strong>Total Ore Tonnes</strong><br />
+                          Sum of remote ore material from all active sites<br />
+                          <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
+                            Calculation: Σ(remoteTonnes) for {scheduleKPIs.activeSites} active sites
+                          </div>
+                        </div>
+                      }
+                      placement="bottom"
+                    >
+                      <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '2px 8px', border: '1px solid #ffd666', cursor: 'pointer' }}>
+                        ⛏️ {scheduleKPIs.totalOre} {t('schedule.kpis.tonnes')}
+                      </Tag>
+                    </Tooltip>
+                    
+                    <Tooltip 
+                      title={
+                        <div>
+                          <strong>Active Sites</strong><br />
+                          Number of sites currently included in scheduling<br />
+                          <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
+                            Calculation: Count of sites where isActive = true
+                          </div>
+                        </div>
+                      }
+                      placement="bottom"
+                    >
+                      <Tag color="green" style={{ margin: 0, fontSize: '12px', padding: '2px 8px', border: '1px solid #95de64', cursor: 'pointer' }}>
+                        📍 {scheduleKPIs.activeSites} {t('schedule.kpis.sites')}
+                      </Tag>
+                    </Tooltip>
+                    
+                    <Tooltip 
+                      title={
+                        <div>
+                          <strong>Total Work Hours</strong><br />
+                          Sum of scheduled task hours across all active sites<br />
+                          <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
+                            Calculation: Count of all scheduled task cells (excluding delays) in {gridHours}h grid
+                          </div>
+                        </div>
+                      }
+                      placement="bottom"
+                    >
+                      <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '2px 8px', border: '1px solid #b37feb', cursor: 'pointer' }}>
+                        ⏱️ {scheduleKPIs.workHours} {t('schedule.kpis.hours')}
+                      </Tag>
+                    </Tooltip>
                   </div>
                 )}
               </div>
