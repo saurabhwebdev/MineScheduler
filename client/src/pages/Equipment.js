@@ -28,6 +28,7 @@ const Equipment = () => {
   const [editingEquipment, setEditingEquipment] = useState(null);
   const [deletingEquipment, setDeletingEquipment] = useState(null);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [maintenanceHistory, setMaintenanceHistory] = useState([]);
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
@@ -272,6 +273,76 @@ const Equipment = () => {
       setIsDeleteModalVisible(false);
       setDeletingEquipment(null);
     }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('equipment.messages.noEquipmentSelected', 'Please select equipment to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('equipment.bulkDelete.title', 'Delete Selected Equipment'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('equipment.bulkDelete.message', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('equipment.bulkDelete.equipment', 'equipment')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('equipment.bulkDelete.warning', 'This action cannot be undone. All maintenance history will also be deleted.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(equipmentId =>
+            fetch(`${config.apiUrl}/equipment/${equipmentId}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('equipment.messages.success'),
+              description: t('equipment.bulkDelete.successMessage', {
+                defaultValue: `Successfully deleted ${successCount} equipment`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('equipment.messages.error'),
+              description: t('equipment.bulkDelete.failMessage', {
+                defaultValue: `Failed to delete ${failCount} equipment`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchEquipment();
+        } catch (error) {
+          console.error('Error bulk deleting equipment:', error);
+          notification.error({
+            message: t('equipment.messages.networkError'),
+            description: t('equipment.messages.deleteError'),
+          });
+        }
+      },
+    });
   };
 
   const showMaintenanceModal = (equipment) => {
@@ -699,18 +770,39 @@ const Equipment = () => {
                 </span>
               ),
               children: (
-                <div className="table-container">
-                  <Table
-                    columns={columns}
-                    dataSource={equipment}
-                    loading={loading}
-                    rowKey="_id"
-                    pagination={{
-                      pageSize: 15,
-                      showSizeChanger: false,
-                      simple: false,
-                    }}
-                  />
+                <div>
+                  {selectedRowKeys.length > 0 && (
+                    <div style={{ marginBottom: '16px', padding: '12px', background: '#fff7e6', borderRadius: '8px', border: '1px solid #ffd591' }}>
+                      <span style={{ marginRight: '12px', fontWeight: 500 }}>
+                        {selectedRowKeys.length} {t('equipment.bulkDelete.selected', 'equipment selected')}
+                      </span>
+                      <button 
+                        className="btn-danger" 
+                        onClick={handleBulkDelete}
+                        style={{ background: '#ff4d4f', border: 'none', color: 'white', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer' }}
+                      >
+                        <DeleteOutlined /> {t('equipment.bulkDelete.deleteSelected', 'Delete Selected')}
+                      </button>
+                    </div>
+                  )}
+                  <div className="table-container">
+                    <Table
+                      columns={columns}
+                      dataSource={equipment}
+                      loading={loading}
+                      rowKey="_id"
+                      rowSelection={{
+                        selectedRowKeys,
+                        onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+                        preserveSelectedRowKeys: true,
+                      }}
+                      pagination={{
+                        pageSize: 15,
+                        showSizeChanger: false,
+                        simple: false,
+                      }}
+                    />
+                  </div>
                 </div>
               )
             },

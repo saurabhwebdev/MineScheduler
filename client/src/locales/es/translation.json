@@ -1129,6 +1129,16 @@
       "assignedTasks": "Tareas Asignadas",
       "notes": "Notas"
     },
+    "bulkDelete": {
+      "title": "Eliminar Equipos Seleccionados",
+      "message": "¿Está seguro de que desea eliminar",
+      "equipment": "equipos",
+      "warning": "Esta acción no se puede deshacer. Todo el historial de mantenimiento también se eliminará.",
+      "selected": "equipo(s) seleccionado(s)",
+      "deleteSelected": "Eliminar Seleccionados",
+      "successMessage": "Eliminados exitosamente {{count}} equipo(s)",
+      "failMessage": "Error al eliminar {{count}} equipo(s)"
+    },
     "messages": {
       "success": "Éxito",
       "error": "Error",
@@ -1140,6 +1150,7 @@
       "createError": "Error al crear equipo",
       "deleteSuccess": "Equipo eliminado exitosamente",
       "deleteError": "Error al eliminar equipo",
+      "noEquipmentSelected": "Por favor seleccione equipos para eliminar",
       "maintenanceSuccess": "Mantenimiento registrado exitosamente",
       "maintenanceError": "Error al registrar mantenimiento",
       "historyError": "Error al cargar historial de mantenimiento",

@@ -1129,6 +1129,16 @@
       "assignedTasks": "Assigned Tasks",
       "notes": "Notes"
     },
+    "bulkDelete": {
+      "title": "Delete Selected Equipment",
+      "message": "Are you sure you want to delete",
+      "equipment": "equipment",
+      "warning": "This action cannot be undone. All maintenance history will also be deleted.",
+      "selected": "equipment selected",
+      "deleteSelected": "Delete Selected",
+      "successMessage": "Successfully deleted {{count}} equipment",
+      "failMessage": "Failed to delete {{count}} equipment"
+    },
     "messages": {
       "success": "Success",
       "error": "Error",
@@ -1140,6 +1150,7 @@
       "createError": "Failed to create equipment",
       "deleteSuccess": "Equipment deleted successfully",
       "deleteError": "Failed to delete equipment",
+      "noEquipmentSelected": "Please select equipment to delete",
       "maintenanceSuccess": "Maintenance logged successfully",
       "maintenanceError": "Failed to log maintenance",
       "historyError": "Failed to fetch maintenance history",
