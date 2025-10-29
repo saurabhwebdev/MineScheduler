@@ -15,6 +15,7 @@ const ConstantsConfig = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editingConstant, setEditingConstant] = useState(null);
   const [deletingConstant, setDeletingConstant] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
   const fileInputRef = useRef(null);
 
@@ -199,6 +200,84 @@ const ConstantsConfig = () => {
       setIsDeleteModalVisible(false);
       setDeletingConstant(null);
     }
+  };
+
+  const handleBulkDelete = () => {
+    if (!isAdmin) {
+      notification.warning({
+        message: t('settings.constantsConfig.permissionDenied'),
+        description: t('settings.constantsConfig.adminOnlyDelete'),
+      });
+      return;
+    }
+
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('settings.constantsConfig.noItemsSelected', 'Please select items to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('settings.constantsConfig.bulkDeleteTitle', 'Delete Selected Constants'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('settings.constantsConfig.bulkDeleteMessage', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('settings.constantsConfig.constants', 'constant(s)')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('settings.constantsConfig.bulkDeleteWarning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(id =>
+            fetch(`${config.apiUrl}/constants/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('settings.constantsConfig.success'),
+              description: t('settings.constantsConfig.bulkDeleteSuccess', {
+                defaultValue: `Successfully deleted ${successCount} constant(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('settings.constantsConfig.error'),
+              description: t('settings.constantsConfig.bulkDeleteFail', {
+                defaultValue: `Failed to delete ${failCount} constant(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchConstants();
+        } catch (error) {
+          console.error('Error bulk deleting:', error);
+          notification.error({
+            message: t('settings.constantsConfig.networkError'),
+            description: t('settings.constantsConfig.deleteError'),
+          });
+        }
+      },
+    });
   };
 
   const handleImport = async (event) => {
@@ -405,6 +484,16 @@ const ConstantsConfig = () => {
         >
           <PlusOutlined /> {t('settings.constantsConfig.newConstant')}
         </button>
+        {selectedRowKeys.length > 0 && (
+          <button 
+            className="btn-danger" 
+            onClick={handleBulkDelete} 
+            disabled={!isAdmin}
+            style={{ background: '#ff4d4f', color: 'white', opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
+          >
+            <DeleteOutlined /> {t('settings.constantsConfig.deleteSelected', `Delete Selected (${selectedRowKeys.length}`)}
+          </button>
+        )}
         <input
           type="file"
           ref={fileInputRef}
@@ -436,6 +525,14 @@ const ConstantsConfig = () => {
           dataSource={constants}
           loading={loading}
           rowKey="_id"
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+            preserveSelectedRowKeys: true,
+            getCheckboxProps: (record) => ({
+              disabled: !isAdmin,
+            }),
+          }}
           pagination={{
             pageSize: 15,
             showSizeChanger: false,

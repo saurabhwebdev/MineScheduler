@@ -14,6 +14,7 @@ const UomConfig = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editingUom, setEditingUom] = useState(null);
   const [deletingUom, setDeletingUom] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
   const fileInputRef = useRef(null);
 
@@ -171,6 +172,76 @@ const UomConfig = () => {
     }
   };
 
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('settings.uomConfig.noItemsSelected', 'Please select items to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('settings.uomConfig.bulkDeleteTitle', 'Delete Selected Items'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('settings.uomConfig.bulkDeleteMessage', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('settings.uomConfig.items', 'item(s)')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('settings.uomConfig.bulkDeleteWarning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(id =>
+            fetch(`${config.apiUrl}/uoms/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('settings.uomConfig.success'),
+              description: t('settings.uomConfig.bulkDeleteSuccess', {
+                defaultValue: `Successfully deleted ${successCount} item(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('settings.uomConfig.error'),
+              description: t('settings.uomConfig.bulkDeleteFail', {
+                defaultValue: `Failed to delete ${failCount} item(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchUoms();
+        } catch (error) {
+          console.error('Error bulk deleting:', error);
+          notification.error({
+            message: t('settings.uomConfig.networkError'),
+            description: t('settings.uomConfig.deleteError'),
+          });
+        }
+      },
+    });
+  };
+
   const handleImport = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -311,6 +382,11 @@ const UomConfig = () => {
         <button className="btn-primary" onClick={handleCreateUom}>
           <PlusOutlined /> {t('settings.uomConfig.newUom')}
         </button>
+        {selectedRowKeys.length > 0 && (
+          <button className="btn-danger" onClick={handleBulkDelete} style={{ background: '#ff4d4f', color: 'white' }}>
+            <DeleteOutlined /> {t('settings.uomConfig.deleteSelected', `Delete Selected (${selectedRowKeys.length}`)}
+          </button>
+        )}
         <input
           type="file"
           ref={fileInputRef}
@@ -335,6 +411,11 @@ const UomConfig = () => {
           dataSource={uoms}
           loading={loading}
           rowKey="_id"
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+            preserveSelectedRowKeys: true,
+          }}
           pagination={{
             pageSize: 15,
             showSizeChanger: false,

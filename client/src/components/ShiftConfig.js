@@ -15,6 +15,7 @@ const ShiftConfig = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editingShift, setEditingShift] = useState(null);
   const [deletingShift, setDeletingShift] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -188,6 +189,76 @@ const ShiftConfig = () => {
     }
   };
 
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('settings.shiftConfig.noItemsSelected', 'Please select items to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('settings.shiftConfig.bulkDeleteTitle', 'Delete Selected Shifts'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('settings.shiftConfig.bulkDeleteMessage', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('settings.shiftConfig.shifts', 'shift(s)')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('settings.shiftConfig.bulkDeleteWarning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(id =>
+            fetch(`${config.apiUrl}/shifts/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('settings.shiftConfig.success'),
+              description: t('settings.shiftConfig.bulkDeleteSuccess', {
+                defaultValue: `Successfully deleted ${successCount} shift(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('settings.shiftConfig.error'),
+              description: t('settings.shiftConfig.bulkDeleteFail', {
+                defaultValue: `Failed to delete ${failCount} shift(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchShifts();
+        } catch (error) {
+          console.error('Error bulk deleting:', error);
+          notification.error({
+            message: t('settings.shiftConfig.networkError'),
+            description: t('settings.shiftConfig.deleteError'),
+          });
+        }
+      },
+    });
+  };
+
   const handleExport = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -332,6 +403,11 @@ const ShiftConfig = () => {
         <button className="btn-primary" onClick={handleCreateShift}>
           <PlusOutlined /> {t('settings.shiftConfig.newShift')}
         </button>
+        {selectedRowKeys.length > 0 && (
+          <button className="btn-danger" onClick={handleBulkDelete} style={{ background: '#ff4d4f', color: 'white' }}>
+            <DeleteOutlined /> {t('settings.shiftConfig.deleteSelected', `Delete Selected (${selectedRowKeys.length}`)}
+          </button>
+        )}
         <button className="btn-secondary" onClick={handleExport}>
           <DownloadOutlined /> {t('settings.shiftConfig.export')}
         </button>
@@ -342,6 +418,11 @@ const ShiftConfig = () => {
         dataSource={shifts}
         loading={loading}
         rowKey="_id"
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+          preserveSelectedRowKeys: true,
+        }}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,

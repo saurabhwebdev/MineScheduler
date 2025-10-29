@@ -54,6 +54,7 @@ const EquipmentTypeConfig = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editingType, setEditingType] = useState(null);
   const [deletingType, setDeletingType] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedIcon, setSelectedIcon] = useState('');
   const [form] = Form.useForm();
   const fileInputRef = useRef(null);
@@ -241,6 +242,84 @@ const EquipmentTypeConfig = () => {
     }
   };
 
+  const handleBulkDelete = () => {
+    if (!isAdmin) {
+      notification.warning({
+        message: t('settings.equipmentTypeConfig.permissionDenied'),
+        description: t('settings.equipmentTypeConfig.adminOnlyDelete'),
+      });
+      return;
+    }
+
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('settings.equipmentTypeConfig.noItemsSelected', 'Please select items to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('settings.equipmentTypeConfig.bulkDeleteTitle', 'Delete Selected Equipment Types'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('settings.equipmentTypeConfig.bulkDeleteMessage', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('settings.equipmentTypeConfig.types', 'type(s)')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('settings.equipmentTypeConfig.bulkDeleteWarning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(id =>
+            fetch(`${config.apiUrl}/equipment-types/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('settings.equipmentTypeConfig.success'),
+              description: t('settings.equipmentTypeConfig.bulkDeleteSuccess', {
+                defaultValue: `Successfully deleted ${successCount} type(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('settings.equipmentTypeConfig.error'),
+              description: t('settings.equipmentTypeConfig.bulkDeleteFail', {
+                defaultValue: `Failed to delete ${failCount} type(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchEquipmentTypes();
+        } catch (error) {
+          console.error('Error bulk deleting:', error);
+          notification.error({
+            message: t('settings.equipmentTypeConfig.networkError'),
+            description: t('settings.equipmentTypeConfig.deleteError'),
+          });
+        }
+      },
+    });
+  };
+
   const handleImport = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -411,6 +490,16 @@ const EquipmentTypeConfig = () => {
         >
           <PlusOutlined /> {t('settings.equipmentTypeConfig.newEquipmentType')}
         </button>
+        {selectedRowKeys.length > 0 && (
+          <button 
+            className="btn-danger" 
+            onClick={handleBulkDelete} 
+            disabled={!isAdmin}
+            style={{ background: '#ff4d4f', color: 'white', opacity: isAdmin ? 1 : 0.7, cursor: isAdmin ? 'pointer' : 'not-allowed' }}
+          >
+            <DeleteOutlined /> {t('settings.equipmentTypeConfig.deleteSelected', `Delete Selected (${selectedRowKeys.length}`)}
+          </button>
+        )}
         <input
           type="file"
           ref={fileInputRef}
@@ -442,6 +531,14 @@ const EquipmentTypeConfig = () => {
           dataSource={equipmentTypes}
           loading={loading}
           rowKey="_id"
+          rowSelection={{
+            selectedRowKeys,
+            onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+            preserveSelectedRowKeys: true,
+            getCheckboxProps: (record) => ({
+              disabled: !isAdmin,
+            }),
+          }}
           pagination={{
             pageSize: 15,
             showSizeChanger: false,
