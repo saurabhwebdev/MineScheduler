@@ -575,6 +575,46 @@ const Schedule = () => {
     
     // Filter only active sites
     const activeSiteIds = allSites.filter(siteId => siteActive[siteId]);
+
+    // Get shift-filtered hours (if shift filter is active)
+    let filteredHours = null;
+    if (selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && activeShifts.length > 0) {
+      const selectedShift = activeShifts.find(s => s._id === selectedShiftFilter);
+      if (selectedShift) {
+        const [startHour] = selectedShift.startTime.split(':').map(Number);
+        const [endHour] = selectedShift.endTime.split(':').map(Number);
+        const hoursArray = [];
+        
+        // Handle same-day shift
+        if (startHour < endHour) {
+          for (let h = startHour; h < endHour; h++) {
+            hoursArray.push(h);
+            // For 48-hour grids, also include next day's hours
+            if (currentGridHours > 24 && h + 24 < currentGridHours) {
+              hoursArray.push(h + 24);
+            }
+          }
+        } else {
+          // Handle overnight shift (e.g., 22:00 - 06:00)
+          for (let h = startHour; h < 24; h++) {
+            hoursArray.push(h);
+          }
+          for (let h = 0; h < endHour; h++) {
+            hoursArray.push(h);
+          }
+          // For 48-hour grids
+          if (currentGridHours > 24) {
+            for (let h = startHour + 24; h < currentGridHours; h++) {
+              hoursArray.push(h);
+            }
+            for (let h = 24; h < 24 + endHour && h < currentGridHours; h++) {
+              hoursArray.push(h);
+            }
+          }
+        }
+        filteredHours = new Set(hoursArray);
+      }
+    }
     
     // Create a map of sites by siteId for quick lookup
     const siteMap = {};
@@ -604,7 +644,10 @@ const Schedule = () => {
         // The grid structure is grid[siteId][hour] = taskId (string)
         // Count non-empty cells (scheduled hours)
         if (Array.isArray(siteRow)) {
-          siteRow.forEach(taskId => {
+          siteRow.forEach((taskId, hour) => {
+            // Skip if shift filter is active and this hour is not in the filtered shift
+            if (filteredHours && !filteredHours.has(hour)) return;
+            
             if (taskId && taskId !== '' && taskId !== 'DELAY') {
               siteScheduledHours += 1;
               totalWorkHours += 1;
@@ -612,7 +655,11 @@ const Schedule = () => {
             }
           });
         } else {
-          Object.values(siteRow).forEach(taskId => {
+          Object.entries(siteRow).forEach(([hourStr, taskId]) => {
+            const hour = parseInt(hourStr, 10);
+            // Skip if shift filter is active and this hour is not in the filtered shift
+            if (filteredHours && !filteredHours.has(hour)) return;
+            
             if (taskId && taskId !== '' && taskId !== 'DELAY') {
               siteScheduledHours += 1;
               totalWorkHours += 1;
@@ -658,7 +705,7 @@ const Schedule = () => {
       activeSites: activeSiteIds.length,
       workHours: totalWorkHours
     };
-  }, [scheduleData, sites, gridHours]);
+  }, [scheduleData, sites, gridHours, selectedShiftFilter, activeShifts]);
 
   const handleDownloadExcel = async () => {
     try {
@@ -757,9 +804,13 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Meters Drilled</strong><br />
-                          Planned meters scheduled in this {gridHours}h grid<br />
+                          Planned meters scheduled in this {gridHours}h grid
+                          {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
+                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                          )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
                             Calculation: Σ(totalPlanMeters × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' in selected shift hours'}
                           </div>
                         </div>
                       }
@@ -774,9 +825,13 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Backfill Tonnes</strong><br />
-                          Backfill material scheduled in this {gridHours}h grid<br />
+                          Backfill material scheduled in this {gridHours}h grid
+                          {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
+                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                          )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
                             Calculation: Σ(totalBackfillTonnes × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' in selected shift hours'}
                           </div>
                         </div>
                       }
@@ -791,9 +846,13 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Ore Tonnes</strong><br />
-                          Ore material scheduled in this {gridHours}h grid<br />
+                          Ore material scheduled in this {gridHours}h grid
+                          {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
+                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                          )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
                             Calculation: Σ(remoteTonnes × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' in selected shift hours'}
                           </div>
                         </div>
                       }
@@ -825,9 +884,13 @@ const Schedule = () => {
                       title={
                         <div>
                           <strong>Total Work Hours</strong><br />
-                          Sum of scheduled task hours across all active sites<br />
+                          Sum of scheduled task hours across all active sites
+                          {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
+                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                          )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
                             Calculation: Count of all scheduled task cells (excluding delays) in {gridHours}h grid
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' for selected shift hours'}
                           </div>
                         </div>
                       }
