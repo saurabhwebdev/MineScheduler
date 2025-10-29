@@ -557,6 +557,139 @@ const Schedule = () => {
     return scheduleData.shifts.filter(s => s.isActive);
   }, [scheduleData]);
 
+  // Calculate site-specific KPIs
+  const calculateSiteKPIs = (siteId) => {
+    if (!scheduleData || !scheduleData.grid || !scheduleData.siteActive || !sites || sites.length === 0) {
+      return {
+        totalMeters: 0,
+        totalBackfill: 0,
+        totalOre: 0,
+        activeSites: 0,
+        workHours: 0
+      };
+    }
+
+    const { grid, siteActive, taskDurations } = scheduleData;
+    const currentGridHours = scheduleData.gridHours || gridHours;
+    
+    // Create a map of sites by siteId for quick lookup
+    const siteMap = {};
+    sites.forEach(site => {
+      siteMap[site.siteId] = site;
+    });
+    
+    const site = siteMap[siteId];
+    if (!site) {
+      return {
+        totalMeters: 0,
+        totalBackfill: 0,
+        totalOre: 0,
+        activeSites: 0,
+        workHours: 0
+      };
+    }
+
+    // Get shift-filtered hours (if shift filter is active)
+    let filteredHours = null;
+    if (selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && activeShifts.length > 0) {
+      const selectedShift = activeShifts.find(s => s._id === selectedShiftFilter);
+      if (selectedShift) {
+        const [startHour] = selectedShift.startTime.split(':').map(Number);
+        const [endHour] = selectedShift.endTime.split(':').map(Number);
+        const hoursArray = [];
+        
+        if (startHour < endHour) {
+          for (let h = startHour; h < endHour; h++) {
+            hoursArray.push(h);
+            if (currentGridHours > 24 && h + 24 < currentGridHours) {
+              hoursArray.push(h + 24);
+            }
+          }
+        } else {
+          for (let h = startHour; h < 24; h++) {
+            hoursArray.push(h);
+          }
+          for (let h = 0; h < endHour; h++) {
+            hoursArray.push(h);
+          }
+          if (currentGridHours > 24) {
+            for (let h = startHour + 24; h < currentGridHours; h++) {
+              hoursArray.push(h);
+            }
+            for (let h = 24; h < 24 + endHour && h < currentGridHours; h++) {
+              hoursArray.push(h);
+            }
+          }
+        }
+        filteredHours = new Set(hoursArray);
+      }
+    }
+    
+    let totalMeters = 0;
+    let totalBackfill = 0;
+    let totalOre = 0;
+    let totalWorkHours = 0;
+
+    // Count scheduled hours for this site
+    const siteRow = grid[siteId];
+    let siteScheduledHours = 0;
+    let siteTotalHours = site.timeToComplete || 0;
+
+    if (siteRow) {
+      if (Array.isArray(siteRow)) {
+        siteRow.forEach((taskId, hour) => {
+          if (filteredHours && !filteredHours.has(hour)) return;
+          
+          if (taskId && taskId !== '' && taskId !== 'DELAY') {
+            siteScheduledHours += 1;
+            totalWorkHours += 1;
+          }
+        });
+      } else {
+        Object.entries(siteRow).forEach(([hourStr, taskId]) => {
+          const hour = parseInt(hourStr, 10);
+          if (filteredHours && !filteredHours.has(hour)) return;
+          
+          if (taskId && taskId !== '' && taskId !== 'DELAY') {
+            siteScheduledHours += 1;
+            totalWorkHours += 1;
+          }
+        });
+      }
+    }
+
+    // Calculate the proportion of work scheduled vs total work
+    if (siteTotalHours === 0 && taskDurations) {
+      Object.keys(taskDurations).forEach(key => {
+        if (key.startsWith(siteId + ':')) {
+          const duration = taskDurations[key];
+          siteTotalHours += (duration && duration.hours) || 0;
+        }
+      });
+    }
+
+    // Calculate proportional KPIs based on scheduled hours vs total hours
+    if (siteScheduledHours > 0) {
+      let proportion = 1;
+      
+      if (siteTotalHours > 0) {
+        proportion = Math.min(siteScheduledHours / siteTotalHours, 1);
+      }
+
+      totalMeters = (site.totalPlanMeters || 0) * proportion;
+      totalBackfill = (site.totalBackfillTonnes || 0) * proportion;
+      totalOre = (site.remoteTonnes || 0) * proportion;
+    }
+
+    return {
+      totalMeters: Math.round(totalMeters),
+      totalBackfill: Math.round(totalBackfill),
+      totalOre: Math.round(totalOre),
+      activeSites: siteActive[siteId] ? 1 : 0,
+      workHours: totalWorkHours
+    };
+  };
+
   // Calculate Phase 1 KPIs from schedule data and sites
   const scheduleKPIs = useMemo(() => {
     if (!scheduleData || !scheduleData.grid || !scheduleData.siteActive || !sites || sites.length === 0) {
@@ -1098,6 +1231,7 @@ const Schedule = () => {
             onRemoveDelay={handleRemoveDelay}
             selectedShiftFilter={selectedShiftFilter}
             activeShifts={activeShifts}
+            calculateSiteKPIs={calculateSiteKPIs}
           />
         )}
 

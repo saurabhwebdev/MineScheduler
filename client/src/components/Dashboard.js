@@ -68,14 +68,54 @@ const Dashboard = () => {
     }
   };
 
-  // Calculate Equipment KPIs
+  // Calculate Equipment KPIs with hybrid date + usage logic
   const calculateEquipmentKPIs = () => {
     const total = equipment.length;
     const operational = equipment.filter(eq => eq.status === 'operational').length;
     const maintenance = equipment.filter(eq => eq.status === 'maintenance').length;
     const outOfService = equipment.filter(eq => eq.status === 'out-of-service').length;
-    const overdue = equipment.filter(eq => parseFloat(eq.percentUsed) >= 100).length;
-    const dueSoon = equipment.filter(eq => parseFloat(eq.percentUsed) >= 80 && parseFloat(eq.percentUsed) < 100).length;
+    
+    // Hybrid logic: Check BOTH date and usage percentage
+    const overdue = equipment.filter(eq => {
+      const percentUsed = parseFloat(eq.percentUsed) || 0;
+      let dateOverdue = false;
+      
+      if (eq.nextMaintenance) {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const nextMaintenance = new Date(eq.nextMaintenance);
+        nextMaintenance.setHours(0, 0, 0, 0);
+        const diffTime = nextMaintenance - now;
+        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        dateOverdue = daysUntil < 0;
+      }
+      
+      // OVERDUE if date passed OR usage >= 100%
+      return dateOverdue || percentUsed >= 100;
+    }).length;
+    
+    const dueSoon = equipment.filter(eq => {
+      const percentUsed = parseFloat(eq.percentUsed) || 0;
+      let dateDueSoon = false;
+      let dateOverdue = false;
+      
+      if (eq.nextMaintenance) {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const nextMaintenance = new Date(eq.nextMaintenance);
+        nextMaintenance.setHours(0, 0, 0, 0);
+        const diffTime = nextMaintenance - now;
+        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        dateOverdue = daysUntil < 0;
+        dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+      }
+      
+      // Skip if already overdue
+      if (dateOverdue || percentUsed >= 100) return false;
+      
+      // DUE SOON if date within 7 days OR usage 80-99%
+      return dateDueSoon || (percentUsed >= 80 && percentUsed < 100);
+    }).length;
 
     return {
       total,
@@ -186,10 +226,69 @@ const Dashboard = () => {
       else if (data.name === 'Maintenance') filteredData = equipment.filter(eq => eq.status === 'maintenance');
       else filteredData = equipment.filter(eq => eq.status === 'out-of-service');
     } else if (chartType === 'equipment-maintenance') {
-      const percent = parseFloat(equipment.find(eq => eq.percentUsed)?.percentUsed || 0);
-      if (data.name === 'Good') filteredData = equipment.filter(eq => parseFloat(eq.percentUsed) < 80);
-      else if (data.name === 'Due Soon') filteredData = equipment.filter(eq => parseFloat(eq.percentUsed) >= 80 && parseFloat(eq.percentUsed) < 100);
-      else filteredData = equipment.filter(eq => parseFloat(eq.percentUsed) >= 100);
+      if (data.name === 'Good') {
+        filteredData = equipment.filter(eq => {
+          const percentUsed = parseFloat(eq.percentUsed) || 0;
+          let dateOverdue = false;
+          let dateDueSoon = false;
+          
+          if (eq.nextMaintenance) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const nextMaintenance = new Date(eq.nextMaintenance);
+            nextMaintenance.setHours(0, 0, 0, 0);
+            const diffTime = nextMaintenance - now;
+            const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            dateOverdue = daysUntil < 0;
+            dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+          }
+          
+          // GOOD if NOT overdue AND NOT due soon (both date and usage)
+          return !dateOverdue && percentUsed < 100 && !dateDueSoon && percentUsed < 80;
+        });
+      } else if (data.name === 'Due Soon') {
+        filteredData = equipment.filter(eq => {
+          const percentUsed = parseFloat(eq.percentUsed) || 0;
+          let dateDueSoon = false;
+          let dateOverdue = false;
+          
+          if (eq.nextMaintenance) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const nextMaintenance = new Date(eq.nextMaintenance);
+            nextMaintenance.setHours(0, 0, 0, 0);
+            const diffTime = nextMaintenance - now;
+            const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            dateOverdue = daysUntil < 0;
+            dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+          }
+          
+          // Skip if already overdue
+          if (dateOverdue || percentUsed >= 100) return false;
+          
+          // DUE SOON if date within 7 days OR usage 80-99%
+          return dateDueSoon || (percentUsed >= 80 && percentUsed < 100);
+        });
+      } else {
+        // Overdue
+        filteredData = equipment.filter(eq => {
+          const percentUsed = parseFloat(eq.percentUsed) || 0;
+          let dateOverdue = false;
+          
+          if (eq.nextMaintenance) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const nextMaintenance = new Date(eq.nextMaintenance);
+            nextMaintenance.setHours(0, 0, 0, 0);
+            const diffTime = nextMaintenance - now;
+            const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            dateOverdue = daysUntil < 0;
+          }
+          
+          // OVERDUE if date passed OR usage >= 100%
+          return dateOverdue || percentUsed >= 100;
+        });
+      }
     }
     
     setModalData(filteredData);

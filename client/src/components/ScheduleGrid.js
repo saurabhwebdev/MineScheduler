@@ -1,17 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Modal, Button, Radio, Tag } from 'antd';
-import { FullscreenExitOutlined, FilterOutlined } from '@ant-design/icons';
-import { useTranslation } from 'react-i18next';
+import { Modal, Button, Tag, Tooltip } from 'antd';
+import { FullscreenExitOutlined } from '@ant-design/icons';
 import ScheduleCell from './ScheduleCell';
 import DelayModal from './DelayModal';
 import './ScheduleGrid.css';
 
-const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay, selectedShiftFilter, activeShifts }) => {
-  const { t } = useTranslation();
+const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay, selectedShiftFilter, activeShifts, calculateSiteKPIs }) => {
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [toggleModalVisible, setToggleModalVisible] = useState(false);
   const [selectedSite, setSelectedSite] = useState(null);
+  const [siteKPIs, setSiteKPIs] = useState(null);
   const [globalDelayModalVisible, setGlobalDelayModalVisible] = useState(false);
   const [selectedHourForGlobalDelay, setSelectedHourForGlobalDelay] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -282,6 +281,11 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
 
   const handleSiteClick = (siteId) => {
     setSelectedSite({ id: siteId, isActive: siteActive[siteId] });
+    // Calculate KPIs for this site if function is provided
+    if (calculateSiteKPIs) {
+      const kpis = calculateSiteKPIs(siteId);
+      setSiteKPIs(kpis);
+    }
     setToggleModalVisible(true);
   };
 
@@ -296,6 +300,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   const handleCancelToggle = () => {
     setToggleModalVisible(false);
     setSelectedSite(null);
+    setSiteKPIs(null);
   };
 
   const handleHourHeaderClick = (hour) => {
@@ -501,6 +506,63 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
             </span>
             Toggle Site Status
           </div>
+          
+          {/* Site-Specific KPIs */}
+          {siteKPIs && (
+            <div style={{ 
+              marginBottom: '20px',
+              padding: '16px',
+              background: '#f5f5f5',
+              borderRadius: '8px',
+              border: '1px solid #d9d9d9'
+            }}>
+              <div style={{ 
+                fontSize: '13px', 
+                fontWeight: 600, 
+                color: '#8c8c8c', 
+                marginBottom: '12px',
+                letterSpacing: '0.5px'
+              }}>
+                SITE METRICS FOR {selectedSite?.id}
+              </div>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                flexWrap: 'wrap' 
+              }}>
+                <Tooltip title="Total meters scheduled for this site in the current grid">
+                  <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #91caff', cursor: 'pointer' }}>
+                    📏 {siteKPIs.totalMeters} m
+                  </Tag>
+                </Tooltip>
+                
+                <Tooltip title="Total backfill tonnes for this site">
+                  <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #ffbb96', cursor: 'pointer' }}>
+                    🏗️ {siteKPIs.totalBackfill} t
+                  </Tag>
+                </Tooltip>
+                
+                <Tooltip title="Total ore tonnes for this site">
+                  <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #ffd666', cursor: 'pointer' }}>
+                    ⛏️ {siteKPIs.totalOre} t
+                  </Tag>
+                </Tooltip>
+                
+                <Tooltip title={selectedSite?.isActive ? "Site is currently active" : "Site is currently inactive"}>
+                  <Tag color={selectedSite?.isActive ? "green" : "default"} style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: selectedSite?.isActive ? '1px solid #95de64' : '1px solid #d9d9d9', cursor: 'pointer' }}>
+                    📍 {selectedSite?.isActive ? 'Active' : 'Inactive'}
+                  </Tag>
+                </Tooltip>
+                
+                <Tooltip title="Total scheduled work hours for this site">
+                  <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #b37feb', cursor: 'pointer' }}>
+                    ⏱️ {siteKPIs.workHours} hrs
+                  </Tag>
+                </Tooltip>
+              </div>
+            </div>
+          )}
           <div style={{ 
             fontSize: '14px', 
             color: '#6b7280', 

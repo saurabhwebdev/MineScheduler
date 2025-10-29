@@ -552,17 +552,34 @@ const Equipment = () => {
   };
 
   const getMaintenanceBadge = (equipment) => {
-    if (!equipment.nextMaintenance) return null;
+    const percentUsed = parseFloat(equipment.percentUsed) || 0;
+    let dateOverdue = false;
+    let dateDueSoon = false;
     
-    const now = new Date();
-    const nextMaintenance = new Date(equipment.nextMaintenance);
-    const daysUntil = Math.ceil((nextMaintenance - now) / (1000 * 60 * 60 * 24));
+    // Check date-based maintenance
+    if (equipment.nextMaintenance) {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // Start of today
+      const nextMaintenance = new Date(equipment.nextMaintenance);
+      nextMaintenance.setHours(0, 0, 0, 0); // Start of maintenance day
+      
+      const diffTime = nextMaintenance - now;
+      const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      dateOverdue = daysUntil < 0; // Date has passed (before today)
+      dateDueSoon = daysUntil >= 0 && daysUntil <= 7; // Within next 7 days (including today)
+    }
     
-    if (daysUntil < 0) {
+    // OVERDUE: if date passed OR usage >= 100%
+    if (dateOverdue || percentUsed >= 100) {
       return <Badge count={t('equipment.badges.overdue')} style={{ backgroundColor: '#ff4d4f' }} />;
-    } else if (daysUntil <= 7) {
+    }
+    
+    // DUE SOON: if date within 7 days OR usage 80-99%
+    if (dateDueSoon || (percentUsed >= 80 && percentUsed < 100)) {
       return <Badge count={t('equipment.badges.dueSoon')} style={{ backgroundColor: '#faad14' }} />;
     }
+    
     return null;
   };
 
