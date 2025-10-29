@@ -1,15 +1,106 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Badge, Dropdown } from 'antd';
-import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined, HomeOutlined, RightOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined, HomeOutlined, RightOutlined, ExclamationCircleOutlined, WarningOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
 import LanguageSwitcher from './LanguageSwitcher';
+import config from '../config/config';
 import './Header.css';
 
 const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [criticalAlerts, setCriticalAlerts] = useState(null);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+
+  // Fetch critical alerts count
+  useEffect(() => {
+    const fetchCriticalAlerts = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiUrl}/dashboard/critical-alerts`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+          setCriticalAlerts(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching critical alerts:', error);
+      }
+    };
+
+    fetchCriticalAlerts();
+    // Refresh every 2 minutes
+    const interval = setInterval(fetchCriticalAlerts, 120000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Notification dropdown content
+  const notificationContent = (
+    <div className="notification-dropdown">
+      <div className="notification-header">
+        <ExclamationCircleOutlined className="notification-header-icon" />
+        <span className="notification-header-title">Critical Alerts</span>
+      </div>
+      {criticalAlerts && criticalAlerts.count > 0 ? (
+        <>
+          <div className="notification-summary">
+            <div className="notification-summary-text">
+              <strong>{criticalAlerts.count}</strong> critical issue{criticalAlerts.count !== 1 ? 's' : ''} detected
+            </div>
+          </div>
+          <div className="notification-items">
+            {criticalAlerts.overdue > 0 && (
+              <div className="notification-item">
+                <WarningOutlined className="notification-item-icon error" />
+                <div className="notification-item-content">
+                  <div className="notification-item-title">Maintenance Overdue</div>
+                  <div className="notification-item-desc">{criticalAlerts.overdue} equipment require immediate attention</div>
+                </div>
+              </div>
+            )}
+            {criticalAlerts.outOfService > 0 && (
+              <div className="notification-item">
+                <ExclamationCircleOutlined className="notification-item-icon error" />
+                <div className="notification-item-content">
+                  <div className="notification-item-title">Out of Service</div>
+                  <div className="notification-item-desc">{criticalAlerts.outOfService} equipment offline</div>
+                </div>
+              </div>
+            )}
+            {criticalAlerts.dueSoon > 0 && (
+              <div className="notification-item">
+                <ClockCircleOutlined className="notification-item-icon warning" />
+                <div className="notification-item-content">
+                  <div className="notification-item-title">Due Soon</div>
+                  <div className="notification-item-desc">{criticalAlerts.dueSoon} equipment maintenance due within 7 days</div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="notification-footer">
+            <div 
+              className="notification-footer-link"
+              onClick={() => {
+                setNotificationOpen(false);
+                navigate('/dashboard');
+              }}
+            >
+              View Dashboard →
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="notification-empty">
+          <div className="notification-empty-icon">✓</div>
+          <div className="notification-empty-text">All systems operational</div>
+          <div className="notification-empty-subtext">No critical alerts at this time</div>
+        </div>
+      )}
+    </div>
+  );
 
   const dropdownContent = (
     <div className="profile-dropdown">
@@ -59,11 +150,25 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
             <LanguageSwitcher />
           </div>
 
-          <div className="header-notification header-desktop-only">
-            <Badge count={0} showZero={false}>
-              <BellOutlined className="notification-icon" />
-            </Badge>
-          </div>
+          <Dropdown
+            popupRender={() => notificationContent}
+            placement="bottomRight"
+            trigger={['click']}
+            open={notificationOpen}
+            onOpenChange={setNotificationOpen}
+            overlayStyle={{ padding: 0 }}
+            className="header-desktop-only"
+          >
+            <div className="header-notification header-desktop-only">
+              <Badge 
+                count={criticalAlerts?.count || 0} 
+                showZero={false}
+                className={criticalAlerts?.count > 0 ? 'notification-badge-urgent' : ''}
+              >
+                <BellOutlined className="notification-icon" />
+              </Badge>
+            </div>
+          </Dropdown>
 
           <Dropdown
             popupRender={() => dropdownContent}

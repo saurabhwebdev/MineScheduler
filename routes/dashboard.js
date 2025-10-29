@@ -4,7 +4,8 @@ const { protect } = require('../middleware/auth');
 const {
   getDashboardMetrics,
   getDashboardTrends,
-  getEquipmentPerformance
+  getEquipmentPerformance,
+  getCriticalAlertsCount
 } = require('../controllers/dashboardController');
 
 // All routes are protected
@@ -24,5 +25,10 @@ router.get('/trends', getDashboardTrends);
 // @desc    Get equipment performance for 24-hour timeline
 // @access  Private
 router.get('/equipment-performance', getEquipmentPerformance);
+
+// @route   GET /api/dashboard/critical-alerts
+// @desc    Get critical alerts count for header notification
+// @access  Private
+router.get('/critical-alerts', getCriticalAlertsCount);
 
 module.exports = router;

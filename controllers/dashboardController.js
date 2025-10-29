@@ -324,3 +324,49 @@ exports.getEquipmentPerformance = async (req, res) => {
     });
   }
 };
+
+/**
+ * Get critical alerts count for header notification
+ * GET /api/dashboard/critical-alerts
+ */
+exports.getCriticalAlertsCount = async (req, res) => {
+  try {
+    const now = new Date();
+    
+    // Fetch all equipment
+    const equipment = await Equipment.find({});
+    
+    // Calculate critical metrics
+    const overdue = equipment.filter(eq => {
+      if (!eq.nextMaintenance) return false;
+      return new Date(eq.nextMaintenance) < now;
+    }).length;
+    
+    const outOfService = equipment.filter(eq => eq.status === 'out-of-service').length;
+    
+    const dueSoon = equipment.filter(eq => {
+      if (!eq.nextMaintenance) return false;
+      const daysUntil = (new Date(eq.nextMaintenance) - now) / (1000 * 60 * 60 * 24);
+      return daysUntil >= 0 && daysUntil <= 7;
+    }).length;
+    
+    const total = overdue + outOfService;
+    
+    res.status(200).json({
+      status: 'success',
+      data: {
+        count: total,
+        overdue,
+        outOfService,
+        dueSoon,
+        severity: total > 5 ? 'critical' : total > 2 ? 'warning' : 'good'
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching critical alerts count:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch critical alerts count'
+    });
+  }
+};
