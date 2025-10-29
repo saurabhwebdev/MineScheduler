@@ -98,9 +98,17 @@ const Dashboard = () => {
   const handleShowCritical = () => {
     const now = new Date();
     const critical = equipment.filter(eq => {
-      const isOverdue = eq.nextMaintenance && new Date(eq.nextMaintenance) < now;
+      const percentUsed = parseFloat(eq.percentUsed) || 0;
+      let isOverdue = false;
+      
+      // Check if maintenance date/time has passed OR usage >= 100%
+      if (eq.nextMaintenance) {
+        const nextMaintenance = new Date(eq.nextMaintenance);
+        isOverdue = nextMaintenance < now;
+      }
+      
       const isOutOfService = eq.status === 'out-of-service';
-      return isOverdue || isOutOfService;
+      return isOverdue || percentUsed >= 100 || isOutOfService;
     });
     setCriticalEquipment(critical);
     setCriticalModalVisible(true);

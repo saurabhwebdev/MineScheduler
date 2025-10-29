@@ -559,15 +559,23 @@ const Equipment = () => {
     // Check date-based maintenance
     if (equipment.nextMaintenance) {
       const now = new Date();
-      now.setHours(0, 0, 0, 0); // Start of today
       const nextMaintenance = new Date(equipment.nextMaintenance);
-      nextMaintenance.setHours(0, 0, 0, 0); // Start of maintenance day
       
-      const diffTime = nextMaintenance - now;
-      const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      dateOverdue = daysUntil < 0; // Date has passed (before today)
-      dateDueSoon = daysUntil >= 0 && daysUntil <= 7; // Within next 7 days (including today)
+      // First check: Has the maintenance time already passed? (exact time comparison)
+      if (nextMaintenance < now) {
+        dateOverdue = true;
+      } else {
+        // If not overdue yet, normalize times and check days
+        const nowDate = new Date(now);
+        nowDate.setHours(0, 0, 0, 0);
+        const maintenanceDate = new Date(nextMaintenance);
+        maintenanceDate.setHours(0, 0, 0, 0);
+        
+        const diffTime = maintenanceDate - nowDate;
+        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+      }
     }
     
     // OVERDUE: if date passed OR usage >= 100%

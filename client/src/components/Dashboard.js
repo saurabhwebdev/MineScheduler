@@ -82,12 +82,10 @@ const Dashboard = () => {
       
       if (eq.nextMaintenance) {
         const now = new Date();
-        now.setHours(0, 0, 0, 0);
         const nextMaintenance = new Date(eq.nextMaintenance);
-        nextMaintenance.setHours(0, 0, 0, 0);
-        const diffTime = nextMaintenance - now;
-        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        dateOverdue = daysUntil < 0;
+        
+        // Check if maintenance time has already passed (exact time comparison)
+        dateOverdue = nextMaintenance < now;
       }
       
       // OVERDUE if date passed OR usage >= 100%
@@ -101,13 +99,22 @@ const Dashboard = () => {
       
       if (eq.nextMaintenance) {
         const now = new Date();
-        now.setHours(0, 0, 0, 0);
         const nextMaintenance = new Date(eq.nextMaintenance);
-        nextMaintenance.setHours(0, 0, 0, 0);
-        const diffTime = nextMaintenance - now;
-        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        dateOverdue = daysUntil < 0;
-        dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+        
+        // Check if maintenance time has already passed
+        if (nextMaintenance < now) {
+          dateOverdue = true;
+        } else {
+          // If not overdue, check days until maintenance
+          const nowDate = new Date(now);
+          nowDate.setHours(0, 0, 0, 0);
+          const maintenanceDate = new Date(nextMaintenance);
+          maintenanceDate.setHours(0, 0, 0, 0);
+          
+          const diffTime = maintenanceDate - nowDate;
+          const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+        }
       }
       
       // Skip if already overdue
@@ -234,13 +241,22 @@ const Dashboard = () => {
           
           if (eq.nextMaintenance) {
             const now = new Date();
-            now.setHours(0, 0, 0, 0);
             const nextMaintenance = new Date(eq.nextMaintenance);
-            nextMaintenance.setHours(0, 0, 0, 0);
-            const diffTime = nextMaintenance - now;
-            const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            dateOverdue = daysUntil < 0;
-            dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+            
+            // Check if already overdue
+            if (nextMaintenance < now) {
+              dateOverdue = true;
+            } else {
+              // Check if due soon (within 7 days)
+              const nowDate = new Date(now);
+              nowDate.setHours(0, 0, 0, 0);
+              const maintenanceDate = new Date(nextMaintenance);
+              maintenanceDate.setHours(0, 0, 0, 0);
+              
+              const diffTime = maintenanceDate - nowDate;
+              const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+            }
           }
           
           // GOOD if NOT overdue AND NOT due soon (both date and usage)
@@ -254,13 +270,22 @@ const Dashboard = () => {
           
           if (eq.nextMaintenance) {
             const now = new Date();
-            now.setHours(0, 0, 0, 0);
             const nextMaintenance = new Date(eq.nextMaintenance);
-            nextMaintenance.setHours(0, 0, 0, 0);
-            const diffTime = nextMaintenance - now;
-            const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            dateOverdue = daysUntil < 0;
-            dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+            
+            // Check if already overdue
+            if (nextMaintenance < now) {
+              dateOverdue = true;
+            } else {
+              // Check if due soon (within 7 days)
+              const nowDate = new Date(now);
+              nowDate.setHours(0, 0, 0, 0);
+              const maintenanceDate = new Date(nextMaintenance);
+              maintenanceDate.setHours(0, 0, 0, 0);
+              
+              const diffTime = maintenanceDate - nowDate;
+              const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              dateDueSoon = daysUntil >= 0 && daysUntil <= 7;
+            }
           }
           
           // Skip if already overdue
@@ -277,12 +302,10 @@ const Dashboard = () => {
           
           if (eq.nextMaintenance) {
             const now = new Date();
-            now.setHours(0, 0, 0, 0);
             const nextMaintenance = new Date(eq.nextMaintenance);
-            nextMaintenance.setHours(0, 0, 0, 0);
-            const diffTime = nextMaintenance - now;
-            const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            dateOverdue = daysUntil < 0;
+            
+            // Check if maintenance time has already passed
+            dateOverdue = nextMaintenance < now;
           }
           
           // OVERDUE if date passed OR usage >= 100%
