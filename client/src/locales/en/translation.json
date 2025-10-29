@@ -773,6 +773,11 @@
     "loadingLatest": "Loading latest schedule...",
     "noScheduleTitle": "No Schedule Generated",
     "noScheduleDesc": "Click \"Generate Schedule\" to create your mine schedule",
+    "shiftFilter": {
+      "label": "Filter by Shift",
+      "allShifts": "All Shifts",
+      "viewing": "Viewing"
+    },
     "clearDelaysModal": {
       "title": "Clear All Delays",
       "message": "Are you sure you want to remove",

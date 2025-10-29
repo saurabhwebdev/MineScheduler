@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Modal, Button } from 'antd';
-import { FullscreenExitOutlined } from '@ant-design/icons';
+import { Modal, Button, Radio, Tag } from 'antd';
+import { FullscreenExitOutlined, FilterOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import ScheduleCell from './ScheduleCell';
 import DelayModal from './DelayModal';
 import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
+  const { t } = useTranslation();
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [toggleModalVisible, setToggleModalVisible] = useState(false);
@@ -13,6 +15,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   const [globalDelayModalVisible, setGlobalDelayModalVisible] = useState(false);
   const [selectedHourForGlobalDelay, setSelectedHourForGlobalDelay] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [selectedShiftFilter, setSelectedShiftFilter] = useState('all');
 
   const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
@@ -118,6 +121,59 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     // For 48-hour grid: only highlight current hour (0-23), not tomorrow's same hour (24-47)
     return hour === currentHour;
   };
+
+  // Get filtered hours based on selected shift
+  const getFilteredHours = useMemo(() => {
+    if (selectedShiftFilter === 'all') {
+      return Array.from({ length: gridHours }, (_, i) => i);
+    }
+
+    const selectedShift = shifts.find(s => s._id === selectedShiftFilter);
+    if (!selectedShift) {
+      return Array.from({ length: gridHours }, (_, i) => i);
+    }
+
+    const [startHour] = selectedShift.startTime.split(':').map(Number);
+    const [endHour] = selectedShift.endTime.split(':').map(Number);
+    const hoursArray = [];
+
+    // Handle same-day shift
+    if (startHour < endHour) {
+      for (let h = startHour; h < endHour; h++) {
+        hoursArray.push(h);
+        // For 48-hour grids, also include next day's hours
+        if (gridHours > 24 && h + 24 < gridHours) {
+          hoursArray.push(h + 24);
+        }
+      }
+    } else {
+      // Handle overnight shift (e.g., 22:00 - 06:00)
+      // First part: from startHour to end of day
+      for (let h = startHour; h < 24; h++) {
+        hoursArray.push(h);
+      }
+      // Second part: from start of day to endHour
+      for (let h = 0; h < endHour; h++) {
+        hoursArray.push(h);
+      }
+      // For 48-hour grids
+      if (gridHours > 24) {
+        for (let h = startHour + 24; h < gridHours; h++) {
+          hoursArray.push(h);
+        }
+        for (let h = 24; h < 24 + endHour && h < gridHours; h++) {
+          hoursArray.push(h);
+        }
+      }
+    }
+
+    return hoursArray.sort((a, b) => a - b);
+  }, [selectedShiftFilter, shifts, gridHours]);
+
+  // Get active shifts (only show active shifts in filter)
+  const activeShifts = useMemo(() => {
+    return shifts.filter(s => s.isActive);
+  }, [shifts]);
 
   // Sort sites: Active first, then inactive, with sorting within each group
   const sortedSites = useMemo(() => {
@@ -283,20 +339,61 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
       >
         Exit Fullscreen (ESC)
       </Button>
+
+      {/* Shift Filter */}
+      {activeShifts.length > 0 && (
+        <div className="shift-filter-container">
+          <div className="shift-filter-label">
+            <FilterOutlined /> {t('schedule.shiftFilter.label')}
+          </div>
+          <Radio.Group
+            value={selectedShiftFilter}
+            onChange={(e) => setSelectedShiftFilter(e.target.value)}
+            className="shift-filter-group"
+          >
+            <Radio.Button value="all" className="shift-filter-option">
+              {t('schedule.shiftFilter.allShifts')}
+            </Radio.Button>
+            {activeShifts.map(shift => (
+              <Radio.Button 
+                key={shift._id} 
+                value={shift._id}
+                className="shift-filter-option"
+              >
+                <span 
+                  className="shift-color-indicator" 
+                  style={{ backgroundColor: shift.color }}
+                ></span>
+                {shift.shiftName}
+                <span className="shift-time-range">({shift.startTime}-{shift.endTime})</span>
+              </Radio.Button>
+            ))}
+          </Radio.Group>
+          {selectedShiftFilter !== 'all' && (
+            <Tag 
+              color="blue" 
+              className="shift-filter-active-tag"
+            >
+              {t('schedule.shiftFilter.viewing')}: {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftName}
+            </Tag>
+          )}
+        </div>
+      )}
+
       <div className="schedule-grid-scroll">
-        <table className="schedule-grid" data-grid-hours={gridHours}>
+        <table className="schedule-grid" data-grid-hours={getFilteredHours.length}>
           <thead>
             {/* Shift Row */}
             <tr className="shift-row">
               <th className="priority-col shift-cell"></th>
               <th className="site-col shift-cell">Shift</th>
-              {Array.from({ length: gridHours }, (_, i) => {
-                const shift = getShiftForHour(i);
+              {getFilteredHours.map((hourIndex) => {
+                const shift = getShiftForHour(hourIndex);
                 // Subtle shift color indication
                 const shiftBg = shift.color ? `${shift.color}15` : '#fafafa';
                 return (
                   <th 
-                    key={i} 
+                    key={hourIndex} 
                     className="hour-col shift-cell"
                     style={{ backgroundColor: shiftBg }}
                     title={`${shift.name} - ${shift.code}`}
@@ -317,14 +414,14 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                 <span>Site</span>
                 <span className="sort-indicator">{getSortIndicator()}</span>
               </th>
-              {Array.from({ length: gridHours }, (_, i) => (
+              {getFilteredHours.map((hourIndex) => (
                 <th 
-                  key={i} 
-                  className={`hour-col hour-header-clickable ${isCurrentHour(i) ? 'current-hour' : ''}`}
-                  onClick={() => handleHourHeaderClick(i)}
+                  key={hourIndex} 
+                  className={`hour-col hour-header-clickable ${isCurrentHour(hourIndex) ? 'current-hour' : ''}`}
+                  onClick={() => handleHourHeaderClick(hourIndex)}
                   title="Click to add delay for all active sites"
                 >
-                  {i + 1}
+                  {hourIndex + 1}
                 </th>
               ))}
             </tr>
@@ -353,7 +450,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                       {siteId}
                     </a>
                   </td>
-                  {Array.from({ length: gridHours }, (_, hour) => {
+                  {getFilteredHours.map((hour) => {
                     const taskId = grid[siteId][hour];
                     const taskColor = taskId ? taskColors[taskId] : null;
                     const allDelays = getDelayInfo(siteId, hour);
