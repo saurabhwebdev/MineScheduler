@@ -537,6 +537,66 @@ const Schedule = () => {
     return scheduleData.shifts.filter(s => s.isActive);
   }, [scheduleData]);
 
+  // Calculate Phase 1 KPIs from schedule data
+  const scheduleKPIs = useMemo(() => {
+    if (!scheduleData || !scheduleData.grid || !scheduleData.siteActive) {
+      return {
+        totalMeters: 0,
+        totalBackfill: 0,
+        totalOre: 0,
+        activeSites: 0,
+        workHours: 0
+      };
+    }
+
+    const { grid, siteActive } = scheduleData;
+    const allSites = Object.keys(grid);
+    
+    // Filter only active sites
+    const activeSiteIds = allSites.filter(siteId => siteActive[siteId]);
+    
+    // Fetch sites data to calculate metrics
+    // We'll need to calculate from the grid data
+    let totalMeters = 0;
+    let totalBackfill = 0;
+    let totalOre = 0;
+    let totalWorkHours = 0;
+
+    // Calculate work hours from the grid
+    activeSiteIds.forEach(siteId => {
+      const siteRow = grid[siteId];
+      if (siteRow) {
+        // Count non-empty cells (scheduled hours)
+        Object.values(siteRow).forEach(cell => {
+          if (cell && cell.taskId && cell.taskId !== 'DELAY') {
+            totalWorkHours += 1; // Each cell is 1 hour
+          }
+        });
+      }
+    });
+
+    // For meters, backfill, and ore, we need site details
+    // These should be included in scheduleData if available
+    if (scheduleData.sites) {
+      activeSiteIds.forEach(siteId => {
+        const site = scheduleData.sites[siteId];
+        if (site) {
+          totalMeters += site.totalPlanMeters || 0;
+          totalBackfill += site.totalBackfillTonnes || 0;
+          totalOre += site.remoteTonnes || 0;
+        }
+      });
+    }
+
+    return {
+      totalMeters: Math.round(totalMeters),
+      totalBackfill: Math.round(totalBackfill),
+      totalOre: Math.round(totalOre),
+      activeSites: activeSiteIds.length,
+      workHours: totalWorkHours
+    };
+  }, [scheduleData]);
+
   const handleDownloadExcel = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -600,11 +660,36 @@ const Schedule = () => {
           items={[{
             key: 'controls',
             label: (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px', fontWeight: 600, flexWrap: 'wrap' }}>
                 <span>{t('schedule.controls', 'Schedule Controls')}</span>
                 {delayedSlots.length > 0 && (
                   <Tag color="warning">{delayedSlots.length} {t('schedule.delaysApplied')}</Tag>
                 )}
+                
+                {/* Phase 1 KPIs */}
+                {generatedAt && scheduleData && (
+                  <>
+                    <div style={{ height: '20px', width: '1px', background: '#d9d9d9' }}></div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                        📏 {scheduleKPIs.totalMeters} {t('schedule.kpis.meters')}
+                      </Tag>
+                      <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                        🏗️ {scheduleKPIs.totalBackfill} {t('schedule.kpis.tonnes')}
+                      </Tag>
+                      <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                        ⛏️ {scheduleKPIs.totalOre} {t('schedule.kpis.tonnes')}
+                      </Tag>
+                      <Tag color="green" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                        📍 {scheduleKPIs.activeSites} {t('schedule.kpis.sites')}
+                      </Tag>
+                      <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '2px 8px' }}>
+                        ⏱️ {scheduleKPIs.workHours} {t('schedule.kpis.hours')}
+                      </Tag>
+                    </div>
+                  </>
+                )}
+                
                 {generatedAt && scheduleData && (
                   <Tooltip 
                     title={

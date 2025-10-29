@@ -853,6 +853,12 @@
     "allShifts": "All Shifts",
     "fullscreenTooltip": "View schedule in fullscreen mode (no scroll)",
     "controls": "Schedule Controls",
+    "kpis": {
+      "meters": "m",
+      "tonnes": "t",
+      "sites": "Sites",
+      "hours": "hrs"
+    },
     "clearDelaysModal": {
       "title": "Clear All Delays",
       "message": "Are you sure you want to remove",

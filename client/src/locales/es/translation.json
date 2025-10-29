@@ -853,6 +853,12 @@
     "allShifts": "Todos los Turnos",
     "fullscreenTooltip": "Ver programación en modo de pantalla completa (sin desplazamiento)",
     "controls": "Controles de Programación",
+    "kpis": {
+      "meters": "m",
+      "tonnes": "t",
+      "sites": "Sitios",
+      "hours": "hrs"
+    },
     "clearDelaysModal": {
       "title": "Borrar Todos los Retrasos",
       "message": "¿Está seguro de que desea eliminar",
