@@ -24,6 +24,7 @@ const Delays = () => {
   const [importResults, setImportResults] = useState(null);
   const [selectedDelay, setSelectedDelay] = useState(null);
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 15,
@@ -192,6 +193,76 @@ const Delays = () => {
       setIsDeleteModalVisible(false);
       setDeletingDelay(null);
     }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('delays.messages.noDelaysSelected', 'Please select delays to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('delays.bulkDelete.title', 'Delete Selected Delays'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('delays.bulkDelete.message', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('delays.bulkDelete.delays', 'delays')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('delays.bulkDelete.warning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(delayId =>
+            fetch(`${config.apiUrl}/delays/${delayId}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('delays.messages.success'),
+              description: t('delays.bulkDelete.successMessage', {
+                defaultValue: `Successfully deleted ${successCount} delay(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('delays.messages.error'),
+              description: t('delays.bulkDelete.failMessage', {
+                defaultValue: `Failed to delete ${failCount} delay(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchDelays();
+        } catch (error) {
+          console.error('Error bulk deleting delays:', error);
+          notification.error({
+            message: t('delays.messages.networkError'),
+            description: t('delays.messages.deleteError'),
+          });
+        }
+      },
+    });
   };
 
   const handleDownloadTemplate = () => {
@@ -426,12 +497,32 @@ const Delays = () => {
           </div>
         </div>
 
+        {selectedRowKeys.length > 0 && (
+          <div style={{ marginBottom: '16px', padding: '12px', background: '#fff7e6', borderRadius: '8px', border: '1px solid #ffd591' }}>
+            <span style={{ marginRight: '12px', fontWeight: 500 }}>
+              {selectedRowKeys.length} {t('delays.bulkDelete.selected', 'delay(s) selected')}
+            </span>
+            <button 
+              className="btn-danger" 
+              onClick={handleBulkDelete}
+              style={{ background: '#ff4d4f', border: 'none', color: 'white', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              <DeleteOutlined /> {t('delays.bulkDelete.deleteSelected', 'Delete Selected')}
+            </button>
+          </div>
+        )}
+
         <div className="table-container">
           <Table
             columns={columns}
             dataSource={delays}
             loading={loading}
             rowKey="_id"
+            rowSelection={{
+              selectedRowKeys,
+              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+              preserveSelectedRowKeys: true,
+            }}
             pagination={{
               current: pagination.current,
               pageSize: pagination.pageSize,

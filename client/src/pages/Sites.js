@@ -22,6 +22,7 @@ const Sites = () => {
   const [editingSite, setEditingSite] = useState(null);
   const [deletingSite, setDeletingSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [importFile, setImportFile] = useState(null);
   const [importing, setImporting] = useState(false);
   const [importResults, setImportResults] = useState(null);
@@ -222,6 +223,76 @@ const Sites = () => {
       setIsDeleteModalVisible(false);
       setDeletingSite(null);
     }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('sites.messages.noSitesSelected', 'Please select sites to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('sites.bulkDelete.title', 'Delete Selected Sites'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('sites.bulkDelete.message', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('sites.bulkDelete.sites', 'sites')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('sites.bulkDelete.warning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(siteId =>
+            fetch(`${config.apiUrl}/sites/${siteId}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('sites.messages.success'),
+              description: t('sites.bulkDelete.successMessage', {
+                defaultValue: `Successfully deleted ${successCount} site(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('sites.messages.error'),
+              description: t('sites.bulkDelete.failMessage', {
+                defaultValue: `Failed to delete ${failCount} site(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchSites();
+        } catch (error) {
+          console.error('Error bulk deleting sites:', error);
+          notification.error({
+            message: t('sites.messages.networkError'),
+            description: t('sites.messages.deleteError'),
+          });
+        }
+      },
+    });
   };
 
   const handleToggleStatus = async (site) => {
@@ -489,12 +560,32 @@ const Sites = () => {
           </div>
         </div>
 
+        {selectedRowKeys.length > 0 && (
+          <div style={{ marginBottom: '16px', padding: '12px', background: '#fff7e6', borderRadius: '8px', border: '1px solid #ffd591' }}>
+            <span style={{ marginRight: '12px', fontWeight: 500 }}>
+              {selectedRowKeys.length} {t('sites.bulkDelete.selected', 'site(s) selected')}
+            </span>
+            <button 
+              className="btn-danger" 
+              onClick={handleBulkDelete}
+              style={{ background: '#ff4d4f', border: 'none', color: 'white', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              <DeleteOutlined /> {t('sites.bulkDelete.deleteSelected', 'Delete Selected')}
+            </button>
+          </div>
+        )}
+
         <div className="table-container">
           <Table
             columns={columns}
             dataSource={sites}
             loading={loading}
             rowKey="_id"
+            rowSelection={{
+              selectedRowKeys,
+              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+              preserveSelectedRowKeys: true,
+            }}
             pagination={{
               pageSize: 15,
               showSizeChanger: false,

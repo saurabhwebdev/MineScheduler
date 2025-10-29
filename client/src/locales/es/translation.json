@@ -486,6 +486,16 @@
       "timeToComplete": "Tiempo para Completar:",
       "hours": "horas"
     },
+    "bulkDelete": {
+      "title": "Eliminar Sitios Seleccionados",
+      "message": "¿Está seguro de que desea eliminar",
+      "sites": "sitios",
+      "warning": "Esta acción no se puede deshacer.",
+      "selected": "sitio(s) seleccionado(s)",
+      "deleteSelected": "Eliminar Seleccionados",
+      "successMessage": "Eliminados exitosamente {{count}} sitio(s)",
+      "failMessage": "Error al eliminar {{count}} sitio(s)"
+    },
     "messages": {
       "error": "Error",
       "success": "Éxito",
@@ -497,14 +507,15 @@
       "createError": "Error al crear sitio",
       "deleteSuccess": "Sitio eliminado exitosamente",
       "deleteError": "Error al eliminar sitio",
+      "noSitesSelected": "Por favor seleccione sitios para eliminar",
       "toggleSuccess": "Sitio {{status}} exitosamente",
-      "toggleError": "Error al cambiar estado del sitio",
+      "toggleError": "Error al alternar estado del sitio",
       "activated": "activado",
       "deactivated": "desactivado",
       "exportSuccess": "Sitios exportados exitosamente",
       "exportError": "Error al exportar sitios",
       "importComplete": "Importación Completa",
-      "importSuccess": "{{count}} sitios importados exitosamente",
+      "importSuccess": "Importados {{count}} sitios exitosamente",
       "importError": "Error al importar sitios",
       "selectFileError": "Por favor seleccione un archivo para importar"
     }
@@ -600,6 +611,16 @@
     "pagination": {
       "total": "{{start}}-{{end}} de {{total}} elementos"
     },
+    "bulkDelete": {
+      "title": "Eliminar Retrasos Seleccionados",
+      "message": "¿Está seguro de que desea eliminar",
+      "delays": "retrasos",
+      "warning": "Esta acción no se puede deshacer.",
+      "selected": "retraso(s) seleccionado(s)",
+      "deleteSelected": "Eliminar Seleccionados",
+      "successMessage": "Eliminados exitosamente {{count}} retraso(s)",
+      "failMessage": "Error al eliminar {{count}} retraso(s)"
+    },
     "messages": {
       "error": "Error",
       "success": "Éxito",
@@ -611,6 +632,7 @@
       "createError": "Error al crear retraso",
       "deleteSuccess": "Retraso eliminado exitosamente",
       "deleteError": "Error al eliminar retraso",
+      "noDelaysSelected": "Por favor seleccione retrasos para eliminar",
       "templateDownloaded": "Plantilla Descargada",
       "templateDownloadedDesc": "La plantilla de Excel se ha descargado exitosamente",
       "noFileSelected": "Ningún Archivo Seleccionado",

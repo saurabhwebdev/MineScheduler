@@ -486,6 +486,16 @@
       "timeToComplete": "Time to Complete:",
       "hours": "hours"
     },
+    "bulkDelete": {
+      "title": "Delete Selected Sites",
+      "message": "Are you sure you want to delete",
+      "sites": "sites",
+      "warning": "This action cannot be undone.",
+      "selected": "site(s) selected",
+      "deleteSelected": "Delete Selected",
+      "successMessage": "Successfully deleted {{count}} site(s)",
+      "failMessage": "Failed to delete {{count}} site(s)"
+    },
     "messages": {
       "error": "Error",
       "success": "Success",
@@ -497,6 +507,7 @@
       "createError": "Failed to create site",
       "deleteSuccess": "Site deleted successfully",
       "deleteError": "Failed to delete site",
+      "noSitesSelected": "Please select sites to delete",
       "toggleSuccess": "Site {{status}} successfully",
       "toggleError": "Failed to toggle site status",
       "activated": "activated",
@@ -600,6 +611,16 @@
     "pagination": {
       "total": "{{start}}-{{end}} of {{total}} items"
     },
+    "bulkDelete": {
+      "title": "Delete Selected Delays",
+      "message": "Are you sure you want to delete",
+      "delays": "delays",
+      "warning": "This action cannot be undone.",
+      "selected": "delay(s) selected",
+      "deleteSelected": "Delete Selected",
+      "successMessage": "Successfully deleted {{count}} delay(s)",
+      "failMessage": "Failed to delete {{count}} delay(s)"
+    },
     "messages": {
       "error": "Error",
       "success": "Success",
@@ -611,6 +632,7 @@
       "createError": "Failed to create delay",
       "deleteSuccess": "Delay deleted successfully",
       "deleteError": "Failed to delete delay",
+      "noDelaysSelected": "Please select delays to delete",
       "templateDownloaded": "Template Downloaded",
       "templateDownloadedDesc": "Excel template has been downloaded successfully",
       "noFileSelected": "No File Selected",
