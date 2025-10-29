@@ -734,6 +734,16 @@
     "pagination": {
       "total": "{{start}}-{{end}} of {{total}} items"
     },
+    "bulkDelete": {
+      "title": "Delete Selected Tasks",
+      "message": "Are you sure you want to delete",
+      "tasks": "tasks",
+      "warning": "This action cannot be undone.",
+      "selected": "task(s) selected",
+      "deleteSelected": "Delete Selected",
+      "successMessage": "Successfully deleted {{count}} task(s)",
+      "failMessage": "Failed to delete {{count}} task(s)"
+    },
     "messages": {
       "error": "Error",
       "success": "Success",
@@ -747,6 +757,7 @@
       "deleteError": "Failed to delete task",
       "moveSuccess": "Task moved {{direction}} successfully",
       "moveError": "Failed to move task",
+      "noTasksSelected": "Please select tasks to delete",
       "templateDownloaded": "Template Downloaded",
       "templateDownloadedDesc": "Excel template has been downloaded successfully",
       "noFileSelected": "No File Selected",

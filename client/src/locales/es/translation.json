@@ -734,6 +734,16 @@
     "pagination": {
       "total": "{{start}}-{{end}} de {{total}} elementos"
     },
+    "bulkDelete": {
+      "title": "Eliminar Tareas Seleccionadas",
+      "message": "¿Está seguro de que desea eliminar",
+      "tasks": "tareas",
+      "warning": "Esta acción no se puede deshacer.",
+      "selected": "tarea(s) seleccionada(s)",
+      "deleteSelected": "Eliminar Seleccionadas",
+      "successMessage": "Eliminadas exitosamente {{count}} tarea(s)",
+      "failMessage": "Error al eliminar {{count}} tarea(s)"
+    },
     "messages": {
       "error": "Error",
       "success": "Éxito",
@@ -747,6 +757,7 @@
       "deleteError": "Error al eliminar tarea",
       "moveSuccess": "Tarea movida {{direction}} exitosamente",
       "moveError": "Error al mover tarea",
+      "noTasksSelected": "Por favor seleccione tareas para eliminar",
       "templateDownloaded": "Plantilla Descargada",
       "templateDownloadedDesc": "La plantilla de Excel se ha descargado exitosamente",
       "noFileSelected": "Ningún Archivo Seleccionado",

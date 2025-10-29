@@ -34,6 +34,7 @@ const Tasks = () => {
   const [deletingTask, setDeletingTask] = useState(null);
   const [movingTask, setMovingTask] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   
   // New states for task type and calculations
   const [taskType, setTaskType] = useState('task');
@@ -270,6 +271,76 @@ const Tasks = () => {
       setIsDeleteModalVisible(false);
       setDeletingTask(null);
     }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('tasks.messages.noTasksSelected', 'Please select tasks to delete'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('tasks.bulkDelete.title', 'Delete Selected Tasks'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('tasks.bulkDelete.message', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('tasks.bulkDelete.tasks', 'tasks')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('tasks.bulkDelete.warning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(taskId =>
+            fetch(`${config.apiUrl}/tasks/${taskId}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('tasks.messages.success'),
+              description: t('tasks.bulkDelete.successMessage', {
+                defaultValue: `Successfully deleted ${successCount} task(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('tasks.messages.error'),
+              description: t('tasks.bulkDelete.failMessage', {
+                defaultValue: `Failed to delete ${failCount} task(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchTasks();
+        } catch (error) {
+          console.error('Error bulk deleting tasks:', error);
+          notification.error({
+            message: t('tasks.messages.networkError'),
+            description: t('tasks.messages.deleteError'),
+          });
+        }
+      },
+    });
   };
 
   const showMoveConfirm = (task, direction) => {
@@ -596,12 +667,32 @@ const Tasks = () => {
           </div>
         </div>
 
+        {selectedRowKeys.length > 0 && (
+          <div style={{ marginBottom: '16px', padding: '12px', background: '#fff7e6', borderRadius: '8px', border: '1px solid #ffd591' }}>
+            <span style={{ marginRight: '12px', fontWeight: 500 }}>
+              {selectedRowKeys.length} {t('tasks.bulkDelete.selected', 'task(s) selected')}
+            </span>
+            <button 
+              className="btn-danger" 
+              onClick={handleBulkDelete}
+              style={{ background: '#ff4d4f', border: 'none', color: 'white', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer' }}
+            >
+              <DeleteOutlined /> {t('tasks.bulkDelete.deleteSelected', 'Delete Selected')}
+            </button>
+          </div>
+        )}
+
         <div className="table-container">
           <Table
             columns={columns}
             dataSource={tasks}
             loading={loading}
             rowKey="_id"
+            rowSelection={{
+              selectedRowKeys,
+              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+              preserveSelectedRowKeys: true,
+            }}
             pagination={{
               defaultPageSize: 10,
               pageSize: 10,
