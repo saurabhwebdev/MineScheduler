@@ -67,7 +67,18 @@
       "deleteSuccess": "Usuario eliminado exitosamente",
       "deleteError": "Error al eliminar usuario",
       "cannotDeleteLastAdmin": "No puede eliminar al último usuario administrador. Debe haber al menos un administrador.",
-      "cannotDeleteTitle": "No se Puede Eliminar"
+      "cannotDeleteTitle": "No se Puede Eliminar",
+      "noUsersSelected": "Por favor seleccione usuarios para eliminar",
+      "cannotDeleteAllAdmins": "No se pueden eliminar todos los usuarios administradores. Debe quedar al menos un administrador."
+    },
+    "bulkDelete": {
+      "title": "Eliminar Usuarios Seleccionados",
+      "message": "¿Está seguro de que desea eliminar",
+      "users": "usuario(s)",
+      "warning": "Esta acción no se puede deshacer.",
+      "deleteSelected": "Eliminar Seleccionados",
+      "successMessage": "Se eliminaron exitosamente {{count}} usuario(s)",
+      "failMessage": "Error al eliminar {{count}} usuario(s)"
     }
   },
   "audit": {

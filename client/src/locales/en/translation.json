@@ -67,7 +67,18 @@
       "deleteSuccess": "User deleted successfully",
       "deleteError": "Failed to delete user",
       "cannotDeleteLastAdmin": "You cannot delete the last admin user. There must be at least one admin.",
-      "cannotDeleteTitle": "Cannot Delete"
+      "cannotDeleteTitle": "Cannot Delete",
+      "noUsersSelected": "Please select users to delete",
+      "cannotDeleteAllAdmins": "Cannot delete all admin users. At least one admin must remain."
+    },
+    "bulkDelete": {
+      "title": "Delete Selected Users",
+      "message": "Are you sure you want to delete",
+      "users": "user(s)",
+      "warning": "This action cannot be undone.",
+      "deleteSelected": "Delete Selected",
+      "successMessage": "Successfully deleted {{count}} user(s)",
+      "failMessage": "Failed to delete {{count}} user(s)"
     }
   },
   "audit": {

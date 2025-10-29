@@ -17,6 +17,7 @@ const UserManagement = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [deletingUser, setDeletingUser] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [form] = Form.useForm();
   const [roleManagementVisible, setRoleManagementVisible] = useState(false);
   const [customRoles, setCustomRoles] = useState([]);
@@ -203,6 +204,89 @@ const UserManagement = () => {
     }
   };
 
+  const handleBulkDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      notification.warning({
+        message: t('common.warning', 'Warning'),
+        description: t('users.messages.noUsersSelected', 'Please select users to delete'),
+      });
+      return;
+    }
+
+    // Check if any selected users are the last admin
+    const selectedUsers = users.filter(u => selectedRowKeys.includes(u._id));
+    const adminCount = users.filter(u => u.role === 'admin').length;
+    const selectedAdminCount = selectedUsers.filter(u => u.role === 'admin').length;
+
+    if (selectedAdminCount > 0 && adminCount === selectedAdminCount) {
+      notification.warning({
+        message: t('users.messages.cannotDeleteTitle'),
+        description: t('users.messages.cannotDeleteAllAdmins', 'Cannot delete all admin users. At least one admin must remain.'),
+      });
+      return;
+    }
+
+    Modal.confirm({
+      title: t('users.bulkDelete.title', 'Delete Selected Users'),
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>{t('users.bulkDelete.message', 'Are you sure you want to delete')} <strong>{selectedRowKeys.length}</strong> {t('users.bulkDelete.users', 'user(s)')}?</p>
+          <p style={{ color: '#ff4d4f', marginTop: '8px' }}>{t('users.bulkDelete.warning', 'This action cannot be undone.')}</p>
+        </div>
+      ),
+      okText: t('common.delete', 'Delete'),
+      okType: 'danger',
+      cancelText: t('common.cancel', 'Cancel'),
+      onOk: async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const deletePromises = selectedRowKeys.map(userId =>
+            fetch(`${config.apiUrl}/users/${userId}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            })
+          );
+
+          const results = await Promise.all(deletePromises);
+          const successCount = results.filter(r => r.ok).length;
+          const failCount = results.length - successCount;
+
+          if (successCount > 0) {
+            notification.success({
+              message: t('common.success'),
+              description: t('users.bulkDelete.successMessage', {
+                defaultValue: `Successfully deleted ${successCount} user(s)`,
+                count: successCount
+              }),
+            });
+          }
+
+          if (failCount > 0) {
+            notification.error({
+              message: t('common.error'),
+              description: t('users.bulkDelete.failMessage', {
+                defaultValue: `Failed to delete ${failCount} user(s)`,
+                count: failCount
+              }),
+            });
+          }
+
+          setSelectedRowKeys([]);
+          fetchUsers();
+        } catch (error) {
+          console.error('Error bulk deleting users:', error);
+          notification.error({
+            message: t('common.error'),
+            description: t('users.messages.deleteError'),
+          });
+        }
+      },
+    });
+  };
+
   const columns = [
     {
       title: t('users.columns.name'),
@@ -283,6 +367,11 @@ const UserManagement = () => {
             <button className="btn-primary" onClick={handleCreateUser}>
               <PlusOutlined /> {t('users.newUser')}
             </button>
+            {selectedRowKeys.length > 0 && (
+              <button className="btn-secondary" onClick={handleBulkDelete}>
+                <DeleteOutlined /> {t('users.bulkDelete.deleteSelected', `Delete Selected (${selectedRowKeys.length})`)}
+              </button>
+            )}
             <Button
               icon={<SafetyOutlined />}
               onClick={() => setRoleManagementVisible(true)}
@@ -299,6 +388,18 @@ const UserManagement = () => {
             dataSource={users}
             loading={loading}
             rowKey="_id"
+            rowSelection={{
+              selectedRowKeys,
+              onChange: (selectedKeys) => setSelectedRowKeys(selectedKeys),
+              preserveSelectedRowKeys: true,
+              getCheckboxProps: (record) => {
+                const adminCount = users.filter(u => u.role === 'admin').length;
+                const isLastAdmin = record.role === 'admin' && adminCount === 1;
+                return {
+                  disabled: isLastAdmin,
+                };
+              },
+            }}
             pagination={{
               pageSize: 15,
               showSizeChanger: false,
