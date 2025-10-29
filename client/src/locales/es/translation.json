@@ -773,11 +773,10 @@
     "loadingLatest": "Cargando última programación...",
     "noScheduleTitle": "No Se Ha Generado Programación",
     "noScheduleDesc": "Haga clic en \"Generar Programación\" para crear su programación minera",
-    "shiftFilter": {
-      "label": "Filtrar por Turno",
-      "allShifts": "Todos los Turnos",
-      "viewing": "Viendo"
-    },
+    "shiftFilter": "Filtrar por Turno",
+    "allShifts": "Todos los Turnos",
+    "fullscreenTooltip": "Ver programación en modo de pantalla completa (sin desplazamiento)",
+    "controls": "Controles de Programación",
     "clearDelaysModal": {
       "title": "Borrar Todos los Retrasos",
       "message": "¿Está seguro de que desea eliminar",

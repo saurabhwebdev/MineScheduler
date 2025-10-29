@@ -6,7 +6,7 @@ import ScheduleCell from './ScheduleCell';
 import DelayModal from './DelayModal';
 import './ScheduleGrid.css';
 
-const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay }) => {
+const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay, selectedShiftFilter, activeShifts }) => {
   const { t } = useTranslation();
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
@@ -15,7 +15,6 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   const [globalDelayModalVisible, setGlobalDelayModalVisible] = useState(false);
   const [selectedHourForGlobalDelay, setSelectedHourForGlobalDelay] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [selectedShiftFilter, setSelectedShiftFilter] = useState('all');
 
   const { grid, gridHours, sitePriority, siteActive, taskColors, shifts = [] } = scheduleData;
 
@@ -124,12 +123,20 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
 
   // Get filtered hours based on selected shift
   const getFilteredHours = useMemo(() => {
-    if (selectedShiftFilter === 'all') {
+    console.log('📊 ScheduleGrid - selectedShiftFilter:', selectedShiftFilter);
+    console.log('📊 ScheduleGrid - activeShifts:', activeShifts);
+    console.log('📊 ScheduleGrid - gridHours:', gridHours);
+    
+    if (!selectedShiftFilter || selectedShiftFilter === 'all') {
+      console.log('✅ Showing all hours');
       return Array.from({ length: gridHours }, (_, i) => i);
     }
 
-    const selectedShift = shifts.find(s => s._id === selectedShiftFilter);
+    const selectedShift = activeShifts?.find(s => s._id === selectedShiftFilter);
+    console.log('🔍 Selected shift object:', selectedShift);
+    
     if (!selectedShift) {
+      console.log('⚠️ No matching shift found, showing all hours');
       return Array.from({ length: gridHours }, (_, i) => i);
     }
 
@@ -168,20 +175,8 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
     }
 
     return hoursArray.sort((a, b) => a - b);
-  }, [selectedShiftFilter, shifts, gridHours]);
+  }, [selectedShiftFilter, activeShifts, gridHours]);
 
-  // Get active shifts (only show active shifts in filter)
-  const activeShifts = useMemo(() => {
-    if (!shifts || shifts.length === 0) {
-      // Return default shifts if none configured
-      return [
-        { _id: 'shift-a', shiftName: 'Day Shift', shiftCode: 'A', startTime: '06:00', endTime: '14:00', color: '#52c41a', isActive: true },
-        { _id: 'shift-b', shiftName: 'Night Shift', shiftCode: 'B', startTime: '14:00', endTime: '22:00', color: '#1890ff', isActive: true },
-        { _id: 'shift-c', shiftName: 'General', shiftCode: 'C', startTime: '22:00', endTime: '06:00', color: '#722ed1', isActive: true }
-      ];
-    }
-    return shifts.filter(s => s.isActive);
-  }, [shifts]);
 
   // Sort sites: Active first, then inactive, with sorting within each group
   const sortedSites = useMemo(() => {
@@ -337,58 +332,19 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
   };
 
   return (
-    <div className="schedule-grid-wrapper">
-      {/* Exit Fullscreen Button (only visible in fullscreen mode) */}
-      <Button
-        className="fullscreen-exit-btn"
-        icon={<FullscreenExitOutlined />}
-        onClick={handleExitFullscreen}
-        size="large"
-      >
-        Exit Fullscreen (ESC)
-      </Button>
+    <>
+      <div className="schedule-grid-wrapper">
+        {/* Exit Fullscreen Button (only visible in fullscreen mode) */}
+        <Button
+          className="fullscreen-exit-btn"
+          icon={<FullscreenExitOutlined />}
+          onClick={handleExitFullscreen}
+          size="large"
+        >
+          Exit Fullscreen (ESC)
+        </Button>
 
-      {/* Shift Filter */}
-      {activeShifts.length > 0 && (
-        <div className="shift-filter-container">
-          <div className="shift-filter-label">
-            <FilterOutlined /> {t('schedule.shiftFilter.label')}
-          </div>
-          <Radio.Group
-            value={selectedShiftFilter}
-            onChange={(e) => setSelectedShiftFilter(e.target.value)}
-            className="shift-filter-group"
-          >
-            <Radio.Button value="all" className="shift-filter-option">
-              {t('schedule.shiftFilter.allShifts')}
-            </Radio.Button>
-            {activeShifts.map(shift => (
-              <Radio.Button 
-                key={shift._id} 
-                value={shift._id}
-                className="shift-filter-option"
-              >
-                <span 
-                  className="shift-color-indicator" 
-                  style={{ backgroundColor: shift.color }}
-                ></span>
-                {shift.shiftName}
-                <span className="shift-time-range">({shift.startTime}-{shift.endTime})</span>
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-          {selectedShiftFilter !== 'all' && (
-            <Tag 
-              color="blue" 
-              className="shift-filter-active-tag"
-            >
-              {t('schedule.shiftFilter.viewing')}: {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftName}
-            </Tag>
-          )}
-        </div>
-      )}
-
-      <div className="schedule-grid-scroll">
+        <div className="schedule-grid-scroll">
         <table className="schedule-grid" data-grid-hours={getFilteredHours.length}>
           <thead>
             {/* Shift Row */}
@@ -491,6 +447,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
             })}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Modern Toggle Modal */}
@@ -581,7 +538,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
         }}
         onSubmit={handleGlobalDelaySubmit}
       />
-    </div>
+    </>
   );
 };
 

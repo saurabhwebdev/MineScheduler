@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Button, notification, Radio, Spin, Tag, Space, Modal, Collapse, Tooltip } from 'antd';
-import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined, DownOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Button, notification, Radio, Spin, Tag, Modal, Collapse, Tooltip } from 'antd';
+import { CalendarOutlined, ReloadOutlined, ClockCircleOutlined, DownloadOutlined, SaveOutlined, FolderOpenOutlined, DeleteOutlined, ExclamationCircleOutlined, DownOutlined, FullscreenOutlined, FullscreenExitOutlined, FilterOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../components/DashboardLayout';
 import ScheduleGrid from '../components/ScheduleGrid';
@@ -18,6 +18,7 @@ const Schedule = () => {
   const [loadingLatest, setLoadingLatest] = useState(true);
   const [controlsCollapsed, setControlsCollapsed] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [selectedShiftFilter, setSelectedShiftFilter] = useState('all');
 
   // Fetch latest schedule on mount
   useEffect(() => {
@@ -528,6 +529,14 @@ const Schedule = () => {
     }
   };
 
+  // Get active shifts from schedule data
+  const activeShifts = useMemo(() => {
+    if (!scheduleData || !scheduleData.shifts || scheduleData.shifts.length === 0) {
+      return [];
+    }
+    return scheduleData.shifts.filter(s => s.isActive);
+  }, [scheduleData]);
+
   const handleDownloadExcel = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -619,117 +628,165 @@ const Schedule = () => {
             ),
             children: (
               <div className="schedule-controls">
-                <div className="controls-single-row">
-                  <div className="control-group">
-                    <label className="control-label">{t('schedule.gridHours')}</label>
-                    <Radio.Group value={gridHours} onChange={handleHoursChange} size="large">
-                      <Radio.Button value={6}>{t('schedule.hours', { count: 6 })}</Radio.Button>
-                      <Radio.Button value={12}>{t('schedule.hours', { count: 12 })}</Radio.Button>
-                      <Radio.Button value={24}>{t('schedule.hours', { count: 24 })}</Radio.Button>
-                      <Radio.Button value={48}>{t('schedule.hours', { count: 48 })}</Radio.Button>
+                <div className="controls-single-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'nowrap' }}>
+                  {/* Grid Hours */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 500, margin: 0, whiteSpace: 'nowrap' }}>
+                      <ClockCircleOutlined style={{ marginRight: '4px' }} />
+                      Grid:
+                    </label>
+                    <Radio.Group value={gridHours} onChange={handleHoursChange} size="small">
+                      <Radio.Button value={6}>6h</Radio.Button>
+                      <Radio.Button value={12}>12h</Radio.Button>
+                      <Radio.Button value={24}>24h</Radio.Button>
+                      <Radio.Button value={48}>48h</Radio.Button>
                     </Radio.Group>
                   </div>
 
-                  {delayedSlots.length > 0 && (
-                    <div className="delay-count">
-                      <span className="delay-badge">{delayedSlots.length}</span>
-                      <span className="delay-text">{t('schedule.delaysApplied')}</span>
+                  {/* Shift Filter */}
+                  {scheduleData && activeShifts && activeShifts.length > 0 && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 500, margin: 0, whiteSpace: 'nowrap' }}>
+                        <FilterOutlined style={{ marginRight: '4px' }} />
+                        Shift:
+                      </label>
+                      <Radio.Group 
+                        value={selectedShiftFilter} 
+                        onChange={(e) => setSelectedShiftFilter(e.target.value)} 
+                        size="small"
+                      >
+                        <Radio.Button value="all">All</Radio.Button>
+                        {activeShifts.map(shift => (
+                          <Radio.Button 
+                            key={shift._id} 
+                            value={shift._id}
+                            style={{ 
+                              borderColor: selectedShiftFilter === shift._id ? shift.color : undefined,
+                              color: selectedShiftFilter === shift._id ? shift.color : undefined
+                            }}
+                          >
+                            {shift.shiftCode}
+                          </Radio.Button>
+                        ))}
+                      </Radio.Group>
                     </div>
                   )}
 
-                  <div className="action-buttons">
-                    <Button
-                      type="primary"
-                      size="large"
-                      icon={<CalendarOutlined />}
-                      onClick={generateSchedule}
-                      loading={loading}
-                      className="generate-btn"
-                    >
-                      {t('schedule.generateSchedule')}
-                    </Button>
+                  {/* Divider */}
+                  <div style={{ height: '24px', width: '1px', background: '#d9d9d9' }}></div>
 
-                    {scheduleData && (
+                  {/* Action Buttons - Icon Only */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Tooltip title={t('schedule.generateSchedule')}>
                       <Button
-                        size="large"
-                        icon={<ReloadOutlined />}
+                        size="middle"
+                        icon={<CalendarOutlined />}
                         onClick={generateSchedule}
                         loading={loading}
-                        className="regenerate-btn"
-                      >
-                        {t('schedule.regenerate')}
-                      </Button>
+                        style={{
+                          background: '#3cca70',
+                          borderColor: '#3cca70',
+                          color: '#ffffff'
+                        }}
+                      />
+                    </Tooltip>
+
+                    {scheduleData && (
+                      <Tooltip title={t('schedule.regenerate')}>
+                        <Button
+                          size="middle"
+                          icon={<ReloadOutlined />}
+                          onClick={generateSchedule}
+                          loading={loading}
+                          style={{
+                            background: '#3cca70',
+                            borderColor: '#3cca70',
+                            color: '#ffffff'
+                          }}
+                        />
+                      </Tooltip>
                     )}
 
                     {scheduleData && (
-                      <Button
-                        size="large"
-                        icon={<DownloadOutlined />}
-                        onClick={handleDownloadExcel}
-                        className="download-btn"
-                      >
-                        {t('schedule.downloadExcel')}
-                      </Button>
+                      <Tooltip title={t('schedule.downloadExcel')}>
+                        <Button
+                          size="middle"
+                          icon={<DownloadOutlined />}
+                          onClick={handleDownloadExcel}
+                          style={{
+                            background: '#3cca70',
+                            borderColor: '#3cca70',
+                            color: '#ffffff'
+                          }}
+                        />
+                      </Tooltip>
                     )}
 
                     {scheduleData && (
-                      <Button
-                        size="large"
-                        icon={<SaveOutlined />}
-                        onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
-                        className="save-btn"
-                      >
-                        {t('schedule.saveSnapshot')}
-                      </Button>
+                      <Tooltip title={t('schedule.saveSnapshot')}>
+                        <Button
+                          size="middle"
+                          icon={<SaveOutlined />}
+                          onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
+                          style={{
+                            background: '#3cca70',
+                            borderColor: '#3cca70',
+                            color: '#ffffff'
+                          }}
+                        />
+                      </Tooltip>
                     )}
 
-                    <Button
-                      size="large"
-                      icon={<FolderOpenOutlined />}
-                      onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
-                      className="load-btn"
-                    >
-                      {t('schedule.loadSnapshot')}
-                    </Button>
+                    <Tooltip title={t('schedule.loadSnapshot')}>
+                      <Button
+                        size="middle"
+                        icon={<FolderOpenOutlined />}
+                        onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
+                        style={{
+                          background: '#3cca70',
+                          borderColor: '#3cca70',
+                          color: '#ffffff'
+                        }}
+                      />
+                    </Tooltip>
 
                     {scheduleData && gridHours === 48 && (
                       <Tooltip title={t('schedule.fullscreenTooltip', 'View schedule in fullscreen mode (no scroll)')}>
                         <Button
+                          size="middle"
                           icon={<FullscreenOutlined />}
                           onClick={handleFullscreenToggle}
                           style={{
-                            background: '#13c2c2',
-                            borderColor: '#13c2c2',
-                            color: '#ffffff',
-                            minWidth: '36px',
-                            width: '36px',
-                            height: '36px',
-                            padding: '0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            background: '#3cca70',
+                            borderColor: '#3cca70',
+                            color: '#ffffff'
                           }}
                         />
                       </Tooltip>
                     )}
 
                     {scheduleData && delayedSlots.length > 0 && (
-                      <Button
-                        size="large"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={handleClearAllDelays}
-                        className="clear-delays-btn"
-                        style={{
-                          background: '#ff4d4f',
-                          borderColor: '#ff4d4f',
-                          color: '#ffffff'
-                        }}
-                      >
-                        {t('schedule.clearAllDelays', { count: delayedSlots.length })}
-                      </Button>
+                      <Tooltip title={t('schedule.clearAllDelays', { count: delayedSlots.length })}>
+                        <Button
+                          size="middle"
+                          icon={<DeleteOutlined />}
+                          onClick={handleClearAllDelays}
+                          style={{
+                            background: '#ff4d4f',
+                            borderColor: '#ff4d4f',
+                            color: '#ffffff'
+                          }}
+                        />
+                      </Tooltip>
                     )}
                   </div>
+
+                  {/* Delay Count Badge */}
+                  {delayedSlots.length > 0 && (
+                    <Tag color="warning" style={{ margin: 0 }}>
+                      {delayedSlots.length} {t('schedule.delaysApplied')}
+                    </Tag>
+                  )}
                 </div>
               </div>
             )
@@ -761,6 +818,8 @@ const Schedule = () => {
             onToggleSite={handleToggleSite}
             onAddDelay={handleAddDelay}
             onRemoveDelay={handleRemoveDelay}
+            selectedShiftFilter={selectedShiftFilter}
+            activeShifts={activeShifts}
           />
         )}
 

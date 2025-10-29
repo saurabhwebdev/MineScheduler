@@ -158,11 +158,13 @@ exports.generateSchedule = async (req, res) => {
       taskLimits,
       gridHours,
       shifts: shifts.map(s => ({
+        _id: s._id,
         shiftCode: s.shiftCode,
         shiftName: s.shiftName,
         startTime: s.startTime,
         endTime: s.endTime,
-        color: s.color
+        color: s.color,
+        isActive: s.isActive
       })),
       shiftChangeoverDelays: shiftChangeoverDelays,
       allDelays: allDelays
