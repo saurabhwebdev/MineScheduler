@@ -172,6 +172,14 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
 
   // Get active shifts (only show active shifts in filter)
   const activeShifts = useMemo(() => {
+    if (!shifts || shifts.length === 0) {
+      // Return default shifts if none configured
+      return [
+        { _id: 'shift-a', shiftName: 'Day Shift', shiftCode: 'A', startTime: '06:00', endTime: '14:00', color: '#52c41a', isActive: true },
+        { _id: 'shift-b', shiftName: 'Night Shift', shiftCode: 'B', startTime: '14:00', endTime: '22:00', color: '#1890ff', isActive: true },
+        { _id: 'shift-c', shiftName: 'General', shiftCode: 'C', startTime: '22:00', endTime: '06:00', color: '#722ed1', isActive: true }
+      ];
+    }
     return shifts.filter(s => s.isActive);
   }, [shifts]);
 
