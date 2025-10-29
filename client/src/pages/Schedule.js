@@ -19,10 +19,12 @@ const Schedule = () => {
   const [controlsCollapsed, setControlsCollapsed] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [selectedShiftFilter, setSelectedShiftFilter] = useState('all');
+  const [sites, setSites] = useState([]);
 
-  // Fetch latest schedule on mount
+  // Fetch latest schedule and sites on mount
   useEffect(() => {
     fetchLatestSchedule();
+    fetchSites();
   }, []);
 
   // Load delayed slots from sessionStorage on mount
@@ -64,6 +66,24 @@ const Schedule = () => {
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
     };
   }, []);
+
+  const fetchSites = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/sites`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.status === 'success') {
+        setSites(data.data.sites || []);
+      }
+    } catch (error) {
+      console.error('Error fetching sites:', error);
+    }
+  };
 
   const fetchLatestSchedule = async () => {
     setLoadingLatest(true);
@@ -537,9 +557,9 @@ const Schedule = () => {
     return scheduleData.shifts.filter(s => s.isActive);
   }, [scheduleData]);
 
-  // Calculate Phase 1 KPIs from schedule data
+  // Calculate Phase 1 KPIs from schedule data and sites
   const scheduleKPIs = useMemo(() => {
-    if (!scheduleData || !scheduleData.grid || !scheduleData.siteActive) {
+    if (!scheduleData || !scheduleData.grid || !scheduleData.siteActive || !sites || sites.length === 0) {
       return {
         totalMeters: 0,
         totalBackfill: 0,
@@ -555,38 +575,46 @@ const Schedule = () => {
     // Filter only active sites
     const activeSiteIds = allSites.filter(siteId => siteActive[siteId]);
     
-    // Fetch sites data to calculate metrics
-    // We'll need to calculate from the grid data
+    // Create a map of sites by siteId for quick lookup
+    const siteMap = {};
+    sites.forEach(site => {
+      siteMap[site.siteId] = site;
+    });
+    
     let totalMeters = 0;
     let totalBackfill = 0;
     let totalOre = 0;
     let totalWorkHours = 0;
 
-    // Calculate work hours from the grid
+    // Calculate metrics for active sites
     activeSiteIds.forEach(siteId => {
+      // Calculate work hours from the grid
       const siteRow = grid[siteId];
       if (siteRow) {
         // Count non-empty cells (scheduled hours)
-        Object.values(siteRow).forEach(cell => {
-          if (cell && cell.taskId && cell.taskId !== 'DELAY') {
-            totalWorkHours += 1; // Each cell is 1 hour
-          }
-        });
+        if (Array.isArray(siteRow)) {
+          siteRow.forEach(cell => {
+            if (cell && cell.taskId && cell.taskId !== 'DELAY') {
+              totalWorkHours += 1; // Each cell is 1 hour
+            }
+          });
+        } else {
+          Object.values(siteRow).forEach(cell => {
+            if (cell && cell.taskId && cell.taskId !== 'DELAY') {
+              totalWorkHours += 1; // Each cell is 1 hour
+            }
+          });
+        }
+      }
+
+      // Get site details from the sites array
+      const site = siteMap[siteId];
+      if (site) {
+        totalMeters += site.totalPlanMeters || 0;
+        totalBackfill += site.totalBackfillTonnes || 0;
+        totalOre += site.remoteTonnes || 0;
       }
     });
-
-    // For meters, backfill, and ore, we need site details
-    // These should be included in scheduleData if available
-    if (scheduleData.sites) {
-      activeSiteIds.forEach(siteId => {
-        const site = scheduleData.sites[siteId];
-        if (site) {
-          totalMeters += site.totalPlanMeters || 0;
-          totalBackfill += site.totalBackfillTonnes || 0;
-          totalOre += site.remoteTonnes || 0;
-        }
-      });
-    }
 
     return {
       totalMeters: Math.round(totalMeters),
@@ -595,7 +623,7 @@ const Schedule = () => {
       activeSites: activeSiteIds.length,
       workHours: totalWorkHours
     };
-  }, [scheduleData]);
+  }, [scheduleData, sites]);
 
   const handleDownloadExcel = async () => {
     try {
