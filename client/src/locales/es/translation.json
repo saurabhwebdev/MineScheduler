@@ -205,7 +205,15 @@
       "exportSuccessDesc": "UDMs exportadas exitosamente",
       "exportFailed": "Exportación Fallida",
       "exportError": "Error al exportar UDMs",
-      "exportErrorOccurred": "Ocurrió un error durante la exportación"
+      "exportErrorOccurred": "Ocurrió un error durante la exportación",
+      "deleteSelected": "Eliminar Seleccionados",
+      "noItemsSelected": "Por favor seleccione elementos para eliminar",
+      "bulkDeleteTitle": "Eliminar Elementos Seleccionados",
+      "bulkDeleteMessage": "¿Está seguro de que desea eliminar",
+      "items": "elemento(s)",
+      "bulkDeleteWarning": "Esta acción no se puede deshacer.",
+      "bulkDeleteSuccess": "Se eliminaron exitosamente {{count}} elemento(s)",
+      "bulkDeleteFail": "Error al eliminar {{count}} elemento(s)"
     },
     "shiftConfig": {
       "newShift": "Nuevo Turno",
@@ -262,7 +270,15 @@
       "exportFailed": "Exportación Fallida",
       "exportError": "Error al exportar turnos",
       "exportErrorOccurred": "Ocurrió un error durante la exportación",
-      "paginationText": "{{start}}-{{end}} de {{total}} turnos"
+      "paginationText": "{{start}}-{{end}} de {{total}} turnos",
+      "deleteSelected": "Eliminar Seleccionados",
+      "noItemsSelected": "Por favor seleccione elementos para eliminar",
+      "bulkDeleteTitle": "Eliminar Turnos Seleccionados",
+      "bulkDeleteMessage": "¿Está seguro de que desea eliminar",
+      "shifts": "turno(s)",
+      "bulkDeleteWarning": "Esta acción no se puede deshacer.",
+      "bulkDeleteSuccess": "Se eliminaron exitosamente {{count}} turno(s)",
+      "bulkDeleteFail": "Error al eliminar {{count}} turno(s)"
     },
     "equipmentTypeConfig": {
       "newEquipmentType": "Nuevo Tipo de Equipo",
@@ -316,7 +332,15 @@
       "exportSuccessDesc": "Tipos de equipo exportados exitosamente",
       "exportFailed": "Exportación Fallida",
       "exportError": "Error al exportar tipos de equipo",
-      "exportErrorOccurred": "Ocurrió un error durante la exportación"
+      "exportErrorOccurred": "Ocurrió un error durante la exportación",
+      "deleteSelected": "Eliminar Seleccionados",
+      "noItemsSelected": "Por favor seleccione elementos para eliminar",
+      "bulkDeleteTitle": "Eliminar Tipos de Equipo Seleccionados",
+      "bulkDeleteMessage": "¿Está seguro de que desea eliminar",
+      "types": "tipo(s)",
+      "bulkDeleteWarning": "Esta acción no se puede deshacer.",
+      "bulkDeleteSuccess": "Se eliminaron exitosamente {{count}} tipo(s)",
+      "bulkDeleteFail": "Error al eliminar {{count}} tipo(s)"
     },
     "constantsConfig": {
       "newConstant": "Nueva Constante",
@@ -383,7 +407,15 @@
       "exportSuccessDesc": "Constantes exportadas exitosamente",
       "exportFailed": "Exportación Fallida",
       "exportError": "Error al exportar constantes",
-      "exportErrorOccurred": "Ocurrió un error durante la exportación"
+      "exportErrorOccurred": "Ocurrió un error durante la exportación",
+      "deleteSelected": "Eliminar Seleccionados",
+      "noItemsSelected": "Por favor seleccione elementos para eliminar",
+      "bulkDeleteTitle": "Eliminar Constantes Seleccionadas",
+      "bulkDeleteMessage": "¿Está seguro de que desea eliminar",
+      "constants": "constante(s)",
+      "bulkDeleteWarning": "Esta acción no se puede deshacer.",
+      "bulkDeleteSuccess": "Se eliminaron exitosamente {{count}} constante(s)",
+      "bulkDeleteFail": "Error al eliminar {{count}} constante(s)"
     }
   },
   "sites": {

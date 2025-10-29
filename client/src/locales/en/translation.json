@@ -205,7 +205,15 @@
       "exportSuccessDesc": "UOMs exported successfully",
       "exportFailed": "Export Failed",
       "exportError": "Failed to export UOMs",
-      "exportErrorOccurred": "An error occurred during export"
+      "exportErrorOccurred": "An error occurred during export",
+      "deleteSelected": "Delete Selected",
+      "noItemsSelected": "Please select items to delete",
+      "bulkDeleteTitle": "Delete Selected Items",
+      "bulkDeleteMessage": "Are you sure you want to delete",
+      "items": "item(s)",
+      "bulkDeleteWarning": "This action cannot be undone.",
+      "bulkDeleteSuccess": "Successfully deleted {{count}} item(s)",
+      "bulkDeleteFail": "Failed to delete {{count}} item(s)"
     },
     "shiftConfig": {
       "newShift": "New Shift",
@@ -262,7 +270,15 @@
       "exportFailed": "Export Failed",
       "exportError": "Failed to export shifts",
       "exportErrorOccurred": "An error occurred during export",
-      "paginationText": "{{start}}-{{end}} of {{total}} shifts"
+      "paginationText": "{{start}}-{{end}} of {{total}} shifts",
+      "deleteSelected": "Delete Selected",
+      "noItemsSelected": "Please select items to delete",
+      "bulkDeleteTitle": "Delete Selected Shifts",
+      "bulkDeleteMessage": "Are you sure you want to delete",
+      "shifts": "shift(s)",
+      "bulkDeleteWarning": "This action cannot be undone.",
+      "bulkDeleteSuccess": "Successfully deleted {{count}} shift(s)",
+      "bulkDeleteFail": "Failed to delete {{count}} shift(s)"
     },
     "equipmentTypeConfig": {
       "newEquipmentType": "New Equipment Type",
@@ -316,7 +332,15 @@
       "exportSuccessDesc": "Equipment types exported successfully",
       "exportFailed": "Export Failed",
       "exportError": "Failed to export equipment types",
-      "exportErrorOccurred": "An error occurred during export"
+      "exportErrorOccurred": "An error occurred during export",
+      "deleteSelected": "Delete Selected",
+      "noItemsSelected": "Please select items to delete",
+      "bulkDeleteTitle": "Delete Selected Equipment Types",
+      "bulkDeleteMessage": "Are you sure you want to delete",
+      "types": "type(s)",
+      "bulkDeleteWarning": "This action cannot be undone.",
+      "bulkDeleteSuccess": "Successfully deleted {{count}} type(s)",
+      "bulkDeleteFail": "Failed to delete {{count}} type(s)"
     },
     "constantsConfig": {
       "newConstant": "New Constant",
@@ -383,7 +407,15 @@
       "exportSuccessDesc": "Constants exported successfully",
       "exportFailed": "Export Failed",
       "exportError": "Failed to export constants",
-      "exportErrorOccurred": "An error occurred during export"
+      "exportErrorOccurred": "An error occurred during export",
+      "deleteSelected": "Delete Selected",
+      "noItemsSelected": "Please select items to delete",
+      "bulkDeleteTitle": "Delete Selected Constants",
+      "bulkDeleteMessage": "Are you sure you want to delete",
+      "constants": "constant(s)",
+      "bulkDeleteWarning": "This action cannot be undone.",
+      "bulkDeleteSuccess": "Successfully deleted {{count}} constant(s)",
+      "bulkDeleteFail": "Failed to delete {{count}} constant(s)"
     }
   },
   "sites": {
