@@ -803,14 +803,14 @@ const Schedule = () => {
                     <Tooltip 
                       title={
                         <div>
-                          <strong>Total Meters Drilled</strong><br />
-                          Planned meters scheduled in this {gridHours}h grid
+                          <strong>{t('schedule.kpis.tooltips.totalMeters')}</strong><br />
+                          {t('schedule.kpis.tooltips.totalMetersDesc', { hours: gridHours })}
                           {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
-                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                            <span> {t('schedule.kpis.tooltips.totalMetersShift', { shift: activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode })}</span>
                           )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Σ(totalPlanMeters × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
-                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' in selected shift hours'}
+                            {t('schedule.kpis.tooltips.totalMetersCalc', { sites: scheduleKPIs.activeSites })}
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && t('schedule.kpis.tooltips.totalMetersCalcShift')}
                           </div>
                         </div>
                       }
@@ -824,14 +824,14 @@ const Schedule = () => {
                     <Tooltip 
                       title={
                         <div>
-                          <strong>Total Backfill Tonnes</strong><br />
-                          Backfill material scheduled in this {gridHours}h grid
+                          <strong>{t('schedule.kpis.tooltips.totalBackfill')}</strong><br />
+                          {t('schedule.kpis.tooltips.totalBackfillDesc', { hours: gridHours })}
                           {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
-                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                            <span> {t('schedule.kpis.tooltips.totalMetersShift', { shift: activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode })}</span>
                           )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Σ(totalBackfillTonnes × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
-                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' in selected shift hours'}
+                            {t('schedule.kpis.tooltips.totalBackfillCalc', { sites: scheduleKPIs.activeSites })}
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && t('schedule.kpis.tooltips.totalMetersCalcShift')}
                           </div>
                         </div>
                       }
@@ -845,14 +845,14 @@ const Schedule = () => {
                     <Tooltip 
                       title={
                         <div>
-                          <strong>Total Ore Tonnes</strong><br />
-                          Ore material scheduled in this {gridHours}h grid
+                          <strong>{t('schedule.kpis.tooltips.totalOre')}</strong><br />
+                          {t('schedule.kpis.tooltips.totalOreDesc', { hours: gridHours })}
                           {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
-                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                            <span> {t('schedule.kpis.tooltips.totalMetersShift', { shift: activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode })}</span>
                           )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Σ(remoteTonnes × scheduledHours/totalHours) for {scheduleKPIs.activeSites} active sites
-                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' in selected shift hours'}
+                            {t('schedule.kpis.tooltips.totalOreCalc', { sites: scheduleKPIs.activeSites })}
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && t('schedule.kpis.tooltips.totalMetersCalcShift')}
                           </div>
                         </div>
                       }
@@ -866,10 +866,10 @@ const Schedule = () => {
                     <Tooltip 
                       title={
                         <div>
-                          <strong>Active Sites</strong><br />
-                          Number of sites currently included in scheduling<br />
+                          <strong>{t('schedule.kpis.tooltips.activeSites')}</strong><br />
+                          {t('schedule.kpis.tooltips.activeSitesDesc')}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Count of sites where isActive = true
+                            {t('schedule.kpis.tooltips.activeSitesCalc')}
                           </div>
                         </div>
                       }
@@ -883,14 +883,14 @@ const Schedule = () => {
                     <Tooltip 
                       title={
                         <div>
-                          <strong>Total Work Hours</strong><br />
-                          Sum of scheduled task hours across all active sites
+                          <strong>{t('schedule.kpis.tooltips.workHours')}</strong><br />
+                          {t('schedule.kpis.tooltips.workHoursDesc')}
                           {selectedShiftFilter && selectedShiftFilter !== 'all' && activeShifts && (
-                            <span> (Shift {activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode} only)</span>
+                            <span> {t('schedule.kpis.tooltips.totalMetersShift', { shift: activeShifts.find(s => s._id === selectedShiftFilter)?.shiftCode })}</span>
                           )}<br />
                           <div style={{ marginTop: '6px', fontSize: '11px', opacity: 0.9 }}>
-                            Calculation: Count of all scheduled task cells (excluding delays) in {gridHours}h grid
-                            {selectedShiftFilter && selectedShiftFilter !== 'all' && ' for selected shift hours'}
+                            {t('schedule.kpis.tooltips.workHoursCalc', { hours: gridHours })}
+                            {selectedShiftFilter && selectedShiftFilter !== 'all' && t('schedule.kpis.tooltips.workHoursCalcShift')}
                           </div>
                         </div>
                       }

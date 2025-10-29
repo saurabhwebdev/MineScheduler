@@ -857,7 +857,27 @@
       "meters": "m",
       "tonnes": "t",
       "sites": "Sites",
-      "hours": "hrs"
+      "hours": "hrs",
+      "tooltips": {
+        "totalMeters": "Total Meters Drilled",
+        "totalMetersDesc": "Planned meters scheduled in this {{hours}}h grid",
+        "totalMetersShift": "(Shift {{shift}} only)",
+        "totalMetersCalc": "Calculation: Σ(totalPlanMeters × scheduledHours/totalHours) for {{sites}} active sites",
+        "totalMetersCalcShift": " in selected shift hours",
+        "totalBackfill": "Total Backfill Tonnes",
+        "totalBackfillDesc": "Backfill material scheduled in this {{hours}}h grid",
+        "totalBackfillCalc": "Calculation: Σ(totalBackfillTonnes × scheduledHours/totalHours) for {{sites}} active sites",
+        "totalOre": "Total Ore Tonnes",
+        "totalOreDesc": "Ore material scheduled in this {{hours}}h grid",
+        "totalOreCalc": "Calculation: Σ(remoteTonnes × scheduledHours/totalHours) for {{sites}} active sites",
+        "activeSites": "Active Sites",
+        "activeSitesDesc": "Number of sites currently included in scheduling",
+        "activeSitesCalc": "Calculation: Count of sites where isActive = true",
+        "workHours": "Total Work Hours",
+        "workHoursDesc": "Sum of scheduled task hours across all active sites",
+        "workHoursCalc": "Calculation: Count of all scheduled task cells (excluding delays) in {{hours}}h grid",
+        "workHoursCalcShift": " for selected shift hours"
+      }
     },
     "clearDelaysModal": {
       "title": "Clear All Delays",

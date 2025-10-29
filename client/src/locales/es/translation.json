@@ -857,7 +857,27 @@
       "meters": "m",
       "tonnes": "t",
       "sites": "Sitios",
-      "hours": "hrs"
+      "hours": "hrs",
+      "tooltips": {
+        "totalMeters": "Total de Metros Perforados",
+        "totalMetersDesc": "Metros planificados programados en esta cuadrícula de {{hours}}h",
+        "totalMetersShift": "(Solo turno {{shift}})",
+        "totalMetersCalc": "Cálculo: Σ(totalPlanMeters × horasProgramadas/horasTotales) para {{sites}} sitios activos",
+        "totalMetersCalcShift": " en horas del turno seleccionado",
+        "totalBackfill": "Total de Toneladas de Relleno",
+        "totalBackfillDesc": "Material de relleno programado en esta cuadrícula de {{hours}}h",
+        "totalBackfillCalc": "Cálculo: Σ(totalBackfillTonnes × horasProgramadas/horasTotales) para {{sites}} sitios activos",
+        "totalOre": "Total de Toneladas de Mineral",
+        "totalOreDesc": "Material de mineral programado en esta cuadrícula de {{hours}}h",
+        "totalOreCalc": "Cálculo: Σ(remoteTonnes × horasProgramadas/horasTotales) para {{sites}} sitios activos",
+        "activeSites": "Sitios Activos",
+        "activeSitesDesc": "Número de sitios actualmente incluidos en la programación",
+        "activeSitesCalc": "Cálculo: Cuenta de sitios donde isActive = true",
+        "workHours": "Horas de Trabajo Totales",
+        "workHoursDesc": "Suma de horas de tareas programadas en todos los sitios activos",
+        "workHoursCalc": "Cálculo: Cuenta de todas las celdas de tareas programadas (excluyendo retrasos) en cuadrícula de {{hours}}h",
+        "workHoursCalcShift": " para horas del turno seleccionado"
+      }
     },
     "clearDelaysModal": {
       "title": "Borrar Todos los Retrasos",
