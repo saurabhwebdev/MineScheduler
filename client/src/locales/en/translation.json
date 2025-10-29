@@ -829,6 +829,30 @@
       "fleetAvailabilityLow": "Fleet availability below 80%",
       "viewDetails": "View Details"
     },
+    "notifications": {
+      "title": "Critical Alerts",
+      "issueDetected": "critical issue detected",
+      "issueDetected_other": "critical issues detected",
+      "maintenanceOverdue": "Maintenance Overdue",
+      "maintenanceOverdueDesc": "{{count}} equipment require immediate attention",
+      "outOfService": "Out of Service",
+      "outOfServiceDesc": "{{count}} equipment offline",
+      "dueSoon": "Due Soon",
+      "dueSoonDesc": "{{count}} equipment maintenance due within 7 days",
+      "viewDetails": "View Details",
+      "allSystemsOperational": "All systems operational",
+      "noAlertsAtThisTime": "No critical alerts at this time"
+    },
+    "criticalModal": {
+      "title": "Critical Equipment",
+      "equipmentId": "Equipment ID",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "issue": "Issue",
+      "maintenanceOverdue": "Maintenance Overdue ({{days}} days)",
+      "outOfService": "OUT OF SERVICE"
+    },
     "quickActions": {
       "title": "Quick Actions",
       "subtitle": "Common workflows and reports",

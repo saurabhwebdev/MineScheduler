@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Avatar, Badge, Dropdown, Modal, Table, Tag } from 'antd';
 import { BellOutlined, UserOutlined, LogoutOutlined, MenuOutlined, CloseOutlined, HomeOutlined, RightOutlined, ExclamationCircleOutlined, WarningOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { generateAvatar, getInitials } from '../utils/avatarUtils';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -9,6 +10,7 @@ import config from '../config/config';
 import './Header.css';
 
 const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [criticalAlerts, setCriticalAlerts] = useState(null);
@@ -73,13 +75,13 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
     <div className="notification-dropdown">
       <div className="notification-header">
         <ExclamationCircleOutlined className="notification-header-icon" />
-        <span className="notification-header-title">Critical Alerts</span>
+        <span className="notification-header-title">{t('dashboard.notifications.title')}</span>
       </div>
       {criticalAlerts && criticalAlerts.count > 0 ? (
         <>
           <div className="notification-summary">
             <div className="notification-summary-text">
-              <strong>{criticalAlerts.count}</strong> critical issue{criticalAlerts.count !== 1 ? 's' : ''} detected
+              <strong>{criticalAlerts.count}</strong> {t('dashboard.notifications.issueDetected', { count: criticalAlerts.count })}
             </div>
           </div>
           <div className="notification-items">
@@ -87,8 +89,8 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
               <div className="notification-item">
                 <WarningOutlined className="notification-item-icon error" />
                 <div className="notification-item-content">
-                  <div className="notification-item-title">Maintenance Overdue</div>
-                  <div className="notification-item-desc">{criticalAlerts.overdue} equipment require immediate attention</div>
+                  <div className="notification-item-title">{t('dashboard.notifications.maintenanceOverdue')}</div>
+                  <div className="notification-item-desc">{t('dashboard.notifications.maintenanceOverdueDesc', { count: criticalAlerts.overdue })}</div>
                 </div>
               </div>
             )}
@@ -96,8 +98,8 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
               <div className="notification-item">
                 <ExclamationCircleOutlined className="notification-item-icon error" />
                 <div className="notification-item-content">
-                  <div className="notification-item-title">Out of Service</div>
-                  <div className="notification-item-desc">{criticalAlerts.outOfService} equipment offline</div>
+                  <div className="notification-item-title">{t('dashboard.notifications.outOfService')}</div>
+                  <div className="notification-item-desc">{t('dashboard.notifications.outOfServiceDesc', { count: criticalAlerts.outOfService })}</div>
                 </div>
               </div>
             )}
@@ -105,8 +107,8 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
               <div className="notification-item">
                 <ClockCircleOutlined className="notification-item-icon warning" />
                 <div className="notification-item-content">
-                  <div className="notification-item-title">Due Soon</div>
-                  <div className="notification-item-desc">{criticalAlerts.dueSoon} equipment maintenance due within 7 days</div>
+                  <div className="notification-item-title">{t('dashboard.notifications.dueSoon')}</div>
+                  <div className="notification-item-desc">{t('dashboard.notifications.dueSoonDesc', { count: criticalAlerts.dueSoon })}</div>
                 </div>
               </div>
             )}
@@ -116,15 +118,15 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
               className="notification-footer-link"
               onClick={handleViewDetails}
             >
-              View Details →
+              {t('dashboard.notifications.viewDetails')} →
             </div>
           </div>
         </>
       ) : (
         <div className="notification-empty">
           <div className="notification-empty-icon">✓</div>
-          <div className="notification-empty-text">All systems operational</div>
-          <div className="notification-empty-subtext">No critical alerts at this time</div>
+          <div className="notification-empty-text">{t('dashboard.notifications.allSystemsOperational')}</div>
+          <div className="notification-empty-subtext">{t('dashboard.notifications.noAlertsAtThisTime')}</div>
         </div>
       )}
     </div>
@@ -231,7 +233,7 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
 
       {/* Critical Equipment Modal */}
       <Modal
-        title="Critical Equipment"
+        title={t('dashboard.criticalModal.title')}
         open={criticalModalVisible}
         onCancel={() => setCriticalModalVisible(false)}
         footer={null}
@@ -244,24 +246,24 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
           pagination={{ pageSize: 10 }}
           columns={[
             {
-              title: 'Equipment ID',
+              title: t('dashboard.criticalModal.equipmentId'),
               dataIndex: 'equipmentId',
               key: 'equipmentId',
               width: 120,
               render: (text) => <strong>{text}</strong>
             },
             {
-              title: 'Name',
+              title: t('dashboard.criticalModal.name'),
               dataIndex: 'name',
               key: 'name',
             },
             {
-              title: 'Type',
+              title: t('dashboard.criticalModal.type'),
               dataIndex: 'type',
               key: 'type',
             },
             {
-              title: 'Status',
+              title: t('dashboard.criticalModal.status'),
               dataIndex: 'status',
               key: 'status',
               render: (status) => {
@@ -274,7 +276,7 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
               }
             },
             {
-              title: 'Issue',
+              title: t('dashboard.criticalModal.issue'),
               key: 'issue',
               render: (_, record) => {
                 const now = new Date();
@@ -283,10 +285,10 @@ const Header = ({ title, subtitle, isMobileMenuOpen, setIsMobileMenuOpen }) => {
                 
                 if (isOverdue) {
                   const daysOverdue = Math.floor((now - new Date(record.nextMaintenance)) / (1000 * 60 * 60 * 24));
-                  return <Tag color="error">Maintenance Overdue ({daysOverdue} days)</Tag>;
+                  return <Tag color="error">{t('dashboard.criticalModal.maintenanceOverdue', { days: daysOverdue })}</Tag>;
                 }
                 if (isOutOfService) {
-                  return <Tag color="error">OUT OF SERVICE</Tag>;
+                  return <Tag color="error">{t('dashboard.criticalModal.outOfService')}</Tag>;
                 }
                 return '-';
               }

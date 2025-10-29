@@ -829,6 +829,30 @@
       "fleetAvailabilityLow": "Disponibilidad de flota por debajo del 80%",
       "viewDetails": "Ver Detalles"
     },
+    "notifications": {
+      "title": "Alertas Críticas",
+      "issueDetected": "problema crítico detectado",
+      "issueDetected_other": "problemas críticos detectados",
+      "maintenanceOverdue": "Mantenimiento Atrasado",
+      "maintenanceOverdueDesc": "{{count}} equipos requieren atención inmediata",
+      "outOfService": "Fuera de Servicio",
+      "outOfServiceDesc": "{{count}} equipos desconectados",
+      "dueSoon": "Vencimiento Próximo",
+      "dueSoonDesc": "{{count}} equipos con mantenimiento próximo dentro de 7 días",
+      "viewDetails": "Ver Detalles",
+      "allSystemsOperational": "Todos los sistemas operacionales",
+      "noAlertsAtThisTime": "No hay alertas críticas en este momento"
+    },
+    "criticalModal": {
+      "title": "Equipos Críticos",
+      "equipmentId": "ID de Equipo",
+      "name": "Nombre",
+      "type": "Tipo",
+      "status": "Estado",
+      "issue": "Problema",
+      "maintenanceOverdue": "Mantenimiento Atrasado ({{days}} días)",
+      "outOfService": "FUERA DE SERVICIO"
+    },
     "quickActions": {
       "title": "Acciones Rápidas",
       "subtitle": "Flujos de trabajo e informes comunes",
