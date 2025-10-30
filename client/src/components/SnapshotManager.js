@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Input, notification, Popconfirm, Empty, Tag, DatePicker, Card, Row, Col, Divider, Segmented, Space } from 'antd';
-import { SaveOutlined, FolderOpenOutlined, DeleteOutlined, ClockCircleOutlined, CalendarOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Button, Modal, Input, notification, Popconfirm, Empty, Tag, DatePicker, Card, Row, Col, Divider, Segmented, Space, Table } from 'antd';
+import { SaveOutlined, FolderOpenOutlined, DeleteOutlined, CalendarOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import config from '../config/config';
 import './SnapshotManager.css';
@@ -456,99 +456,126 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           />
         </div>
 
-        {/* Snapshots Grid */}
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
-            <ClockCircleOutlined spin style={{ fontSize: '48px', color: '#3cca70', marginBottom: '16px' }} />
-            <div style={{ fontSize: '14px', color: '#8c8c8c' }}>Loading snapshots...</div>
-          </div>
-        ) : filteredSnapshots.length === 0 ? (
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={
-              <span style={{ color: '#8c8c8c' }}>
-                {searchText || dateFilter !== 'all' ? 'No snapshots match your filters' : 'No snapshots saved yet'}
-              </span>
-            }
-            style={{ padding: '60px 0' }}
-          >
-            {searchText || dateFilter !== 'all' ? (
-              <Button onClick={() => { setSearchText(''); setDateFilter('all'); }}>Clear Filters</Button>
-            ) : null}
-          </Empty>
-        ) : (
-          <Row gutter={[16, 16]} className="snapshot-grid">
-            {filteredSnapshots.map((snapshot) => (
-              <Col key={snapshot._id} xs={24} sm={12} lg={8}>
-                <Card
-                  className="snapshot-card"
-                  hoverable
-                  actions={[
+        {/* Snapshots Table */}
+        <Table
+          dataSource={filteredSnapshots}
+          loading={loading}
+          rowKey={(record) => record._id}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: false,
+            showTotal: (total) => `Total ${total} snapshots`
+          }}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <span style={{ color: '#8c8c8c' }}>
+                    {searchText || dateFilter !== 'all' ? 'No snapshots match your filters' : 'No snapshots saved yet'}
+                  </span>
+                }
+              >
+                {searchText || dateFilter !== 'all' ? (
+                  <Button onClick={() => { setSearchText(''); setDateFilter('all'); }}>Clear Filters</Button>
+                ) : null}
+              </Empty>
+            )
+          }}
+          columns={[
+            {
+              title: 'Snapshot Name',
+              dataIndex: 'name',
+              key: 'name',
+              width: '30%',
+              render: (text) => <strong style={{ color: '#262626' }}>{text}</strong>
+            },
+            {
+              title: 'Date',
+              dataIndex: 'snapshotDate',
+              key: 'snapshotDate',
+              width: '15%',
+              sorter: (a, b) => moment(a.snapshotDate).unix() - moment(b.snapshotDate).unix(),
+              defaultSortOrder: 'descend',
+              render: (date) => (
+                <span>
+                  <CalendarOutlined style={{ marginRight: '6px', color: '#3cca70' }} />
+                  {moment(date).format('MMM D, YYYY')}
+                </span>
+              )
+            },
+            {
+              title: 'Description',
+              dataIndex: 'description',
+              key: 'description',
+              width: '25%',
+              ellipsis: true,
+              render: (text) => <span style={{ color: '#595959' }}>{text || '—'}</span>
+            },
+            {
+              title: 'Hours',
+              dataIndex: 'gridHours',
+              key: 'gridHours',
+              width: '8%',
+              align: 'center',
+              render: (hours) => <Tag color="blue">{hours}h</Tag>
+            },
+            {
+              title: 'Sites',
+              dataIndex: 'totalSites',
+              key: 'totalSites',
+              width: '8%',
+              align: 'center',
+              render: (total) => <span style={{ color: '#595959' }}>{total}</span>
+            },
+            {
+              title: 'Active',
+              dataIndex: 'activeSites',
+              key: 'activeSites',
+              width: '8%',
+              align: 'center',
+              render: (active) => <Tag color="green">{active}</Tag>
+            },
+            {
+              title: 'Actions',
+              key: 'actions',
+              width: '14%',
+              align: 'center',
+              render: (_, record) => (
+                <Space size="small">
+                  <Button
+                    type="primary"
+                    size="small"
+                    icon={<FolderOpenOutlined />}
+                    onClick={() => handleLoadSnapshot(record._id)}
+                    loading={loading}
+                    style={{
+                      backgroundColor: '#3cca70',
+                      borderColor: '#3cca70'
+                    }}
+                  >
+                    Load
+                  </Button>
+                  <Popconfirm
+                    title="Delete Snapshot?"
+                    description="This action cannot be undone."
+                    onConfirm={() => handleDeleteSnapshot(record._id, record.name)}
+                    okText="Delete"
+                    cancelText="Cancel"
+                    okButtonProps={{ danger: true }}
+                  >
                     <Button
-                      type="primary"
-                      icon={<FolderOpenOutlined />}
-                      onClick={() => handleLoadSnapshot(snapshot._id)}
-                      loading={loading}
-                      style={{
-                        backgroundColor: '#3cca70',
-                        borderColor: '#3cca70'
-                      }}
-                    >
-                      Load
-                    </Button>,
-                    <Popconfirm
-                      title="Delete Snapshot?"
-                      description="This action cannot be undone."
-                      onConfirm={() => handleDeleteSnapshot(snapshot._id, snapshot.name)}
-                      okText="Delete"
-                      cancelText="Cancel"
-                      okButtonProps={{ danger: true }}
-                    >
-                      <Button
-                        danger
-                        icon={<DeleteOutlined />}
-                        loading={deleteLoading[snapshot._id]}
-                      >
-                        Delete
-                      </Button>
-                    </Popconfirm>
-                  ]}
-                >
-                  <div className="card-header">
-                    <div className="snapshot-card-date">
-                      <CalendarOutlined style={{ marginRight: '6px', color: '#3cca70' }} />
-                      {moment(snapshot.snapshotDate).format('MMM D, YYYY')}
-                    </div>
-                    <Tag color="blue">{snapshot.gridHours}h</Tag>
-                  </div>
-                  <div className="snapshot-card-name">{snapshot.name}</div>
-                  {snapshot.description && (
-                    <div className="snapshot-card-description">{snapshot.description}</div>
-                  )}
-                  <Divider style={{ margin: '12px 0' }} />
-                  <div className="snapshot-card-stats">
-                    <div className="stat-item">
-                      <span className="stat-number">{snapshot.totalSites}</span>
-                      <span className="stat-label">Sites</span>
-                    </div>
-                    <div className="stat-item">
-                      <span className="stat-number">{snapshot.activeSites}</span>
-                      <span className="stat-label">Active</span>
-                    </div>
-                    <div className="stat-item">
-                      <span className="stat-number">{snapshot.totalDelays}</span>
-                      <span className="stat-label">Delays</span>
-                    </div>
-                  </div>
-                  <div className="snapshot-card-footer">
-                    <ClockCircleOutlined style={{ marginRight: '6px', fontSize: '12px' }} />
-                    <span>{snapshot.age || 'Just now'}</span>
-                  </div>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        )}
+                      danger
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      loading={deleteLoading[record._id]}
+                    />
+                  </Popconfirm>
+                </Space>
+              )
+            }
+          ]}
+        />
       </Modal>
     </div>
   );
