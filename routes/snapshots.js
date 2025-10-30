@@ -12,6 +12,7 @@ router.post('/', protect, async (req, res) => {
     const {
       name,
       description,
+      snapshotDate,
       gridData,
       gridHours,
       delayedSlots,
@@ -34,6 +35,7 @@ router.post('/', protect, async (req, res) => {
     const snapshot = await Snapshot.create({
       name,
       description: description || '',
+      snapshotDate: snapshotDate || new Date(),
       gridData,
       gridHours,
       delayedSlots: delayedSlots || [],
@@ -88,8 +90,29 @@ router.post('/', protect, async (req, res) => {
 // @access  Private
 router.get('/', protect, async (req, res) => {
   try {
-    const snapshots = await Snapshot.find({ createdBy: req.user.id })
-      .sort({ createdAt: -1 })
+    const { startDate, endDate, search } = req.query;
+    
+    // Build query
+    const query = { createdBy: req.user.id };
+    
+    // Add date range filter if provided
+    if (startDate || endDate) {
+      query.snapshotDate = {};
+      if (startDate) query.snapshotDate.$gte = new Date(startDate);
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        query.snapshotDate.$lte = end;
+      }
+    }
+    
+    // Add text search if provided
+    if (search) {
+      query.$text = { $search: search };
+    }
+    
+    const snapshots = await Snapshot.find(query)
+      .sort({ snapshotDate: -1, createdAt: -1 })
       .populate('createdBy', 'name email')
       .select('-gridData'); // Exclude large gridData from list view
 

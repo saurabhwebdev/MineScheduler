@@ -1,137 +1,184 @@
+/* Modern Snapshot Manager Styling */
 .snapshot-manager {
   display: inline-block;
 }
 
-/* Save Snapshot Modal */
-.snapshot-form {
-  padding: 10px 0;
+/* Modern Save Form */
+.modern-snapshot-form {
+  padding: 8px 0;
 }
 
-.snapshot-form .form-group {
-  margin-bottom: 20px;
+.modern-snapshot-form .form-field {
+  margin-bottom: 24px;
 }
 
-.snapshot-form .form-group label {
+.modern-snapshot-form .field-label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 500;
-  color: #262626;
-}
-
-.snapshot-preview {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 6px;
-  border: 1px solid #d9d9d9;
-}
-
-.snapshot-preview h4 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
   font-weight: 600;
-  color: #262626;
-}
-
-.snapshot-preview ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.snapshot-preview li {
-  padding: 4px 0;
   font-size: 13px;
-  color: #595959;
+  color: #262626;
 }
 
-.snapshot-preview li strong {
-  color: #1890ff;
-  font-weight: 600;
+/* Preview Card */
+.snapshot-preview-card {
+  margin-top: 24px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Load Snapshot Modal */
-.snapshot-list {
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.snapshot-list .ant-list-item {
-  padding: 16px 0;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s;
-}
-
-.snapshot-list .ant-list-item:hover {
-  background-color: #fafafa;
-}
-
-.snapshot-title {
+.snapshot-preview-card .preview-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
+  justify-content: space-between;
 }
 
-.snapshot-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #262626;
-}
-
-.snapshot-description {
+.snapshot-preview-card .preview-stat {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
-.description-text {
-  margin: 0;
+.snapshot-preview-card .stat-label {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+.snapshot-preview-card .stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #3cca70;
+}
+
+/* Load Modal - Filters */
+.snapshot-filters {
+  margin-bottom: 8px;
+}
+
+.load-snapshot-modal .ant-segmented {
+  display: flex;
+  width: 100%;
+}
+
+.load-snapshot-modal .ant-segmented-item {
+  flex: 1;
+  text-align: center;
+}
+
+/* Snapshot Cards Grid */
+.snapshot-grid {
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.snapshot-card {
+  height: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.snapshot-card:hover {
+  border-color: #3cca70;
+  box-shadow: 0 4px 16px rgba(60, 202, 112, 0.15);
+  transform: translateY(-2px);
+}
+
+.snapshot-card .ant-card-body {
+  padding: 16px;
+}
+
+.snapshot-card .ant-card-actions {
+  background: #fafafa;
+  border-top: 1px solid #e5e7eb;
+}
+
+.snapshot-card .ant-card-actions > li {
+  margin: 8px 0;
+}
+
+/* Card Content */
+.snapshot-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.snapshot-card-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3cca70;
+  display: flex;
+  align-items: center;
+}
+
+.snapshot-card-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.snapshot-card-description {
   font-size: 13px;
-  color: #595959;
+  color: #6b7280;
   line-height: 1.5;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-style: italic;
 }
 
-.snapshot-stats {
+.snapshot-card-stats {
   display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 8px 0;
 }
 
-.snapshot-stats span {
+.snapshot-card-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.snapshot-card-stats .stat-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.snapshot-card-stats .stat-label {
+  font-size: 11px;
+  color: #8c8c8c;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.snapshot-card-footer {
   font-size: 12px;
   color: #8c8c8c;
-  padding: 2px 8px;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-}
-
-.snapshot-meta {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #8c8c8c;
-  margin-top: 4px;
-}
-
-.snapshot-meta .anticon {
-  font-size: 11px;
-}
-
-/* Action buttons */
-.snapshot-list .ant-list-item-action {
-  margin-left: 20px;
-}
-
-.snapshot-list .ant-list-item-action > li {
-  padding: 0 4px;
-}
-
-/* Empty state */
-.snapshot-list .ant-empty {
-  padding: 40px 0;
 }
 
 /* Responsive */
@@ -142,57 +189,65 @@
 
   .snapshot-manager .ant-space {
     width: 100%;
+    display: flex;
   }
 
   .snapshot-manager .ant-btn {
     flex: 1;
   }
 
-  .snapshot-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+  .snapshot-grid {
+    max-height: 500px;
   }
 
-  .snapshot-stats {
+  .load-snapshot-modal .ant-segmented {
+    flex-wrap: wrap;
+  }
+
+  .load-snapshot-modal .ant-segmented-item {
+    min-width: 48%;
+  }
+
+  .snapshot-card-stats {
     gap: 8px;
   }
 
-  .snapshot-list .ant-list-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .snapshot-list .ant-list-item-action {
-    margin-left: 0;
-    margin-top: 12px;
-    width: 100%;
-  }
-
-  .snapshot-list .ant-list-item-action > li {
-    flex: 1;
-  }
-
-  .snapshot-list .ant-list-item-action .ant-btn {
-    width: 100%;
+  .snapshot-card-stats .stat-number {
+    font-size: 18px;
   }
 }
 
-/* Loading state */
-.snapshot-list .ant-spin-container {
-  min-height: 200px;
+/* Custom Scrollbar */
+.snapshot-grid::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Modal customization */
-.ant-modal .snapshot-form .ant-input-textarea-show-count::after {
-  font-size: 11px;
-  color: #8c8c8c;
+.snapshot-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
-/* Tags in list */
-.snapshot-list .ant-tag {
-  margin: 0;
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 4px;
+.snapshot-grid::-webkit-scrollbar-thumb {
+  background: #3cca70;
+  border-radius: 10px;
+}
+
+.snapshot-grid::-webkit-scrollbar-thumb:hover {
+  background: #2eb85c;
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.snapshot-card {
+  animation: fadeIn 0.3s ease-in-out;
 }

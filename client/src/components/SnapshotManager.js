@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Input, List, notification, Popconfirm, Space, Empty, Tag } from 'antd';
-import { SaveOutlined, FolderOpenOutlined, DeleteOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Button, Modal, Input, notification, Popconfirm, Empty, Tag, DatePicker, Card, Row, Col, Divider, Segmented, Space } from 'antd';
+import { SaveOutlined, FolderOpenOutlined, DeleteOutlined, ClockCircleOutlined, CalendarOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import config from '../config/config';
 import './SnapshotManager.css';
 
@@ -11,9 +12,13 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
   const [loadModalVisible, setLoadModalVisible] = useState(false);
   const [snapshotName, setSnapshotName] = useState('');
   const [snapshotDescription, setSnapshotDescription] = useState('');
+  const [snapshotDate, setSnapshotDate] = useState(moment());
   const [snapshots, setSnapshots] = useState([]);
+  const [filteredSnapshots, setFilteredSnapshots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState({});
+  const [searchText, setSearchText] = useState('');
+  const [dateFilter, setDateFilter] = useState('all');
 
   // Fetch snapshots when load modal opens
   useEffect(() => {
@@ -21,6 +26,43 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
       fetchSnapshots();
     }
   }, [loadModalVisible]);
+
+  // Filter snapshots when search, date filter, or snapshots change
+  useEffect(() => {
+    filterSnapshots();
+  }, [searchText, dateFilter, snapshots]);
+
+  const filterSnapshots = () => {
+    let filtered = [...snapshots];
+
+    // Text search filter
+    if (searchText) {
+      const search = searchText.toLowerCase();
+      filtered = filtered.filter(s => 
+        s.name.toLowerCase().includes(search) || 
+        (s.description && s.description.toLowerCase().includes(search))
+      );
+    }
+
+    // Date filter
+    const now = moment();
+    switch (dateFilter) {
+      case 'today':
+        filtered = filtered.filter(s => moment(s.snapshotDate).isSame(now, 'day'));
+        break;
+      case 'week':
+        filtered = filtered.filter(s => moment(s.snapshotDate).isSame(now, 'week'));
+        break;
+      case 'month':
+        filtered = filtered.filter(s => moment(s.snapshotDate).isSame(now, 'month'));
+        break;
+      default:
+        // 'all' - no filter
+        break;
+    }
+
+    setFilteredSnapshots(filtered);
+  };
 
   const fetchSnapshots = async () => {
     setLoading(true);
@@ -82,6 +124,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         body: JSON.stringify({
           name: snapshotName,
           description: snapshotDescription,
+          snapshotDate: snapshotDate.toISOString(),
           gridData: scheduleData.grid,
           gridHours: scheduleData.gridHours,
           delayedSlots: delayedSlots,
@@ -103,6 +146,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         setSaveModalVisible(false);
         setSnapshotName('');
         setSnapshotDescription('');
+        setSnapshotDate(moment());
       } else {
         notification.error({
           message: 'Error',
@@ -247,137 +291,264 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         </Button>
       </Space>
 
-      {/* Save Snapshot Modal */}
+      {/* Save Snapshot Modal - Modern Design */}
       <Modal
-        title="Save Snapshot"
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <SaveOutlined style={{ color: '#3cca70', fontSize: '20px' }} />
+            <span>Save Snapshot</span>
+          </div>
+        }
         open={saveModalVisible}
         onOk={handleSaveSnapshot}
         onCancel={() => {
           setSaveModalVisible(false);
           setSnapshotName('');
           setSnapshotDescription('');
+          setSnapshotDate(moment());
         }}
-        okText="Save"
+        okText="Save Snapshot"
         confirmLoading={loading}
-        width={500}
+        width={600}
+        okButtonProps={{
+          style: {
+            backgroundColor: '#3cca70',
+            borderColor: '#3cca70',
+            height: '40px',
+            fontSize: '14px',
+            fontWeight: 600
+          }
+        }}
+        cancelButtonProps={{
+          style: {
+            height: '40px',
+            fontSize: '14px'
+          }
+        }}
       >
-        <div className="snapshot-form">
-          <div className="form-group">
-            <label>Snapshot Name *</label>
+        <div className="modern-snapshot-form">
+          <div className="form-field">
+            <label className="field-label">
+              <FileTextOutlined style={{ marginRight: '6px' }} />
+              Snapshot Name *
+            </label>
             <Input
-              placeholder="e.g., Week 1 - Day Shift"
+              size="large"
+              placeholder="e.g., Week 1 - Day Shift Schedule"
               value={snapshotName}
               onChange={(e) => setSnapshotName(e.target.value)}
               maxLength={100}
               showCount
+              style={{ borderRadius: '8px' }}
             />
           </div>
-          <div className="form-group">
-            <label>Description (Optional)</label>
+
+          <div className="form-field">
+            <label className="field-label">
+              <CalendarOutlined style={{ marginRight: '6px' }} />
+              Snapshot Date *
+            </label>
+            <DatePicker
+              size="large"
+              value={snapshotDate}
+              onChange={(date) => setSnapshotDate(date || moment())}
+              format="MMMM D, YYYY"
+              style={{ width: '100%', borderRadius: '8px' }}
+            />
+            <div style={{ marginTop: '6px', fontSize: '12px', color: '#8c8c8c' }}>
+              💡 Select the date this schedule is for
+            </div>
+          </div>
+
+          <div className="form-field">
+            <label className="field-label">
+              Description (Optional)
+            </label>
             <TextArea
-              placeholder="Add notes about this snapshot..."
+              size="large"
+              placeholder="Add notes about this snapshot (e.g., special considerations, changes made...)" 
               value={snapshotDescription}
               onChange={(e) => setSnapshotDescription(e.target.value)}
               rows={4}
               maxLength={500}
               showCount
+              style={{ borderRadius: '8px' }}
             />
           </div>
+
           {scheduleData && (
-            <div className="snapshot-preview">
-              <h4>Snapshot will include:</h4>
-              <ul>
-                <li>Grid Hours: <strong>{scheduleData.gridHours}h</strong></li>
-                <li>Total Sites: <strong>{Object.keys(scheduleData.grid || {}).length}</strong></li>
-                <li>Active Sites: <strong>{Object.values(scheduleData.siteActive || {}).filter(Boolean).length}</strong></li>
-                <li>Delays: <strong>{delayedSlots.length}</strong></li>
-              </ul>
-            </div>
+            <Card className="snapshot-preview-card" size="small">
+              <div className="preview-header">
+                <span style={{ fontSize: '13px', fontWeight: 600, color: '#595959' }}>📋 Snapshot Contents</span>
+              </div>
+              <Divider style={{ margin: '12px 0' }} />
+              <Row gutter={[16, 12]}>
+                <Col span={12}>
+                  <div className="preview-stat">
+                    <span className="stat-label">Grid Hours</span>
+                    <span className="stat-value">{scheduleData.gridHours}h</span>
+                  </div>
+                </Col>
+                <Col span={12}>
+                  <div className="preview-stat">
+                    <span className="stat-label">Total Sites</span>
+                    <span className="stat-value">{Object.keys(scheduleData.grid || {}).length}</span>
+                  </div>
+                </Col>
+                <Col span={12}>
+                  <div className="preview-stat">
+                    <span className="stat-label">Active Sites</span>
+                    <span className="stat-value">{Object.values(scheduleData.siteActive || {}).filter(Boolean).length}</span>
+                  </div>
+                </Col>
+                <Col span={12}>
+                  <div className="preview-stat">
+                    <span className="stat-label">Delays</span>
+                    <span className="stat-value">{delayedSlots.length}</span>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
           )}
         </div>
       </Modal>
 
-      {/* Load Snapshot Modal */}
+      {/* Load Snapshot Modal - Modern Design */}
       <Modal
-        title="Load Snapshot"
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <FolderOpenOutlined style={{ color: '#3cca70', fontSize: '20px' }} />
+            <span>Load Snapshot</span>
+          </div>
+        }
         open={loadModalVisible}
-        onCancel={() => setLoadModalVisible(false)}
+        onCancel={() => {
+          setLoadModalVisible(false);
+          setSearchText('');
+          setDateFilter('all');
+        }}
         footer={null}
-        width={700}
+        width={900}
+        className="load-snapshot-modal"
       >
-        <List
-          className="snapshot-list"
-          loading={loading}
-          dataSource={snapshots}
-          locale={{
-            emptyText: (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="No snapshots saved yet"
-              />
-            )
-          }}
-          renderItem={(snapshot) => (
-            <List.Item
-              key={snapshot._id}
-              actions={[
-                <Button
-                  type="primary"
-                  size="small"
-                  onClick={() => handleLoadSnapshot(snapshot._id)}
-                  loading={loading}
+        {/* Search and Filters */}
+        <div className="snapshot-filters">
+          <Input
+            size="large"
+            placeholder="Search snapshots by name or description..."
+            prefix={<SearchOutlined style={{ color: '#8c8c8c' }} />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            allowClear
+            style={{ marginBottom: '16px', borderRadius: '8px' }}
+          />
+          <Segmented
+            value={dateFilter}
+            onChange={setDateFilter}
+            size="large"
+            options={[
+              { label: 'All', value: 'all' },
+              { label: 'Today', value: 'today' },
+              { label: 'This Week', value: 'week' },
+              { label: 'This Month', value: 'month' }
+            ]}
+            style={{ marginBottom: '24px' }}
+          />
+        </div>
+
+        {/* Snapshots Grid */}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <ClockCircleOutlined spin style={{ fontSize: '48px', color: '#3cca70', marginBottom: '16px' }} />
+            <div style={{ fontSize: '14px', color: '#8c8c8c' }}>Loading snapshots...</div>
+          </div>
+        ) : filteredSnapshots.length === 0 ? (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <span style={{ color: '#8c8c8c' }}>
+                {searchText || dateFilter !== 'all' ? 'No snapshots match your filters' : 'No snapshots saved yet'}
+              </span>
+            }
+            style={{ padding: '60px 0' }}
+          >
+            {searchText || dateFilter !== 'all' ? (
+              <Button onClick={() => { setSearchText(''); setDateFilter('all'); }}>Clear Filters</Button>
+            ) : null}
+          </Empty>
+        ) : (
+          <Row gutter={[16, 16]} className="snapshot-grid">
+            {filteredSnapshots.map((snapshot) => (
+              <Col key={snapshot._id} xs={24} sm={12} lg={8}>
+                <Card
+                  className="snapshot-card"
+                  hoverable
+                  actions={[
+                    <Button
+                      type="primary"
+                      icon={<FolderOpenOutlined />}
+                      onClick={() => handleLoadSnapshot(snapshot._id)}
+                      loading={loading}
+                      style={{
+                        backgroundColor: '#3cca70',
+                        borderColor: '#3cca70'
+                      }}
+                    >
+                      Load
+                    </Button>,
+                    <Popconfirm
+                      title="Delete Snapshot?"
+                      description="This action cannot be undone."
+                      onConfirm={() => handleDeleteSnapshot(snapshot._id, snapshot.name)}
+                      okText="Delete"
+                      cancelText="Cancel"
+                      okButtonProps={{ danger: true }}
+                    >
+                      <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        loading={deleteLoading[snapshot._id]}
+                      >
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                  ]}
                 >
-                  Load
-                </Button>,
-                <Popconfirm
-                  title="Delete Snapshot"
-                  description="Are you sure you want to delete this snapshot?"
-                  onConfirm={() => handleDeleteSnapshot(snapshot._id, snapshot.name)}
-                  okText="Yes"
-                  cancelText="No"
-                  okButtonProps={{ danger: true }}
-                >
-                  <Button
-                    danger
-                    size="small"
-                    icon={<DeleteOutlined />}
-                    loading={deleteLoading[snapshot._id]}
-                  >
-                    Delete
-                  </Button>
-                </Popconfirm>
-              ]}
-            >
-              <List.Item.Meta
-                title={
-                  <div className="snapshot-title">
-                    <span className="snapshot-name">{snapshot.name}</span>
+                  <div className="card-header">
+                    <div className="snapshot-card-date">
+                      <CalendarOutlined style={{ marginRight: '6px', color: '#3cca70' }} />
+                      {moment(snapshot.snapshotDate).format('MMM D, YYYY')}
+                    </div>
                     <Tag color="blue">{snapshot.gridHours}h</Tag>
                   </div>
-                }
-                description={
-                  <div className="snapshot-description">
-                    {snapshot.description && (
-                      <p className="description-text">{snapshot.description}</p>
-                    )}
-                    <div className="snapshot-stats">
-                      <span>Sites: {snapshot.totalSites}</span>
-                      <span>Active: {snapshot.activeSites}</span>
-                      <span>Tasks: {snapshot.totalTasks}</span>
-                      {snapshot.totalDelays > 0 && (
-                        <span>Delays: {snapshot.totalDelays}</span>
-                      )}
+                  <div className="snapshot-card-name">{snapshot.name}</div>
+                  {snapshot.description && (
+                    <div className="snapshot-card-description">{snapshot.description}</div>
+                  )}
+                  <Divider style={{ margin: '12px 0' }} />
+                  <div className="snapshot-card-stats">
+                    <div className="stat-item">
+                      <span className="stat-number">{snapshot.totalSites}</span>
+                      <span className="stat-label">Sites</span>
                     </div>
-                    <div className="snapshot-meta">
-                      <ClockCircleOutlined />
-                      <span>{snapshot.age || 'Just now'}</span>
+                    <div className="stat-item">
+                      <span className="stat-number">{snapshot.activeSites}</span>
+                      <span className="stat-label">Active</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-number">{snapshot.totalDelays}</span>
+                      <span className="stat-label">Delays</span>
                     </div>
                   </div>
-                }
-              />
-            </List.Item>
-          )}
-        />
+                  <div className="snapshot-card-footer">
+                    <ClockCircleOutlined style={{ marginRight: '6px', fontSize: '12px' }} />
+                    <span>{snapshot.age || 'Just now'}</span>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </Modal>
     </div>
   );

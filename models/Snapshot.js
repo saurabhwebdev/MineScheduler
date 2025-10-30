@@ -13,6 +13,11 @@ const SnapshotSchema = new mongoose.Schema({
     maxlength: [500, 'Description cannot be more than 500 characters'],
     default: ''
   },
+  snapshotDate: {
+    type: Date,
+    required: [true, 'Please add a snapshot date'],
+    default: Date.now
+  },
   // Schedule data
   gridData: {
     type: Object,
@@ -77,6 +82,7 @@ const SnapshotSchema = new mongoose.Schema({
 
 // Index for faster queries
 SnapshotSchema.index({ createdBy: 1, createdAt: -1 });
+SnapshotSchema.index({ createdBy: 1, snapshotDate: -1 });
 SnapshotSchema.index({ name: 'text', description: 'text' });
 
 // Virtual for age (how old is this snapshot)
