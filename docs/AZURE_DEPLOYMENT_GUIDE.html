@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MineScheduler - Azure Deployment Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+        }
+        
+        h1 {
+            color: #0078D4;
+            border-bottom: 4px solid #0078D4;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            font-size: 32px;
+            page-break-before: always;
+        }
+        
+        h1:first-of-type {
+            page-break-before: auto;
+            text-align: center;
+            border-bottom: none;
+            margin-bottom: 5px;
+        }
+        
+        h2 {
+            color: #106EBE;
+            margin-top: 25px;
+            font-size: 24px;
+            border-left: 4px solid #0078D4;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #005A9E;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        
+        h4 {
+            color: #004578;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .document-info {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            border: 2px solid #0078D4;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            page-break-after: always;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            color: #0078D4;
+            border-left: none;
+            padding-left: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: #0078D4;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            border-left: 4px solid #0078D4;
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        
+        .info-box {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        .warning-box {
+            background: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        .success-box {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        .danger-box {
+            background: #FFEBEE;
+            border-left: 4px solid #F44336;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #0078D4;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .checklist li:before {
+            content: "☐ ";
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #0078D4;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 2px solid #0078D4;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .highlight {
+            background-color: #FFEB3B;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+        
+        strong {
+            color: #0078D4;
+        }
+        
+        a {
+            color: #0078D4;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            table, figure, .info-box, .warning-box, .success-box, .danger-box {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>MineScheduler</h1>
+    <div class="subtitle">Azure Deployment Guide</div>
+    <div class="document-info">
+        <p><strong>Complete Step-by-Step Guide to Deploy on Azure App Service</strong></p>
+        <p>Version 1.0 | Last Updated: October 30, 2025</p>
+        <p>Author: MineScheduler Team</p>
+    </div>
+
+    <div class="toc">
+        <h2>📋 Table of Contents</h2>
+        <ul>
+            <li><strong>1.</strong> Prerequisites</li>
+            <li><strong>2.</strong> Architecture Overview</li>
+            <li><strong>3.</strong> Part 1: Setting Up Azure Cosmos DB (MongoDB)</li>
+            <li><strong>4.</strong> Part 2: Preparing the Application for Deployment</li>
+            <li><strong>5.</strong> Part 3: Creating Azure App Service</li>
+            <li><strong>6.</strong> Part 4: Configuring Environment Variables</li>
+            <li><strong>7.</strong> Part 5: Deploying the Application</li>
+            <li><strong>8.</strong> Part 6: Post-Deployment Configuration</li>
+            <li><strong>9.</strong> Part 7: Setting Up OAuth (Google & Microsoft)</li>
+            <li><strong>10.</strong> Part 8: Testing and Verification</li>
+            <li><strong>11.</strong> Part 9: Setting Up Custom Domain (Optional)</li>
+            <li><strong>12.</strong> Part 10: Monitoring and Maintenance</li>
+            <li><strong>13.</strong> Troubleshooting</li>
+            <li><strong>14.</strong> Cost Estimation</li>
+        </ul>
+    </div>
+
+    <h1 id="prerequisites">Prerequisites</h1>
+    
+    <p>Before you begin, ensure you have the following:</p>
+
+    <h2>Required Accounts</h2>
+    <ul class="checklist">
+        <li><strong>Microsoft Azure Account</strong> with active subscription
+            <br>Sign up at: <a href="https://azure.microsoft.com/free/">https://azure.microsoft.com/free/</a>
+            <br>New accounts get $200 free credits for 30 days</li>
+        <li><strong>GitHub Account</strong> (for deployment)</li>
+        <li><strong>Google Cloud Console Account</strong> (if using Google OAuth)</li>
+        <li><strong>Microsoft Azure AD</strong> (already available with Azure account for Microsoft OAuth)</li>
+    </ul>
+
+    <h2>Required Software on Local Machine</h2>
+    <ul class="checklist">
+        <li><strong>Node.js</strong> (v18.x or v20.x LTS)
+            <br>Check: <code>node --version</code></li>
+        <li><strong>npm</strong> (comes with Node.js)
+            <br>Check: <code>npm --version</code></li>
+        <li><strong>Git</strong>
+            <br>Check: <code>git --version</code></li>
+        <li><strong>Azure CLI</strong> (recommended but optional)
+            <br>Download: <a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli">https://docs.microsoft.com/en-us/cli/azure/install-azure-cli</a>
+            <br>Check: <code>az --version</code></li>
+    </ul>
+
+    <h2>Application Requirements</h2>
+    <ul class="checklist">
+        <li>Your MineScheduler application code ready</li>
+        <li>Tested locally and working</li>
+        <li>Git repository initialized</li>
+    </ul>
+
+    <h1 id="architecture">Architecture Overview</h1>
+
+    <p><strong>What We're Building:</strong></p>
+
+    <div class="architecture-diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                    Internet Users                            │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+         ┌───────────────────────┐
+         │   Azure App Service    │
+         │  (Node.js Runtime)     │
+         │                        │
+         │  ┌──────────────────┐  │
+         │  │  Express Server   │  │ ← Backend API
+         │  │  (Port 5000)      │  │
+         │  └──────────────────┘  │
+         │  ┌──────────────────┐  │
+         │  │  React Build      │  │ ← Frontend (Static)
+         │  │  (Served by       │  │
+         │  │   Express)        │  │
+         │  └──────────────────┘  │
+         └───────────┬────────────┘
+                     │
+                     ▼
+         ┌───────────────────────┐
+         │  Azure Cosmos DB      │
+         │  (MongoDB API)        │
+         │  Database Storage     │
+         └───────────────────────┘
+    </div>
+
+    <div class="info-box">
+        <h3>Key Points:</h3>
+        <ul>
+            <li>Single App Service hosts both frontend and backend</li>
+            <li>React app builds to static files served by Express</li>
+            <li>Cosmos DB provides MongoDB-compatible database</li>
+            <li>OAuth providers for authentication</li>
+        </ul>
+    </div>
+
+    <h1 id="part1">Part 1: Setting Up Azure Cosmos DB (MongoDB)</h1>
+
+    <h2>Step 1.1: Sign in to Azure Portal</h2>
+    <ol>
+        <li>Go to <strong>https://portal.azure.com</strong></li>
+        <li>Sign in with your Microsoft account</li>
+        <li>You should see the Azure Portal dashboard</li>
+    </ol>
+
+    <h2>Step 1.2: Create a Resource Group</h2>
+    <p>A resource group is a container for all related Azure resources.</p>
+    <ol>
+        <li>Click <strong>"Resource groups"</strong> in the left sidebar (or search for it)</li>
+        <li>Click <strong>"+ Create"</strong> button</li>
+        <li>Fill in the details:
+            <ul>
+                <li><strong>Subscription</strong>: Select your subscription</li>
+                <li><strong>Resource group name</strong>: <code>minescheduler-rg</code></li>
+                <li><strong>Region</strong>: Choose closest to your users (e.g., <code>East US</code>, <code>West Europe</code>, <code>Southeast Asia</code>)</li>
+            </ul>
+        </li>
+        <li>Click <strong>"Review + create"</strong></li>
+        <li>Click <strong>"Create"</strong></li>
+    </ol>
+
+    <h2>Step 1.3: Create Azure Cosmos DB Account</h2>
+    <ol>
+        <li>Click <strong>"+ Create a resource"</strong> (top left)</li>
+        <li>Search for <strong>"Azure Cosmos DB"</strong></li>
+        <li>Click <strong>"Create"</strong> on the Azure Cosmos DB card</li>
+        <li>Select <strong>"Azure Cosmos DB for MongoDB"</strong></li>
+        <li>Click <strong>"Create"</strong></li>
+    </ol>
+
+    <h2>Step 1.4: Configure Cosmos DB Settings</h2>
+    
+    <h3>Basics Tab:</h3>
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+            <th>Notes</th>
+        </tr>
+        <tr>
+            <td>Subscription</td>
+            <td>Your subscription</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Resource Group</td>
+            <td>minescheduler-rg</td>
+            <td>Select the one you created</td>
+        </tr>
+        <tr>
+            <td>Account Name</td>
+            <td>minescheduler-db</td>
+            <td>Must be globally unique</td>
+        </tr>
+        <tr>
+            <td>Location</td>
+            <td>Same as your resource group</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Capacity mode</td>
+            <td>Serverless</td>
+            <td>Recommended for start - pay per use</td>
+        </tr>
+        <tr>
+            <td>Version</td>
+            <td>4.2 or latest</td>
+            <td>-</td>
+        </tr>
+    </table>
+
+    <div class="warning-box">
+        <strong>⚠️ Important:</strong> If <code>minescheduler-db</code> is taken, try: <code>minescheduler-db-[yourname]</code> or <code>minescheduler-db-[random]</code>
+    </div>
+
+    <h3>Global Distribution Tab:</h3>
+    <ul>
+        <li><strong>Geo-Redundancy</strong>: Disable (can enable later)</li>
+        <li><strong>Multi-region Writes</strong>: Disable (can enable later)</li>
+    </ul>
+
+    <h3>Networking Tab:</h3>
+    <ul>
+        <li><strong>Connectivity method</strong>: Select <strong>"All networks"</strong> (simplest for initial setup)
+            <br>OR <strong>"Public endpoint (selected networks)"</strong> (more secure - recommended)</li>
+    </ul>
+
+    <ol start="6">
+        <li>Click <strong>"Review + create"</strong></li>
+        <li>Review all settings</li>
+        <li>Click <strong>"Create"</strong></li>
+        <li><strong>Wait 5-10 minutes</strong> for deployment to complete</li>
+        <li>Click <strong>"Go to resource"</strong> when ready</li>
+    </ol>
+
+    <h2>Step 1.5: Get MongoDB Connection String</h2>
+    
+    <div class="danger-box">
+        <strong>🔒 CRITICAL:</strong> This is your database connection string. Keep it secure!
+    </div>
+
+    <ol>
+        <li>In your Cosmos DB account, click <strong>"Connection strings"</strong> in the left menu (under Settings)</li>
+        <li>You'll see a connection string like:<br>
+            <code>mongodb://minescheduler-db:[password]@minescheduler-db.mongo.cosmos.azure.com:10255/?ssl=true...</code></li>
+        <li><strong class="highlight">Copy the "PRIMARY CONNECTION STRING"</strong></li>
+        <li><strong>SAVE THIS SECURELY</strong> - you'll need it for environment variables
+            <ul>
+                <li>Consider using a password manager</li>
+                <li>DO NOT commit this to Git</li>
+            </ul>
+        </li>
+        <li>Also note down:
+            <ul>
+                <li><strong>HOST</strong>: <code>minescheduler-db.mongo.cosmos.azure.com</code></li>
+                <li><strong>PORT</strong>: <code>10255</code></li>
+                <li><strong>USERNAME</strong>: <code>minescheduler-db</code></li>
+                <li><strong>PRIMARY PASSWORD</strong>: (shown on the page)</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h1 id="part2">Part 2: Preparing the Application for Deployment</h1>
+
+    <h2>Step 2.1: Verify Application Structure</h2>
+    <p>Ensure your project has this structure:</p>
+    <pre><code>MineScheduler/
+├── client/                  # React frontend
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── ...
+├── config/                  # Configuration files
+├── controllers/             # Express controllers
+├── middleware/              # Express middleware
+├── models/                  # Mongoose models
+├── routes/                  # Express routes
+├── utils/                   # Utility functions
+├── .env.example
+├── .gitignore
+├── package.json             # Backend package.json
+├── server.js                # Main server file
+└── build.sh                 # Build script</code></pre>
+
+    <h2>Step 2.2: Update .gitignore</h2>
+    <p>Ensure sensitive files are not tracked:</p>
+    <ol>
+        <li>Open <code>.gitignore</code> in your editor</li>
+        <li>Verify it contains:
+            <pre><code>node_modules/
+.env
+.env.local
+.env.production
+client/build/
+npm-debug.log*</code></pre>
+        </li>
+        <li>Save if you made changes</li>
+    </ol>
+
+    <h2>Step 2.7: Test Build Locally</h2>
+    <p>Before deploying, test that the build works:</p>
+    <pre><code># Install all dependencies
+npm install
+
+# Build the React frontend
+npm run build
+
+# Test production mode locally
+NODE_ENV=production npm start</code></pre>
+
+    <p>Visit <code>http://localhost:5000</code> - you should see the React app served by Express.</p>
+    <p>If successful, stop the server (Ctrl+C).</p>
+
+    <h1 id="part3">Part 3: Creating Azure App Service</h1>
+
+    <h2>Step 3.2: Configure Web App Basics</h2>
+
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+            <th>Notes</th>
+        </tr>
+        <tr>
+            <td>Subscription</td>
+            <td>Your subscription</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Resource Group</td>
+            <td>minescheduler-rg</td>
+            <td>Same as before</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>minescheduler-app</td>
+            <td>Must be globally unique</td>
+        </tr>
+        <tr>
+            <td>Publish</td>
+            <td>Code</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Runtime stack</td>
+            <td>Node 20 LTS</td>
+            <td>Or Node 18 LTS</td>
+        </tr>
+        <tr>
+            <td>Operating System</td>
+            <td>Linux</td>
+            <td>Recommended</td>
+        </tr>
+        <tr>
+            <td>Region</td>
+            <td>Same as your Cosmos DB</td>
+            <td>-</td>
+        </tr>
+    </table>
+
+    <div class="info-box">
+        <strong>💡 Pricing Tiers:</strong>
+        <ul>
+            <li><strong>F1 Free</strong>: For testing only - limited, sleeps after inactivity</li>
+            <li><strong>B1 Basic</strong> ($13/month): Recommended minimum for production</li>
+            <li><strong>P1V2</strong> ($88/month): Better performance</li>
+        </ul>
+    </div>
+
+    <h1 id="part4">Part 4: Configuring Environment Variables</h1>
+
+    <h2>Environment Variables to Add</h2>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>NODE_ENV</td>
+            <td>production</td>
+            <td>Environment mode</td>
+        </tr>
+        <tr>
+            <td>PORT</td>
+            <td>8080</td>
+            <td>Azure App Service port</td>
+        </tr>
+        <tr>
+            <td>MONGO_URI</td>
+            <td>[Your Cosmos DB connection string]</td>
+            <td>Database connection</td>
+        </tr>
+        <tr>
+            <td>JWT_SECRET</td>
+            <td>[Generate random 32+ chars]</td>
+            <td>JWT encryption key</td>
+        </tr>
+        <tr>
+            <td>JWT_EXPIRE</td>
+            <td>30d</td>
+            <td>Token expiration</td>
+        </tr>
+        <tr>
+            <td>CLIENT_URL</td>
+            <td>https://minescheduler-app.azurewebsites.net</td>
+            <td>Your App Service URL</td>
+        </tr>
+        <tr>
+            <td>WEBSITE_NODE_DEFAULT_VERSION</td>
+            <td>20-lts</td>
+            <td>Node.js version</td>
+        </tr>
+        <tr>
+            <td>SCM_DO_BUILD_DURING_DEPLOYMENT</td>
+            <td>true</td>
+            <td>Enable build on deploy</td>
+        </tr>
+    </table>
+
+    <div class="warning-box">
+        <strong>⚠️ Generate JWT Secret:</strong><br>
+        Use this command to generate a secure JWT secret:<br>
+        <code>node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"</code>
+    </div>
+
+    <h1 id="part5">Part 5: Deploying the Application</h1>
+
+    <h2>Option A: Deploy from GitHub (Recommended)</h2>
+
+    <h3>Step 5A.1: Push Code to GitHub</h3>
+    <pre><code># Initialize git (if not already done)
+git init
+
+# Add all files
+git add .
+
+# Commit
+git commit -m "Initial commit - ready for Azure deployment"
+
+# Create repository on GitHub.com first, then:
+git remote add origin https://github.com/[your-username]/minescheduler.git
+
+# Push to GitHub
+git push -u origin main</code></pre>
+
+    <h3>Step 5A.2: Set Up Deployment Center</h3>
+    <ol>
+        <li>In your App Service, click <strong>"Deployment Center"</strong> (left menu)</li>
+        <li>Under <strong>"Source"</strong>, select <strong>"GitHub"</strong></li>
+        <li>Click <strong>"Authorize"</strong> to connect your GitHub account</li>
+        <li>Select:
+            <ul>
+                <li><strong>Organization</strong>: Your GitHub username</li>
+                <li><strong>Repository</strong>: <code>minescheduler</code></li>
+                <li><strong>Branch</strong>: <code>main</code></li>
+            </ul>
+        </li>
+        <li><strong>Build Provider</strong>: Select <strong>"GitHub Actions"</strong></li>
+        <li>Click <strong>"Save"</strong></li>
+    </ol>
+
+    <div class="success-box">
+        <strong>✅ Deployment will start automatically!</strong><br>
+        Azure creates a GitHub Actions workflow file and triggers the first deployment.
+    </div>
+
+    <h1 id="part6">Part 6: Post-Deployment Configuration</h1>
+
+    <h2>Step 6.6: Test Health Endpoint</h2>
+    <ol>
+        <li>Visit: <code>https://minescheduler-app.azurewebsites.net/api/health</code></li>
+        <li>You should see:
+            <pre><code>{
+  "status": "success",
+  "message": "Server is running",
+  "environment": "production",
+  "database": "connected"
+}</code></pre>
+        </li>
+        <li>If you see this, backend is working! ✅</li>
+    </ol>
+
+    <h1 id="part7">Part 7: Setting Up OAuth (Google & Microsoft)</h1>
+
+    <h2>Setting Up Google OAuth</h2>
+
+    <h3>Step 7.1: Go to Google Cloud Console</h3>
+    <ol>
+        <li>Visit: <a href="https://console.cloud.google.com/">https://console.cloud.google.com/</a></li>
+        <li>Sign in with your Google account</li>
+    </ol>
+
+    <h3>Step 7.5: Create OAuth Credentials</h3>
+    <ol>
+        <li>Go to <strong>"APIs & Services"</strong> → <strong>"Credentials"</strong></li>
+        <li>Click <strong>"+ Create Credentials"</strong> → <strong>"OAuth client ID"</strong></li>
+        <li><strong>Application type</strong>: <strong>Web application</strong></li>
+        <li><strong>Name</strong>: <code>MineScheduler Web Client</code></li>
+        <li><strong>Authorized JavaScript origins</strong>:
+            <ul><li>Add: <code>https://minescheduler-app.azurewebsites.net</code></li></ul>
+        </li>
+        <li><strong>Authorized redirect URIs</strong>:
+            <ul><li>Add: <code>https://minescheduler-app.azurewebsites.net/api/auth/google/callback</code></li></ul>
+        </li>
+        <li>Click <strong>"Create"</strong></li>
+        <li><strong>Copy the Client ID and Client Secret</strong> ✅</li>
+    </ol>
+
+    <h1 id="troubleshooting">Troubleshooting</h1>
+
+    <h2>Issue 1: Application Not Starting</h2>
+    <div class="warning-box">
+        <strong>Symptoms:</strong>
+        <ul>
+            <li>503 Service Unavailable</li>
+            <li>Application Error page</li>
+        </ul>
+    </div>
+
+    <strong>Solutions:</strong>
+    <ol>
+        <li><strong>Check Logs:</strong> App Service → Log stream</li>
+        <li><strong>Verify Environment Variables:</strong> Configuration → Application settings</li>
+        <li><strong>Check Startup Command:</strong> Should be <code>npm start</code></li>
+        <li><strong>Check Node Version:</strong> Should match your local version</li>
+    </ol>
+
+    <h2>Issue 2: Database Connection Errors</h2>
+    <div class="warning-box">
+        <strong>Symptoms:</strong>
+        <ul>
+            <li>MongoDB connection failed</li>
+            <li>Database errors in logs</li>
+        </ul>
+    </div>
+
+    <strong>Solutions:</strong>
+    <ol>
+        <li><strong>Verify Connection String:</strong> Check MONGO_URI in Configuration</li>
+        <li><strong>Check Cosmos DB Firewall:</strong> Allow Azure services</li>
+        <li><strong>Verify Cosmos DB is Running:</strong> Status should be "Online"</li>
+    </ol>
+
+    <h1 id="cost">Cost Estimation</h1>
+
+    <h2>Monthly Cost Breakdown (USD)</h2>
+
+    <table>
+        <tr>
+            <th>Environment</th>
+            <th>App Service</th>
+            <th>Cosmos DB</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td><strong>Development/Testing</strong></td>
+            <td>B1 Basic: $13/month</td>
+            <td>Serverless: $1-10/month</td>
+            <td><strong>~$14-23/month</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Small Production</strong></td>
+            <td>B2 Basic: $38/month</td>
+            <td>Serverless: $10-30/month</td>
+            <td><strong>~$50-73/month</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Medium Production</strong></td>
+            <td>P1V2: $88/month</td>
+            <td>Provisioned 400 RU/s: $24/month</td>
+            <td><strong>~$122/month</strong></td>
+        </tr>
+        <tr>
+            <td><strong>Large Production</strong></td>
+            <td>P2V2: $176/month</td>
+            <td>Provisioned 1000 RU/s: $58/month</td>
+            <td><strong>~$270/month</strong></td>
+        </tr>
+    </table>
+
+    <h2>Cost Optimization Tips</h2>
+    <ul>
+        <li>✅ Use Serverless Cosmos DB for variable workloads</li>
+        <li>✅ Start with B1 tier and scale as needed</li>
+        <li>✅ Use Azure Free Credits ($200 for new accounts)</li>
+        <li>✅ Enable autoscale to scale down during low usage</li>
+        <li>✅ Monitor usage and adjust accordingly</li>
+        <li>✅ Delete unused resources promptly</li>
+        <li>✅ Use reserved instances for predictable workloads (save up to 30%)</li>
+    </ul>
+
+    <h1 id="conclusion">Conclusion</h1>
+
+    <div class="success-box">
+        <h2>🎉 You've Successfully Deployed MineScheduler to Azure!</h2>
+        <p><strong>Your application is now:</strong></p>
+        <ul>
+            <li>✅ Hosted on Azure App Service</li>
+            <li>✅ Connected to Azure Cosmos DB (MongoDB)</li>
+            <li>✅ Secured with HTTPS</li>
+            <li>✅ Monitored with Application Insights</li>
+            <li>✅ Configured with OAuth authentication</li>
+            <li>✅ Ready for production use</li>
+        </ul>
+    </div>
+
+    <h2>Key URLs to Save:</h2>
+    <ul>
+        <li><strong>Application:</strong> <code>https://minescheduler-app.azurewebsites.net</code></li>
+        <li><strong>Azure Portal:</strong> <a href="https://portal.azure.com">https://portal.azure.com</a></li>
+        <li><strong>Health Check:</strong> <code>https://minescheduler-app.azurewebsites.net/api/health</code></li>
+    </ul>
+
+    <h2>Important Credentials to Secure:</h2>
+    <ul>
+        <li>🔒 Cosmos DB Connection String</li>
+        <li>🔒 JWT Secret</li>
+        <li>🔒 OAuth Client Secrets</li>
+        <li>🔒 Deployment Credentials</li>
+    </ul>
+
+    <div class="info-box">
+        <h3>Support and Feedback</h3>
+        <p>If you encounter issues not covered in this guide:</p>
+        <ol>
+            <li>Check Application Insights for detailed errors</li>
+            <li>Review Log Stream for real-time logs</li>
+            <li>Consult Azure documentation</li>
+            <li>Reach out to Azure support</li>
+        </ol>
+    </div>
+
+    <div class="footer">
+        <p><strong>Document Version:</strong> 1.0</p>
+        <p><strong>Last Updated:</strong> October 30, 2025</p>
+        <p><strong>Author:</strong> MineScheduler Team</p>
+        <p><strong>Next Review:</strong> Before each deployment</p>
+        <hr>
+        <p>© 2025 MineScheduler. All rights reserved.</p>
+        <p><strong>Happy Mining! ⛏️</strong></p>
+    </div>
+</body>
+</html>
