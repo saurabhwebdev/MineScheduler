@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input, notification, Popconfirm, Empty, Tag, DatePicker, Card, Row, Col, Divider, Segmented, Space, Table } from 'antd';
 import { SaveOutlined, FolderOpenOutlined, DeleteOutlined, CalendarOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import config from '../config/config';
 import './SnapshotManager.css';
@@ -8,6 +9,7 @@ import './SnapshotManager.css';
 const { TextArea } = Input;
 
 const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot }) => {
+  const { t } = useTranslation();
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [loadModalVisible, setLoadModalVisible] = useState(false);
   const [snapshotName, setSnapshotName] = useState('');
@@ -80,15 +82,15 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         setSnapshots(data.data.snapshots);
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to fetch snapshots',
+          message: t('common.error'),
+          description: data.message || t('schedule.snapshot.messages.fetchError'),
         });
       }
     } catch (error) {
       console.error('Error fetching snapshots:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to fetch snapshots',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.snapshot.messages.fetchError'),
       });
     } finally {
       setLoading(false);
@@ -98,16 +100,16 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
   const handleSaveSnapshot = async () => {
     if (!snapshotName.trim()) {
       notification.warning({
-        message: 'Validation Error',
-        description: 'Please enter a snapshot name',
+        message: t('common.error'),
+        description: t('schedule.snapshot.messages.nameRequired'),
       });
       return;
     }
 
     if (!scheduleData) {
       notification.warning({
-        message: 'No Schedule',
-        description: 'Please generate a schedule first',
+        message: t('common.error'),
+        description: t('schedule.snapshot.messages.noSchedule'),
       });
       return;
     }
@@ -139,8 +141,8 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: 'Snapshot saved successfully',
+          message: t('common.success'),
+          description: t('schedule.snapshot.messages.saveSuccess'),
           duration: 2
         });
         setSaveModalVisible(false);
@@ -149,15 +151,15 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         setSnapshotDate(moment());
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to save snapshot',
+          message: t('common.error'),
+          description: data.message || t('schedule.snapshot.messages.saveError'),
         });
       }
     } catch (error) {
       console.error('Error saving snapshot:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to save snapshot',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.snapshot.messages.saveError'),
       });
     } finally {
       setLoading(false);
@@ -211,22 +213,22 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         onLoadSnapshot(loadedScheduleData, snapshot.delayedSlots, snapshot.gridHours);
         
         notification.success({
-          message: 'Success',
-          description: `Snapshot "${snapshot.name}" loaded successfully`,
+          message: t('common.success'),
+          description: t('schedule.snapshot.messages.loadSuccess', { name: snapshot.name }),
           duration: 2
         });
         setLoadModalVisible(false);
       } else {
         notification.error({
-          message: 'Error',
-          description: snapshotData.message || 'Failed to load snapshot',
+          message: t('common.error'),
+          description: snapshotData.message || t('schedule.snapshot.messages.loadError'),
         });
       }
     } catch (error) {
       console.error('Error loading snapshot:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to load snapshot',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.snapshot.messages.loadError'),
       });
     } finally {
       setLoading(false);
@@ -248,23 +250,23 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
 
       if (response.ok && data.status === 'success') {
         notification.success({
-          message: 'Success',
-          description: `Snapshot "${snapshotName}" deleted successfully`,
+          message: t('common.success'),
+          description: t('schedule.snapshot.messages.deleteSuccess', { name: snapshotName }),
           duration: 2
         });
         // Refresh the list
         fetchSnapshots();
       } else {
         notification.error({
-          message: 'Error',
-          description: data.message || 'Failed to delete snapshot',
+          message: t('common.error'),
+          description: data.message || t('schedule.snapshot.messages.deleteError'),
         });
       }
     } catch (error) {
       console.error('Error deleting snapshot:', error);
       notification.error({
-        message: 'Network Error',
-        description: 'Failed to delete snapshot',
+        message: t('schedule.messages.networkError'),
+        description: t('schedule.snapshot.messages.deleteError'),
       });
     } finally {
       setDeleteLoading({ ...deleteLoading, [snapshotId]: false });
@@ -278,16 +280,18 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           icon={<SaveOutlined />}
           onClick={() => setSaveModalVisible(true)}
           disabled={!scheduleData}
-          title="Save current schedule as snapshot"
+          title={t('schedule.saveSnapshot')}
+          data-snapshot-action="save"
         >
-          Save Snapshot
+          {t('schedule.saveSnapshot')}
         </Button>
         <Button
           icon={<FolderOpenOutlined />}
           onClick={() => setLoadModalVisible(true)}
-          title="Load a saved snapshot"
+          title={t('schedule.loadSnapshot')}
+          data-snapshot-action="load"
         >
-          Load Snapshot
+          {t('schedule.loadSnapshot')}
         </Button>
       </Space>
 
@@ -296,7 +300,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         title={
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <SaveOutlined style={{ color: '#3cca70', fontSize: '20px' }} />
-            <span>Save Snapshot</span>
+            <span>{t('schedule.snapshot.saveModal.title')}</span>
           </div>
         }
         open={saveModalVisible}
@@ -307,7 +311,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           setSnapshotDescription('');
           setSnapshotDate(moment());
         }}
-        okText="Save Snapshot"
+        okText={t('schedule.snapshot.saveModal.saveButton')}
         confirmLoading={loading}
         width={600}
         okButtonProps={{
@@ -330,11 +334,11 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           <div className="form-field">
             <label className="field-label">
               <FileTextOutlined style={{ marginRight: '6px' }} />
-              Snapshot Name *
+              {t('schedule.snapshot.saveModal.nameLabel')} *
             </label>
             <Input
               size="large"
-              placeholder="e.g., Week 1 - Day Shift Schedule"
+              placeholder={t('schedule.snapshot.saveModal.namePlaceholder')}
               value={snapshotName}
               onChange={(e) => setSnapshotName(e.target.value)}
               maxLength={100}
@@ -346,7 +350,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           <div className="form-field">
             <label className="field-label">
               <CalendarOutlined style={{ marginRight: '6px' }} />
-              Snapshot Date *
+              {t('schedule.snapshot.saveModal.dateLabel')} *
             </label>
             <DatePicker
               size="large"
@@ -356,17 +360,17 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
               style={{ width: '100%', borderRadius: '8px' }}
             />
             <div style={{ marginTop: '6px', fontSize: '12px', color: '#8c8c8c' }}>
-              💡 Select the date this schedule is for
+              {t('schedule.snapshot.saveModal.dateHint')}
             </div>
           </div>
 
           <div className="form-field">
             <label className="field-label">
-              Description (Optional)
+              {t('schedule.snapshot.saveModal.descriptionLabel')}
             </label>
             <TextArea
               size="large"
-              placeholder="Add notes about this snapshot (e.g., special considerations, changes made...)" 
+              placeholder={t('schedule.snapshot.saveModal.descriptionPlaceholder')}
               value={snapshotDescription}
               onChange={(e) => setSnapshotDescription(e.target.value)}
               rows={4}
@@ -379,31 +383,31 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           {scheduleData && (
             <Card className="snapshot-preview-card" size="small">
               <div className="preview-header">
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#595959' }}>📋 Snapshot Contents</span>
+                <span style={{ fontSize: '13px', fontWeight: 600, color: '#595959' }}>{t('schedule.snapshot.saveModal.previewTitle')}</span>
               </div>
               <Divider style={{ margin: '12px 0' }} />
               <Row gutter={[16, 12]}>
                 <Col span={12}>
                   <div className="preview-stat">
-                    <span className="stat-label">Grid Hours</span>
+                    <span className="stat-label">{t('schedule.snapshot.saveModal.gridHours')}</span>
                     <span className="stat-value">{scheduleData.gridHours}h</span>
                   </div>
                 </Col>
                 <Col span={12}>
                   <div className="preview-stat">
-                    <span className="stat-label">Total Sites</span>
+                    <span className="stat-label">{t('schedule.snapshot.saveModal.totalSites')}</span>
                     <span className="stat-value">{Object.keys(scheduleData.grid || {}).length}</span>
                   </div>
                 </Col>
                 <Col span={12}>
                   <div className="preview-stat">
-                    <span className="stat-label">Active Sites</span>
+                    <span className="stat-label">{t('schedule.snapshot.saveModal.activeSites')}</span>
                     <span className="stat-value">{Object.values(scheduleData.siteActive || {}).filter(Boolean).length}</span>
                   </div>
                 </Col>
                 <Col span={12}>
                   <div className="preview-stat">
-                    <span className="stat-label">Delays</span>
+                    <span className="stat-label">{t('schedule.snapshot.saveModal.delays')}</span>
                     <span className="stat-value">{delayedSlots.length}</span>
                   </div>
                 </Col>
@@ -418,7 +422,7 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
         title={
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <FolderOpenOutlined style={{ color: '#3cca70', fontSize: '20px' }} />
-            <span>Load Snapshot</span>
+            <span>{t('schedule.snapshot.loadModal.title')}</span>
           </div>
         }
         open={loadModalVisible}
@@ -428,14 +432,14 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           setDateFilter('all');
         }}
         footer={null}
-        width={900}
+        width={1100}
         className="load-snapshot-modal"
       >
         {/* Search and Filters */}
         <div className="snapshot-filters">
           <Input
             size="large"
-            placeholder="Search snapshots by name or description..."
+            placeholder={t('schedule.snapshot.loadModal.searchPlaceholder')}
             prefix={<SearchOutlined style={{ color: '#8c8c8c' }} />}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -447,10 +451,10 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
             onChange={setDateFilter}
             size="large"
             options={[
-              { label: 'All', value: 'all' },
-              { label: 'Today', value: 'today' },
-              { label: 'This Week', value: 'week' },
-              { label: 'This Month', value: 'month' }
+              { label: t('schedule.snapshot.loadModal.filterAll'), value: 'all' },
+              { label: t('schedule.snapshot.loadModal.filterToday'), value: 'today' },
+              { label: t('schedule.snapshot.loadModal.filterWeek'), value: 'week' },
+              { label: t('schedule.snapshot.loadModal.filterMonth'), value: 'month' }
             ]}
             style={{ marginBottom: '24px' }}
           />
@@ -461,88 +465,90 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
           dataSource={filteredSnapshots}
           loading={loading}
           rowKey={(record) => record._id}
+          size="small"
           pagination={{
             pageSize: 10,
             showSizeChanger: false,
-            showTotal: (total) => `Total ${total} snapshots`
+            showTotal: (total) => total === 1 ? t('schedule.snapshot.loadModal.paginationTotal', { total }) : t('schedule.snapshot.loadModal.paginationTotal_plural', { total }),
+            size: 'small'
           }}
           locale={{
             emptyText: (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 description={
-                  <span style={{ color: '#8c8c8c' }}>
-                    {searchText || dateFilter !== 'all' ? 'No snapshots match your filters' : 'No snapshots saved yet'}
+                  <span style={{ color: '#8c8c8c', fontSize: '13px' }}>
+                    {searchText || dateFilter !== 'all' ? t('schedule.snapshot.loadModal.emptyNoMatch') : t('schedule.snapshot.loadModal.emptyNoSnapshots')}
                   </span>
                 }
               >
                 {searchText || dateFilter !== 'all' ? (
-                  <Button onClick={() => { setSearchText(''); setDateFilter('all'); }}>Clear Filters</Button>
+                  <Button size="small" onClick={() => { setSearchText(''); setDateFilter('all'); }}>{t('schedule.snapshot.loadModal.clearFilters')}</Button>
                 ) : null}
               </Empty>
             )
           }}
+          style={{ fontSize: '13px' }}
           columns={[
             {
-              title: 'Snapshot Name',
+              title: t('schedule.snapshot.loadModal.columns.name'),
               dataIndex: 'name',
               key: 'name',
-              width: '30%',
-              render: (text) => <strong style={{ color: '#262626' }}>{text}</strong>
+              ellipsis: true,
+              render: (text) => <strong style={{ color: '#262626', fontSize: '13px' }}>{text}</strong>
             },
             {
-              title: 'Date',
+              title: t('schedule.snapshot.loadModal.columns.date'),
               dataIndex: 'snapshotDate',
               key: 'snapshotDate',
-              width: '15%',
+              width: 140,
               sorter: (a, b) => moment(a.snapshotDate).unix() - moment(b.snapshotDate).unix(),
               defaultSortOrder: 'descend',
               render: (date) => (
-                <span>
-                  <CalendarOutlined style={{ marginRight: '6px', color: '#3cca70' }} />
+                <span style={{ fontSize: '13px', color: '#595959' }}>
+                  <CalendarOutlined style={{ marginRight: '4px', color: '#3cca70', fontSize: '12px' }} />
                   {moment(date).format('MMM D, YYYY')}
                 </span>
               )
             },
             {
-              title: 'Description',
+              title: t('schedule.snapshot.loadModal.columns.description'),
               dataIndex: 'description',
               key: 'description',
-              width: '25%',
               ellipsis: true,
-              render: (text) => <span style={{ color: '#595959' }}>{text || '—'}</span>
+              render: (text) => <span style={{ color: '#8c8c8c', fontSize: '12px' }}>{text || '—'}</span>
             },
             {
-              title: 'Hours',
+              title: t('schedule.snapshot.loadModal.columns.hours'),
               dataIndex: 'gridHours',
               key: 'gridHours',
-              width: '8%',
+              width: 70,
               align: 'center',
-              render: (hours) => <Tag color="blue">{hours}h</Tag>
+              render: (hours) => <Tag color="blue" style={{ fontSize: '11px', margin: 0 }}>{hours}h</Tag>
             },
             {
-              title: 'Sites',
+              title: t('schedule.snapshot.loadModal.columns.sites'),
               dataIndex: 'totalSites',
               key: 'totalSites',
-              width: '8%',
+              width: 60,
               align: 'center',
-              render: (total) => <span style={{ color: '#595959' }}>{total}</span>
+              render: (total) => <span style={{ color: '#595959', fontSize: '12px' }}>{total}</span>
             },
             {
-              title: 'Active',
+              title: t('schedule.snapshot.loadModal.columns.active'),
               dataIndex: 'activeSites',
               key: 'activeSites',
-              width: '8%',
+              width: 65,
               align: 'center',
-              render: (active) => <Tag color="green">{active}</Tag>
+              render: (active) => <Tag color="green" style={{ fontSize: '11px', margin: 0 }}>{active}</Tag>
             },
             {
-              title: 'Actions',
+              title: t('schedule.snapshot.loadModal.columns.actions'),
               key: 'actions',
-              width: '14%',
+              width: 120,
               align: 'center',
               render: (_, record) => (
-                <Space size="small">
+                <Space size={4}>
                   <Button
                     type="primary"
                     size="small"
@@ -551,24 +557,31 @@ const SnapshotManager = ({ scheduleData, delayedSlots, gridHours, onLoadSnapshot
                     loading={loading}
                     style={{
                       backgroundColor: '#3cca70',
-                      borderColor: '#3cca70'
+                      borderColor: '#3cca70',
+                      fontSize: '12px',
+                      height: '26px',
+                      padding: '0 8px'
                     }}
-                  >
-                    Load
-                  </Button>
+                  />
                   <Popconfirm
-                    title="Delete Snapshot?"
-                    description="This action cannot be undone."
+                    title={t('schedule.snapshot.loadModal.deleteTitle')}
+                    description={t('schedule.snapshot.loadModal.deleteDescription')}
                     onConfirm={() => handleDeleteSnapshot(record._id, record.name)}
-                    okText="Delete"
-                    cancelText="Cancel"
-                    okButtonProps={{ danger: true }}
+                    okText={t('schedule.snapshot.loadModal.deleteOk')}
+                    cancelText={t('schedule.snapshot.loadModal.deleteCancel')}
+                    okButtonProps={{ danger: true, size: 'small' }}
+                    cancelButtonProps={{ size: 'small' }}
                   >
                     <Button
                       danger
                       size="small"
                       icon={<DeleteOutlined />}
                       loading={deleteLoading[record._id]}
+                      style={{
+                        fontSize: '12px',
+                        height: '26px',
+                        padding: '0 8px'
+                      }}
                     />
                   </Popconfirm>
                 </Space>

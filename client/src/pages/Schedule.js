@@ -1138,7 +1138,7 @@ const Schedule = () => {
                         <Button
                           size="middle"
                           icon={<SaveOutlined />}
-                          onClick={() => document.querySelector('.snapshot-manager button[title*="Save"]')?.click()}
+                          onClick={() => document.querySelector('.snapshot-manager button[data-snapshot-action="save"]')?.click()}
                           style={{
                             background: '#3cca70',
                             borderColor: '#3cca70',
@@ -1152,7 +1152,7 @@ const Schedule = () => {
                       <Button
                         size="middle"
                         icon={<FolderOpenOutlined />}
-                        onClick={() => document.querySelector('.snapshot-manager button[title*="Load"]')?.click()}
+                        onClick={() => document.querySelector('.snapshot-manager button[data-snapshot-action="load"]')?.click()}
                         style={{
                           background: '#3cca70',
                           borderColor: '#3cca70',
