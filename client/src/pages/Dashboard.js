@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Space, Card, Statistic, Divider } from 'antd';
+import { Row, Col, Spin, Modal, Table, Tag, Alert, DatePicker, Button, Progress, Space, Card, Statistic, Divider, Segmented } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { 
   ToolOutlined, 
@@ -49,6 +49,7 @@ const Dashboard = () => {
   const [qualityInfoVisible, setQualityInfoVisible] = useState(false);
   const [maintenanceCostModalVisible, setMaintenanceCostModalVisible] = useState(false);
   const [maintenanceCostData, setMaintenanceCostData] = useState(null);
+  const [delayFilter, setDelayFilter] = useState('all'); // 'all', 'user', 'shift'
 
   const fetchAllData = useCallback(async () => {
     setLoading(true);
@@ -363,6 +364,13 @@ const Dashboard = () => {
                     <span className="kpi-max">/100</span>
                   </div>
                   <div className="kpi-label">{t('dashboard.kpis.scheduleQuality')}</div>
+                  <div className="kpi-sublabel" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px' }}>
+                    {
+                      delayFilter === 'user' ? `${metrics.activeOperations.userDelays} user delays` :
+                      delayFilter === 'shift' ? `${metrics.activeOperations.shiftDelays} shift delays` :
+                      `${metrics.activeOperations.allDelays} total delays`
+                    }
+                  </div>
                   <Progress 
                     percent={metrics.scheduleEfficiency.quality} 
                     strokeColor={
@@ -383,7 +391,7 @@ const Dashboard = () => {
         {metrics && (
           <Row gutter={[16, 16]} className="secondary-kpis-row">
             <Col xs={12} sm={12} lg={6}>
-              <Card className="mini-kpi-card">
+              <Card className="mini-kpi-card" style={{ minHeight: '140px' }}>
                 <Statistic
                   title={t('dashboard.kpis.activeSites')}
                   value={metrics.activeOperations.activeSites}
@@ -394,7 +402,7 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col xs={12} sm={12} lg={6}>
-              <Card className="mini-kpi-card">
+              <Card className="mini-kpi-card" style={{ minHeight: '140px' }}>
                 <Statistic
                   title={t('dashboard.kpis.totalTasks')}
                   value={metrics.activeOperations.totalTasks}
@@ -404,17 +412,34 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col xs={12} sm={12} lg={6}>
-              <Card className="mini-kpi-card">
+              <Card className="mini-kpi-card" style={{ minHeight: '140px' }}>
+                <div style={{ marginBottom: '8px' }}>
+                  <Segmented
+                    size="small"
+                    value={delayFilter}
+                    onChange={setDelayFilter}
+                    options={[
+                      { label: 'All', value: 'all' },
+                      { label: 'User', value: 'user' },
+                      { label: 'Shift', value: 'shift' }
+                    ]}
+                    style={{ fontSize: '11px' }}
+                  />
+                </div>
                 <Statistic
                   title={t('dashboard.kpis.delays')}
-                  value={metrics.activeOperations.delays}
+                  value={
+                    delayFilter === 'user' ? metrics.activeOperations.userDelays :
+                    delayFilter === 'shift' ? metrics.activeOperations.shiftDelays :
+                    metrics.activeOperations.allDelays
+                  }
                   prefix={<WarningOutlined />}
                   valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#ef4444' }}
                 />
               </Card>
             </Col>
             <Col xs={12} sm={12} lg={6}>
-              <Card className="mini-kpi-card">
+              <Card className="mini-kpi-card" style={{ minHeight: '140px' }}>
                 <Statistic
                   title={t('dashboard.kpis.dueSoon')}
                   value={metrics.criticalAlerts.dueSoon}
@@ -633,7 +658,13 @@ const Dashboard = () => {
                     </div>
                     <div className="quality-metric">
                       <span className="metric-label">{t('dashboard.quality.conflicts')}</span>
-                      <span className="metric-value">{metrics.scheduleEfficiency.conflicts}</span>
+                      <span className="metric-value">
+                        {
+                          delayFilter === 'user' ? metrics.activeOperations.userDelays :
+                          delayFilter === 'shift' ? metrics.activeOperations.shiftDelays :
+                          metrics.scheduleEfficiency.conflicts
+                        }
+                      </span>
                     </div>
                     <div className="quality-metric">
                       <span className="metric-label">{t('dashboard.quality.completion')}</span>

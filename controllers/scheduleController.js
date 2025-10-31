@@ -170,7 +170,12 @@ exports.generateSchedule = async (req, res) => {
       allDelays: allDelays
     };
 
-    // 12. Save schedule to database
+    // 12. Delete old schedules to keep only the latest one
+    // This ensures dashboard always shows data from the current schedule
+    // Note: Snapshots are stored separately and are NOT affected by this deletion
+    await Schedule.deleteMany({});
+
+    // 13. Save new schedule to database
     const savedSchedule = await Schedule.create({
       gridHours,
       grid,
@@ -188,7 +193,7 @@ exports.generateSchedule = async (req, res) => {
       generatedAt: new Date()
     });
 
-    // 13. Return schedule data with metadata
+    // 14. Return schedule data with metadata
     res.json({
       status: 'success',
       data: {

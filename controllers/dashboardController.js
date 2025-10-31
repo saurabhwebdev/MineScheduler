@@ -122,11 +122,19 @@ exports.getDashboardMetrics = async (req, res) => {
     const tasks = await Task.find({});
     const activeSites = sites.filter(s => s.isActive).length;
     
+    // Get delay counts by type
+    const userDelays = latestSchedule && latestSchedule.delayedSlots ? latestSchedule.delayedSlots.length : 0;
+    const shiftDelays = latestSchedule && latestSchedule.shiftChangeoverDelays ? latestSchedule.shiftChangeoverDelays.length : 0;
+    const allDelays = latestSchedule && latestSchedule.allDelays ? latestSchedule.allDelays.length : 0;
+    
     const activeOperations = {
       activeSites,
       totalSites: sites.length,
       totalTasks: tasks.length,
-      delays: latestSchedule && latestSchedule.allDelays ? latestSchedule.allDelays.length : 0
+      delays: allDelays,
+      userDelays: userDelays,
+      shiftDelays: shiftDelays,
+      allDelays: allDelays
     };
 
     res.status(200).json({
