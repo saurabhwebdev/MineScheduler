@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Modal, Button, Tag, Tooltip } from 'antd';
 import { FullscreenExitOutlined } from '@ant-design/icons';
+import { useTranslation, Trans } from 'react-i18next';
 import ScheduleCell from './ScheduleCell';
 import DelayModal from './DelayModal';
 import './ScheduleGrid.css';
 
 const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, onRemoveDelay, selectedShiftFilter, activeShifts, calculateSiteKPIs }) => {
+  const { t } = useTranslation();
   const [sortDirection, setSortDirection] = useState('desc'); // 'none', 'asc', 'desc'
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [toggleModalVisible, setToggleModalVisible] = useState(false);
@@ -460,8 +462,8 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
         open={toggleModalVisible}
         onOk={handleConfirmToggle}
         onCancel={handleCancelToggle}
-        okText={selectedSite?.isActive ? 'Deactivate' : 'Activate'}
-        cancelText="Cancel"
+        okText={selectedSite?.isActive ? t('schedule.siteToggleModal.deactivate') : t('schedule.siteToggleModal.activate')}
+        cancelText={t('schedule.siteToggleModal.cancel')}
         centered
         width={480}
         okButtonProps={{ 
@@ -480,6 +482,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
             borderColor: '#d9d9d9'
           }
         }}
+        title={t('schedule.siteToggleModal.title')}
       >
         <div style={{ padding: '20px 0' }}>
           <div style={{ 
@@ -504,7 +507,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
             }}>
               {selectedSite?.isActive ? '⏸' : '▶'}
             </span>
-            Toggle Site Status
+            {t('schedule.siteToggleModal.title')}
           </div>
           
           {/* Site-Specific KPIs */}
@@ -523,7 +526,7 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                 marginBottom: '12px',
                 letterSpacing: '0.5px'
               }}>
-                SITE METRICS FOR {selectedSite?.id}
+                {t('schedule.siteToggleModal.siteMetricsTitle', { siteId: selectedSite?.id })}
               </div>
               <div style={{ 
                 display: 'flex', 
@@ -531,31 +534,31 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
                 gap: '8px', 
                 flexWrap: 'wrap' 
               }}>
-                <Tooltip title="Total meters scheduled for this site in the current grid">
+                <Tooltip title={t('schedule.siteToggleModal.tooltips.totalMeters')}>
                   <Tag color="blue" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #91caff', cursor: 'pointer' }}>
                     📏 {siteKPIs.totalMeters} m
                   </Tag>
                 </Tooltip>
                 
-                <Tooltip title="Total backfill tonnes for this site">
+                <Tooltip title={t('schedule.siteToggleModal.tooltips.totalBackfill')}>
                   <Tag color="orange" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #ffbb96', cursor: 'pointer' }}>
                     🏗️ {siteKPIs.totalBackfill} t
                   </Tag>
                 </Tooltip>
                 
-                <Tooltip title="Total ore tonnes for this site">
+                <Tooltip title={t('schedule.siteToggleModal.tooltips.totalOre')}>
                   <Tag color="gold" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #ffd666', cursor: 'pointer' }}>
                     ⛏️ {siteKPIs.totalOre} t
                   </Tag>
                 </Tooltip>
                 
-                <Tooltip title={selectedSite?.isActive ? "Site is currently active" : "Site is currently inactive"}>
+                <Tooltip title={selectedSite?.isActive ? t('schedule.siteToggleModal.tooltips.status', { status: t('schedule.siteToggleModal.active') }) : t('schedule.siteToggleModal.tooltips.status', { status: t('schedule.siteToggleModal.inactive') })}>
                   <Tag color={selectedSite?.isActive ? "green" : "default"} style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: selectedSite?.isActive ? '1px solid #95de64' : '1px solid #d9d9d9', cursor: 'pointer' }}>
-                    📍 {selectedSite?.isActive ? 'Active' : 'Inactive'}
+                    📍 {selectedSite?.isActive ? t('schedule.siteToggleModal.active') : t('schedule.siteToggleModal.inactive')}
                   </Tag>
                 </Tooltip>
                 
-                <Tooltip title="Total scheduled work hours for this site">
+                <Tooltip title={t('schedule.siteToggleModal.tooltips.workHours')}>
                   <Tag color="purple" style={{ margin: 0, fontSize: '12px', padding: '4px 10px', border: '1px solid #b37feb', cursor: 'pointer' }}>
                     ⏱️ {siteKPIs.workHours} hrs
                   </Tag>
@@ -571,16 +574,16 @@ const ScheduleGrid = ({ scheduleData, delayedSlots, onToggleSite, onAddDelay, on
           }}>
             {selectedSite?.isActive ? (
               <>
-                Are you sure you want to <strong style={{ color: '#ff4d4f' }}>deactivate</strong> site <strong style={{ color: '#062d54' }}>{selectedSite?.id}</strong>?
+                <span><Trans i18nKey="schedule.siteToggleModal.deactivateQuestion" values={{ siteId: selectedSite?.id }} components={{ strong: <strong style={{ color: '#ff4d4f' }} /> }} /></span>
                 <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff7e6', borderRadius: '8px', fontSize: '13px' }}>
-                  ⚠️ Deactivated sites will be <strong>excluded from scheduling</strong> but remain visible in the grid.
+                  <Trans i18nKey="schedule.siteToggleModal.deactivateWarning" components={{ strong: <strong /> }} />
                 </div>
               </>
             ) : (
               <>
-                Are you sure you want to <strong style={{ color: '#3cca70' }}>activate</strong> site <strong style={{ color: '#062d54' }}>{selectedSite?.id}</strong>?
+                <span><Trans i18nKey="schedule.siteToggleModal.activateQuestion" values={{ siteId: selectedSite?.id }} components={{ strong: <strong style={{ color: '#3cca70' }} /> }} /></span>
                 <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#e6f9f0', borderRadius: '8px', fontSize: '13px' }}>
-                  ✓ Activated sites will be <strong>included in scheduling</strong> on the next generation.
+                  <Trans i18nKey="schedule.siteToggleModal.activateInfo" components={{ strong: <strong /> }} />
                 </div>
               </>
             )}

@@ -945,6 +945,26 @@
       "okText": "Yes, Clear All Delays",
       "cancel": "Cancel"
     },
+    "siteToggleModal": {
+      "title": "Toggle Site Status",
+      "siteMetricsTitle": "SITE METRICS FOR {{siteId}}",
+      "tooltips": {
+        "totalMeters": "Total meters scheduled for this site in the current grid",
+        "totalBackfill": "Total backfill tonnes for this site",
+        "totalOre": "Total ore tonnes for this site",
+        "status": "Site is currently {{status}}",
+        "workHours": "Total scheduled work hours for this site"
+      },
+      "active": "Active",
+      "inactive": "Inactive",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "cancel": "Cancel",
+      "deactivateQuestion": "Are you sure you want to <strong>deactivate</strong> site <strong>{{siteId}}</strong>?",
+      "activateQuestion": "Are you sure you want to <strong>activate</strong> site <strong>{{siteId}}</strong>?",
+      "deactivateWarning": "⚠️ Deactivated sites will be <strong>excluded from scheduling</strong> but remain visible in the grid.",
+      "activateInfo": "✓ Activated sites will be <strong>included in scheduling</strong> on the next generation."
+    },
     "messages": {
       "success": "Success",
       "error": "Error",

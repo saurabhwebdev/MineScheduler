@@ -945,6 +945,26 @@
       "okText": "Sí, Borrar Todos los Retrasos",
       "cancel": "Cancelar"
     },
+    "siteToggleModal": {
+      "title": "Alternar Estado del Sitio",
+      "siteMetricsTitle": "MÉTRICAS DEL SITIO PARA {{siteId}}",
+      "tooltips": {
+        "totalMeters": "Metros totales programados para este sitio en la cuadrícula actual",
+        "totalBackfill": "Toneladas totales de relleno para este sitio",
+        "totalOre": "Toneladas totales de mineral para este sitio",
+        "status": "El sitio está actualmente {{status}}",
+        "workHours": "Horas de trabajo totales programadas para este sitio"
+      },
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "deactivate": "Desactivar",
+      "activate": "Activar",
+      "cancel": "Cancelar",
+      "deactivateQuestion": "¿Está seguro de que desea <strong>desactivar</strong> el sitio <strong>{{siteId}}</strong>?",
+      "activateQuestion": "¿Está seguro de que desea <strong>activar</strong> el sitio <strong>{{siteId}}</strong>?",
+      "deactivateWarning": "⚠️ Los sitios desactivados serán <strong>excluidos de la programación</strong> pero permanecen visibles en la cuadrícula.",
+      "activateInfo": "✓ Los sitios activados serán <strong>incluidos en la programación</strong> en la próxima generación."
+    },
     "messages": {
       "success": "Éxito",
       "error": "Error",
