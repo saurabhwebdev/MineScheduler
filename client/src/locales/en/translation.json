@@ -1099,6 +1099,28 @@
       "tip3": "<strong>Maintain Equipment:</strong> Keep equipment operational to maximize scheduling flexibility",
       "tip4": "<strong>Balance Task Limits:</strong> Adjust task limits in Settings to match operational capacity",
       "tip5": "<strong>Monitor Delays:</strong> Address recurring delays to improve task completion rates"
+    },
+    "maintenanceCostModal": {
+      "title": "Maintenance Cost History",
+      "clickHint": "Click for history",
+      "totalCost": "Total Cost",
+      "laborCost": "Labor Cost",
+      "partsCost": "Parts Cost",
+      "events": "events",
+      "monthlyCostTrend": "Monthly Cost Trend",
+      "costByEquipmentType": "Cost by Equipment Type",
+      "monthlyBreakdown": "Monthly Breakdown",
+      "topEquipmentByCost": "Top Equipment by Maintenance Cost",
+      "month": "Month",
+      "eventCount": "Events",
+      "labor": "Labor Cost",
+      "parts": "Parts Cost",
+      "total": "Total Cost",
+      "equipmentId": "Equipment ID",
+      "equipmentName": "Name",
+      "equipmentType": "Type",
+      "totalCostLabel": "Total Cost",
+      "eventCountLabel": "Events"
     }
   },
   "equipment": {

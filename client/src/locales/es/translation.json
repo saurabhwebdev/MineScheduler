@@ -1099,6 +1099,24 @@
       "tip3": "<strong>Mantener Equipos:</strong> Mantener equipos operacionales para maximizar flexibilidad de programación",
       "tip4": "<strong>Balancear Límites de Tareas:</strong> Ajustar límites de tareas en Configuración para coincidir con capacidad operacional",
       "tip5": "<strong>Monitorear Retrasos:</strong> Abordar retrasos recurrentes para mejorar tasas de finalización de tareas"
+    },
+    "maintenanceCostModal": {
+      "title": "Historial de Costos de Mantenimiento",
+      "totalCost": "Costo Total",
+      "laborCost": "Costo de Mano de Obra",
+      "partsCost": "Costo de Partes",
+      "monthlyCostTrend": "Tendencia de Costos Mensuales",
+      "costByEquipmentType": "Costo por Tipo de Equipo",
+      "topEquipmentByCost": "Principales Equipos por Costo",
+      "monthlyBreakdown": "Desglose Mensual",
+      "month": "Mes",
+      "labor": "Mano de Obra",
+      "parts": "Partes",
+      "total": "Total",
+      "equipmentId": "ID de Equipo",
+      "equipmentName": "Nombre de Equipo",
+      "close": "Cerrar",
+      "noData": "No hay datos disponibles"
     }
   },
   "equipment": {
