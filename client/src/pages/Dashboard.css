@@ -188,6 +188,15 @@
   cursor: pointer;
 }
 
+.hero-kpi-card.clickable {
+  cursor: pointer;
+}
+
+.hero-kpi-card.clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
 /* KPI Content */
 .kpi-content {
   flex: 1;
@@ -258,6 +267,15 @@
   font-size: 11px;
   color: #9ca3af;
   line-height: 1.4;
+}
+
+.kpi-hint {
+  font-size: 10px;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 4px;
+  text-align: center;
+  font-weight: 400;
 }
 
 .kpi-trend-row {

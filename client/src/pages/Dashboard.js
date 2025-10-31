@@ -47,6 +47,8 @@ const Dashboard = () => {
   const [criticalModalVisible, setCriticalModalVisible] = useState(false);
   const [criticalEquipment, setCriticalEquipment] = useState([]);
   const [qualityInfoVisible, setQualityInfoVisible] = useState(false);
+  const [maintenanceCostModalVisible, setMaintenanceCostModalVisible] = useState(false);
+  const [maintenanceCostData, setMaintenanceCostData] = useState(null);
 
   const fetchAllData = useCallback(async () => {
     setLoading(true);
@@ -123,6 +125,22 @@ const Dashboard = () => {
     setCustomDateRange(dates);
     if (dates) {
       setDateRange(null);
+    }
+  };
+
+  const fetchMaintenanceCostHistory = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/maintenance-logs/analytics`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.status === 'success') {
+        setMaintenanceCostData(data.data);
+        setMaintenanceCostModalVisible(true);
+      }
+    } catch (error) {
+      console.error('Error fetching maintenance cost data:', error);
     }
   };
 
@@ -303,7 +321,7 @@ const Dashboard = () => {
 
             {/* Maintenance Cost */}
             <Col xs={24} sm={12} lg={6}>
-              <Card className="hero-kpi-card cost-card">
+              <Card className="hero-kpi-card cost-card clickable" onClick={fetchMaintenanceCostHistory}>
                 <div className="kpi-icon-wrapper cost">
                   <DollarOutlined />
                 </div>
@@ -321,6 +339,7 @@ const Dashboard = () => {
                       {Math.abs(metrics.maintenanceCost.trend)}%
                     </span>
                   </div>
+                  <div className="kpi-hint">Click for history</div>
                 </div>
               </Card>
             </Col>
@@ -824,6 +843,203 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+        </Modal>
+
+        {/* Maintenance Cost History Modal */}
+        <Modal
+          title="Maintenance Cost History"
+          open={maintenanceCostModalVisible}
+          onCancel={() => setMaintenanceCostModalVisible(false)}
+          width={1100}
+          footer={null}
+          className="maintenance-cost-modal"
+        >
+          {maintenanceCostData && (
+            <div>
+              {/* Summary Cards */}
+              <Row gutter={16} style={{ marginBottom: 24 }}>
+                <Col xs={24} sm={8}>
+                  <Card className="cost-summary-card" style={{ background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                    <div style={{ fontSize: '13px', color: '#6b7280', marginBottom: '10px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Cost</div>
+                    <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>
+                      ${(maintenanceCostData.summary?.totalCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#9ca3af' }}>{maintenanceCostData.summary?.totalEvents || 0} events</div>
+                  </Card>
+                </Col>
+                <Col xs={24} sm={8}>
+                  <Card className="cost-summary-card" style={{ background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                    <div style={{ fontSize: '13px', color: '#6b7280', marginBottom: '10px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Labor Cost</div>
+                    <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>
+                      ${(maintenanceCostData.summary?.totalLaborCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#059669', fontWeight: 600 }}>
+                      {maintenanceCostData.summary?.totalCost > 0
+                        ? `${((maintenanceCostData.summary.totalLaborCost / maintenanceCostData.summary.totalCost) * 100).toFixed(0)}%`
+                        : '0%'}
+                    </div>
+                  </Card>
+                </Col>
+                <Col xs={24} sm={8}>
+                  <Card className="cost-summary-card" style={{ background: 'linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)', padding: '20px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                    <div style={{ fontSize: '13px', color: '#6b7280', marginBottom: '10px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Parts Cost</div>
+                    <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>
+                      ${(maintenanceCostData.summary?.totalPartsCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#059669', fontWeight: 600 }}>
+                      {maintenanceCostData.summary?.totalCost > 0
+                        ? `${((maintenanceCostData.summary.totalPartsCost / maintenanceCostData.summary.totalCost) * 100).toFixed(0)}%`
+                        : '0%'}
+                    </div>
+                  </Card>
+                </Col>
+              </Row>
+
+              {/* Monthly Trend Chart */}
+              {maintenanceCostData.monthlyCostTrend && maintenanceCostData.monthlyCostTrend.length > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <h4 style={{ marginBottom: 16, fontSize: '16px', fontWeight: 600, color: '#1f2937' }}>Monthly Cost Trend</h4>
+                  <ResponsiveContainer width="100%" height={280}>
+                    <ComposedChart data={maintenanceCostData.monthlyCostTrend}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis 
+                        dataKey="month" 
+                        tick={{ fontSize: 12, fill: '#8c8c8c' }}
+                        tickFormatter={(month) => moment(month).format('MMM YY')}
+                      />
+                      <YAxis tick={{ fontSize: 12, fill: '#8c8c8c' }} />
+                      <Tooltip 
+                        content={<CustomTooltip />}
+                        labelFormatter={(month) => moment(month).format('MMMM YYYY')}
+                      />
+                      <Legend />
+                      <Area type="monotone" dataKey="cost" fill="#fecaca" stroke="#ef4444" strokeWidth={0} name="Total Cost" />
+                      <Bar dataKey="laborCost" fill="#60a5fa" name="Labor" />
+                      <Bar dataKey="partsCost" fill="#34d399" name="Parts" />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              {/* Cost by Equipment Type */}
+              {maintenanceCostData.costByEquipmentType && maintenanceCostData.costByEquipmentType.length > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <h4 style={{ marginBottom: 16, fontSize: '16px', fontWeight: 600, color: '#1f2937' }}>Cost by Equipment Type</h4>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={maintenanceCostData.costByEquipmentType}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis dataKey="type" tick={{ fontSize: 12, fill: '#8c8c8c' }} />
+                      <YAxis tick={{ fontSize: 12, fill: '#8c8c8c' }} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Bar dataKey="cost" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Total Cost" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              {/* Monthly Breakdown Table */}
+              {maintenanceCostData.monthlyCostTrend && maintenanceCostData.monthlyCostTrend.length > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <h4 style={{ marginBottom: 16, fontSize: '16px', fontWeight: 600, color: '#1f2937' }}>Monthly Breakdown</h4>
+                  <Table
+                    dataSource={maintenanceCostData.monthlyCostTrend.slice().reverse()}
+                    columns={[
+                      {
+                        title: 'Month',
+                        dataIndex: 'month',
+                        key: 'month',
+                        render: (month) => moment(month).format('MMM YYYY'),
+                        width: 120
+                      },
+                      {
+                        title: 'Events',
+                        dataIndex: 'count',
+                        key: 'count',
+                        width: 80,
+                        align: 'center'
+                      },
+                      {
+                        title: 'Labor Cost',
+                        dataIndex: 'laborCost',
+                        key: 'laborCost',
+                        render: (cost) => `$${(cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                        align: 'right'
+                      },
+                      {
+                        title: 'Parts Cost',
+                        dataIndex: 'partsCost',
+                        key: 'partsCost',
+                        render: (cost) => `$${(cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                        align: 'right'
+                      },
+                      {
+                        title: 'Total Cost',
+                        dataIndex: 'cost',
+                        key: 'cost',
+                        render: (cost) => (
+                          <strong style={{ color: '#ef4444' }}>${(cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                        ),
+                        sorter: (a, b) => a.cost - b.cost,
+                        align: 'right'
+                      }
+                    ]}
+                    rowKey="month"
+                    pagination={{ pageSize: 12, showSizeChanger: false }}
+                    scroll={{ x: 600 }}
+                    size="small"
+                  />
+                </div>
+              )}
+
+              {/* Top Equipment by Cost */}
+              {maintenanceCostData.topEquipment && maintenanceCostData.topEquipment.length > 0 && (
+                <div>
+                  <h4 style={{ marginBottom: 16, fontSize: '16px', fontWeight: 600, color: '#1f2937' }}>Top Equipment by Maintenance Cost</h4>
+                  <Table
+                    dataSource={maintenanceCostData.topEquipment}
+                    columns={[
+                      { 
+                        title: 'Equipment ID', 
+                        dataIndex: 'equipmentId', 
+                        key: 'equipmentId',
+                        width: 130
+                      },
+                      { 
+                        title: 'Name', 
+                        dataIndex: 'name', 
+                        key: 'name'
+                      },
+                      { 
+                        title: 'Type', 
+                        dataIndex: 'type', 
+                        key: 'type'
+                      },
+                      {
+                        title: 'Total Cost',
+                        dataIndex: 'cost',
+                        key: 'cost',
+                        render: (cost) => (
+                          <strong style={{ color: '#ef4444' }}>${(cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                        ),
+                        sorter: (a, b) => a.cost - b.cost,
+                        align: 'right'
+                      },
+                      { 
+                        title: 'Events', 
+                        dataIndex: 'count', 
+                        key: 'count',
+                        align: 'center',
+                        width: 80
+                      }
+                    ]}
+                    rowKey="equipmentId"
+                    pagination={false}
+                    size="small"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </Modal>
       </div>
     </DashboardLayout>
