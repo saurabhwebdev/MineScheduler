@@ -145,6 +145,31 @@ const Dashboard = () => {
     }
   };
 
+  // Calculate dynamic quality score based on selected delay filter
+  const calculateQualityScore = () => {
+    if (!metrics || !metrics.scheduleEfficiency || !metrics.activeOperations) return 0;
+    
+    const utilization = parseFloat(metrics.scheduleEfficiency.utilization);
+    const taskCompletion = metrics.scheduleEfficiency.taskCompletion;
+    
+    // Get filtered conflicts count
+    const conflicts = delayFilter === 'user' ? metrics.activeOperations.userDelays :
+                      delayFilter === 'shift' ? metrics.activeOperations.shiftDelays :
+                      metrics.scheduleEfficiency.conflicts;
+    
+    // Calculate quality score (0-100)
+    // 40% utilization (optimal 70-90%), 30% task completion, 30% no conflicts
+    const utilizationScore = utilization >= 70 && utilization <= 90 ? 40 : 
+                             utilization >= 60 ? 30 : 
+                             utilization >= 50 ? 20 : 10;
+    const conflictScore = conflicts === 0 ? 30 : conflicts <= 5 ? 20 : conflicts <= 10 ? 10 : 0;
+    const taskCompletionScore = 30; // 100% completion = 30 points
+    
+    return Math.round(utilizationScore + conflictScore + taskCompletionScore);
+  };
+
+  const dynamicQualityScore = calculateQualityScore();
+
   // Custom Tooltip Component
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -360,7 +385,7 @@ const Dashboard = () => {
                 </div>
                 <div className="kpi-content">
                   <div className="kpi-value-with-max">
-                    <span className="kpi-value-large">{metrics.scheduleEfficiency.quality}</span>
+                    <span className="kpi-value-large">{dynamicQualityScore}</span>
                     <span className="kpi-max">/100</span>
                   </div>
                   <div className="kpi-label">{t('dashboard.kpis.scheduleQuality')}</div>
@@ -372,10 +397,10 @@ const Dashboard = () => {
                     }
                   </div>
                   <Progress 
-                    percent={metrics.scheduleEfficiency.quality} 
+                    percent={dynamicQualityScore} 
                     strokeColor={
-                      metrics.scheduleEfficiency.quality >= 80 ? '#10b981' :
-                      metrics.scheduleEfficiency.quality >= 60 ? '#f59e0b' : '#ef4444'
+                      dynamicQualityScore >= 80 ? '#10b981' :
+                      dynamicQualityScore >= 60 ? '#f59e0b' : '#ef4444'
                     }
                     showInfo={false}
                     size="small"
@@ -413,7 +438,10 @@ const Dashboard = () => {
             </Col>
             <Col xs={12} sm={12} lg={6}>
               <Card className="mini-kpi-card" style={{ minHeight: '140px' }}>
-                <div style={{ marginBottom: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ fontSize: '14px', color: 'rgba(0, 0, 0, 0.45)' }}>
+                    {t('dashboard.kpis.delays')}
+                  </div>
                   <Segmented
                     size="small"
                     value={delayFilter}
@@ -426,16 +454,16 @@ const Dashboard = () => {
                     style={{ fontSize: '11px' }}
                   />
                 </div>
-                <Statistic
-                  title={t('dashboard.kpis.delays')}
-                  value={
-                    delayFilter === 'user' ? metrics.activeOperations.userDelays :
-                    delayFilter === 'shift' ? metrics.activeOperations.shiftDelays :
-                    metrics.activeOperations.allDelays
-                  }
-                  prefix={<WarningOutlined />}
-                  valueStyle={{ fontSize: '20px', fontWeight: 700, color: '#ef4444' }}
-                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <WarningOutlined style={{ fontSize: '20px', color: '#ef4444' }} />
+                  <div style={{ fontSize: '24px', fontWeight: 700, color: '#ef4444' }}>
+                    {
+                      delayFilter === 'user' ? metrics.activeOperations.userDelays :
+                      delayFilter === 'shift' ? metrics.activeOperations.shiftDelays :
+                      metrics.activeOperations.allDelays
+                    }
+                  </div>
+                </div>
               </Card>
             </Col>
             <Col xs={12} sm={12} lg={6}>
@@ -640,14 +668,14 @@ const Dashboard = () => {
                   <div className="quality-score-circle">
                     <Progress 
                       type="circle" 
-                      percent={metrics.scheduleEfficiency.quality}
+                      percent={dynamicQualityScore}
                       strokeColor={{
-                        '0%': metrics.scheduleEfficiency.quality >= 80 ? '#10b981' :
-                              metrics.scheduleEfficiency.quality >= 60 ? '#f59e0b' : '#ef4444',
-                        '100%': metrics.scheduleEfficiency.quality >= 80 ? '#10b981' :
-                                metrics.scheduleEfficiency.quality >= 60 ? '#f59e0b' : '#ef4444',
+                        '0%': dynamicQualityScore >= 80 ? '#10b981' :
+                              dynamicQualityScore >= 60 ? '#f59e0b' : '#ef4444',
+                        '100%': dynamicQualityScore >= 80 ? '#10b981' :
+                                dynamicQualityScore >= 60 ? '#f59e0b' : '#ef4444',
                       }}
-                      format={() => <div className="score-text">{metrics.scheduleEfficiency.quality}<span className="score-label">/100</span></div>}
+                      format={() => <div className="score-text">{dynamicQualityScore}<span className="score-label">/100</span></div>}
                       width={120}
                     />
                   </div>
