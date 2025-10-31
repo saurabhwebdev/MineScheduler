@@ -709,6 +709,14 @@ exports.getMaintenanceAnalytics = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
+        summary: {
+          totalCost,
+          totalEvents,
+          avgCost,
+          avgDuration,
+          totalLaborCost,
+          totalPartsCost
+        },
         kpis: {
           totalCost,
           totalEvents,
